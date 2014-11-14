@@ -1,0 +1,82 @@
+#########################
+#	-o output file
+#	-c compile but not link
+#	-L, -I include and lib paths
+#	-l link a lib
+#	-g insert debugging info in your exutable
+#	-Wall turn on warnings
+#	-fPIC position independent code (dosen't work sometimes)
+#	-O optimize
+#########################
+SDIR1=./00_PILEDTestRunner
+SDIR2=./01_ComClients
+SDIR3=./02_DebugServer
+
+ODIR1=$(SDIR1)/obj
+ODIR2=$(SDIR2)/obj
+ODIR3=$(SDIR3)/obj
+
+#The PILEDTestRunner files
+_SOURCES1=helpers.cpp PlatformCygwin.cpp Settings.cpp main.cpp PILEDTestRunner.cpp IXMLParser.cpp Logger.cpp PILEDScene.cpp
+OBJECTS1=$(addprefix  $(ODIR1)/, $(_SOURCES1:.cpp=.o))
+
+#The ComClient files
+#_SOURCES2=DMXClient.cpp baseClient.cpp serialib.cpp ZLLClient.cpp DaliClient.cpp ftdi.cpp
+_SOURCES2=DMXClient.cpp baseClient.cpp serialib.cpp ZLLClient.cpp DaliClient.cpp
+SOURCES2=$(addprefix  $(SDIR2)/,$(_SOURCES2))
+OBJECTS2=$(addprefix  $(ODIR2)/, $(_SOURCES2:.cpp=.o))
+
+#The Debug Server files
+_SOURCES3=DebugServer.cpp tcpacceptor.cpp tcpstream.cpp
+SOURCES3=$(addprefix  $(SDIR3)/,$(_SOURCES3))
+OBJECTS3=$(addprefix  $(ODIR3)/, $(_SOURCES3:.cpp=.o))
+
+# the diresw/ptestrunctory where the include files are stored
+IDIR = -I $(SDIR1) -I $(SDIR2) -I $(SDIR3)
+
+# This is the compiler g++ is for C++ code
+CC=g++
+# the compiler flags: CYGWIN is may special #define to see if we are on Cygwin or windows or raspberry pi; gnu++11 is necessary to get all the function (std:stoi still does not work)
+#CFLAGS=-c -v -I $(IDIR) -Wall -D CYGWIN -Wno-unknown-pragmas -Wno-switch -std=gnu++11 -Wno-write-strings 
+#CFLAGS=-c -I $(IDIR) -Wall -D CYGWIN -Wno-unknown-pragmas -Wno-switch -std=gnu++11 -Wno-write-strings 
+CFLAGS=-c $(IDIR) -Wall -D CYGWIN -Wno-unknown-pragmas -Wno-switch -std=gnu++11 -Wno-write-strings
+
+# Linker flags:
+#LDFLAGS= /home/57/ptestrun/lib/libftd2xx.a
+#LDFLAGS=./lib/libftd2xx.a
+#LDFLAGS=-lftd2xx
+#LDFLAGS=-L./lib -ldl -lrt -lpthread 
+#LDFLAGS=-L./lib
+#LDFLAGS=-L./lib -Wl,-Bstatic -lftd2xx -Wl,-Bdynamic  -ldl -lrt -lpthread -Wl,--as-needed
+#LDFLAGS=-L./lib -lftd2xx -ldl -lrt -lpthread -Wl,--as-needed
+
+# the name of the exe file
+EXECUTABLE=PILEDTestRunner.exe
+
+# target: dependencies
+# [tab] system command
+
+# "all" is the default "target", it has no command associated
+all: $(EXECUTABLE)
+
+# target is the exe. This is dependant on all the *.o files	
+# the command is g++
+$(EXECUTABLE): $(OBJECTS1) $(OBJECTS2) $(OBJECTS3)
+	$(CC) $(LDFLAGS) $(OBJECTS1) $(OBJECTS2) $(OBJECTS3) -o $@
+
+# this is the actual compile command
+# it puts all the *.o files into the ../obj dir
+#.cpp.o:
+$(ODIR1)/%.o: $(SDIR1)/%.cpp 
+	$(CC) $(CFLAGS) $< -o $@
+
+$(ODIR2)/%.o: $(SDIR2)/%.cpp 
+	$(CC) $(CFLAGS) $< -o $@
+	
+$(ODIR3)/%.o: $(SDIR3)/%.cpp 
+	$(CC) $(CFLAGS) $< -o $@		
+	
+# "make clean"  deletes ../obj/*.o files and what is the stuff here
+clean:
+	rm -f $(ODIR1)/*.o $(ODIR2)/*.o $(ODIR3)/*.o *~ core $(INCDIR)/*~ 	
+

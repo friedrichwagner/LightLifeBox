@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Settings>
+  <Logging>
+	<debugport value="9999" />
+    <loglevel value="10" />
+  </Logging>
+  <ControlBox name="Box1">
+	<Potis value="Poti1,Poti2,Poti3,Poti4" />
+	<Buttons value="Button1" />
+	<PILights value="Light1" />
+  </ControlBox>
+  <Button1 id="1" name="btnLock">
+	<PortNr value="1234"/>
+  </Button1>
+  <Poti1 id="1" name="btnBrightness">
+	<PortNr value="1234"/>
+  </Poti1>
+  <Poti2 id="2" name="btnCCT">
+	<PortNr value="12345"/>
+  </Poti2>
+  <Poti3 id="3" name="btnX">
+	<PortNr value="123456"/>
+  </Poti3>
+  <Poti4 id="4" name="btnY">
+	<PortNr value="123456"/>
+  </Poti4>
+  <Light1 id="1" name="liBazille">
+	<Default value="2700,100"/>	
+  </Light1>  
+
+  
+  <DMX name="DMXClient1">
+    <IP-Address value="192.168.4.200,192.168.4.201,192.168.4.202" />
+	<IP-Port value="6454" />
+	<!--<USBCom value="COM2,256000,8,N,1" />-->
+	<USBName value="FT232R USB UART" />
+	<UseFTDI value="yes" />
+	<StartAddress value="1" />
+  </DMX>
+  <ZLL name="ZLLClient1">
+	<!--<USBCom value="COM30,115200,8,N,1" />-->
+  </ZLL> 
+  <DALI name="DALIClient1">
+	<!--<USBCom value="COM29,115200,8,N,1" />-->
+  </DALI>   
+ 
+</Settings>

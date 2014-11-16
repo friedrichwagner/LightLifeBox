@@ -31,6 +31,7 @@
     <ClCompile Include="03_LogIni\Settings.cpp" />
     <ClCompile Include="04_Platform\PlatformCygwin.cpp" />
     <ClCompile Include="04_Platform\PlatformWin32.cpp" />
+    <ClCompile Include="05_Test\IPClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="00_LightLifeBox\Button.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="03_LogIni\Settings.h" />
     <ClInclude Include="04_Platform\PlatformCygwin.h" />
     <ClInclude Include="04_Platform\PlatformWin32.h" />
+    <ClInclude Include="05_Test\IPClient.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F38178C2-E963-418A-9EA1-3B2FFF859504}</ProjectGuid>
@@ -86,7 +88,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\00_LightLifeBox;.\01_ComClients;.\02_DebugServer;.\03_LogIni;.\04_Platform;$(IncludePath)</IncludePath>
+    <IncludePath>.\00_LightLifeBox;.\01_ComClients;.\02_DebugServer;.\03_LogIni;.\04_Platform;.\05_Test;$(IncludePath)</IncludePath>
     <ExtensionsToDeleteOnClean>*.cdf;*.cache;*.obj;*.ilk;*.resources;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;*.tlog;*.manifest;*.res;*.pch;*.exp;*.idb;*.rep;*.xdc;*.pdb;*_manifest.rc;*.bsc;*.sbr;*.metagen;*.bi</ExtensionsToDeleteOnClean>
     <LibraryPath>.\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>

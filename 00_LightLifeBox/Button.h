@@ -4,6 +4,7 @@
 #include "Settings.h"
 #include "Logger.h"
 #include <time.h>
+//#include "IPClient.h"
 
 using namespace std;
 
@@ -32,6 +33,9 @@ protected:
 
 	//Observer Pattern
 	vector<IButtonObserver*> notifyClients;
+
+	//Testing
+	//TestClient* tc;
 
 #ifdef WIN32
 	//Windows Thread Handling

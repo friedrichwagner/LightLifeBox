@@ -13,26 +13,53 @@
   <Button1 id="1" name="btnLock">
 	<PortNr value="1234"/>
 	<Sleep value="1000"/>
+	<Testing value="MockButton"/>
   </Button1>
   <Poti1 id="1" name="btnBrightness">
 	<PortNr value="1234"/>
 	<Sleep value="1000"/>
+	<Testing value="MockPoti1"/>
   </Poti1>
   <Poti2 id="2" name="btnCCT">
 	<PortNr value="12345"/>
 	<Sleep value="1000"/>
+	<Testing value="MockPoti2"/>
   </Poti2>
   <Poti3 id="3" name="btnX">
 	<PortNr value="123456"/>
 	<Sleep value="1000"/>
+	<Testing value="MockPoti3"/>
   </Poti3>
   <Poti4 id="4" name="btnY">
 	<PortNr value="123456"/>
 	<Sleep value="1000"/>
+	<Testing value="MockPoti4"/>
   </Poti4>
   <Light1 id="1" name="liBazille">
 	<Default value="2700,100"/>	
   </Light1>  
+  
+  <MockButton>
+	<IP value="127.0.0.1"/>
+	<Port value="10000"/>
+  </MockButton>
+  <MockPoti1>
+	<IP value="127.0.0.1"/>
+	<Port value="10001"/>
+  </MockPoti1>
+  <MockPoti2>
+	<IP value="127.0.0.1"/>
+	<Port value="10002"/>
+  </MockPoti2>
+  <MockPoti3>
+	<IP value="127.0.0.1"/>
+	<Port value="10003"/>
+  </MockPoti3>
+  <MockPoti4>
+	<IP value="127.0.0.1"/>
+	<Port value="10004"/>
+  </MockPoti4>
+  
 
   
   <DMX name="DMXClient1">

@@ -1,10 +1,13 @@
 //http://vichargrave.com]
 
+#include "tcpconnector.h"
+#include "tcpconnector.h"
+//#include <windows.h>
 #include <stdio.h>
 #include <string.h>
-#include <fcntl.h>
-#include <errno.h>
-#include "tcpconnector.h"
+//#include <fcntl.h>
+//#include <errno.h>
+
 #include "helpers.h"
 
 TCPStream* TCPConnector::connect(const char* server, int port)

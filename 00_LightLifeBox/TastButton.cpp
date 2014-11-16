@@ -36,7 +36,7 @@ unsigned long TastButton::startListen()
 	log->cout(this->Name + ": start listening");
 	while (!done) 
 	{	
-		log->cout(this->Name + ": waiting...");
+		//log->cout(this->Name + ": waiting...");
 		if (!isPressed && PortVal < 100) ButtonDown();
 		else if (isPressed && PortVal < 100) ButtonPressed();
 		else if (isPressed && PortVal > 1000) ButtonUp();
@@ -56,6 +56,8 @@ void TastButton::OnChange(long delta)
 	log->cout(this->Name + ": OnChange");
 	//call ControlBox Callback Function
 	actualValue=PortVal2;
+	for (unsigned int i = 0; i < notifyClients.size(); i++)
+		notifyClients[i]->notify(BUTTON_UP, PortVal2);
 }
 
 

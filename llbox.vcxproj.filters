@@ -16,6 +16,9 @@
     <Filter Include="04 Platform">
       <UniqueIdentifier>{9db9fbdf-eb25-4f9e-ac1d-01ccda7d935d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05 Test">
+      <UniqueIdentifier>{9c0bd473-d9cb-4cd8-a5c1-061c66d6d5e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="01_ComClients\baseClient.cpp">
@@ -78,6 +81,9 @@
     <ClCompile Include="02_DebugServer\tcpconnector.cpp">
       <Filter>02 DebugServer</Filter>
     </ClCompile>
+    <ClCompile Include="05_Test\IPClient.cpp">
+      <Filter>05 Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01_ComClients\baseClient.h">
@@ -139,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="02_DebugServer\tcpconnector.h">
       <Filter>02 DebugServer</Filter>
+    </ClInclude>
+    <ClInclude Include="05_Test\IPClient.h">
+      <Filter>05 Test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,5 @@
 #pragma once
 
-//#include <netinet/in.h>
 #include "tcpstream.h"
 
 class TCPConnector
@@ -12,3 +11,4 @@ class TCPConnector
   private:
     int resolveHostName(const char* host, struct in_addr* addr);
 };
+

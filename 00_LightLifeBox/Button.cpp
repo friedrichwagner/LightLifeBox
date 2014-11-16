@@ -22,6 +22,11 @@ Button::Button(std::string pSection)
 	tstop=0;
 	PortVal = 1000;
 
+#ifdef _DEBUG
+
+	//tc = TestClient(ini->Read<string>(pSection, "Testing", ""));
+#endif
+
 	spawn();
 }
 
@@ -58,7 +63,7 @@ unsigned long Button::startListen()
 	log->cout(this->Name+": start listening...");
 	while (!done) 
 	{	
-		log->cout(this->Name + ": waiting...");
+		//log->cout(this->Name + ": waiting...");
 		getPortVal();
 
 		if (!isPressed && PortVal < 100) ButtonDown();
@@ -77,7 +82,7 @@ void Button::ButtonDown(void)
 	tstart=clock();
 
 	log->cout(this->Name + ": ButtonDown");
-	for (int i = 0; i < notifyClients.size; i++)
+	for (unsigned int i = 0; i < notifyClients.size(); i++)
 		notifyClients[i]->notify(BUTTON_DOWN, 0);
 	//call ControlBox Callback Function
 }
@@ -90,7 +95,7 @@ void Button::ButtonPressed(void)
 	elapsedTime = (((float)tstop)-((float)tstart)); 
 	isPressed = true;
 
-	for (int i = 0; i < notifyClients.size; i++)
+	for (unsigned int i = 0; i < notifyClients.size(); i++)
 		notifyClients[i]->notify(BUTTON_PRESSED, 0);
 	//call ControlBox Callback Function
 }
@@ -100,7 +105,7 @@ void Button::ButtonUp(void)
 	log->cout(this->Name + ": ButtonUp");
 	isPressed = false;
 	//call ControlBox Callback Function
-	for (int i = 0; i < notifyClients.size; i++)
+	for (unsigned  int i = 0; i < notifyClients.size(); i++)
 		notifyClients[i]->notify(BUTTON_UP, 0);
 
 }

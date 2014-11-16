@@ -123,3 +123,8 @@ void ControlBox::Beep(int freq, int time)
 { 
 	log->cout("beep");
 }
+
+void ControlBox::notify(enumButtonEvents event, long val)
+{
+	log->cout("notify");
+}

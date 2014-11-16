@@ -20,6 +20,6 @@ class TCPAcceptor
     TCPStream* accept();
 
   private:
-    TCPAcceptor() {}
+	  TCPAcceptor() {};
 };
 

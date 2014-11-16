@@ -8,21 +8,27 @@
 	<Potis value="Poti1,Poti2,Poti3,Poti4" />
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
+	<Sleep value="1000"/>
   </ControlBox>
   <Button1 id="1" name="btnLock">
 	<PortNr value="1234"/>
+	<Sleep value="1000"/>
   </Button1>
   <Poti1 id="1" name="btnBrightness">
 	<PortNr value="1234"/>
+	<Sleep value="1000"/>
   </Poti1>
   <Poti2 id="2" name="btnCCT">
 	<PortNr value="12345"/>
+	<Sleep value="1000"/>
   </Poti2>
   <Poti3 id="3" name="btnX">
 	<PortNr value="123456"/>
+	<Sleep value="1000"/>
   </Poti3>
   <Poti4 id="4" name="btnY">
 	<PortNr value="123456"/>
+	<Sleep value="1000"/>
   </Poti4>
   <Light1 id="1" name="liBazille">
 	<Default value="2700,100"/>	

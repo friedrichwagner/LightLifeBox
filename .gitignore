@@ -2,14 +2,15 @@
 ipch/
 Debug/*
 !Debug/*.xml
-!Debug/*.exe
+#!Debug/*.exe
 
 #Visual Studio Code Browsing Database (big file)
 *.sdf
+*.suo
 
 Release/*
 !Release/*.xml
-!Release/*.exe
+#!Release/*.exe
 
 #gcc *.o directory
 *.o

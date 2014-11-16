@@ -33,9 +33,10 @@ void TastButton::setValue(unsigned long val)
 unsigned long TastButton::startListen()
 {
   
-	cout << this->Name <<": start listening..." << endl;
+	log->cout(this->Name + ": start listening");
 	while (!done) 
-	{			
+	{	
+		log->cout(this->Name + ": waiting...");
 		if (!isPressed && PortVal < 100) ButtonDown();
 		else if (isPressed && PortVal < 100) ButtonPressed();
 		else if (isPressed && PortVal > 1000) ButtonUp();
@@ -45,13 +46,14 @@ unsigned long TastButton::startListen()
 			OnChange(actualValue-PortVal2);
 		}
 
-		lumitech::sleep(100);
+		lumitech::sleep(1000);
 	}
 	return 0;
 }
 
 void TastButton::OnChange(long delta)
 {	
+	log->cout(this->Name + ": OnChange");
 	//call ControlBox Callback Function
 	actualValue=PortVal2;
 }

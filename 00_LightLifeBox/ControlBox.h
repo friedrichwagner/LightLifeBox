@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class ControlBox
+class ControlBox : IButtonObserver
 {
 protected:
 	static ControlBox* _instance;	//Class property!
@@ -19,6 +19,7 @@ protected:
 	string IP;
 	vector<TastButton*> Potis;
 	vector<Button*> Buttons;
+	int threadSleepTime;
 	
 	Settings* ini;
 	Logger* log;
@@ -26,7 +27,7 @@ protected:
 	//Functions
 	bool Init();
 
-	ControlBox(std::string pName); //private contructor
+	ControlBox(std::string pName); //private contructor	
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL
@@ -38,4 +39,6 @@ public:
 
 	vector<PILight*> Lights;
 	bool isDone;
+
+	void notify(enumButtonEvents event, long val);
 };

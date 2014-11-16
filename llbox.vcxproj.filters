@@ -24,9 +24,6 @@
     <ClCompile Include="01_ComClients\DMXClient.cpp">
       <Filter>01 ComClients</Filter>
     </ClCompile>
-    <ClCompile Include="01_ComClients\ftdi.cpp">
-      <Filter>01 ComClients</Filter>
-    </ClCompile>
     <ClCompile Include="01_ComClients\serialib.cpp">
       <Filter>01 ComClients</Filter>
     </ClCompile>
@@ -78,18 +75,15 @@
     <ClCompile Include="00_LightLifeBox\PILight.cpp">
       <Filter>00 LightLifeBox</Filter>
     </ClCompile>
+    <ClCompile Include="02_DebugServer\tcpconnector.cpp">
+      <Filter>02 DebugServer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01_ComClients\baseClient.h">
       <Filter>01 ComClients</Filter>
     </ClInclude>
     <ClInclude Include="01_ComClients\DMXClient.h">
-      <Filter>01 ComClients</Filter>
-    </ClInclude>
-    <ClInclude Include="01_ComClients\ftd2xx.h">
-      <Filter>01 ComClients</Filter>
-    </ClInclude>
-    <ClInclude Include="01_ComClients\ftdi.h">
       <Filter>01 ComClients</Filter>
     </ClInclude>
     <ClInclude Include="01_ComClients\serialib.h">
@@ -142,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="00_LightLifeBox\PILight.h">
       <Filter>00 LightLifeBox</Filter>
+    </ClInclude>
+    <ClInclude Include="02_DebugServer\tcpconnector.h">
+      <Filter>02 DebugServer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,8 +11,6 @@ class Button
 {
 protected:
 	//Fields
-	volatile bool done;
-
 	unsigned int ID;
 	unsigned int PortNr;
 	unsigned int PortVal;
@@ -23,12 +21,17 @@ protected:
 	bool isPressed;
 	clock_t tstart, tstop;
 	float elapsedTime;
+	int threadSleepTime;
 
 	//Functions
+	int getPortVal();
 	void ButtonDown(void);
 	void ButtonUp(void);
 	void ButtonPressed(void);
 	virtual unsigned long startListen(void);
+
+	//Observer Pattern
+	vector<IButtonObserver*> notifyClients;
 
 #ifdef WIN32
 	//Windows Thread Handling
@@ -59,5 +62,8 @@ public:
 	Button(std::string pName);
 	~Button();	
 
+	volatile bool done;
 	bool getIsPressed();
+
+	void addClient(IButtonObserver* obs);
 };

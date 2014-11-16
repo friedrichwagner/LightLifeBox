@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,11 +20,11 @@
     <ClCompile Include="01_ComClients\baseClient.cpp" />
     <ClCompile Include="01_ComClients\DaliClient.cpp" />
     <ClCompile Include="01_ComClients\DMXClient.cpp" />
-    <ClCompile Include="01_ComClients\ftdi.cpp" />
     <ClCompile Include="01_ComClients\serialib.cpp" />
     <ClCompile Include="01_ComClients\ZLLClient.cpp" />
     <ClCompile Include="02_DebugServer\DebugServer.cpp" />
     <ClCompile Include="02_DebugServer\tcpacceptor.cpp" />
+    <ClCompile Include="02_DebugServer\tcpconnector.cpp" />
     <ClCompile Include="02_DebugServer\tcpstream.cpp" />
     <ClCompile Include="03_LogIni\IXMLParser.cpp" />
     <ClCompile Include="03_LogIni\Logger.cpp" />
@@ -42,12 +42,11 @@
     <ClInclude Include="01_ComClients\baseClient.h" />
     <ClInclude Include="01_ComClients\DaliClient.h" />
     <ClInclude Include="01_ComClients\DMXClient.h" />
-    <ClInclude Include="01_ComClients\ftd2xx.h" />
-    <ClInclude Include="01_ComClients\ftdi.h" />
     <ClInclude Include="01_ComClients\serialib.h" />
     <ClInclude Include="01_ComClients\ZLLClient.h" />
     <ClInclude Include="02_DebugServer\DebugServer.h" />
     <ClInclude Include="02_DebugServer\tcpacceptor.h" />
+    <ClInclude Include="02_DebugServer\tcpconnector.h" />
     <ClInclude Include="02_DebugServer\tcpstream.h" />
     <ClInclude Include="03_LogIni\IXMLParser.h" />
     <ClInclude Include="03_LogIni\Logger.h" />
@@ -66,12 +65,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -100,12 +101,12 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;USE_FTDI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Ws2_32.lib;winmm.lib;ftd2xx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
       <Command>-help</Command>

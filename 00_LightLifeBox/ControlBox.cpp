@@ -40,7 +40,7 @@ ControlBox* ControlBox::getInstance()
 
 ControlBox::~ControlBox() 
 { 
-	isDone = true;
+	stopEventLoop();
 }
 
 bool ControlBox::Init() 
@@ -54,16 +54,24 @@ bool ControlBox::Init()
 	ini->ReadStringVector("ControlBox", "Potis","", &flds);
 	for (unsigned  int i=0; i< flds.size(); i++)
 	{
-		if (ini->ReadAttrib<int>(flds[i],"id",0) > 0)
+		if (ini->ReadAttrib<int>(flds[i], "id", 0) > 0)
+		{
 			Potis.push_back(new TastButton(flds[i]));
+			Potis[i]->addClient(this);
+		}
+			
 	}
 
 	//2. get the Buttons
 	ini->ReadStringVector("ControlBox", "Buttons","", &flds);
 	for (unsigned  int i=0; i< flds.size(); i++)
 	{
-		if (ini->ReadAttrib<int>(flds[i],"id",0) > 0)
+		if (ini->ReadAttrib<int>(flds[i], "id", 0) > 0)
+		{
 			Buttons.push_back(new Button(flds[i]));
+			Buttons[i]->addClient(this);
+		}
+			
 	}
 
 	//2. get the Lights
@@ -74,24 +82,27 @@ bool ControlBox::Init()
 			Lights.push_back(new PILight(flds[i]));
 	}
 
-
+	threadSleepTime = ini->Read<int>("ControlBox", "Sleep", 100);
 	return true;
 }
 
 bool ControlBox::EventLoop() 
 { 
+	int c = 0;
 	log->cout("Controlbox::EventLoop-BEGIN");
 	while (!isDone)
 	{
-		log->cout("Controlbox::EventLoop");
+		log->cout("------------Controlbox::EventLoop-------------");
 
 #ifdef _DEBUG
-	lumitech::waitOnKeyPress();
+	//c= lumitech::waitOnKeyPress();
+	//if (c == 3) isDone = true;
 #endif
 
-		lumitech::sleep(100);
+		lumitech::sleep(1000);
 	}
 
+	stopEventLoop();
 	log->cout("Controlbox::EventLoop-END");
 
 	return true;
@@ -100,6 +111,12 @@ bool ControlBox::EventLoop()
 void ControlBox::stopEventLoop() 
 { 
 	isDone = true;
+
+	for (unsigned int i = 0; i< Potis.size(); i++)
+		Potis[i]->done = true;
+
+	for (unsigned int i = 0; i< Buttons.size(); i++)
+		Buttons[i]->done = true;
 }
 
 void ControlBox::Beep(int freq, int time) 

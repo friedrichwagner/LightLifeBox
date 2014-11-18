@@ -1,5 +1,5 @@
 #include "PlatformWin32.h"
-#include <Windows.h>
+//#include <Windows.h>
 #include <sstream>
 #include <algorithm>
 #include <conio.h>  //_getch();

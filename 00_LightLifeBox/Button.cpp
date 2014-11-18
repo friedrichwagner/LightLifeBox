@@ -23,8 +23,7 @@ Button::Button(std::string pSection)
 	PortVal = 1000;
 
 #ifdef _DEBUG
-
-	//tc = TestClient(ini->Read<string>(pSection, "Testing", ""));
+	tc = new TestClient(ini->Read<string>(pSection, "Testing", ""));
 #endif
 
 	spawn();
@@ -40,17 +39,19 @@ Button::~Button()
 	//close(socket_id) does not close the accept, therefore it would hang here if I wait on the join
 	//listenThread.join();
 #endif
+
+#ifdef _DEBUG
+	delete tc;
+#endif
 }
 
 int Button::getPortVal()
 {
 #ifdef _DEBUG
-	cin >> PortVal;
-
-	return PortVal;
-#else
+	PortVal = tc->getPortVal();
 #endif
 
+	return 0;
 }
 
 bool Button::getIsPressed()

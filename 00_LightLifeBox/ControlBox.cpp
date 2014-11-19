@@ -50,7 +50,18 @@ bool ControlBox::Init()
 	//If name not found in settings return immediately
 	if (ini->ReadAttribute("ControlBox", "name","") != this->Name) return false;
 
-	//1. Get the Potis
+	//1. get the Buttons
+	ini->ReadStringVector("ControlBox", "Buttons", "", &flds);
+	for (unsigned int i = 0; i< flds.size(); i++)
+	{
+		if (ini->ReadAttrib<int>(flds[i], "id", 0) > 0)
+		{
+			Buttons.push_back(new Button(flds[i]));
+			Buttons[i]->addClient(this);
+		}
+	}
+
+	//2. Get the Potis
 	ini->ReadStringVector("ControlBox", "Potis","", &flds);
 	for (unsigned  int i=0; i< flds.size(); i++)
 	{
@@ -62,19 +73,7 @@ bool ControlBox::Init()
 			
 	}
 
-	//2. get the Buttons
-	ini->ReadStringVector("ControlBox", "Buttons","", &flds);
-	for (unsigned  int i=0; i< flds.size(); i++)
-	{
-		if (ini->ReadAttrib<int>(flds[i], "id", 0) > 0)
-		{
-			Buttons.push_back(new Button(flds[i]));
-			Buttons[i]->addClient(this);
-		}
-			
-	}
-
-	//2. get the Lights
+	//3. get the Lights
 	ini->ReadStringVector("ControlBox", "PILights","", &flds);
 	for (unsigned  int i=0; i< flds.size(); i++)
 	{
@@ -89,21 +88,21 @@ bool ControlBox::Init()
 bool ControlBox::EventLoop() 
 { 
 	int c = 0;
-	log->cout("Controlbox::EventLoop-BEGIN");
+	log->cout("------------- Controlbox::EventLoop-BEGIN ------------- ");
 	while (!isDone)
 	{
-		log->cout("------------Controlbox::EventLoop-------------");
+		//log->cout("------------Controlbox::EventLoop-------------");
 
 #ifdef _DEBUG
 	//c= lumitech::waitOnKeyPress();
 	//if (c == 3) isDone = true;
 #endif
 
-		lumitech::sleep(1000);
+		//lumitech::sleep(threadSleepTime);
 	}
 
 	stopEventLoop();
-	log->cout("Controlbox::EventLoop-END");
+	log->cout("-------------  Controlbox::EventLoop-END ------------- ");
 
 	return true;
 }
@@ -126,5 +125,33 @@ void ControlBox::Beep(int freq, int time)
 
 void ControlBox::notify(enumButtonEvents event, long val)
 {
-	log->cout("notify");
+	string result;
+	std::ostringstream ss1;
+
+
+	switch (event)
+	{
+	case BUTTON_DOWN:
+		ss1 << Name << ": BUTTON_DOWN val=" << val;
+		log->cout(ss1.str());
+		break;
+
+	case BUTTON_UP:
+		ss1 << Name << ": BUTTON_UP val=" << val;
+		log->cout(ss1.str());
+		break;
+
+	case BUTTON_PRESSED:
+		ss1 << Name << ": BUTTON_PRESSED val=" << val;
+		log->cout(ss1.str());
+		break;
+
+	case BUTTON_CHANGE:
+		ss1 << Name << ": BUTTON_CHANGE val=" << val;
+		log->cout(ss1.str());
+		break;
+
+	default:
+		break;
+	}
 }

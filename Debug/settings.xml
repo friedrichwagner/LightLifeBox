@@ -5,7 +5,8 @@
     <loglevel value="10" />
   </Logging>
   <ControlBox name="Box1">
-	<Potis value="Poti1,Poti2,Poti3,Poti4" />
+	<!--<Potis value="Poti1,Poti2,Poti3,Poti4" />-->
+	<!--<Potis value="Poti1" />-->
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
 	<Sleep value="1000"/>
@@ -45,19 +46,19 @@
   </MockButton>
   <MockPoti1>
 	<IP value="127.0.0.1"/>
-	<Port value="10001"/>
+	<Port value="10000"/>
   </MockPoti1>
   <MockPoti2>
 	<IP value="127.0.0.1"/>
-	<Port value="10002"/>
+	<Port value="10000"/>
   </MockPoti2>
   <MockPoti3>
 	<IP value="127.0.0.1"/>
-	<Port value="10003"/>
+	<Port value="10000"/>
   </MockPoti3>
   <MockPoti4>
 	<IP value="127.0.0.1"/>
-	<Port value="10004"/>
+	<Port value="10000"/>
   </MockPoti4>
   
 

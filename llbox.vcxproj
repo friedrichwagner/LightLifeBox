@@ -35,7 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="00_LightLifeBox\Button.h" />
-    <ClInclude Include="00_LightLifeBox\Callback.h" />
     <ClInclude Include="00_LightLifeBox\ControlBox.h" />
     <ClInclude Include="00_LightLifeBox\helpers.h" />
     <ClInclude Include="00_LightLifeBox\PILight.h" />

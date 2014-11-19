@@ -9,12 +9,14 @@ protected:
 	//Fields
 	unsigned long delta;
 	unsigned long actualValue;
-	unsigned long PortVal2;
+	int PortVal2;
 	
 
 	//Functions
 	void OnChange(long delta);
 	virtual unsigned long startListen(void);
+
+	int getPortVal2();
 public:
 	TastButton(std::string pName);
 	~TastButton();	

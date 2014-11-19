@@ -23,7 +23,13 @@ Button::Button(std::string pSection)
 	PortVal = 1000;
 
 #ifdef _DEBUG
-	tc = new TestClient(ini->Read<string>(pSection, "Testing", ""));
+	string mockObjectName = ini->Read<string>(pSection, "Testing", "");
+	tc = new TestClient(mockObjectName);
+
+	if (tc->connected())
+	{
+		tc->send(mockObjectName);
+	}
 #endif
 
 	spawn();
@@ -48,7 +54,11 @@ Button::~Button()
 int Button::getPortVal()
 {
 #ifdef _DEBUG
-	PortVal = tc->getPortVal();
+	int len=-1;
+	int val = tc->getPortVal(&len); //this is blocking when the TestServer is running
+	if (len < 0) done = true;
+	return val;
+
 #endif
 
 	return 0;
@@ -61,17 +71,17 @@ bool Button::getIsPressed()
 
 unsigned long Button::startListen()
 {  
-	log->cout(this->Name+": start listening...");
+	log->cout(this->Name+": Button start listening ...");
 	while (!done) 
 	{	
 		//log->cout(this->Name + ": waiting...");
-		getPortVal();
+		PortVal = getPortVal();
 
-		if (!isPressed && PortVal < 100) ButtonDown();
-		else if (isPressed && PortVal < 100) ButtonPressed();
-		else if (isPressed && PortVal > 1000) ButtonUp();
+		if (!isPressed && PortVal < 10) ButtonDown();
+		else if (isPressed && PortVal < 10) ButtonPressed();
+		else if (isPressed && PortVal > 10) ButtonUp();
 
-		lumitech::sleep(threadSleepTime);
+		//lumitech::sleep(threadSleepTime);
 	}
 	log->cout(this->Name + ": stop listening...");
 	return 0;
@@ -84,7 +94,7 @@ void Button::ButtonDown(void)
 
 	log->cout(this->Name + ": ButtonDown");
 	for (unsigned int i = 0; i < notifyClients.size(); i++)
-		notifyClients[i]->notify(BUTTON_DOWN, 0);
+		notifyClients[i]->notify(BUTTON_DOWN, PortVal);
 	//call ControlBox Callback Function
 }
 
@@ -97,7 +107,7 @@ void Button::ButtonPressed(void)
 	isPressed = true;
 
 	for (unsigned int i = 0; i < notifyClients.size(); i++)
-		notifyClients[i]->notify(BUTTON_PRESSED, 0);
+		notifyClients[i]->notify(BUTTON_PRESSED, PortVal);
 	//call ControlBox Callback Function
 }
 
@@ -107,7 +117,7 @@ void Button::ButtonUp(void)
 	isPressed = false;
 	//call ControlBox Callback Function
 	for (unsigned  int i = 0; i < notifyClients.size(); i++)
-		notifyClients[i]->notify(BUTTON_UP, 0);
+		notifyClients[i]->notify(BUTTON_UP, PortVal);
 
 }
 

@@ -68,15 +68,26 @@ bool TestClient::connected()
 	return false;
 }
 
-int TestClient::getPortVal()
+int TestClient::getPortVal(int* len)
+{
+	string s;
+
+	s = this->receive(len);
+	int i = atoi(s.c_str());
+
+	return i;
+}
+
+int TestClient::getPortVal2()
 {
 	int len;
 	string s;
 
 	s = this->receive(&len);
+	int i = atoi(s.c_str());
 
-	return fromString<int>(s);
-
+	return i;
 }
+
 
 

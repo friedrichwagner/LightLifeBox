@@ -10,14 +10,22 @@ TastButton::TastButton(string pName)
 	delta = 10;
 	actualValue=0;
 	PortVal2=0;
-
-	spawn();
 }
 
 TastButton::~TastButton() 
 { 
 	done = true;
 }
+
+int TastButton::getPortVal2()
+{
+#ifdef _DEBUG
+	return tc->getPortVal2();
+#endif
+
+	return 0;
+}
+
 
 unsigned long TastButton::getValue()
 {
@@ -33,20 +41,22 @@ void TastButton::setValue(unsigned long val)
 unsigned long TastButton::startListen()
 {
   
-	log->cout(this->Name + ": start listening");
+	log->cout(this->Name + ": TastButton start listening");
 	while (!done) 
 	{	
-		//log->cout(this->Name + ": waiting...");
-		if (!isPressed && PortVal < 100) ButtonDown();
-		else if (isPressed && PortVal < 100) ButtonPressed();
-		else if (isPressed && PortVal > 1000) ButtonUp();
+		PortVal = getPortVal();
+		//PortVal2 = getPortVal2();
+
+		if (!isPressed && PortVal < 10) ButtonDown();
+		else if (isPressed && PortVal < 10) ButtonPressed();
+		else if (isPressed && PortVal > 10) ButtonUp();
 
 		if  ( labs((long)(actualValue - PortVal2)) > delta)
 		{
 			OnChange(actualValue-PortVal2);
 		}
 
-		lumitech::sleep(1000);
+		//lumitech::sleep(threadSleepTime);
 	}
 	return 0;
 }

@@ -1,5 +1,7 @@
 #Ignore Visual Studio intermediate files
 ipch/
+obj/
+bin/
 Debug/*
 !Debug/*.xml
 #!Debug/*.exe

@@ -131,9 +131,6 @@
     <ClInclude Include="00_LightLifeBox\Button.h">
       <Filter>00 LightLifeBox</Filter>
     </ClInclude>
-    <ClInclude Include="00_LightLifeBox\Callback.h">
-      <Filter>00 LightLifeBox</Filter>
-    </ClInclude>
     <ClInclude Include="00_LightLifeBox\TastButton.h">
       <Filter>00 LightLifeBox</Filter>
     </ClInclude>

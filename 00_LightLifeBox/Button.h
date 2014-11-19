@@ -15,7 +15,7 @@ protected:
 	//Fields
 	unsigned int ID;
 	unsigned int PortNr;
-	unsigned int PortVal;
+	int PortVal;
 	string	Name;
 	string	Section;
 	Settings* ini;

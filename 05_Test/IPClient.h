@@ -16,16 +16,17 @@ protected:
 	Settings* ini;
 
 	bool connect();
-	void send(string);
+	
 	string receive(int* len);
 	
 public:
 	TestClient(string name);
 	~TestClient();
 
-
+	void send(string);
 	bool connected();
-	int getPortVal();
+	int getPortVal(int* len);
+	int getPortVal2();
 };
 
 

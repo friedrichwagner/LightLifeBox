@@ -14,13 +14,18 @@ protected:
 	string IP;
 	int Port;
 	Settings* ini;
+
+	bool connect();
+	void send(string);
+	string receive(int* len);
 	
 public:
 	TestClient(string name);
 	~TestClient();
-	bool connect();
-	void send(string);
-	string receive(int* len);
+
+
+	bool connected();
+	int getPortVal();
 };
 
 

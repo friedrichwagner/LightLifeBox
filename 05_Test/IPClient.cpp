@@ -6,10 +6,12 @@ TestClient::TestClient(std::string pName)
 	ini = Settings::getInstance();
 	name = pName;
 
-	//this->IP = ini->Read<string>(pName, "IP", "127.0.0.1");
+	this->IP = ini->Read<string>(pName, "IP", "127.0.0.1");
 	this->Port = ini->Read<int>(pName, "Port", 10000);
 	connector = new TCPConnector();
 	stream = NULL;
+
+	connect();
 }
 
 TestClient::~TestClient()
@@ -55,4 +57,26 @@ string TestClient::receive(int* len)
 
 	return retStr;
 }
+
+bool TestClient::connected()
+{
+	if (stream)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+int TestClient::getPortVal()
+{
+	int len;
+	string s;
+
+	s = this->receive(&len);
+
+	return fromString<int>(s);
+
+}
+
 

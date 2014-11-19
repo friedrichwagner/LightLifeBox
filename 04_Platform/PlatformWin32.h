@@ -1,5 +1,9 @@
 #pragma once
 
+
+#include <Ws2tcpip.h>
+#include <winsock2.h>
+
 #include <string>
 #include <windows.h>
 #include <time.h> 

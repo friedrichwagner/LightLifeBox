@@ -7,6 +7,7 @@
 #include <arpa/inet.h> //inet_addr
 #include <unistd.h>		//close(socket)
 #include <thread> 
+#include <sstream>
 
 namespace lumitech
 {
@@ -44,6 +45,26 @@ namespace lumitech
 	//Ctrl-C Handler
 	void sigproc(int);
 }
+
+template <typename T>
+std::string toString(T Number )
+{
+	std::ostringstream ss;
+	ss << Number;
+	return ss.str();
+}
+
+template <class T>
+T fromString(const std::string& s)
+{
+	std::istringstream ss(s);
+	T result;
+	ss >> result;    // TODO handle errors
+
+	return result;
+}
+
+
 
 #endif
 

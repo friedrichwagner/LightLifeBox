@@ -51,7 +51,7 @@ unsigned long TastButton::startListen()
 		else if (isPressed && PortVal < 10) ButtonPressed();
 		else if (isPressed && PortVal > 10) ButtonUp();
 
-		if  ( labs((long)(actualValue - PortVal2)) > delta)
+		if  ( (unsigned long)labs((long)(actualValue - PortVal2)) > delta)
 		{
 			OnChange(actualValue-PortVal2);
 		}

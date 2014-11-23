@@ -2,11 +2,16 @@
 
 #include "tcpconnector.h"
 #include "tcpconnector.h"
-//#include <windows.h>
 #include <stdio.h>
 #include <string.h>
-//#include <fcntl.h>
-//#include <errno.h>
+
+#ifdef CYGWIN
+	#include <netinet/in.h>
+	#include <netdb.h>
+	#include <arpa/inet.h>
+	#include <fcntl.h>
+	#include <errno.h>
+#endif
 
 #include "helpers.h"
 

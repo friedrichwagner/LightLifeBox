@@ -49,6 +49,14 @@ namespace lumitech
 }
 
 
+template <typename T>
+std::string toString(T Number)
+{
+	std::ostringstream ss;
+	ss << Number;
+	return ss.str();
+}
+
 template <class T>
 T fromString(const std::string& s)
 {

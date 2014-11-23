@@ -3,6 +3,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iostream>
+#include "ControlBox.h"
 
 #ifdef CYGWIN
 #include <thread>
@@ -18,7 +19,7 @@ namespace lumitech {
 std::string gExeName;
 std::thread hSequenceThread;
 //to be able to stop the Sequence in the Ctr-C Handler
-//PILEDSequenceRunner* globalSequence=0;
+ControlBox* thisBox = 0;
 
 int PlatformInit(char* argv0)
 {
@@ -109,14 +110,6 @@ bool stob(std::string s)
 	return ret;
 }
 
-template <typename T>
-std::string toString(T Number )
-{
-    std::ostringstream ss;
-    ss << Number;
-    return ss.str();
-}
-
 std::string itos(int i)
 {
 	return toString<int>(i);
@@ -161,7 +154,7 @@ int gettimeofdayLT(struct timeval* tp, void* tzp)
 #ifdef RASPI
 	return gettimeofday(tp, ( __timezone_ptr_t) tzp);
 #else
-	return gettimeofday(tp, tzp);
+	return gettimeofday(tp, ( __timezone_ptr_t) tzp);
 #endif
 }
 
@@ -202,7 +195,7 @@ void waitSequenceThread()
 
 void setSequencePointer(void* p)
 {
-	if (p!= 0) globalSequence = (PILEDSequenceRunner*) p;
+	if (p != 0) thisBox = (ControlBox*)p;
 }
 
 void sigproc(int pi)
@@ -211,10 +204,12 @@ void sigproc(int pi)
 	/* NOTE some versions of UNIX will reset signal to default
 	after each call. So for portability reset signal each time */
  
-	cout << "Ctrl-C" << endl;
+	cout << "Ctrl-C Handler" << endl;
 
-	if (globalSequence != 0)
-		globalSequence->stopSequence();
+	if (thisBox != 0) 	
+	{
+		thisBox->stopEventLoop();
+	}
 }
 
 

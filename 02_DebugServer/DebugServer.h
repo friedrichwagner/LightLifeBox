@@ -4,6 +4,8 @@
 #include "tcpstream.h"
 #include "helpers.h"
 #include <vector>
+#include "Logger.h"
+#include <thread>
 
 
 class DebugServer : IObserver
@@ -11,45 +13,25 @@ class DebugServer : IObserver
 	volatile bool done;
 	static DebugServer* _instance;
 
-#ifdef WIN32
-	//Windows USB Thread Handling
-	static DWORD WINAPI StaticThreadStart(void* Param)
-    {
-        DebugServer* This = (DebugServer*) Param;
-        return This->startListen();
-    }
-
-	HANDLE listenThread;
-	void spawn()
-    {
-       DWORD ThreadID;
-       listenThread=CreateThread(NULL, 0, StaticThreadStart, (void*) this, 0, &ThreadID);
-    };
-#endif
-
-#ifdef CYGWIN
 	std::thread listenThread;
-	std::thread spawn() 
+	void spawn()
 	{
-		return std::thread(&DebugServer::startListen, this);
+		listenThread = std::thread(&DebugServer::startListen, this);
+		//listenThread = std::move(	std::thread( [this] { this->startListen(); } ));
 	};
 
-#endif
-
-	
 private:
 	int listenPort;
+	Logger* log;
 	
 	TCPAcceptor* listener;
 	std::vector<TCPStream*> DebugClients;
 	std::vector<int> listofDowns;
 	unsigned long startListen(void);
-
 	DebugServer(); //private constructor
-
   public:
-    static DebugServer* getInstance();
-
+    static DebugServer* getInstance(); //Singleton does not work on Linux. Thread always crashes
+	
 	~DebugServer();
 	void updateClient(std::string);
 };

@@ -34,7 +34,8 @@ void PILight::removeComClient(IBaseClient* c)
 		if (*iter == c)
 		{
 			log->info("remove Client:" + c->getName());
-			ComClients.erase(iter);
+			//FW 21.11.2014 - funktionier nicht in g++4.7 ??
+			//ComClients.erase(iter);
 			return;
 		}
 	}

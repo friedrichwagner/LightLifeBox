@@ -40,7 +40,7 @@ ControlBox* ControlBox::getInstance()
 
 ControlBox::~ControlBox() 
 { 
-	stopEventLoop();
+	if (!isDone) stopEventLoop();
 }
 
 bool ControlBox::Init() 
@@ -87,7 +87,7 @@ bool ControlBox::Init()
 
 bool ControlBox::EventLoop() 
 { 
-	int c = 0;
+	//int c = 0;
 	log->cout("------------- Controlbox::EventLoop-BEGIN ------------- ");
 	while (!isDone)
 	{
@@ -101,7 +101,7 @@ bool ControlBox::EventLoop()
 		//lumitech::sleep(threadSleepTime);
 	}
 
-	stopEventLoop();
+	//stopEventLoop(); this is done from Ctr-C Handler
 	log->cout("-------------  Controlbox::EventLoop-END ------------- ");
 
 	return true;
@@ -110,12 +110,18 @@ bool ControlBox::EventLoop()
 void ControlBox::stopEventLoop() 
 { 
 	isDone = true;
+	unsigned int i = 0;
+	unsigned int cnt = Potis.size();
 
-	for (unsigned int i = 0; i< Potis.size(); i++)
-		Potis[i]->done = true;
+	for (i = 0; i< cnt; i++)
+		Potis[i]->stop();
 
-	for (unsigned int i = 0; i< Buttons.size(); i++)
-		Buttons[i]->done = true;
+	cnt = Buttons.size();
+	for (i = 0; i< cnt; i++)
+	{
+		Buttons[i]->stop();
+	}
+	
 }
 
 void ControlBox::Beep(int freq, int time) 

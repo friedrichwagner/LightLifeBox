@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include <time.h>
 #include "IPClient.h"
+#include <thread>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ class Button
 {
 protected:
 	//Fields
+	volatile bool done;
 	unsigned int ID;
 	unsigned int PortNr;
 	int PortVal;
@@ -38,37 +40,18 @@ protected:
 	//Testing
 	TestClient* tc;
 
-#ifdef WIN32
-	//Windows Thread Handling
-	static DWORD WINAPI StaticThreadStart(void* Param)
-    {
-        Button* This = (Button*) Param;
-        return This->startListen();
-    }
-
-	HANDLE thisThread;
-	void spawn()
-    {
-       DWORD ThreadID;
-       thisThread=CreateThread(NULL, 0, StaticThreadStart, (void*) this, 0, &ThreadID);
-    };
-#endif
-
-#ifdef CYGWIN
 	std::thread thisThread;
-	void spawn() 
+	void spawn()
 	{
 		thisThread = std::thread(&Button::startListen, this);
 	};
 
-#endif
-
 public:
 	Button(std::string pName);
 	~Button();	
-
-	volatile bool done;
+	
 	bool getIsPressed();
+	void stop();
 
 	void addClient(IButtonObserver* obs);
 };

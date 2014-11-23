@@ -51,7 +51,7 @@ string TestClient::receive(int* len)
 		if (*len > 0)
 		{
 			retStr = line;
-			line[*len] = NULL;
+			line[*len] = 0;
 		}
 	}
 

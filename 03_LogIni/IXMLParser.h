@@ -259,8 +259,9 @@
  *
  ****************************************************************************/
 
-#ifndef __INCLUDE_IXML_NODE__
-#define __INCLUDE_IXML_NODE__
+//#ifndef __INCLUDE_IXML_NODE__
+//#define __INCLUDE_IXML_NODE__
+#pragma once
 
 #include <stdlib.h>
 
@@ -1507,4 +1508,4 @@ private:
 
 #undef XMLDLLENTRY
 
-#endif
+

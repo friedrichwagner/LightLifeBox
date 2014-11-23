@@ -121,15 +121,6 @@ namespace lumitech
 		return ret;
 	}
 
-
-	template <typename T>
-	std::string toString(T Number)
-	{
-		std::ostringstream ss;
-		ss << Number;
-		return ss.str();
-	}
-
 	std::string itos(int i)
 	{
 		return toString<int>(i);

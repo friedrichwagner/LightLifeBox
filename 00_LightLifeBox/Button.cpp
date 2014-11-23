@@ -37,14 +37,7 @@ Button::Button(std::string pSection)
 
 Button::~Button() 
 { 
-	done = true;
-
-#ifdef WIN32
-	WaitForSingleObject(thisThread, INFINITE);
-#else
-	//close(socket_id) does not close the accept, therefore it would hang here if I wait on the join
-	//listenThread.join();
-#endif
+	if (!done) stop();
 
 #ifdef _DEBUG
 	delete tc;
@@ -81,11 +74,18 @@ unsigned long Button::startListen()
 		else if (isPressed && PortVal < 10) ButtonPressed();
 		else if (isPressed && PortVal > 10) ButtonUp();
 
-		//lumitech::sleep(threadSleepTime);
+		lumitech::sleep(threadSleepTime);
 	}
 	log->cout(this->Name + ": stop listening...");
 	return 0;
 }
+
+void Button::stop()
+{
+	done = true;
+	thisThread.join();
+}
+
 
 void Button::ButtonDown(void)
 {

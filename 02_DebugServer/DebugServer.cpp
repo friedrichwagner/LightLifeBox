@@ -1,21 +1,26 @@
 #include "DebugServer.h"
 #include "Settings.h"
+#include "PlatformCygwin.h"
 
 DebugServer* DebugServer::_instance = NULL;
 
-DebugServer::DebugServer() 
+DebugServer::DebugServer()
 {
-	Settings* ini = Settings::getInstance();
+	try
+	{
+		Settings* ini = Settings::getInstance();
+		log = Logger::getInstance();
 
-	listenPort= ini->ReadInt("Logging", "debugport", 9999);
-	//listenPort= ini->Read<int>("Logging", "debugport", 9999);
+		listenPort= ini->Read<int>("Logging", "debugport", 9999);
 
-#ifdef WIN32
-	spawn();
-#else
-	listenThread = spawn();
-#endif
+		spawn();
+	}
+	catch (exception& ex)
+	{
+		log->cout(ex.what());
+	}
 }
+
 
 DebugServer* DebugServer::getInstance()
 {
@@ -31,9 +36,13 @@ DebugServer* DebugServer::getInstance()
 	}
 }
 
+
 DebugServer::~DebugServer()
 {
-  	for (unsigned int i=0;i<DebugClients.size(); i++)
+	unsigned int i = 0;
+	unsigned int cnt = DebugClients.size();
+
+	for (i = 0; i<cnt; i++)
 	{
 		//Notify Clients of closing
 		DebugClients[i]->doShutdown();
@@ -45,31 +54,26 @@ DebugServer::~DebugServer()
 	try
 	{
 		//Closes Listening Thread
-		delete listener;
-
-	//Waiting for Listening Thread to shutdown
-#ifdef WIN32
-	WaitForSingleObject(listenThread, INFINITE);
-#else
-	//close(socket_id) does not close the accept, therefore it would hang here if I wait on the join
-	//listenThread.join();
-#endif
+		delete listener;		
 	}
 	catch(...)
 	{
 		//silently ignore errors here.
 	}
 
-	
+	//Waiting for Listening Thread to shutdown
+	//Linus waits here indefinetly when this is called
+	//listenThread.join();
+	log->cout("DebugServer: deleted!");
 }
 
 unsigned long DebugServer::startListen()
 {
 	TCPStream* stream = NULL;
-
+	
 	listener = new TCPAcceptor(listenPort);
-   
-	cout << "Start Listening..." << endl;
+  
+	cout << "DebugServer: start listening..." << endl;
     if (listener->start() == 0) 
 	{
 		while (1) 

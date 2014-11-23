@@ -48,14 +48,15 @@ int main(int argc, char * argv[])
 		else //if ((argc==3) && (cmdOptionExists(argv, argv+argc, "-box") || cmdOptionExists(argv, argv+argc, "-b")) )
 		{
 			//Must be declared after WSAStartup
-			DebugServer *dbgSrv= DebugServer::getInstance();
+			dbgSrv= DebugServer::getInstance();
 			log->addClient((IObserver*)dbgSrv);
 
-			string boxName="Box1";
+			string boxName="Box1";		
 
 	#ifdef USE_FTDI
 			ftdi::CreateDeviceInfoList();
 	#endif
+
 
 			if (cmdOptionExists(argv, argv+argc, "-box")) boxName = getCmdOption(argv, argv+argc,"-box");
 			if (cmdOptionExists(argv, argv+argc, "-b")) boxName = getCmdOption(argv, argv+argc,"-b");
@@ -68,28 +69,28 @@ int main(int argc, char * argv[])
 
 			//wait for Thread to be finished
 			lumitech::waitSequenceThread();	
-
-			delete dbgSrv;
 		}		
-
 	}
-	catch(...)
+	catch(exception& ex)
 	{
-		//log->cout(e.what());
 		log->cout("something happend on the way to heaven");
+		log->cout(ex.what());
 		if (dbgSrv) delete dbgSrv;
 	}
 
-
-	delete log;
-
-	lumitech::PlatformClose();
+	if (dbgSrv != NULL)	delete dbgSrv;	
 
 #ifdef _DEBUG
 	lumitech::waitOnKeyPress();
 #endif
+	
+	log->cout("llbox: stopped!");
+	
+	delete log;
 
-    return 0;
+	lumitech::PlatformClose();
+
+	return 0;
 }
 
 char* getCmdOption(char ** begin, char ** end, const std::string & option)
@@ -124,8 +125,7 @@ void runLightLifeBox(string boxName)
 	{
 		delete box;
 		return;
-	}
-	
+	}		
 	lumitech::setSequencePointer((void*) box);
 
 	DMXClient* dmx = new DMXClient();

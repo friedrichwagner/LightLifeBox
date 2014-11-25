@@ -92,13 +92,23 @@ void Logger::cout(string msg)
 
 	ss <<  msg <<  endl;
 	std::cout << ss.str();
-	for (unsigned int i=0; i<logClients.size(); i++)
-		logClients[i]->updateClient(ss.str());
+	for (unsigned int i = 0; i < logClients.size(); i++)
+	{
+		if (logClients[i] != NULL)
+			logClients[i]->updateClient(ss.str());
+	}
+		
 }
 
 void Logger::addClient(IObserver* obs)
 {
 	logClients.push_back(obs);
+}
+
+void Logger::removeClient(IObserver* obs)
+{
+	//only last element will be removed here
+	logClients.pop_back();
 }
 
  void Logger::log(string msg, string type, string pwhere, int actualLevel)

@@ -61,9 +61,8 @@ DebugServer::~DebugServer()
 		//silently ignore errors here.
 	}
 
-	//Waiting for Listening Thread to shutdown
-	//Linus waits here indefinetly when this is called
-	//listenThread.join();
+	log->cout("DebuServer: waiting for listening thread to stop...");
+	listenThread.join();
 	log->cout("DebugServer: deleted!");
 }
 

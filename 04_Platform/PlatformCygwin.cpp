@@ -151,8 +151,8 @@ void sleep(unsigned long miliseceonds)
 
 int gettimeofdayLT(struct timeval* tp, void* tzp) 
 {
-#ifdef RASPI
-	return gettimeofday(tp, ( __timezone_ptr_t) tzp);
+#ifdef CYGWIN
+	return gettimeofday(tp, (void*) tzp);
 #else
 	return gettimeofday(tp, ( __timezone_ptr_t) tzp);
 #endif

@@ -35,5 +35,6 @@ public:
 	//all the DebugServers
 	void cout(std::string msg);
 	void addClient(IObserver* obs);
+	void removeClient(IObserver* obs);
 };
 

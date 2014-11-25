@@ -50,7 +50,7 @@ int main(int argc, char * argv[])
 			//Must be declared after WSAStartup
 			dbgSrv= DebugServer::getInstance();
 			log->addClient((IObserver*)dbgSrv);
-
+			
 			string boxName="Box1";		
 
 	#ifdef USE_FTDI
@@ -78,18 +78,20 @@ int main(int argc, char * argv[])
 		if (dbgSrv) delete dbgSrv;
 	}
 
-	if (dbgSrv != NULL)	delete dbgSrv;	
+	if (dbgSrv != NULL)
+	{
+		log->removeClient((IObserver*)dbgSrv);
+		delete dbgSrv;
+	}
 
 #ifdef _DEBUG
 	lumitech::waitOnKeyPress();
 #endif
 	
 	log->cout("llbox: stopped!");
-	
 	delete log;
 
 	lumitech::PlatformClose();
-
 	return 0;
 }
 
@@ -111,9 +113,9 @@ bool cmdOptionExists(char** begin, char** end, const std::string& option)
 void printHelp()
 {
 	cout << VERSION << endl << endl;
-	cout << " -help \t\t\t this help screen" << endl;
-	cout << " -box/-b Name of box from settings.ini file" << endl;
-	cout << " -light/-l Name of PILight from settings.ini file" << endl;
+	cout << " -help \t\t this help screen" << endl;
+	cout << " -box/-b \t Name of box from settings.ini file" << endl;
+	cout << " -light/-l \t Name of PILight from settings.ini file" << endl;
 	cout << endl;
 }
 

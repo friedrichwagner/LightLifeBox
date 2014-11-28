@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <Settings>
   <Logging>
-	<debugport value="9999" />
+	<debugport value="9999123" />
     <loglevel value="10" />
   </Logging>
   <ControlBox name="Box1">

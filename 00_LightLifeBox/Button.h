@@ -41,7 +41,7 @@ protected:
 	TestClient* tc;
 
 	std::thread thisThread;
-	void spawn()
+	virtual void spawn()
 	{
 		thisThread = std::thread(&Button::startListen, this);
 	};
@@ -51,7 +51,10 @@ public:
 	~Button();	
 	
 	bool getIsPressed();
+	string getName();
+	int getID();
 	void stop();
+	void start();
 
 	void addClient(IButtonObserver* obs);
 };

@@ -5,7 +5,7 @@
     <loglevel value="10" />
   </Logging>
   <ControlBox name="Box1">
-	<!--<Potis value="Poti1,Poti2,Poti3,Poti4" />-->
+	<Potis value="Poti1,Poti2,Poti3" />
 	<!--<Potis value="Poti1" />-->
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
@@ -26,16 +26,11 @@
 	<Sleep value="1000"/>
 	<Testing value="MockPoti2"/>
   </Poti2>
-  <Poti3 id="3" name="btnX">
+  <Poti3 id="3" name="btnJudd">
 	<PortNr value="123456"/>
 	<Sleep value="1000"/>
 	<Testing value="MockPoti3"/>
   </Poti3>
-  <Poti4 id="4" name="btnY">
-	<PortNr value="123456"/>
-	<Sleep value="1000"/>
-	<Testing value="MockPoti4"/>
-  </Poti4>
   <Light1 id="1" name="liBazille">
 	<Default value="2700,100"/>	
   </Light1>  
@@ -60,15 +55,13 @@
 	<IP value="127.0.0.1"/>
 	<Port value="10000"/>
   </MockPoti4>
-  
-
-  
+   
   <DMX name="DMXClient1">
-    <IP-Address value="192.168.4.200,192.168.4.201,192.168.4.202" />
+    <IP-Address value="192.168.4.200" />
 	<IP-Port value="6454" />
 	<!--<USBCom value="COM2,256000,8,N,1" />-->
-	<USBName value="FT232R USB UART" />
-	<UseFTDI value="yes" />
+	<!--<USBName value="FT232R USB UART" />
+	<UseFTDI value="no" />-->
 	<StartAddress value="1" />
   </DMX>
   <ZLL name="ZLLClient1">

@@ -89,12 +89,6 @@ protected:
 
 	int SendUDP(unsigned char* data, int cnt);	
 	int SendUSB(unsigned char* data, int cnt);
-
-	virtual void setBrightness(unsigned int)=0;	
-	virtual void setCCT(unsigned int)=0;	
-	virtual void setRGB(unsigned int[])=0;	
-	virtual void setXY(float[])=0;	
-	virtual void setFadeTime(unsigned int val)=0;
 public:
 	std::string getName();
 
@@ -102,5 +96,11 @@ public:
 	virtual ~IBaseClient();
     virtual void updateData(struct PILEDScene* scene)=0;
 	int getCntClients();
+
+	virtual void setBrightness(unsigned int) = 0;
+	virtual void setCCT(unsigned int) = 0;
+	virtual void setRGB(unsigned int[]) = 0;
+	virtual void setXY(float[]) = 0;
+	virtual void setFadeTime(unsigned int val) = 0;
 };
 

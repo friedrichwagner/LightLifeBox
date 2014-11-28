@@ -16,7 +16,7 @@ namespace ControlBoxTester
     {
         public string Name;
         public int ID;
-        public uint Value;
+        public int Value;
         public int Value2;
         public bool done = false;
         public EventWaitHandle _waitHandle = new AutoResetEvent(false);
@@ -189,7 +189,7 @@ namespace ControlBoxTester
             tcpListener.Stop();
         }
 
-        public void SetButton(string name, uint val)
+        public void SetButton(string name, int val)
         {
             foreach (SignalButton b in Buttons)
             {
@@ -207,7 +207,7 @@ namespace ControlBoxTester
             {
                 if (b.Name == name)
                 {
-                    b.Value2 = val;
+                    b.Value = val;
                     b._waitHandle.Set();
                 }
             }

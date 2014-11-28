@@ -40,5 +40,5 @@ public:
 	vector<PILight*> Lights;
 	bool isDone;
 
-	void notify(enumButtonEvents event, long val);
+	void notify(void* sender, enumButtonEvents event, long val);
 };

@@ -22,7 +22,7 @@ protected:
 	unsigned int brightness;
 	unsigned int cct;
 	float xy[2];
-	unsigned int rgb[2];
+	unsigned int rgb[3];
 	unsigned int fadetime;
 	std::vector<IBaseClient*> ComClients;
 	enumPILEDMode piledMode;
@@ -40,7 +40,7 @@ public:
 
 	void setBrightness(unsigned int);	
 	void setCCT(unsigned int);	
-	void setRGB(unsigned int[]);	
+	void setRGB(unsigned int[]);
 	void setXY(float[]);	
 	void setFadeTime(unsigned int val);
 

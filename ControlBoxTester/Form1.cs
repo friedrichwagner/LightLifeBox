@@ -74,7 +74,6 @@ namespace ControlBoxTester
                 string s = ((sender as TrackBar).Tag).ToString();
                 int val = (sender as TrackBar).Value;
                 srv.SetPoti(s, val);
-                //(sender as TrackBar).Value = 0;
             }
 
         }
@@ -84,7 +83,7 @@ namespace ControlBoxTester
             if (sender is Button)
             {
                 string s = ((sender as Button).Tag).ToString();
-                srv.SetButton(s, 5);
+                srv.SetButton(s, -1);
             }
         }
 
@@ -93,7 +92,7 @@ namespace ControlBoxTester
             if (sender is Button)
             {
                 string s = ((sender as Button).Tag).ToString();
-                srv.SetButton(s, 999);
+                srv.SetButton(s, 1001);
             }
         }
     }

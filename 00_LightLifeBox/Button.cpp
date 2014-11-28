@@ -31,8 +31,6 @@ Button::Button(std::string pSection)
 		tc->send(mockObjectName);
 	}
 #endif
-
-	spawn();
 }
 
 Button::~Button() 
@@ -49,7 +47,7 @@ int Button::getPortVal()
 #ifdef _DEBUG
 	int len=-1;
 	int val = tc->getPortVal(&len); //this is blocking when the TestServer is running
-	if (len < 0) done = true;
+	//if (len < 0) done = true;
 	return val;
 
 #endif
@@ -70,14 +68,19 @@ unsigned long Button::startListen()
 		//log->cout(this->Name + ": waiting...");
 		PortVal = getPortVal();
 
-		if (!isPressed && PortVal < 10) ButtonDown();
-		else if (isPressed && PortVal < 10) ButtonPressed();
-		else if (isPressed && PortVal > 10) ButtonUp();
+		if (!isPressed && PortVal < 0) ButtonDown();
+		//else if (isPressed && PortVal < 10) ButtonPressed();
+		else if (isPressed && PortVal > 1000) ButtonUp();
 
-		lumitech::sleep(threadSleepTime);
+		//lumitech::sleep(threadSleepTime);
 	}
 	log->cout(this->Name + ": stop listening...");
 	return 0;
+}
+
+void Button::start()
+{
+	spawn();
 }
 
 void Button::stop()
@@ -94,7 +97,11 @@ void Button::ButtonDown(void)
 
 	log->cout(this->Name + ": ButtonDown");
 	for (unsigned int i = 0; i < notifyClients.size(); i++)
-		notifyClients[i]->notify(BUTTON_DOWN, PortVal);
+	{
+		if (notifyClients[i] != NULL)
+			notifyClients[i]->notify(this, BUTTON_DOWN, PortVal);
+	}
+		
 	//call ControlBox Callback Function
 }
 
@@ -107,7 +114,8 @@ void Button::ButtonPressed(void)
 	isPressed = true;
 
 	for (unsigned int i = 0; i < notifyClients.size(); i++)
-		notifyClients[i]->notify(BUTTON_PRESSED, PortVal);
+		if (notifyClients[i] != NULL)
+			notifyClients[i]->notify(this, BUTTON_PRESSED, PortVal);
 	//call ControlBox Callback Function
 }
 
@@ -117,7 +125,8 @@ void Button::ButtonUp(void)
 	isPressed = false;
 	//call ControlBox Callback Function
 	for (unsigned  int i = 0; i < notifyClients.size(); i++)
-		notifyClients[i]->notify(BUTTON_UP, PortVal);
+		if (notifyClients[i] != NULL)
+			notifyClients[i]->notify(this, BUTTON_UP, PortVal);
 
 }
 
@@ -126,3 +135,12 @@ void Button::addClient(IButtonObserver* obs)
 	notifyClients.push_back(obs);
 }
 
+string Button::getName()
+{
+	return Name;
+}
+
+int Button::getID()
+{
+	return ID;
+}

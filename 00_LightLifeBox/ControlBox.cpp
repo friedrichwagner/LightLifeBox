@@ -58,6 +58,7 @@ bool ControlBox::Init()
 		{
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[i]->addClient(this);
+			Buttons[i]->start();
 		}
 	}
 
@@ -69,6 +70,7 @@ bool ControlBox::Init()
 		{
 			Potis.push_back(new TastButton(flds[i]));
 			Potis[i]->addClient(this);
+			Potis[i]->start();
 		}
 			
 	}
@@ -129,32 +131,42 @@ void ControlBox::Beep(int freq, int time)
 	log->cout("beep");
 }
 
-void ControlBox::notify(enumButtonEvents event, long val)
+void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 {
 	string result;
 	std::ostringstream ss1;
 
+	string btnName = ((Button*)sender)->getName();
 
 	switch (event)
 	{
 	case BUTTON_DOWN:
-		ss1 << Name << ": BUTTON_DOWN val=" << val;
+		ss1 << btnName << "(down): val=" << val;
 		log->cout(ss1.str());
 		break;
 
 	case BUTTON_UP:
-		ss1 << Name << ": BUTTON_UP val=" << val;
-		log->cout(ss1.str());
+		ss1 << btnName << "(up): val=" << val; log->cout(ss1.str());	
+
+		if (btnName == "btnLock") Lights[0]->resetDefault();
+		if (btnName == "btnBrightness") Lights[0]->setBrightness(125);
+		if (btnName == "btnCCT") Lights[0]->setCCT(2700);
+		if (btnName == "btnJudd") Lights[0]->setCCT(2700);
 		break;
 
 	case BUTTON_PRESSED:
-		ss1 << Name << ": BUTTON_PRESSED val=" << val;
+		ss1 << btnName << "(pressed): val=" << val;
 		log->cout(ss1.str());
 		break;
 
 	case BUTTON_CHANGE:
-		ss1 << Name << ": BUTTON_CHANGE val=" << val;
-		log->cout(ss1.str());
+		ss1 << btnName << "(change): val=" << val; log->cout(ss1.str());
+
+		if (btnName == "btnLock") Lights[0]->resetDefault();
+		if (btnName == "btnBrightness") Lights[0]->setBrightness(val);
+		if (btnName == "btnCCT") Lights[0]->setCCT(val);
+		//if (btnName == "btnJudd") Lights[0]->setXY(2700);
+		break;
 		break;
 
 	default:

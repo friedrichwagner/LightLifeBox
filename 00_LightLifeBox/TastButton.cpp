@@ -47,13 +47,14 @@ unsigned long TastButton::startListen()
 		PortVal = getPortVal();
 		//PortVal2 = getPortVal2();
 
-		if (!isPressed && PortVal < 10) ButtonDown();
-		else if (isPressed && PortVal < 10) ButtonPressed();
-		else if (isPressed && PortVal > 10) ButtonUp();
+		if (!isPressed && PortVal < 0) ButtonDown();
+		//else if (isPressed && PortVal < 10) ButtonPressed();
+		else if (isPressed && PortVal > 1000) ButtonUp();
 
-		if  ( (unsigned long)labs((long)(actualValue - PortVal2)) > delta)
+		//if  ( (unsigned long)labs((long)(actualValue - PortVal2)) > delta)
+		if (PortVal>=0 && PortVal<=1000)
 		{
-			OnChange(actualValue-PortVal2);
+			OnChange(PortVal);
 		}
 
 		//lumitech::sleep(threadSleepTime);
@@ -64,10 +65,12 @@ unsigned long TastButton::startListen()
 void TastButton::OnChange(long delta)
 {	
 	log->cout(this->Name + ": OnChange");
-	//call ControlBox Callback Function
-	actualValue=PortVal2;
+	actualValue=delta;
 	for (unsigned int i = 0; i < notifyClients.size(); i++)
-		notifyClients[i]->notify(BUTTON_UP, PortVal2);
+	{
+		if (notifyClients[i] != NULL)
+			notifyClients[i]->notify(this, BUTTON_UP, PortVal);
+	}		
 }
 
 

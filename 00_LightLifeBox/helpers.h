@@ -27,7 +27,7 @@ public:
 class IButtonObserver
 {
 public:
-	virtual void notify(enumButtonEvents event, long val) = 0;
+	virtual void notify(void* sender, enumButtonEvents event, long val) = 0;
 	virtual ~IButtonObserver() {};
 };
 

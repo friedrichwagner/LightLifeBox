@@ -17,6 +17,11 @@ protected:
 	virtual unsigned long startListen(void);
 
 	int getPortVal2();
+	void spawn()
+	{
+		thisThread = std::thread(&TastButton::startListen, this);
+	};
+
 public:
 	TastButton(std::string pName);
 	~TastButton();	

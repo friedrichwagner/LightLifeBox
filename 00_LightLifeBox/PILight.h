@@ -54,5 +54,6 @@ public:
 
 	void addComClient(IBaseClient*);
 	void removeComClient(IBaseClient*);
+	void removeComClients();
 	void updateClients();
 };

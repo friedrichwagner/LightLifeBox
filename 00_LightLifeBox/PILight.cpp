@@ -27,15 +27,27 @@ void PILight::addComClient(IBaseClient* c)
 	ComClients.push_back(c);
 }
 
+void PILight::removeComClients()
+{
+	//löscht alle Clients
+	ComClients.clear();
+}
+
 void PILight::removeComClient(IBaseClient* c)
 {
+
+	//only last element will be removed here
+	//logClients.pop_back();
+
 	for(vector<IBaseClient*>::const_iterator iter = ComClients.begin(); iter != ComClients.end(); ++iter)
     {
 		if (*iter == c)
 		{
-			log->info("remove Client:" + c->getName());
+			log->cout("remove Client:" + c->getName());
+#ifdef WIN32
 			//FW 21.11.2014 - funktionier nicht in g++4.7 ??
-			//ComClients.erase(iter);
+			ComClients.erase(iter);
+#endif
 			return;
 		}
 	}

@@ -9,7 +9,7 @@
 #include "PILEDScene.h"
 //#include "ftdi.h"
 
-enum enumClientType { CLIENT_NONE=1, CLIENT_DMX=2, CLIENT_DALI=3, CLIENT_ZIGBEE=4, CLIENT_ZLL=5};
+enum enumClientType { CLIENT_NONE = 1, CLIENT_DMX = 2, CLIENT_DALI = 3, CLIENT_ZIGBEE = 4, CLIENT_ZLL = 5, CLIENT_WEBAPI = 6 };
 //enum enumInterfaceType {IF_NONE, IF_USB, IF_UDP };
 
 struct IPSocket
@@ -95,7 +95,6 @@ protected:
 	virtual void setRGB(unsigned int[])=0;	
 	virtual void setXY(float[])=0;	
 	virtual void setFadeTime(unsigned int val)=0;
-
 public:
 	std::string getName();
 

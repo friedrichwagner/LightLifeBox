@@ -98,7 +98,7 @@ bool ControlBox::EventLoop()
 	//if (c == 3) isDone = true;
 #endif
 
-		//lumitech::sleep(threadSleepTime);
+		lumitech::sleep(threadSleepTime);
 	}
 
 	//stopEventLoop(); this is done from Ctr-C Handler

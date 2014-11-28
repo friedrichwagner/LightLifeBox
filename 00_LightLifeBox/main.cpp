@@ -80,7 +80,7 @@ int main(int argc, char * argv[])
 
 	if (dbgSrv != NULL)
 	{
-		log->removeClient((IObserver*)dbgSrv);
+		log->removeClients();
 		delete dbgSrv;
 	}
 
@@ -142,6 +142,9 @@ void runLightLifeBox(string boxName)
 
 	//Prgram loops here endlessly
 	box->EventLoop();
+
+
+	box->Lights[0]->removeComClients();
 
 	delete dali;
 	delete zll;

@@ -105,10 +105,29 @@ void Logger::addClient(IObserver* obs)
 	logClients.push_back(obs);
 }
 
+void Logger::removeClients()
+{
+	//löscht alle Clients
+	logClients.clear();
+}
+
 void Logger::removeClient(IObserver* obs)
 {
 	//only last element will be removed here
-	logClients.pop_back();
+	//logClients.pop_back();
+
+
+
+	for (vector<IObserver*>::const_iterator iter = logClients.begin(); iter != logClients.end(); ++iter)
+	{
+		if (*iter == obs)
+		{
+#ifdef WIN32
+			//FW 21.11.2014 - funktionier nicht in g++4.7 ??
+			logClients.erase(iter);
+#endif
+		}
+	}
 }
 
  void Logger::log(string msg, string type, string pwhere, int actualLevel)

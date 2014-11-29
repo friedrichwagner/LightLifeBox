@@ -62,7 +62,7 @@ CC=g++
 #CFLAGS=-c -v -I $(IDIR) -Wall -D CYGWIN -Wno-unknown-pragmas -Wno-switch -std=gnu++11 -Wno-write-strings 
 #CFLAGS=-c -I $(IDIR) -Wall -D CYGWIN -Wno-unknown-pragmas -Wno-switch -std=gnu++11 -Wno-write-strings 
 #CFLAGS=-c $(IDIR) -Wall -D CYGWIN -D _DEBUG -Wno-unknown-pragmas -Wno-switch -std=gnu++11 -Wno-write-strings
-CFLAGS=-c $(IDIR) -g -Wall -D CYGWIN -Wno-unknown-pragmas -Wno-switch -std=gnu++11 -Wno-write-strings
+CFLAGS=-c $(IDIR) -g -Wall -D CYGWIN -D _DEBUG -Wno-unknown-pragmas -Wno-switch -std=gnu++11 -Wno-write-strings
 
 # Linker flags:
 #LDFLAGS= /home/57/ptestrun/lib/libftd2xx.a

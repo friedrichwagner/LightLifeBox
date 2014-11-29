@@ -1,4 +1,4 @@
-#include "button.h"
+#include "Button.h"
 #include "helpers.h"
 
 
@@ -45,10 +45,13 @@ Button::~Button()
 int Button::getPortVal()
 {
 #ifdef _DEBUG
-	int len=-1;
-	int val = tc->getPortVal(&len); //this is blocking when the TestServer is running
-	//if (len < 0) done = true;
-	return val;
+	if (tc->connected())
+	{
+		int len = -1;
+		int val = tc->getPortVal(&len); //this is blocking when the TestServer is running
+		//if (len < 0) done = true;
+		return val;
+	}
 
 #endif
 

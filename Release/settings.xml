@@ -4,12 +4,64 @@
 	<debugport value="9999" />
     <loglevel value="10" />
   </Logging>
+  <ControlBox name="Box1">
+	<Potis value="Poti1,Poti2,Poti3" />
+	<!--<Potis value="Poti1" />-->
+	<Buttons value="Button1" />
+	<PILights value="Light1" />
+	<Sleep value="1000"/>
+  </ControlBox>
+  <Button1 id="1" name="btnLock">
+	<PortNr value="1234"/>
+	<Sleep value="1000"/>
+	<Testing value="MockButton"/>
+  </Button1>
+  <Poti1 id="1" name="btnBrightness">
+	<PortNr value="1234"/>
+	<Sleep value="1000"/>
+	<Testing value="MockPoti1"/>
+  </Poti1>
+  <Poti2 id="2" name="btnCCT">
+	<PortNr value="12345"/>
+	<Sleep value="1000"/>
+	<Testing value="MockPoti2"/>
+  </Poti2>
+  <Poti3 id="3" name="btnJudd">
+	<PortNr value="123456"/>
+	<Sleep value="1000"/>
+	<Testing value="MockPoti3"/>
+  </Poti3>
+  <Light1 id="1" name="liBazille">
+	<Default value="2700,100"/>	
+  </Light1>  
+  
+  <MockButton>
+	<IP value="127.0.0.1"/>
+	<Port value="10000"/>
+  </MockButton>
+  <MockPoti1>
+	<IP value="127.0.0.1"/>
+	<Port value="10000"/>
+  </MockPoti1>
+  <MockPoti2>
+	<IP value="127.0.0.1"/>
+	<Port value="10000"/>
+  </MockPoti2>
+  <MockPoti3>
+	<IP value="127.0.0.1"/>
+	<Port value="10000"/>
+  </MockPoti3>
+  <MockPoti4>
+	<IP value="127.0.0.1"/>
+	<Port value="10000"/>
+  </MockPoti4>
+   
   <DMX name="DMXClient1">
-    <!--<IP-Address value="127.0.0.1,192.168.4.201" />
-	<IP-Port value="6454" />-->
-	<USBCom value="COM2,115200,8,N,1" />
-	<USBName value="FT232R USB UART" />
-	<UseFTDI value="yes" />
+    <IP-Address value="192.168.4.200" />
+	<IP-Port value="6454" />
+	<!--<USBCom value="COM2,256000,8,N,1" />-->
+	<!--<USBName value="FT232R USB UART" />
+	<UseFTDI value="no" />-->
 	<StartAddress value="1" />
   </DMX>
   <ZLL name="ZLLClient1">
@@ -18,21 +70,5 @@
   <DALI name="DALIClient1">
 	<!--<USBCom value="COM29,115200,8,N,1" />-->
   </DALI>   
-  <PILEDSequencesTable>
-		<PILEDSequence name="autorun" repeat="-1">
-			<PILEDScene nr="1" brightness="255" cct="2700" fadetime="100" waittime="2000"/>
-			<PILEDScene nr="2" brightness="255" cct="6500" />
-			<PILEDScene nr="3" rgb="255,0,0"/>
-			<PILEDScene nr="4" rgb="0,255,0"/>
-			<PILEDScene nr="5" rgb="0,0,255"/>
-			<PILEDScene nr="6" brightness="255" xy="0.333,0.3333"/>
-			<PILEDScene nr="7" brightness="25"  xy="0.333,0.3333" />
-		</PILEDSequence>
-		<PILEDSequence name="test2" repeat="3">
-			<PILEDScene nr="1" brightness="255" cct="2700" fadetime="100" waittime="1000" />
-			<PILEDScene nr="2" brightness="25"  cct="2700" waitkeypress="true"/>		
-			<PILEDScene nr="3" brightness="255" cct="6500"/>
-			<PILEDScene nr="4" brightness="25"  cct="6500" />		
-		</PILEDSequence>  
-	</PILEDSequencesTable>
+ 
 </Settings>

@@ -20,7 +20,10 @@ TastButton::~TastButton()
 int TastButton::getPortVal2()
 {
 #ifdef _DEBUG
-	return tc->getPortVal2();
+	if (tc->connected())
+	{
+		return tc->getPortVal2();
+	}
 #endif
 
 	return 0;
@@ -52,7 +55,7 @@ unsigned long TastButton::startListen()
 		else if (isPressed && PortVal > 1000) ButtonUp();
 
 		//if  ( (unsigned long)labs((long)(actualValue - PortVal2)) > delta)
-		if (PortVal>=0 && PortVal<=1000)
+		if (PortVal>0 && PortVal<1000)
 		{
 			OnChange(PortVal);
 		}

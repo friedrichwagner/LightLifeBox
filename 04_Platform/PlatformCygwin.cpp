@@ -151,11 +151,10 @@ void sleep(unsigned long miliseceonds)
 
 int gettimeofdayLT(struct timeval* tp, void* tzp) 
 {
-#ifdef CYGWIN
-	return gettimeofday(tp, (void*) tzp);
-#else
+
 	return gettimeofday(tp, ( __timezone_ptr_t) tzp);
-#endif
+	//return gettimeofday(tp, (void*) tzp);
+
 }
 
 // Get current date/time, format is YYYY-MM-DD.HH:mm:ss

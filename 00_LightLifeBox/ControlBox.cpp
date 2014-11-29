@@ -116,12 +116,18 @@ void ControlBox::stopEventLoop()
 	unsigned int cnt = Potis.size();
 
 	for (i = 0; i< cnt; i++)
-		Potis[i]->stop();
+	{
+		if (Potis[i] != NULL)
+			Potis[i]->stop();
+	}
+		
+
 
 	cnt = Buttons.size();
 	for (i = 0; i< cnt; i++)
 	{
-		Buttons[i]->stop();
+		if (Buttons[i] != NULL)
+			Buttons[i]->stop();
 	}
 	
 }

@@ -61,9 +61,9 @@ DebugServer::~DebugServer()
 		//silently ignore errors here.
 	}
 
-	log->cout("DebuServer: waiting for listening thread to stop...");
-	listenThread.join();
-	log->cout("DebugServer: deleted!");
+	log->cout("DebugServer: waiting for listening thread to stop...");
+
+	if (listenThread.joinable()) listenThread.join();
 }
 
 unsigned long DebugServer::startListen()
@@ -72,16 +72,15 @@ unsigned long DebugServer::startListen()
 	
 	listener = new TCPAcceptor(listenPort);
   
-	cout << "DebugServer: start listening..." << endl;
+	log->cout("DebugServer: start listening...");
     if (listener->start() == 0) 
 	{
 		while (1) 
 		{			
-			stream = listener->accept();
-			cout << " accept " << endl;
-
+			stream = listener->accept();			
 			if (stream != NULL) 
 			{
+				log->cout("DebugServer: client added");
 				DebugClients.push_back(stream);
 			}
 			else
@@ -106,6 +105,7 @@ void DebugServer::updateClient(string s2send)
 		//cout << "Client ret=" << ret << endl;
 		if (ret < 0)
 		{
+			log->cout("DebugServer: client removed");
 			listofDowns.push_back(i);			
 		}
 	}

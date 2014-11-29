@@ -81,7 +81,7 @@ int main(int argc, char * argv[])
 	if (dbgSrv != NULL)
 	{
 		log->removeClients();
-		delete dbgSrv;
+		delete dbgSrv;		
 	}
 
 #ifdef _DEBUG

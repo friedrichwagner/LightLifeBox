@@ -41,23 +41,23 @@
   </Light1>  
   
   <MockButton>
-	<IP value="127.0.0.1"/>
+	<IP value="10.0.0.204"/>
 	<Port value="10000"/>
   </MockButton>
   <MockPoti1>
-	<IP value="127.0.0.1"/>
+	<IP value="10.0.0.204"/>
 	<Port value="10000"/>
   </MockPoti1>
   <MockPoti2>
-	<IP value="127.0.0.1"/>
+	<IP value="10.0.0.204"/>
 	<Port value="10000"/>
   </MockPoti2>
   <MockPoti3>
-	<IP value="127.0.0.1"/>
+	<IP value="10.0.0.204"/>
 	<Port value="10000"/>
   </MockPoti3>
   <MockPoti4>
-	<IP value="127.0.0.1"/>
+	<IP value="10.0.0.204"/>
 	<Port value="10000"/>
   </MockPoti4>
    

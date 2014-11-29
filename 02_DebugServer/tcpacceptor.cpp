@@ -16,8 +16,8 @@ TCPAcceptor::~TCPAcceptor()
 #ifdef WIN32
         closesocket(m_lsd);
 #else
-		//shutdown(m_lsd,-1);
-		close(m_lsd);
+ 		shutdown(m_lsd,SHUT_RDWR);		
+		//close(m_lsd);
 #endif
     }
 }
@@ -73,7 +73,7 @@ TCPStream* TCPAcceptor::accept()
     int sd = ::accept(m_lsd, (struct sockaddr*)&address, (socklen_t*) &len);
     if (sd < 0) 
 	{
-        perror("accept() failed or server is shutting down..");
+		perror("accept() failed or server is shutting down..");
         return NULL;
     }
     return new TCPStream(sd, &address);

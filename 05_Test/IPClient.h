@@ -1,7 +1,7 @@
 #pragma once
 
 #include "tcpconnector.h"
-#include "settings.h"
+#include "Settings.h"
 
 using namespace std;
 

@@ -16,6 +16,7 @@ Release/*
 
 #gcc *.o directory
 *.o
+*.exe
 
 #UML Documentation Tool "Ideas Modeler", ignore backup files
 *.simp.bak

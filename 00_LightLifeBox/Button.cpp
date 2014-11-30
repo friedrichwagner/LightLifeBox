@@ -98,7 +98,7 @@ void Button::ButtonDown(void)
 	isPressed = true;
 	tstart=clock();
 
-	log->cout(this->Name + ": ButtonDown");
+	//log->cout(this->Name + ": ButtonDown");
 	for (unsigned int i = 0; i < notifyClients.size(); i++)
 	{
 		if (notifyClients[i] != NULL)
@@ -110,7 +110,7 @@ void Button::ButtonDown(void)
 
 void Button::ButtonPressed(void)
 {
-	log->cout(this->Name + ": ButtonPressed");
+	//log->cout(this->Name + ": ButtonPressed");
 
 	tstop=clock();
 	elapsedTime = (((float)tstop)-((float)tstart)); 
@@ -124,7 +124,7 @@ void Button::ButtonPressed(void)
 
 void Button::ButtonUp(void)
 {
-	log->cout(this->Name + ": ButtonUp");
+	//log->cout(this->Name + ": ButtonUp");
 	isPressed = false;
 	//call ControlBox Callback Function
 	for (unsigned  int i = 0; i < notifyClients.size(); i++)

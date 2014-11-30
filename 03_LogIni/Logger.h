@@ -37,5 +37,7 @@ public:
 	void addClient(IObserver* obs);
 	void removeClient(IObserver* obs);
 	void removeClients();
+
+	void cout1(string msg);
 };
 

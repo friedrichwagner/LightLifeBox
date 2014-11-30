@@ -16,8 +16,8 @@ TestClient::TestClient(std::string pName)
 
 TestClient::~TestClient()
 {
-	delete connector;
 	delete stream;
+	delete connector;
 }
 
 bool TestClient::connect()

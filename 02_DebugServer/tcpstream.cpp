@@ -26,7 +26,12 @@ TCPStream::~TCPStream()
 
 void TCPStream::doShutdown()
 {
-	shutdown(m_sd,1);
+#ifdef WIN32
+	shutdown(m_sd, SD_BOTH);
+#else
+	shutdown(m_sd, SHUT_RDWR);
+	//close(m_lsd);
+#endif
 }
 
 int TCPStream::send(const char* buffer, size_t len) 

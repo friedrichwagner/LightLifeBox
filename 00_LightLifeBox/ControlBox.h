@@ -20,6 +20,7 @@ protected:
 	vector<TastButton*> Potis;
 	vector<Button*> Buttons;
 	int threadSleepTime;
+	stringstream sslog;
 	
 	Settings* ini;
 	Logger* log;

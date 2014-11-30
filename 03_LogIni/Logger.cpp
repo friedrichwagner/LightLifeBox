@@ -100,6 +100,20 @@ void Logger::cout(string msg)
 		
 }
 
+void Logger::cout1(string msg)
+{
+	std::ostringstream ss;
+
+	ss << msg << "\r";
+	std::cout << ss.str();
+	for (unsigned int i = 0; i < logClients.size(); i++)
+	{
+		if (logClients[i] != NULL)
+			logClients[i]->updateClient(ss.str());
+	}
+
+}
+
 void Logger::addClient(IObserver* obs)
 {
 	logClients.push_back(obs);

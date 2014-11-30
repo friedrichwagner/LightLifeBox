@@ -67,7 +67,7 @@ unsigned long TastButton::startListen()
 
 void TastButton::OnChange(long delta)
 {	
-	log->cout(this->Name + ": OnChange");
+	//log->cout(this->Name + ": OnChange");
 	actualValue=delta;
 	for (unsigned int i = 0; i < notifyClients.size(); i++)
 	{

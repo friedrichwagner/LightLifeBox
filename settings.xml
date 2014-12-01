@@ -2,10 +2,10 @@
 <Settings>
   <Logging>
 	<debugport value="9999" />
-    <loglevel value="10" />
+    <loglevel value="5" />
   </Logging>
   <ControlBox name="Box1">
-	<!--<Potis value="Poti1,Poti2,Poti3,Poti4" />-->
+	<Potis value="Poti1,Poti2,Poti3" />
 	<!--<Potis value="Poti1" />-->
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
@@ -41,33 +41,35 @@
   </Light1>  
   
   <MockButton>
-	<IP value="10.0.0.204"/>
+	<IP value="127.0.0.1"/>
 	<Port value="10000"/>
   </MockButton>
   <MockPoti1>
-	<IP value="10.0.0.204"/>
+	<IP value="127.0.0.1"/>
 	<Port value="10000"/>
   </MockPoti1>
   <MockPoti2>
-	<IP value="10.0.0.204"/>
+	<IP value="127.0.0.1"/>
 	<Port value="10000"/>
   </MockPoti2>
   <MockPoti3>
-	<IP value="10.0.0.204"/>
+	<IP value="127.0.0.1"/>
 	<Port value="10000"/>
   </MockPoti3>
   <MockPoti4>
-	<IP value="10.0.0.204"/>
+	<IP value="127.0.0.1"/>
 	<Port value="10000"/>
   </MockPoti4>
    
-  <!--<DMX name="DMXClient1">
-    <IP-Address value="192.168.4.200,192.168.4.201,192.168.4.202" />
+  <DMX name="DMXClient1">
+    <IP-Address value="192.168.4.201" />
 	<IP-Port value="6454" />
-	<USBName value="FT232R USB UART" />
-	<UseFTDI value="yes" />
+	<!--<USBCom value="COM2,256000,8,N,1" />-->
+	<!--<USBName value="FT232R USB UART" />
+	<UseFTDI value="no" />-->
 	<StartAddress value="1" />
   </DMX>
+  
   <ZLL name="ZLLClient1">
 	<USBCom value="COM30,115200,8,N,1" />
   </ZLL> 

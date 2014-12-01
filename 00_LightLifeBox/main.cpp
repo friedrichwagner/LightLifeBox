@@ -37,7 +37,8 @@ int main(int argc, char * argv[])
 	if (lumitech::PlatformInit(argv[0]) < 0 ) return -1;
 
 	Logger* log=Logger::getInstance();
-	DebugServer *dbgSrv=NULL;
+	DebugServer *dbgSrv = DebugServer::getInstance();
+	log->addClient((IObserver*)dbgSrv);
 
 	try
 	{
@@ -48,8 +49,8 @@ int main(int argc, char * argv[])
 		else //if ((argc==3) && (cmdOptionExists(argv, argv+argc, "-box") || cmdOptionExists(argv, argv+argc, "-b")) )
 		{
 			//Must be declared after WSAStartup
-			dbgSrv= DebugServer::getInstance();
-			log->addClient((IObserver*)dbgSrv);
+			//dbgSrv= DebugServer::getInstance();
+			//log->addClient((IObserver*)dbgSrv);
 			
 			string boxName="Box1";		
 
@@ -75,7 +76,7 @@ int main(int argc, char * argv[])
 	{
 		log->cout("something happend on the way to heaven");
 		log->cout(ex.what());
-		if (dbgSrv) delete dbgSrv;
+		//if (dbgSrv) delete dbgSrv;
 	}
 
 	if (dbgSrv != NULL)
@@ -89,7 +90,7 @@ int main(int argc, char * argv[])
 #endif
 	
 	log->cout("llbox: stopped!");
-	delete log;
+ 	delete log;
 
 	lumitech::PlatformClose();
 	return 0;

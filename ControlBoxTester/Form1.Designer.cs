@@ -165,6 +165,7 @@
             this.trackBar1.TabIndex = 13;
             this.trackBar1.Tag = "MockPoti2";
             this.trackBar1.TickFrequency = 10;
+            this.trackBar1.Scroll += new System.EventHandler(this.tb1_Scroll);
             // 
             // trackBar2
             // 
@@ -176,6 +177,7 @@
             this.trackBar2.TabIndex = 14;
             this.trackBar2.Tag = "MockPoti3";
             this.trackBar2.TickFrequency = 10;
+            this.trackBar2.Scroll += new System.EventHandler(this.tb1_Scroll);
             // 
             // trackBar3
             // 
@@ -187,6 +189,7 @@
             this.trackBar3.TabIndex = 15;
             this.trackBar3.Tag = "MockPoti4";
             this.trackBar3.TickFrequency = 10;
+            this.trackBar3.Scroll += new System.EventHandler(this.tb1_Scroll);
             // 
             // Form1
             // 

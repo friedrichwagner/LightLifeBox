@@ -15,11 +15,15 @@ ZLLClient::ZLLClient()
 	//es kann nur einen geben
 	//flds.clear();
 	ini->ReadStringVector("ZLL", "USBCom","", &flds);
-	//if (flds.size() >=2 ) USBClients.push_back(new serialib(flds[0], lumitech::stoi(flds[1])));
+	if (flds.size() >=2 ) 
+		USBClients.push_back(new serialib(flds[0], lumitech::stoi(flds[1]), false ));
+
+	data = new PILEDInterfaceData();
 }
 
 ZLLClient::~ZLLClient()
 {
+	delete data;
 }
 
 #pragma region Member Function
@@ -27,39 +31,55 @@ ZLLClient::~ZLLClient()
 
 void ZLLClient::setBrightness(unsigned int val)
 {
-	data.byCmd = SET_BRIGHTNESS;
-	data.brightness=val;
+	data->byCmd = SET_BRIGHTNESS;
+	data->brightness = val;
+
+	send();
 }
 
 void ZLLClient::setCCT(unsigned int val)
 {
-	data.byCmd = SET_CCT;
-	data.cct=val;
+	data->byCmd = SET_CCT;
+	data->cct = unsigned int(1e6/val); //in Mired
 
+	send();
 }
 
 void ZLLClient::setRGB(unsigned int val[3])
 {
-	data.byCmd = SET_RGB;
-	data.byR=val[0];
-	data.byG=val[1];
-	data.byB=val[2];
+	data->byCmd = SET_RGB;
+	data->byR = val[0];
+	data->byG = val[1];
+	data->byB = val[2];
+
+	send();
 }
 
 void ZLLClient::setXY(float val[2])
 {
-	data.byCmd = SET_XY;
+	data->byCmd = SET_XY;
 
-   data.ciex = val[0];
-   data.ciey = val[1];
+	data->ciex = val[0];
+	data->ciey = val[1];
+
+   send();
 }
 
 void ZLLClient::setFadeTime(unsigned int val)
 {
-	data.fadetime = val;
+	data->fadetime = val;
+
+	send();
+}
+
+void ZLLClient::send()
+{
+	unsigned char *pBuf = data->ToByteArray();
+	SendUSB(pBuf, ZLL_BUFFER_SIZE);
 }
 
 
+/*
 void ZLLClient::updateData(PILEDScene* scene)
 {
 	setFadeTime(scene->fadetime);	
@@ -101,5 +121,6 @@ void ZLLClient::updateData(PILEDScene* scene)
 
 	}
 }
+*/
 
 #pragma endregion

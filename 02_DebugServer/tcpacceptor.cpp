@@ -15,6 +15,7 @@ TCPAcceptor::~TCPAcceptor()
 	{
 #ifdef WIN32
         closesocket(m_lsd);
+		//shutdown(m_lsd,2);		
 #else
  		shutdown(m_lsd,SHUT_RDWR);		
 		//close(m_lsd);

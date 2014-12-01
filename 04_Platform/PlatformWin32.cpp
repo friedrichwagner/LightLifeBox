@@ -174,7 +174,8 @@ namespace lumitech
 
 		std::vector<unsigned char> arrayOfByte(size);
 		for (int i = 0; i < size; i++)
-			arrayOfByte[size - i] = (paramInt >> (i * 8));
+			//arrayOfByte[size - i-1] = (paramInt >> (i * 8));
+			arrayOfByte[i] = (paramInt >> (i * 8));
 		return arrayOfByte;
 	}
 

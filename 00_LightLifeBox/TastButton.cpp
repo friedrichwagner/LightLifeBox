@@ -55,7 +55,7 @@ unsigned long TastButton::startListen()
 		else if (isPressed && PortVal > 1000) ButtonUp();
 
 		//if  ( (unsigned long)labs((long)(actualValue - PortVal2)) > delta)
-		if (PortVal>0 && PortVal<1000)
+		if ((PortVal >=0) && (PortVal <= 1000))
 		{
 			OnChange(PortVal);
 		}
@@ -72,7 +72,7 @@ void TastButton::OnChange(long delta)
 	for (unsigned int i = 0; i < notifyClients.size(); i++)
 	{
 		if (notifyClients[i] != NULL)
-			notifyClients[i]->notify(this, BUTTON_UP, PortVal);
+			notifyClients[i]->notify(this, BUTTON_CHANGE, PortVal);
 	}		
 }
 

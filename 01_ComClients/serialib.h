@@ -2,6 +2,7 @@
 
 #include <string>
 #include "Logger.h"
+#include <thread>
 
 // Include for windows
 #if defined (_WIN32) || defined( _WIN64)
@@ -32,30 +33,11 @@ private:
 
 	volatile bool done;
 
-#ifdef WIN32
-	//Windows USB Thread Handling
-	static DWORD WINAPI StaticThreadStart(void* Param)
-    {
-        serialib* This = (serialib*) Param;
-        return This->writeData();
-    }
-
-	HANDLE hComThread;
-	void startMyThread()
-    {
-       DWORD ThreadID;
-		hComThread=CreateThread(NULL, 0, StaticThreadStart, (void*) this, 0, &ThreadID);
-    }
-#endif
-
-#ifdef CYGWIN
 	std::thread hComThread;
 	void startMyThread()
-    {
-		hComThread = std::thread(&serialib::writeData, this);     
-    }
-
-#endif
+	{
+		hComThread = std::thread(&serialib::writeData, this);
+	};
 
 	unsigned long writeDataToPort(void);
 

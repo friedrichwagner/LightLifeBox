@@ -156,7 +156,7 @@ void Logger::removeClient(IObserver* obs)
 			
 #if !defined(RASPI)
 			ss1 << endl;
-			cout("Should not come here on RASPI");
+			//cout("Should not come here on RASPI");
 			fstream fs(LogFileName, std::fstream::out | std::fstream::app);
 
 			if (fs.is_open())

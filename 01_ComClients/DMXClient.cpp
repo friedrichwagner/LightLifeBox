@@ -115,6 +115,8 @@ void DMXClient::setDMXValue(int offset, int value)
 void DMXClient::setBrightness(unsigned int val)
 {
 	setDMXValue(1, val);
+
+	send();
 }
 
 void DMXClient::setCCT(unsigned int val)
@@ -123,6 +125,7 @@ void DMXClient::setCCT(unsigned int val)
 	setDMXValue(0, DMXVAL_CCT_MODE);
 	setDMXValue(2, dmxcct);
 
+	send();
 }
 
 void DMXClient::setRGB(unsigned int val[])
@@ -131,6 +134,8 @@ void DMXClient::setRGB(unsigned int val[])
 	setDMXValue(1, val[0]);
 	setDMXValue(2, val[1]);
 	setDMXValue(3, val[2]);
+
+	send();
 }
 
 void DMXClient::setXY(float val[2])
@@ -140,7 +145,15 @@ void DMXClient::setXY(float val[2])
 
 	setDMXValue(0, DMXVAL_XY_MODE);
 	setDMXValue(2, x);
-	setDMXValue(3, y);	
+	setDMXValue(3, y);
+
+	send();
+}
+
+void DMXClient::send()
+{
+	SendUDP(&artNetData[0], sizeof(artNetData));
+	SendUSB(&buffer[0], sizeof(buffer));
 }
 
 void DMXClient::setFadeTime(unsigned int val)
@@ -149,6 +162,7 @@ void DMXClient::setFadeTime(unsigned int val)
 }
 
 
+/*
 void DMXClient::updateData(PILEDScene* scene)
 {
 	setFadeTime(scene->fadetime);	
@@ -174,6 +188,6 @@ void DMXClient::updateData(PILEDScene* scene)
 	SendUDP(&artNetData[0], sizeof(artNetData));
 	SendUSB(&buffer[0], sizeof(buffer));
 }
-
+*/
 
 #pragma endregion

@@ -36,13 +36,7 @@ serialib::serialib(string paramPort, int paramBaud, bool paramUseDMXWrite)
 serialib::~serialib()
 {
 	done=true;
-
-#if defined (_WIN32) || defined( _WIN64)
-	WaitForSingleObject(hComThread, 200);
-#else
 	hComThread.join();
-#endif
-
     Close();
 }
 

@@ -2,11 +2,11 @@
 <Settings>
   <Logging>
 	<debugport value="9999" />
-    <loglevel value="10" />
+    <loglevel value="5" />
   </Logging>
   <ControlBox name="Box1">
 	<Potis value="Poti1,Poti2,Poti3" />
-	<!--<Potis value="Poti1" />-->
+	<!--<Potis value="Poti1" />!-->
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
 	<Sleep value="1000"/>
@@ -32,7 +32,7 @@
 	<Testing value="MockPoti3"/>
   </Poti3>
   <Light1 id="1" name="liBazille">
-	<Default value="2700,100"/>	
+	<Default value="6500,100"/>	
   </Light1>  
   
   <MockButton>
@@ -57,7 +57,7 @@
   </MockPoti4>
    
   <DMX name="DMXClient1">
-    <IP-Address value="192.168.4.200" />
+    <IP-Address value="192.168.4.201" />
 	<IP-Port value="6454" />
 	<!--<USBCom value="COM2,256000,8,N,1" />-->
 	<!--<USBName value="FT232R USB UART" />
@@ -65,7 +65,7 @@
 	<StartAddress value="1" />
   </DMX>
   <ZLL name="ZLLClient1">
-	<!--<USBCom value="COM30,115200,8,N,1" />-->
+	<USBCom value="COM4,19200,8,N,1" />
   </ZLL> 
   <DALI name="DALIClient1">
 	<!--<USBCom value="COM29,115200,8,N,1" />-->

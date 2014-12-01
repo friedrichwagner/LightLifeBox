@@ -4,6 +4,7 @@
 #include "Settings.h"
 #include "Logger.h"
 #include "baseClient.h"
+#include <sstream>
 
 
 enum enumPILEDMode { CCT_MODE=1, XY_MODE=2, RGB_MODE=3};
@@ -26,6 +27,7 @@ protected:
 	unsigned int fadetime;
 	std::vector<IBaseClient*> ComClients;
 	enumPILEDMode piledMode;
+	ostringstream sslog;
 
 	unsigned int defaultBrightness;
 	unsigned int defaultCct;
@@ -34,6 +36,7 @@ protected:
 	Logger* log;
 
 	//Functions
+	void setLog();
 public:
 	PILight(std::string pName); //private contructor
 	~PILight();	

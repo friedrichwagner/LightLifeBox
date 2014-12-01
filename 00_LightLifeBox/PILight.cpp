@@ -22,8 +22,8 @@ PILight::PILight(std::string pSection)
 	vector<string> flds = s.split(',');
 	if (flds.size() >= 2)
 	{
-		defaultBrightness = atoi(flds[0].c_str());
-		defaultCct = atoi(flds[1].c_str());
+		defaultCct = atoi(flds[0].c_str());
+		defaultBrightness = atoi(flds[1].c_str());		
 	}
 
 	brightness = 255;
@@ -83,8 +83,10 @@ void PILight::updateClients()
 
 void PILight::setBrightness(unsigned int val)
 {
-	if (val>0 && val < 255) 
+	if (val <= 255) 
 		brightness = val;
+
+	setLog();
 
 	for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
@@ -95,9 +97,8 @@ void PILight::setBrightness(unsigned int val)
 
 void PILight::setCCT(unsigned int val)
 {
-	//Wert zw. 0-255, sonst dirket CCT
-	if (val<=255)
-		cct = (6500 - 2700) / 255 * val + 2700;
+	cct = (unsigned int) ((6500.0f - 2700.0f) / 255.0f * val + 2700);
+	setLog();	
 
 	for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
@@ -106,8 +107,11 @@ void PILight::setCCT(unsigned int val)
 	}
 }
 
-void PILight::setRGB(unsigned int rgb[])
+void PILight::setRGB(unsigned int prgb[])
 {
+	rgb[0] = prgb[0]; rgb[1] = prgb[1]; rgb[2] = prgb[2];
+	setLog();
+
 	for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
 		if (ComClients[i] != NULL)
@@ -115,8 +119,11 @@ void PILight::setRGB(unsigned int rgb[])
 	}
 }
 
-void PILight::setXY(float xy[])
+void PILight::setXY(float pxy[])
 {
+	xy[0] = pxy[0]; xy[1] = pxy[1];
+	setLog();
+
 	for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
 		if (ComClients[i] != NULL)
@@ -171,11 +178,18 @@ void PILight::setXYUpDown(float [])
 
 void PILight::resetDefault()
 {
-	setCCT(defaultCct);
+	setCCT(255); //hier darf nicht CCT angegeben werden, sondern die POTI Stellung
 	setBrightness(defaultBrightness);	
 }
 
 void PILight::lockCurrState()
 {
 
+}
+
+void PILight::setLog()
+{
+	sslog.str(""); sslog.clear();
+	sslog << "b:" << brightness << " cct:" << cct << " x:" << xy[0] << " y:" << xy[1] << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
+	log->cout(sslog.str());
 }

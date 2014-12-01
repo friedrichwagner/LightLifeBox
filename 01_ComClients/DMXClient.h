@@ -28,8 +28,9 @@ private:
 	void setRGB(unsigned int[3]);	
 	void setXY(float[2]);	
 	void setFadeTime(unsigned int);
+	void send();
 public:
 	DMXClient();
 	~DMXClient();
-    void updateData(PILEDScene* scene);          
+    //void updateData(PILEDScene* scene);          
 };

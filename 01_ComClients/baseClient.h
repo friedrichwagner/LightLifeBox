@@ -94,7 +94,7 @@ public:
 
 	IBaseClient();
 	virtual ~IBaseClient();
-    virtual void updateData(struct PILEDScene* scene)=0;
+    //virtual void updateData(struct PILEDScene* scene)=0;
 	int getCntClients();
 
 	virtual void setBrightness(unsigned int) = 0;

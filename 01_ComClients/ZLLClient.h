@@ -58,10 +58,10 @@ struct PILEDInterfaceData
         bySubCmd = 0x00;
         byIF = IF_ZLL;
         brightness = 0;
-        fadetime = 0; // Beim Messen ist fading eher nicht erwünscht
+        fadetime = 0; // in ms, nur 100ms Schritte
         ciex = 0.0f;
         ciey = 0.0f;
-        cct = 2700;
+        cct = unsigned int (1e6/6500);
         byR = 0;
         byG = 0;
         byB = 0;
@@ -139,15 +139,17 @@ struct PILEDInterfaceData
 class ZLLClient : public IBaseClient
 {
 private:
-	PILEDInterfaceData data;
+	PILEDInterfaceData* data;
 
 	void setBrightness(unsigned int);	
 	void setCCT(unsigned int);	
 	void setRGB(unsigned int[3]);	
 	void setXY(float[2]);	
 	void setFadeTime(unsigned int);
+	void send();
+	
 public:
 	ZLLClient();
 	~ZLLClient();
-    void updateData(PILEDScene* scene);          
+    //void updateData(PILEDScene* scene);          
 };

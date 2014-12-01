@@ -59,7 +59,6 @@ bool ControlBox::Init()
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[i]->addClient(this);
 			Buttons[i]->start();
-			sslog << Buttons[i]->getName() << ": %i ";
 		}
 	}
 
@@ -72,11 +71,8 @@ bool ControlBox::Init()
 			Potis.push_back(new TastButton(flds[i]));
 			Potis[i]->addClient(this);
 			Potis[i]->start();
-			sslog << Potis[i]->getName() << ": %i ";
 		}			
 	}
-
-	sslog << "\0";
 
 	//3. get the Lights
 	ini->ReadStringVector("ControlBox", "PILights","", &flds);
@@ -141,17 +137,11 @@ void ControlBox::Beep(int freq, int time)
 void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 {
 	string result;
-	std::ostringstream ss1;
-
 	string btnName = ((Button*)sender)->getName();
-
-	log->cout1(sslog.str());
 
 	switch (event)
 	{
 	case BUTTON_DOWN:
-		//ss1 << btnName << "(down): val=" << val;
-		log->cout1(ss1.str());
 		break;
 
 	case BUTTON_UP:

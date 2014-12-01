@@ -152,8 +152,8 @@ void sleep(unsigned long miliseceonds)
 int gettimeofdayLT(struct timeval* tp, void* tzp) 
 {
 
-	return gettimeofday(tp, ( __timezone_ptr_t) tzp);
-	//return gettimeofday(tp, (void*) tzp);
+	//return gettimeofday(tp, ( __timezone_ptr_t) tzp);
+	return gettimeofday(tp, NULL);
 
 }
 

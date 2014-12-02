@@ -20,6 +20,8 @@
     <ClCompile Include="01_ComClients\baseClient.cpp" />
     <ClCompile Include="01_ComClients\DaliClient.cpp" />
     <ClCompile Include="01_ComClients\DMXClient.cpp" />
+    <ClCompile Include="01_ComClients\LightLifeLogger.cpp" />
+    <ClCompile Include="01_ComClients\NeoLinkClient.cpp" />
     <ClCompile Include="01_ComClients\serialib.cpp" />
     <ClCompile Include="01_ComClients\ZLLClient.cpp" />
     <ClCompile Include="02_DebugServer\DebugServer.cpp" />
@@ -42,6 +44,8 @@
     <ClInclude Include="01_ComClients\baseClient.h" />
     <ClInclude Include="01_ComClients\DaliClient.h" />
     <ClInclude Include="01_ComClients\DMXClient.h" />
+    <ClInclude Include="01_ComClients\LightLifeLogger.h" />
+    <ClInclude Include="01_ComClients\NeoLinkClient.h" />
     <ClInclude Include="01_ComClients\serialib.h" />
     <ClInclude Include="01_ComClients\ZLLClient.h" />
     <ClInclude Include="02_DebugServer\DebugServer.h" />

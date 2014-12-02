@@ -84,6 +84,12 @@
     <ClCompile Include="05_Test\IPClient.cpp">
       <Filter>05 Test</Filter>
     </ClCompile>
+    <ClCompile Include="01_ComClients\NeoLinkClient.cpp">
+      <Filter>01 ComClients</Filter>
+    </ClCompile>
+    <ClCompile Include="01_ComClients\LightLifeLogger.cpp">
+      <Filter>01 ComClients</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01_ComClients\baseClient.h">
@@ -145,6 +151,12 @@
     </ClInclude>
     <ClInclude Include="05_Test\IPClient.h">
       <Filter>05 Test</Filter>
+    </ClInclude>
+    <ClInclude Include="01_ComClients\NeoLinkClient.h">
+      <Filter>01 ComClients</Filter>
+    </ClInclude>
+    <ClInclude Include="01_ComClients\LightLifeLogger.h">
+      <Filter>01 ComClients</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

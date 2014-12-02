@@ -3,14 +3,14 @@
   <Logging>
 	<debugport value="9999" />
     <loglevel value="5" />
-  </Logging>
+  </Logging> 
   <ControlBox name="Box1">
 	<Potis value="Poti1,Poti2,Poti3" />
-	<!--<Potis value="Poti1" />!-->
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
 	<Sleep value="1000"/>
   </ControlBox>
+  
   <Button1 id="1" name="btnLock">
 	<PortNr value="1234"/>
 	<Sleep value="1000"/>
@@ -32,7 +32,7 @@
 	<Testing value="MockPoti3"/>
   </Poti3>
   <Light1 id="1" name="liBazille">
-	<Default value="6500,100"/>	
+	<Default value="6500,255"/>	
   </Light1>  
   
   <MockButton>
@@ -59,16 +59,23 @@
   <DMX name="DMXClient1">
     <IP-Address value="192.168.4.201" />
 	<IP-Port value="6454" />
-	<!--<USBCom value="COM2,256000,8,N,1" />-->
-	<!--<USBName value="FT232R USB UART" />
-	<UseFTDI value="no" />-->
 	<StartAddress value="1" />
   </DMX>
-  <ZLL name="ZLLClient1">
+
+  <NEOLINK name="NeoLinkBox1">
+    <IP-Address value="192.168.4.1" />
+	<IP-Port value="1025" />
+  </NEOLINK>   
+  <LIGHTLIFESERVER name="LightLife1">
+    <IP-Address value="127.0.0.1" />
+	<IP-Port value="12345" />
+  </LIGHTLIFESERVER>     
+  <!--
+    <ZLL name="ZLLClient1">
 	<USBCom value="COM4,19200,8,N,1" />
-  </ZLL> 
+  </ZLL>
   <DALI name="DALIClient1">
-	<!--<USBCom value="COM29,115200,8,N,1" />-->
-  </DALI>   
- 
+	<USBCom value="COM29,115200,8,N,1" />
+  </DALI> -->
 </Settings>
+

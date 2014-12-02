@@ -150,6 +150,12 @@ void DMXClient::setXY(float val[2])
 	send();
 }
 
+void DMXClient::setGroup(unsigned char val)
+{
+	StartAddresses.clear();
+	StartAddresses.push_back(val);
+}
+
 void DMXClient::send()
 {
 	SendUDP(&artNetData[0], sizeof(artNetData));

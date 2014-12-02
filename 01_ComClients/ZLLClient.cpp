@@ -72,6 +72,13 @@ void ZLLClient::setFadeTime(unsigned int val)
 	send();
 }
 
+void ZLLClient::setGroup(unsigned char val)
+{
+	//Nothing to do here
+	//ZLlCleint connects directly to one PI-LED LMU, so no group is required
+}
+
+
 void ZLLClient::send()
 {
 	unsigned char *pBuf = data->ToByteArray();

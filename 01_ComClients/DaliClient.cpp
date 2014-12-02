@@ -50,6 +50,12 @@ void DaliClient::setFadeTime(unsigned int val)
 
 }
 
+void DaliClient::setGroup(unsigned char val)
+{
+
+}
+
+
 
 void DaliClient::updateData(PILEDScene* scene)
 {

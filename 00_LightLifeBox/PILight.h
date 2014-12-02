@@ -25,6 +25,8 @@ protected:
 	float xy[2];
 	unsigned int rgb[3];
 	unsigned int fadetime;
+	unsigned char groupid;
+
 	std::vector<IBaseClient*> ComClients;
 	enumPILEDMode piledMode;
 	ostringstream sslog;
@@ -51,6 +53,7 @@ public:
 	void setCCTUpDown(int);	
 	void setRGBUpDown(int[]);	
 	void setXYUpDown(float[]);	
+	void setGroup(unsigned char);
 
 	void resetDefault();
 	void lockCurrState();

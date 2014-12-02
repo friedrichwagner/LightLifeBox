@@ -14,7 +14,7 @@ TastButton::TastButton(string pName)
 
 TastButton::~TastButton() 
 { 
-	done = true;
+	if (!done) stop();
 }
 
 int TastButton::getPortVal2()
@@ -26,7 +26,7 @@ int TastButton::getPortVal2()
 	}
 #endif
 
-	return 0;
+	return -100;
 }
 
 
@@ -50,9 +50,9 @@ unsigned long TastButton::startListen()
 		PortVal = getPortVal();
 		//PortVal2 = getPortVal2();
 
-		if (!isPressed && PortVal < 0) ButtonDown();
+		if (!isPressed && PortVal == -1) ButtonDown();
 		//else if (isPressed && PortVal < 10) ButtonPressed();
-		else if (isPressed && PortVal > 1000) ButtonUp();
+		else if (isPressed && PortVal == 1001) ButtonUp();
 
 		//if  ( (unsigned long)labs((long)(actualValue - PortVal2)) > delta)
 		if ((PortVal >=0) && (PortVal <= 1000))
@@ -69,11 +69,19 @@ void TastButton::OnChange(long delta)
 {	
 	//log->cout(this->Name + ": OnChange");
 	actualValue=delta;
-	for (unsigned int i = 0; i < notifyClients.size(); i++)
+	try
 	{
-		if (notifyClients[i] != NULL)
-			notifyClients[i]->notify(this, BUTTON_CHANGE, PortVal);
-	}		
+
+		for (unsigned int i = 0; i < notifyClients.size(); i++)
+		{
+			if (notifyClients[i] != NULL)
+				notifyClients[i]->notify(this, BUTTON_CHANGE, PortVal);
+		}
+	}
+	catch (exception& ex)
+	{
+		log->cout(ex.what());
+	}
 }
 
 

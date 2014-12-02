@@ -11,6 +11,7 @@ private:
 	void setRGB(unsigned int[3]);	
 	void setXY(float[2]);	
 	void setFadeTime(unsigned int);
+	void setGroup(unsigned char);
 public:
 	DaliClient();
 	~DaliClient();

@@ -11,6 +11,8 @@
 #include "DMXClient.h"
 #include "ZLLClient.h"
 #include "DaliClient.h"
+#include "NeoLinkClient.h"
+#include "LightLifeLogger.h"
 
 using namespace std;
 
@@ -132,14 +134,16 @@ void runLightLifeBox(string boxName)
 	lumitech::setSequencePointer((void*) box);
 
 	DMXClient* dmx = new DMXClient();
-	//LightLifeClient* ll = new LightLifeClient();
 	ZLLClient* zll = new ZLLClient();
-	DaliClient* dali = new DaliClient();
+	//DaliClient* dali = new DaliClient();
+	NeoLinkClient* neolink = new NeoLinkClient();
+	LightLifeLogger* ll = new LightLifeLogger();
 	
 	if (dmx->getCntClients() > 0) box->Lights[0]->addComClient(dmx);
-	//if (ll->getCntClients() > 0) box->light->addComClient(ll);
 	if (zll->getCntClients() > 0) box->Lights[0]->addComClient(zll);
-	if (dali->getCntClients() > 0) box->Lights[0]->addComClient(dali);
+	//if (dali->getCntClients() > 0) box->Lights[0]->addComClient(dali);
+	if (neolink->getCntClients() > 0) box->Lights[0]->addComClient(neolink);
+	if (ll->getCntClients() > 0) box->Lights[0]->addComClient(ll);
 
 	//Prgram loops here endlessly
 	box->EventLoop();
@@ -147,10 +151,12 @@ void runLightLifeBox(string boxName)
 
 	box->Lights[0]->removeComClients();
 
-	delete dali;
+	delete ll;
+	delete neolink;
+	//delete dali;
 	delete zll;
 	delete dmx;
-	//delete ll;
+	
 	
 	delete box;
 }
@@ -174,4 +180,5 @@ int startLLBox(char* param)
 	return 0;
 }
 #endif
+
 

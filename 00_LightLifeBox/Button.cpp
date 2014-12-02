@@ -55,7 +55,7 @@ int Button::getPortVal()
 
 #endif
 
-	return 0;
+	return -100;
 }
 
 bool Button::getIsPressed()
@@ -71,9 +71,9 @@ unsigned long Button::startListen()
 		//log->cout(this->Name + ": waiting...");
 		PortVal = getPortVal();
 
-		if (!isPressed && PortVal < 0) ButtonDown();
+		if (!isPressed && PortVal == -1) ButtonDown();
 		//else if (isPressed && PortVal < 10) ButtonPressed();
-		else if (isPressed && PortVal > 1000) ButtonUp();
+		else if (isPressed && PortVal == 1001) ButtonUp();
 
 		//lumitech::sleep(threadSleepTime);
 	}

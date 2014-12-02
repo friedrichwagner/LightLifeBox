@@ -65,6 +65,7 @@ DebugServer::~DebugServer()
 
 	if (listenThread.joinable())  
 		listenThread.join();
+	log->cout("DebugServer: stopped!");
 }
 
 unsigned long DebugServer::startListen()

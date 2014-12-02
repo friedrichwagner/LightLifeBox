@@ -187,6 +187,18 @@ void PILight::lockCurrState()
 
 }
 
+void PILight::setGroup(unsigned char val)
+{
+	groupid = val;
+
+	for (unsigned int i = 0; i < ComClients.size(); i++)
+	{
+		if (ComClients[i] != NULL)
+			ComClients[i]->setGroup(groupid);
+	}
+}
+
+
 void PILight::setLog()
 {
 	sslog.str(""); sslog.clear();

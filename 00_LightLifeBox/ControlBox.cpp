@@ -48,6 +48,7 @@ bool ControlBox::Init()
 	vector<string> flds;
 
 	//If name not found in settings return immediately
+	string s = ini->ReadAttribute("ControlBox", "name", "");
 	if (ini->ReadAttribute("ControlBox", "name","") != this->Name) return false;
 
 	//1. get the Buttons
@@ -139,6 +140,8 @@ void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 	string result;
 	string btnName = ((Button*)sender)->getName();
 
+	if (Lights.size() == 0) return;
+
 	switch (event)
 	{
 	case BUTTON_DOWN:
@@ -149,8 +152,8 @@ void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 
 		if (btnName == "btnLock") Lights[0]->resetDefault();
 		if (btnName == "btnBrightness") Lights[0]->setBrightness(125);
-		if (btnName == "btnCCT") Lights[0]->setCCT(2700);
-		if (btnName == "btnJudd") Lights[0]->setCCT(2700);
+		if (btnName == "btnCCT") Lights[0]->resetDefault();
+		if (btnName == "btnJudd") Lights[0]->resetDefault();
 		break;
 
 	case BUTTON_PRESSED:

@@ -16,9 +16,10 @@ namespace PILEDServer
     public enum LLMode
     {
 	    LL_SET_BRIGHTNESS = 1,
-	    LL_SET_XY = 2,
-	    LL_SET_CCT = 3,
+        LL_SET_CCT = 2,
+	    LL_SET_XY = 3,	    
 	    LL_SET_RGB = 4,
+        LL_SET_LOCKED = 99,
     };
 
     public class PILEDData
@@ -26,11 +27,13 @@ namespace PILEDServer
         public LLMode mode;
         public int groupid;
         public int cct;
-        public int brigthness;
+        public int brightness;
         public double[] xy= new double[2];
         public int[] rgb= new int[3];
 
-        public PILEDData(string json)
+        public PILEDData() {}
+
+        /*public PILEDData(string json)
         {
             PILEDData data = json.FromJson<PILEDData>();
             groupid = data.groupid;
@@ -39,45 +42,102 @@ namespace PILEDServer
             mode = data.mode;
             xy = data.xy;
             rgb = data.rgb;
+        }*/
+    }
+
+    internal class Unsubscriber<PILEDData> : IDisposable
+    {
+        private List<IObserver<PILEDData>> _observers;
+        private IObserver<PILEDData> _observer;
+
+        internal Unsubscriber(List<IObserver<PILEDData>> observers, IObserver<PILEDData> observer)
+        {
+            this._observers = observers;
+            this._observer = observer;
+        }
+
+        public void Dispose()
+        {
+            if (_observers.Contains(_observer))
+                _observers.Remove(_observer);
         }
     }
 
-    public sealed class UDPServer
+
+    public sealed class UDPServer : IObservable<PILEDData>, IDisposable
     {
         private bool done;
         private int listenPort;
         private Thread ServerThread;
         private Logger log;
+        private Settings ini;
         private  UdpClient listener;
+        private bool bisStarted;
+        public bool isStarted
+        {
+            get { return bisStarted; }
+        }
+
+        private List<IObserver<PILEDData>> observers;
 
         public UDPServer()
         {
             log = Logger.GetInstance();
-            Settings ini = Settings.GetInstance();
+            ini = Settings.GetInstance();
+
             done = false;
             listenPort = ini.Read<int>("UDPServer", "ListenPort",12345);
+            observers = new List<IObserver<PILEDData>>();
 
-            ServerThread = new Thread(new ThreadStart(StartListener));            
+            AddObservers();
+
+            ServerThread = new Thread(new ThreadStart(StartListener));
+
+            //PILEDData p = new PILEDData();
+            //string s=p.ToJson();
         }
 
-        ~UDPServer()
+        public void Dispose()
         {
             Stop();
         }
 
+        public IDisposable Subscribe(IObserver<PILEDData> observer)
+        {
+            // Check whether observer is already registered. If not, add it 
+            if (!observers.Contains(observer))
+            {
+                observers.Add(observer);
+            }
+            return new Unsubscriber<PILEDData>(observers, observer);
+        }
+
+
         public void Start()
         {
-            if (!ServerThread.IsAlive) ServerThread.Start();
+            if (!ServerThread.IsAlive)
+            {
+                ServerThread = new Thread(new ThreadStart(StartListener));
+                ServerThread.Start();
+            }
+
+            bisStarted = ServerThread.IsAlive;
         }
 
         public void Stop()
         {
+            foreach (var observer in observers)
+                observer.OnCompleted();
+            observers.Clear();
+
             if (ServerThread.IsAlive)
             {
                 done = true;
                 listener.Close();
                 ServerThread.Join();
             }
+
+            bisStarted = ServerThread.IsAlive;
         }
 
 
@@ -97,9 +157,19 @@ namespace PILEDServer
 
                      if (bytes.Length > 0)
                      {
-                         string s = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
-                         PILEDData p = s.FromJson<PILEDData>();
-                         log.Info(s);
+                         try
+                         {
+                             string s = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
+                             log.Info(s);
+                             PILEDData info = s.FromJson<PILEDData>();                             
+                             foreach (var observer in observers)
+                                 observer.OnNext(info);
+                         }
+                         catch (Exception ex)
+                         {
+                             log.Error(ex.Message);
+                         }
+
                      }
                  }
 
@@ -115,5 +185,33 @@ namespace PILEDServer
              }
         }
 
+
+        private void AddObservers()
+        {
+            string[] strInterfaces = ini.Read<string>("Definitions", "Interfaces", "").Split(',');
+
+            foreach(string s in strInterfaces)
+            {
+                bool bEnable = ini.Read<bool>(s, "Enable", false);
+
+                if (bEnable)
+                {
+                    IObserver<PILEDData> obs = null;
+
+                    if (s == "LTDMX")
+                    {
+                        obs = new LTDMXBase(3);
+                    }
+                    else if (s=="LightLifeLogger")
+                    {
+                        obs = new LightLifeLogger();
+                    }
+
+                    if (obs != null)
+                        Subscribe(obs);
+                }
+
+            }
+        }
     }
 }

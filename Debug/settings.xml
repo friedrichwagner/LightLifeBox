@@ -54,9 +54,13 @@
   <MockPoti4>
 	<IP value="127.0.0.1"/>
 	<Port value="10000"/>
-  </MockPoti4>
+  </MockPoti4> 
+  <LIGHTLIFESERVER name="LightLife1">
+    <IP-Address value="127.0.0.1" />
+	<IP-Port value="12345" />
+  </LIGHTLIFESERVER>     
    
-  <DMX name="DMXClient1">
+  <!--<DMX name="DMXClient1">
     <IP-Address value="192.168.4.201" />
 	<IP-Port value="6454" />
 	<StartAddress value="1" />
@@ -65,11 +69,7 @@
   <NEOLINK name="NeoLinkBox1">
     <IP-Address value="192.168.4.1" />
 	<IP-Port value="1025" />
-  </NEOLINK>   
-  <LIGHTLIFESERVER name="LightLife1">
-    <IP-Address value="127.0.0.1" />
-	<IP-Port value="12345" />
-  </LIGHTLIFESERVER>     
+  </NEOLINK>  -->  
   <!--
     <ZLL name="ZLLClient1">
 	<USBCom value="COM4,19200,8,N,1" />

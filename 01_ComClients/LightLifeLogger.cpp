@@ -5,7 +5,7 @@
 
 LightLifeLogger::LightLifeLogger()
 {
-	clientType = CLIENT_ZLL;
+	clientType = CLIENT_LIGHTLIFE;
 	Name= ini->ReadAttribute("LIGHTLIFESERVER", "name", "LightLife1");
 	
 	vector<string> flds;
@@ -70,6 +70,16 @@ void LightLifeLogger::setFadeTime(unsigned int millisec)
 void LightLifeLogger::setGroup(unsigned char group)
 {
 	lldata->groupid = group;
+}
+
+void LightLifeLogger::setLocked()
+{
+	LLMode m = lldata->mode;
+	lldata->mode = LL_SET_LOCKED;
+	send();
+
+	//Reset immediately after button press
+	lldata->mode = m;
 }
 
 void LightLifeLogger::send()

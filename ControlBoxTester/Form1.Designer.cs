@@ -54,7 +54,7 @@
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
             this.button1.Tag = "MockButton";
-            this.button1.Text = "button1";
+            this.button1.Text = "Lock";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button2_Click);
             this.button1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
@@ -110,7 +110,7 @@
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 6;
             this.button2.Tag = "MockPoti1";
-            this.button2.Text = "button2";
+            this.button2.Text = "Brightness";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             this.button2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
@@ -123,7 +123,7 @@
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 8;
             this.button3.Tag = "MockPoti2";
-            this.button3.Text = "button3";
+            this.button3.Text = "CCT";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button2_Click);
             this.button3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
@@ -136,7 +136,7 @@
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 10;
             this.button4.Tag = "MockPoti3";
-            this.button4.Text = "button4";
+            this.button4.Text = "Judd";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button2_Click);
             this.button4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);

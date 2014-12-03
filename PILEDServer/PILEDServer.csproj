@@ -45,11 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="01_ComClients\DALIBridge.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="01_ComClients\DALIInterface.cs" />
     <Compile Include="01_ComClients\Interfaces.cs" />
+    <Compile Include="01_ComClients\LightLifeLogger.cs" />
     <Compile Include="01_ComClients\LTDMX.cs" />
     <Compile Include="01_ComClients\ZLLInterface.cs" />
     <Compile Include="02_Database\JSONSerialize.cs" />

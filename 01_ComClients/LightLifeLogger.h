@@ -7,9 +7,10 @@
 enum LLMode : char
 {
 	LL_SET_BRIGHTNESS = 1,
-	LL_SET_XY = 2,
-	LL_SET_CCT = 3,
+	LL_SET_CCT = 2,
+	LL_SET_XY = 3,
 	LL_SET_RGB = 4,
+	LL_SET_LOCKED = 99,
 };
 
 struct LightLifeData
@@ -20,6 +21,7 @@ struct LightLifeData
 	int	rgb[3];
 	float xy[2];
 	LLMode mode;
+	bool locked;
 
 	LightLifeData()
 	{
@@ -41,14 +43,17 @@ struct LightLifeData
 
 	string ToJSonString()
 	{
+		//"{\"brigthness\":0,\"cct\":0,\"groupid\":0,\"locked\":false,\"mode\":0,\"rgb\":[0,0,0],\"xy\":[0,0]}"
+		//"{\"groupid\":0,\"mode\":3,\"brightness\":255,\"cct\":6500,\"xy\":[0,0]\"rgb\":[0,0,0]\"locked\":false}"
+
 		ostringstream s;
-		s << "{" << endl;
-		s << "\"groupid\":" << groupid << ","<< endl;
-		s << "\"mode\":" << mode << "," << endl;
-		s << "\"brightness\":" << brightness << "," << endl;
-		s << "\"cct\":" << cct << "," << endl;
-		s << "\"xy\":" << "[" << xy[0] << "," << xy[1] << "]" << endl;
-		s << "\"rgb\":" << "[" << rgb[0] << "," << rgb[1] << "," << rgb[2] << "]" << endl;
+		s << "{";
+		s << "\"groupid\":" << groupid << ",";
+		s << "\"mode\":" << mode << ",";
+		s << "\"brightness\":" << brightness << "," ;
+		s << "\"cct\":" << cct << ",";
+		s << "\"xy\":" << "[" << xy[0] << "," << xy[1] << "]," ;
+		s << "\"rgb\":" << "[" << rgb[0] << "," << rgb[1] << "," << rgb[2] << "],";
 		s << "}";
 		
 		return s.str();
@@ -72,4 +77,6 @@ private:
 public:
 	LightLifeLogger();
 	~LightLifeLogger();
+
+	void setLocked();
 };

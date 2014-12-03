@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 
-namespace PiledToolbox.Interfaces
+namespace PILEDServer
 {
     //FW 9.2.2014
     public enum TuneableWhiteType { None, PILED_MM1, PILED_MM2, CWWW};

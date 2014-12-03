@@ -17,6 +17,8 @@ namespace PILEDServer
         {
             // Create a simple tray menu with only one item.
             trayMenu = new ContextMenu();
+            trayMenu.MenuItems.Add("Stop", OnStartStop);
+            trayMenu.MenuItems.Add("-");
             trayMenu.MenuItems.Add("Exit", OnExit);
 
             // Create a tray icon. In this example we use a
@@ -41,14 +43,32 @@ namespace PILEDServer
             ShowInTaskbar = false; // Remove from taskbar.
 
             base.OnLoad(e);
-
-            UDPSrv.Start();
+            
+            
+            OnStartStop(this, e);
         }
 
         private void OnExit(object sender, EventArgs e)
         {
-            UDPSrv.Stop();
+            //Stop UDPSrv
+            OnStartStop(this, e);
             Application.Exit();
+        }
+
+        private void OnStartStop(object sender, EventArgs e)
+        {
+            if (UDPSrv.isStarted) 
+            { 
+                //Stop it
+                UDPSrv.Stop();
+                trayMenu.MenuItems[0].Text = "Start";
+            }
+            else
+            {
+                //Start it
+                UDPSrv.Start();
+                trayMenu.MenuItems[0].Text = "Stop";
+            }
         }
 
         protected override void Dispose(bool isDisposing)

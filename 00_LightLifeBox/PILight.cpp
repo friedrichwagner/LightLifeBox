@@ -1,6 +1,8 @@
 #include "PILight.h"
 #include "helpers.h"
+#include "LightLifeLogger.h"
 #include <vector>
+
 
 
 PILight::PILight(std::string pSection)
@@ -184,7 +186,18 @@ void PILight::resetDefault()
 
 void PILight::lockCurrState()
 {
-
+	for (unsigned int i = 0; i < ComClients.size(); i++)
+	{
+		if (ComClients[i] != NULL)
+		{
+			if (ComClients[i]->getType() == CLIENT_LIGHTLIFE)
+			{
+				LightLifeLogger* p = static_cast<LightLifeLogger*>(ComClients[i]);
+				if (p)
+					p->setLocked();
+			}				
+		}			
+	}	
 }
 
 void PILight::setGroup(unsigned char val)

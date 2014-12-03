@@ -5,9 +5,9 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Net;
 using System.Security.Permissions;
+using Lumitech.Helpers;
 
-
-namespace PiledToolbox.Interfaces
+namespace PILEDServer
 {
     public enum FT_STATUS
     {
@@ -47,19 +47,8 @@ namespace PiledToolbox.Interfaces
         }
     }
 
-    public class CWWWDMX : LTDMXBase
-    {
-        public CWWWDMX() : base(2)
-        {
-        }
 
-        public override void setXy(Single[] cie, byte brightness)
-        {
-            throw new ArgumentOutOfRangeException("Function not supported by this Interface!");
-        }
-    }
-
-    public class LTDMXBase : IPILed
+    public class LTDMXBase : IPILed, IObserver<PILEDData>
     {
         private const int iDMXBroadCastStartAddress = 501;
         protected const int MINCCT = 2700;
@@ -82,6 +71,9 @@ namespace PiledToolbox.Interfaces
 
         //FW 29.3.29012
         UdpClient udpclient=new UdpClient();
+
+        //FW 3.12.2014
+        private IDisposable cancellation;
 
         private uint iStartAddress;  //0..511
         public uint StartAddress    //1..512
@@ -690,6 +682,63 @@ namespace PiledToolbox.Interfaces
 
         }
 #endregion
+
+        #region Observer Pattern
+
+        public virtual void Subscribe(UDPServer provider)
+        {
+            Settings ini = Settings.GetInstance();
+
+            cancellation = provider.Subscribe(this);
+
+            strUDPAddress = ini.Read<string>("LTDMX", "UDP_Address", "127.0.0.1");
+            Connect("1", strUDPAddress);
+        }
+
+        public virtual void Unsubscribe()
+        {
+            done = true;            
+            cancellation.Dispose();
+        }
+
+        //Called from UDP Server when closing application
+        public virtual void OnCompleted()
+        {
+            Disconnect();
+        }
+
+        public virtual void OnError(Exception e)
+        {
+
+        }
+
+        //Called from UDP Server when new data arrive
+        public virtual void OnNext(PILEDData info)
+        {
+            iStartAddress = (uint)info.groupid;
+
+            switch (info.mode)
+            {
+                case LLMode.LL_SET_BRIGHTNESS:
+                    this.setBrightness((byte)info.brightness);
+                    break;
+                case LLMode.LL_SET_CCT:
+                    this.setCCT(info.cct, (byte) info.brightness);
+                    break;
+                case LLMode.LL_SET_XY:
+                    float[] f = new float[2];
+                    f[0] = (float)info.xy[0]; f[1] = (float)info.xy[1];
+                    this.setXy( f, (byte)info.brightness);
+                    break;
+                case LLMode.LL_SET_RGB:
+                    byte[] b = new byte[3];
+                    b[0] = (byte)info.rgb[0];b[1] = (byte)info.rgb[1];b[2] = (byte)info.rgb[2];
+                    this.setRGB(b);
+                    break;
+            }
+        }
+
+        #endregion
 
     }
 

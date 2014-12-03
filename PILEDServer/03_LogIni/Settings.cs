@@ -173,6 +173,54 @@ namespace Lumitech.Helpers
 
         }
 
+        public string ReadStringAttrib(string path, string atrribname, string defaultValue)
+        {
+            XmlNode root = doc.DocumentElement;
+            XmlNode s = root.SelectSingleNode('/' + rootName + '/' + path);
+
+            if (s == null)
+                return defaultValue;  //not found
+
+            XmlAttributeCollection attrs = s.Attributes;
+
+            foreach (XmlAttribute attr in attrs)
+            {
+                if (attr.Name == atrribname)
+                    return attr.Value;
+            }
+
+            return defaultValue;
+        }
+
+        //FW 21.4.2013 - Probiers mal mit Generic
+        public T ReadAttrib<T>(string path, string attribname, T defaultValue)
+        {
+            T ret = defaultValue;
+            string s = ReadStringAttrib(path, attribname, "");
+
+            if (s == "") return defaultValue;
+
+            try
+            {
+                if (typeof(T) == typeof(string))
+                {
+                    ret = (T)Convert.ChangeType(s, typeof(T));
+                }
+                else
+                {
+                    MethodInfo m = typeof(T).GetMethod("Parse", new Type[] { typeof(string) });
+                    if (m != null) { ret = (T)m.Invoke(null, new object[] { s }); }
+                }
+
+                return ret;
+            }
+            catch (FormatException)
+            {
+                return defaultValue;
+            }
+
+        }
+
         #endregion
 
 

@@ -148,12 +148,13 @@ void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 		break;
 
 	case BUTTON_UP:
-		//ss1 << btnName << "(up): val=" << val; log->cout1(ss1.str());	
+		if (btnName == "btnLock") {
+			Lights[0]->lockCurrState();
+		}
+		else {
+			Lights[0]->resetDefault();
+		}
 
-		if (btnName == "btnLock") Lights[0]->resetDefault();
-		if (btnName == "btnBrightness") Lights[0]->setBrightness(125);
-		if (btnName == "btnCCT") Lights[0]->resetDefault();
-		if (btnName == "btnJudd") Lights[0]->resetDefault();
 		break;
 
 	case BUTTON_PRESSED:

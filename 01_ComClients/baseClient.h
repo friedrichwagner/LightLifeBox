@@ -9,7 +9,7 @@
 #include "PILEDScene.h"
 //#include "ftdi.h"
 
-enum enumClientType { CLIENT_NONE = 1, CLIENT_DMX = 2, CLIENT_DALI = 3, CLIENT_ZIGBEE = 4, CLIENT_ZLL = 5, CLIENT_WEBAPI = 6,  CLIENT_NEOLINK = 7 };
+enum enumClientType { CLIENT_NONE = 1, CLIENT_DMX = 2, CLIENT_DALI = 3, CLIENT_ZIGBEE = 4, CLIENT_ZLL = 5, CLIENT_WEBAPI = 6,  CLIENT_NEOLINK = 7, CLIENT_LIGHTLIFE=8 };
 //enum enumInterfaceType {IF_NONE, IF_USB, IF_UDP };
 
 struct IPSocket
@@ -91,6 +91,7 @@ protected:
 	int SendUSB(unsigned char* data, int cnt);
 public:
 	std::string getName();
+	int getType();
 
 	IBaseClient();
 	virtual ~IBaseClient();

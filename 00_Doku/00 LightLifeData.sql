@@ -1,4 +1,7 @@
 insert into LLRole(RoleID, Name, Rights, Remark)
+values (0, 'NoName','0000000000', 'Dummy');
+
+insert into LLRole(RoleID, Name, Rights, Remark)
 values (1, 'Admin','1111111111', 'Administrator/In');
 
 insert into LLRole(RoleID, Name, Rights, Remark)
@@ -9,25 +12,31 @@ values (100, 'Proband/In','0000000001', 'Versuchsperson');
 
 ------------------------------------------------------------
 
-insert into LLUser(FirstName, LastName, Birthday, Gender, RoleID)
-values ('Fritz', 'Wagner', '18.6.1970', 'male', 1);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
+values (0, 'No', 'Name', '1.1.2014', 'androgyn', 0);
 
-insert into LLUser(FirstName, LastName, Birthday, Gender, RoleID)
-values ('Hans', 'Hoschopf', '1.1.2014', 'male', 1);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
+values (1, 'Fritz', 'Wagner', '18.6.1970', 'male', 1);
 
-insert into LLUser(FirstName, LastName, Birthday, Gender, RoleID)
-values ('Versuchs', 'Leiterin1', '1.1.2014', 'female', 10);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
+values (2, 'Hans', 'Hoschopf', '1.1.2014', 'male', 1);
 
-insert into LLUser(FirstName, LastName, Birthday, Gender, RoleID)
-values ('Versuchs', 'Leiter2', '1.1.2014', 'male', 10);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
+values (3, 'Versuchs', 'Leiterin1', '1.1.2014', 'female', 10);
 
-insert into LLUser(FirstName, LastName, Birthday, Gender, RoleID)
-values ('Proband', 'In1', '1.1.2014', 'female', 100);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
+values (4, 'Versuchs', 'Leiter2', '1.1.2014', 'male', 10);
 
-insert into LLUser(FirstName, LastName, Birthday, Gender, RoleID)
-values ('Proband', '2', '1.1.2014', 'male', 100);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
+values (5, 'Proband', 'In1', '1.1.2014', 'female', 100);
+
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
+values (6, 'Proband', '2', '1.1.2014', 'male', 100);
 
 ------------------------------------------------------------
+
+insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
+values (0, 'Dummy Raum', '1','');
 
 insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
 values (1, 'Testraum 1', '1:1','CCT=2700&Brightness=50');
@@ -222,3 +231,53 @@ values ('AREA V3','Vorraum', 'CCT=2700&Brightness=50',2, 3);
 insert into LLFixture (Name, Remark, DefaultSettings, FTypeId, RoomId)
 values ('AREA V4','Vorraum', 'CCT=2700&Brightness=50',2, 3);
 
+---------
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (10, 'SET_LIGHTS', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (20, 'CALL_SCENE', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (30, 'START_TESTSEQUENCE', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (31, 'STOP_TESTSEQUENCE', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (32, 'PAUSE_TESTSEQUENCE', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (33, 'NEXT_TESTSEQUENCE_STEP', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (34, 'PREV_TESTSEQUENCE_STEP', null);
+
+---------
+
+insert into LlPILedMode(PiledID, PILEDMode, Remark)
+values (0, 'NO_MODE', null);
+
+insert into LlPILedMode(PiledID, PILEDMode, Remark)
+values (1, 'SET_BRIGHTNESS', null);
+
+insert into LlPILedMode(PiledID, PILEDMode, Remark)
+values (2, 'LL_SET_CCT', null);
+
+insert into LlPILedMode(PiledID, PILEDMode, Remark)
+values (3, 'LL_SET_XY', null);
+
+insert into LlPILedMode(PiledID, PILEDMode, Remark)
+values (4, 'LL_SET_RGB', null);
+
+insert into LlPILedMode(PiledID, PILEDMode, Remark)
+values (99, 'LL_SET_LOCKED', 'Lock current lightstate, used in LightLife Control Boxes');
+
+----------
+insert into LLScene (SceneID, SceneName, Brightness, CCT, x, y, pimode, Remark) 
+values(0, 'No Scene', 0,0,0,0,0,'');
+
+----------
+insert into LLTestSequenceDefinition (SequenceDefID, SequenceName, StepID, Remark) 
+values(0, 'No Sequence', 0, null);

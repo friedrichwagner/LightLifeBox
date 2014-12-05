@@ -7,16 +7,17 @@ using System.Data.SqlClient;
 using Lumitech.Helpers;
 using System.Threading;
 using System.Collections.Concurrent;
+using PILEDServer;
 
-namespace PILEDServer
+namespace Lumitech.Interfaces
 {
     class LightLifeLogger: IObserver<PILEDData>
     {        
         private string name;
         private LTSQLCommand cmd;
         private IDisposable cancellation;
-        private const string sqlInsert = "insert into LLData(roomID, userID, VLID, SceneID, SequenceID, Brightness, CCT, x, y, pimode, Remark)" +
-                                          " values (:1, :2,:3,:4,:5,:6,:7,:8,:9,:10,:11)";
+        private const string sqlInsert = "insert into LLData(roomID, userID, VLID, SceneID, SequenceID, Brightness, CCT, x, y, pimode, sender, receiver, MsgTypeID, Remark)" +
+                                          " values (:1, :2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14)";
 
         private Logger log;
         private ConcurrentQueue<PILEDData>  dataQueue;
@@ -93,6 +94,9 @@ namespace PILEDServer
                         cmd.Params[i++] = info.xy[0];
                         cmd.Params[i++] = info.xy[1];
                         cmd.Params[i++] = (int)info.mode;
+                        cmd.Params[i++] = info.sender;
+                        cmd.Params[i++] = info.receiver;
+                        cmd.Params[i++] = (int)info.msgtype;                        
                         cmd.Params[i++] = "This is a test";
                         cmd.Exec();
 

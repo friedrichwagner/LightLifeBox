@@ -135,6 +135,11 @@ void ControlBox::Beep(int freq, int time)
 	log->cout("beep");
 }
 
+string ControlBox::getName()
+{
+	return this->Name;
+}
+
 void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 {
 	string result;

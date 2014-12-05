@@ -6,8 +6,9 @@ using System.Net.Sockets;
 using System.Net;
 using System.Security.Permissions;
 using Lumitech.Helpers;
+using PILEDServer;
 
-namespace PILEDServer
+namespace Lumitech.Interfaces
 {
     public enum FT_STATUS
     {
@@ -683,7 +684,7 @@ namespace PILEDServer
         }
 #endregion
 
-        #region Observer Pattern
+#region Observer Pattern
 
         public virtual void Subscribe(UDPServer provider)
         {
@@ -719,18 +720,18 @@ namespace PILEDServer
 
             switch (info.mode)
             {
-                case LLMode.LL_SET_BRIGHTNESS:
+                case PILEDMode.PILED_SET_BRIGHTNESS:
                     this.setBrightness((byte)info.brightness);
                     break;
-                case LLMode.LL_SET_CCT:
+                case PILEDMode.PILED_SET_CCT:
                     this.setCCT(info.cct, (byte) info.brightness);
                     break;
-                case LLMode.LL_SET_XY:
+                case PILEDMode.PILED_SET_XY:
                     float[] f = new float[2];
                     f[0] = (float)info.xy[0]; f[1] = (float)info.xy[1];
                     this.setXy( f, (byte)info.brightness);
                     break;
-                case LLMode.LL_SET_RGB:
+                case PILEDMode.PILED_SET_RGB:
                     byte[] b = new byte[3];
                     b[0] = (byte)info.rgb[0];b[1] = (byte)info.rgb[1];b[2] = (byte)info.rgb[2];
                     this.setRGB(b);
@@ -738,7 +739,7 @@ namespace PILEDServer
             }
         }
 
-        #endregion
+ #endregion
 
     }
 

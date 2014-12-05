@@ -4,13 +4,19 @@
 #include "helpers.h"
 
 
-enum LLMode : char
+//must correspond to PILEDServer "enum PILEDMode" in file UDPServer.cs and lines in table LLPILedMode
+enum PILEDMode : char
 {
-	LL_SET_BRIGHTNESS = 1,
-	LL_SET_CCT = 2,
-	LL_SET_XY = 3,
-	LL_SET_RGB = 4,
-	LL_SET_LOCKED = 99,
+	PILED_SET_BRIGHTNESS = 1,
+	PILED_SET_CCT = 2,
+	PILED_SET_XY = 3,
+	PILED_SET_RGB = 4,
+	PILED_SET_LOCKED = 99,
+};
+
+enum LLMsgType
+{
+	LL_SET_LIGHTS = 10,
 };
 
 struct LightLifeData
@@ -20,17 +26,23 @@ struct LightLifeData
 	int brightness;
 	int	rgb[3];
 	float xy[2];
-	LLMode mode;
+	PILEDMode mode;
 	bool locked;
+	string sender;
+	string receiver;
+	LLMsgType msgtype;
 
-	LightLifeData()
+	LightLifeData(string pSender)
 	{
 		groupid = 0;
 		cct = 2700;
 		brightness = 255;
 		rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
 		xy[0] = 0.0f; xy[1] = 0.0f;
-		mode = LL_SET_BRIGHTNESS;
+		mode = PILED_SET_BRIGHTNESS;
+		msgtype = LL_SET_LIGHTS;	//Controlboxes always send to Lights
+		receiver = "LIGHTS";		//Controlboxes always send to Lights
+		sender = pSender;			//This is the name of the Box
 	}
 
 	string ToURLString()
@@ -38,6 +50,7 @@ struct LightLifeData
 		ostringstream s;
 
 		s << "groupid=" << groupid << "&mode=" << mode << "&brightness=" << brightness << "&cct=" << cct << "&xy=" << xy[0] << ";" << xy[1] << "&rgb=" << rgb[0] << ";" << rgb[1] << ";" << rgb[2];
+		s << "&sender=" << sender << "&receiver=" << receiver << "&msgtype=" << msgtype;
 		return s.str();
 	}
 
@@ -54,6 +67,9 @@ struct LightLifeData
 		s << "\"cct\":" << cct << ",";
 		s << "\"xy\":" << "[" << xy[0] << "," << xy[1] << "]," ;
 		s << "\"rgb\":" << "[" << rgb[0] << "," << rgb[1] << "," << rgb[2] << "],";
+		s << "\"sender\":" << "\"" << sender << "\"" << ",";
+		s << "\"receiver\":" << "\"" << receiver << "\"" << ",";
+		s << "\"msgtype\":" << msgtype;
 		s << "}";
 		
 		return s.str();
@@ -75,7 +91,7 @@ private:
 	void send();
 
 public:
-	LightLifeLogger();
+	LightLifeLogger(string);
 	~LightLifeLogger();
 
 	void setLocked();

@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Lumitech.Helpers;
+using Lumitech.Interfaces;
 
 namespace PILEDServer
 {
@@ -13,36 +14,39 @@ namespace PILEDServer
     //http://www.dofactory.com/Patterns/PatternSingleton.aspx#csharp
 
     
-    public enum LLMode
+    public enum PILEDMode
     {
-	    LL_SET_BRIGHTNESS = 1,
-        LL_SET_CCT = 2,
-	    LL_SET_XY = 3,	    
-	    LL_SET_RGB = 4,
-        LL_SET_LOCKED = 99,
+        PILED_SET_BRIGHTNESS = 1,
+        PILED_SET_CCT = 2,
+        PILED_SET_XY = 3,	    
+	    PILED_SET_RGB = 4,
+        PILED_SET_LOCKED = 99,
+    };
+
+    public enum LLMsgType
+    {
+        LL_SET_LIGHTS = 10,
+        LL_CALL_SCENE = 20,
+        LL_START_TESTSEQUENCE = 30,
+        LL_STOP_TESTSEQUENCE = 31,
+        LL_PAUSE_TESTSEQUENCE = 32,
+        LL_NEXT_TESTSEQUENCE_STEP = 33,
+        LL_PREV_TESTSEQUENCE_STEP=34
     };
 
     public class PILEDData
     {
-        public LLMode mode;
+        public PILEDMode mode;
         public int groupid;
         public int cct;
         public int brightness;
         public double[] xy= new double[2];
         public int[] rgb= new int[3];
+        public string sender;
+        public string receiver;
+        public LLMsgType msgtype;
 
         public PILEDData() {}
-
-        /*public PILEDData(string json)
-        {
-            PILEDData data = json.FromJson<PILEDData>();
-            groupid = data.groupid;
-            cct = data.cct;
-            brigthness = data.brigthness;
-            mode = data.mode;
-            xy = data.xy;
-            rgb = data.rgb;
-        }*/
     }
 
     internal class Unsubscriber<PILEDData> : IDisposable

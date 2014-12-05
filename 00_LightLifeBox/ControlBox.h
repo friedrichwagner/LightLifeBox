@@ -37,7 +37,8 @@ public:
 	bool EventLoop();
 	void stopEventLoop();
 	void Beep(int freq, int time);
-
+	string getName();
+	
 	vector<PILight*> Lights;
 	bool isDone;
 

@@ -14,7 +14,7 @@ PILight::PILight(std::string pSection)
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);
-	//this->PortNr = ini->Read<int>(pSection,"PortNr",0);
+	this->groupid = ini->Read<int>(pSection, "groupid", 0);
 
 	defaultBrightness = 255;
 	defaultCct = 2700;
@@ -41,9 +41,14 @@ PILight::~PILight()
 }
 
 void PILight::addComClient(IBaseClient* c)
-{
-	log->cout("added Client:" + c->getName());
-	ComClients.push_back(c);
+{		
+	if (c != NULL)
+	{
+		//zu steuernde Gruppe setzen
+		c->setGroup(groupid);
+		ComClients.push_back(c);
+		log->cout("added Client:" + c->getName());
+	}
 }
 
 void PILight::removeComClients()
@@ -210,6 +215,12 @@ void PILight::setGroup(unsigned char val)
 			ComClients[i]->setGroup(groupid);
 	}
 }
+
+unsigned char PILight::getGroup()
+{
+	return this->groupid;
+}
+
 
 
 void PILight::setLog()

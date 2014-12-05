@@ -6,7 +6,7 @@
 
 NeoLinkClient::NeoLinkClient()
 {
-	clientType = CLIENT_ZLL;
+	clientType = CLIENT_NEOLINK;
 	Name= ini->ReadAttribute("NEOLINK", "name", "NeoLinkClient");
 	
 	vector<string> flds;

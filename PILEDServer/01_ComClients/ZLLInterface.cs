@@ -6,7 +6,7 @@ using System.IO.Ports;
 using System.Threading;
 using Lumitech.Helpers;
 
-namespace PiledToolbox.Interfaces
+namespace Lumitech.Interfaces
 {
 
     enum ZLLCommand : byte

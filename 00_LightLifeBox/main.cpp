@@ -137,7 +137,7 @@ void runLightLifeBox(string boxName)
 	ZLLClient* zll = new ZLLClient();
 	//DaliClient* dali = new DaliClient();
 	NeoLinkClient* neolink = new NeoLinkClient();
-	LightLifeLogger* ll = new LightLifeLogger();
+	LightLifeLogger* ll = new LightLifeLogger(box->getName());
 	
 	if (dmx->getCntClients() > 0) box->Lights[0]->addComClient(dmx);
 	if (zll->getCntClients() > 0) box->Lights[0]->addComClient(zll);

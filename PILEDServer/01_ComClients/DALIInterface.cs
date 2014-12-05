@@ -5,10 +5,11 @@ using System.Text;
 using System.IO.Ports;
 using System.Threading;
 using Lumitech.Helpers;
+using PILEDServer;
 
-namespace PiledToolbox.Interfaces
+namespace Lumitech.Interfaces
 {
-    class DALIInterface : IPILed
+    class DALIInterface : IPILed, IObserver<PILEDData>
     {
         private Object thisLock = new Object();
         private const int DALI_SEND_SLEEPTIME = 50;
@@ -32,6 +33,9 @@ namespace PiledToolbox.Interfaces
         }
 
        private byte[] DALISendData = new byte[2];
+
+       //FW 3.12.2014
+       private IDisposable cancellation;
 
         public DALIInterface()
         {
@@ -196,5 +200,60 @@ namespace PiledToolbox.Interfaces
             }
             // catch { }
         }
+
+        #region Observer Pattern
+
+        public virtual void Subscribe(UDPServer provider)
+        {
+            Settings ini = Settings.GetInstance();
+            serial.PortName = ini.Read<string>("DALI", "UDP_Address", "127.0.0.1");
+
+            Connect();
+            cancellation = provider.Subscribe(this);
+        }
+
+        public virtual void Unsubscribe()
+        {
+            cancellation.Dispose();
+        }
+
+        //Called from UDP Server when closing application
+        public virtual void OnCompleted()
+        {
+            Disconnect();
+        }
+
+        public virtual void OnError(Exception e)
+        {
+
+        }
+
+        //Called from UDP Server when new data arrive
+        public virtual void OnNext(PILEDData info)
+        {
+            iStartAddress = (uint)info.groupid;
+
+            switch (info.mode)
+            {
+                case PILEDMode.PILED_SET_BRIGHTNESS:
+                    this.setBrightness((byte)info.brightness);
+                    break;
+                case PILEDMode.PILED_SET_CCT:
+                    this.setCCT(info.cct, (byte)info.brightness);
+                    break;
+                case PILEDMode.PILED_SET_XY:
+                    float[] f = new float[2];
+                    f[0] = (float)info.xy[0]; f[1] = (float)info.xy[1];
+                    this.setXy(f, (byte)info.brightness);
+                    break;
+                case PILEDMode.PILED_SET_RGB:
+                    byte[] b = new byte[3];
+                    b[0] = (byte)info.rgb[0]; b[1] = (byte)info.rgb[1]; b[2] = (byte)info.rgb[2];
+                    this.setRGB(b);
+                    break;
+            }
+        }
+
+        #endregion
     }
 }

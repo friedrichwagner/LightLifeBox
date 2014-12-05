@@ -54,6 +54,7 @@ public:
 	void setRGBUpDown(int[]);	
 	void setXYUpDown(float[]);	
 	void setGroup(unsigned char);
+	unsigned char getGroup();
 
 	void resetDefault();
 	void lockCurrState();

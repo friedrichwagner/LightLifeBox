@@ -14,14 +14,16 @@
 class DMXClient : public IBaseClient
 {
 private:
-	int iDMXBroadCastStartAddress;
+	const int iDMXBroadCastStartAddress = 501;
 	char artNetName[8];
 	std::vector<int> StartAddresses;
     unsigned char buffer[DMX_BUFFER_SIZE +1]; ///DMX Start Code byte[0]=0 muss hier mitgeschickt werden, d.h. eigentlich werden 513 bytes geschickt
     unsigned char artNetData[ARTNET_HEADER_SIZE + DMX_BUFFER_SIZE];
 	void InitBuffers();
+	bool useBroadcast;
 
 	void setDMXValue(int addr, int val);
+	void resetDMXBroadcast();
 
 	void setBrightness(unsigned int);	
 	void setCCT(unsigned int);	

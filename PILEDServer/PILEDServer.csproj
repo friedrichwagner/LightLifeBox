@@ -49,7 +49,6 @@
     <Compile Include="01_ComClients\Interfaces.cs" />
     <Compile Include="01_ComClients\LightLifeLogger.cs" />
     <Compile Include="01_ComClients\LTDMX.cs" />
-    <Compile Include="01_ComClients\ZLLInterface.cs" />
     <Compile Include="02_Database\JSONSerialize.cs" />
     <Compile Include="02_Database\LTSQLCommand.cs" />
     <Compile Include="02_Database\Photometric.cs" />

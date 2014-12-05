@@ -8,7 +8,6 @@
 DMXClient::DMXClient()
 {	
 	clientType = CLIENT_DMX;
-	iDMXBroadCastStartAddress= 501;
 	InitBuffers();
 
 	Name= ini->ReadAttribute("DMX", "name","DMXClient");
@@ -98,18 +97,41 @@ void DMXClient::InitBuffers()
 
 void DMXClient::setDMXValue(int offset, int value)
 {
-	for (unsigned int i=0; i < StartAddresses.size(); i++)
+	if (useBroadcast)
 	{
 		//Channel between 1 and 512
-		int channel = StartAddresses[i]+offset;
+		int channel = iDMXBroadCastStartAddress + offset;
 
-		if ( channel >= 1 && channel <= 512)
+		if (channel >= 501 && channel <= 512)
 		{
-			//buffer[channel] = value;
+			//relativer Kanal = iDMXBroadCastStartAddress(=501) + 1
+			channel = channel + 1;
+
 			buffer[channel] = value;
-			artNetData[ARTNET_HEADER_SIZE + channel-1] = value;    
+			artNetData[ARTNET_HEADER_SIZE + channel - 1] = value;
 		}
-	 }
+	}
+	else
+	{
+		for (unsigned int i = 0; i < StartAddresses.size(); i++)
+		{
+			//Channel between 1 and 512
+			int channel = StartAddresses[i] + offset;
+
+			if (channel >= 1 && channel <= 512)
+			{
+				//buffer[channel] = value;
+				buffer[channel] = value;
+				artNetData[ARTNET_HEADER_SIZE + channel - 1] = value;
+			}
+		}
+	}
+}
+
+void DMXClient::resetDMXBroadcast()
+{
+	for (int c = iDMXBroadCastStartAddress; c < iDMXBroadCastStartAddress+12; c++)
+		setDMXValue(c, 0);
 }
 
 void DMXClient::setBrightness(unsigned int val)
@@ -153,7 +175,24 @@ void DMXClient::setXY(float val[2])
 void DMXClient::setGroup(unsigned char val)
 {
 	StartAddresses.clear();
-	StartAddresses.push_back(val);
+
+	if (val == 0) //broadcast
+	{
+		useBroadcast = true;
+		//Channel 501 and 512 = 3 for global control
+		buffer[iDMXBroadCastStartAddress] = 3;
+		buffer[DMX_BUFFER_SIZE] = 3; //Buffer ist (DMX_BUFFER_SIZE + 1) lang
+		artNetData[ARTNET_HEADER_SIZE + iDMXBroadCastStartAddress - 1] = 3;
+		artNetData[ARTNET_HEADER_SIZE + DMX_BUFFER_SIZE - 1] = 3;
+		//Sleep(200);
+
+	}
+	else
+	{
+		useBroadcast = false;
+		resetDMXBroadcast();
+		StartAddresses.push_back(val);
+	}		
 }
 
 void DMXClient::send()
@@ -166,34 +205,5 @@ void DMXClient::setFadeTime(unsigned int val)
 {
 	//Nothing to do in DMX with Fading
 }
-
-
-/*
-void DMXClient::updateData(PILEDScene* scene)
-{
-	setFadeTime(scene->fadetime);	
-
-	if (scene->pmode == PILED_XY)
-	{
-		setXY(scene->xy);		
-		setBrightness(scene->brightness);
-	}
-
-	if (scene->pmode == PILED_RGB)
-	{
-		setRGB(scene->rgb);
-	}
-
-	if (scene->pmode == PILED_CCT)
-	{
-		setCCT(scene->cct);		
-		setBrightness(scene->brightness);
-	}
-
-	//Maybe run this in a thread to not block the other observers ????
-	SendUDP(&artNetData[0], sizeof(artNetData));
-	SendUSB(&buffer[0], sizeof(buffer));
-}
-*/
 
 #pragma endregion

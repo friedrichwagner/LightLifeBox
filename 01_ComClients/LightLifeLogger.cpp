@@ -3,7 +3,7 @@
 
 #pragma region Contructor/Destructor
 
-LightLifeLogger::LightLifeLogger()
+LightLifeLogger::LightLifeLogger(string boxname)
 {
 	clientType = CLIENT_LIGHTLIFE;
 	Name= ini->ReadAttribute("LIGHTLIFESERVER", "name", "LightLife1");
@@ -19,7 +19,7 @@ LightLifeLogger::LightLifeLogger()
 	if (flds.size() >=1 ) 
 		IPClients.push_back(new IPSocket(flds[0], IPPort));
 
-	lldata = new LightLifeData();
+	lldata = new LightLifeData(boxname);
 }
 
 LightLifeLogger::~LightLifeLogger()
@@ -32,21 +32,21 @@ LightLifeLogger::~LightLifeLogger()
 
 void LightLifeLogger::setBrightness(unsigned int val)
 {	
-	lldata->mode = LL_SET_BRIGHTNESS;
+	lldata->mode = PILED_SET_BRIGHTNESS;
 	lldata->brightness= val;
 	send();
 }
 
 void LightLifeLogger::setCCT(unsigned int cct)
 {
-	lldata->mode = LL_SET_CCT;
+	lldata->mode = PILED_SET_CCT;
 	lldata->cct = cct;
 	send();
 }
 
 void LightLifeLogger::setRGB(unsigned int rgb[3])
 {
-	lldata->mode = LL_SET_RGB;
+	lldata->mode = PILED_SET_RGB;
 	lldata->rgb[0] = rgb[0];
 	lldata->rgb[1] = rgb[1];
 	lldata->rgb[2] = rgb[2];
@@ -55,7 +55,7 @@ void LightLifeLogger::setRGB(unsigned int rgb[3])
 
 void LightLifeLogger::setXY(float xy[2])
 {
-	lldata->mode = LL_SET_XY;
+	lldata->mode = PILED_SET_XY;
 	lldata->xy[0] = xy[0];
 	lldata->xy[1] = xy[1];
 	
@@ -74,8 +74,8 @@ void LightLifeLogger::setGroup(unsigned char group)
 
 void LightLifeLogger::setLocked()
 {
-	LLMode m = lldata->mode;
-	lldata->mode = LL_SET_LOCKED;
+	PILEDMode m = lldata->mode;
+	lldata->mode = PILED_SET_LOCKED;
 	send();
 
 	//Reset immediately after button press

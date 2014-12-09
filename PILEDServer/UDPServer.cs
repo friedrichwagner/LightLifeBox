@@ -9,66 +9,7 @@ using Lumitech.Interfaces;
 
 namespace PILEDServer
 {
-    //Singleton: There can only be one
-    //http://www.codeproject.com/Articles/42354/The-Art-of-Logging
-    //http://www.dofactory.com/Patterns/PatternSingleton.aspx#csharp
-
-    
-    public enum PILEDMode
-    {
-        PILED_SET_BRIGHTNESS = 1,
-        PILED_SET_CCT = 2,
-        PILED_SET_XY = 3,	    
-	    PILED_SET_RGB = 4,
-        PILED_SET_LOCKED = 99,
-    };
-
-    public enum LLMsgType
-    {
-        LL_SET_LIGHTS = 10,
-        LL_CALL_SCENE = 20,
-        LL_START_TESTSEQUENCE = 30,
-        LL_STOP_TESTSEQUENCE = 31,
-        LL_PAUSE_TESTSEQUENCE = 32,
-        LL_NEXT_TESTSEQUENCE_STEP = 33,
-        LL_PREV_TESTSEQUENCE_STEP=34
-    };
-
-    public class PILEDData
-    {
-        public PILEDMode mode;
-        public int groupid;
-        public int cct;
-        public int brightness;
-        public double[] xy= new double[2];
-        public int[] rgb= new int[3];
-        public string sender;
-        public string receiver;
-        public LLMsgType msgtype;
-
-        public PILEDData() {}
-    }
-
-    internal class Unsubscriber<PILEDData> : IDisposable
-    {
-        private List<IObserver<PILEDData>> _observers;
-        private IObserver<PILEDData> _observer;
-
-        internal Unsubscriber(List<IObserver<PILEDData>> observers, IObserver<PILEDData> observer)
-        {
-            this._observers = observers;
-            this._observer = observer;
-        }
-
-        public void Dispose()
-        {
-            if (_observers.Contains(_observer))
-                _observers.Remove(_observer);
-        }
-    }
-
-
-    public sealed class UDPServer : IObservable<PILEDData>, IDisposable
+    public sealed class UDPServer : IObservable<PILEDData>, IObservable<LightLifeData>, IDisposable
     {
         private bool done;
         private int listenPort;
@@ -82,7 +23,8 @@ namespace PILEDServer
             get { return bisStarted; }
         }
 
-        private List<IObserver<PILEDData>> observers;
+        private List<IObserver<PILEDData>> observersPILED;
+        private List<IObserver<LightLifeData>> observersLightLife;
 
         public UDPServer()
         {
@@ -91,7 +33,8 @@ namespace PILEDServer
 
             done = false;
             listenPort = ini.Read<int>("UDPServer", "ListenPort",12345);
-            observers = new List<IObserver<PILEDData>>();
+            observersPILED = new List<IObserver<PILEDData>>();
+            observersLightLife = new List<IObserver<LightLifeData>>();
 
             AddObservers();
 
@@ -109,11 +52,21 @@ namespace PILEDServer
         public IDisposable Subscribe(IObserver<PILEDData> observer)
         {
             // Check whether observer is already registered. If not, add it 
-            if (!observers.Contains(observer))
+            if (!observersPILED.Contains(observer))
             {
-                observers.Add(observer);
+                observersPILED.Add(observer);
             }
-            return new Unsubscriber<PILEDData>(observers, observer);
+            return new UnsubscriberPILEDData<PILEDData>(observersPILED, observer);
+        }
+
+        public IDisposable Subscribe(IObserver<LightLifeData> observer)
+        {
+            // Check whether observer is already registered. If not, add it 
+            if (!observersLightLife.Contains(observer))
+            {
+                observersLightLife.Add(observer);
+            }
+            return new UnsubscriberLightLifeData<LightLifeData>(observersLightLife, observer);
         }
 
 
@@ -130,9 +83,13 @@ namespace PILEDServer
 
         public void Stop()
         {
-            foreach (var observer in observers)
+            foreach (var observer in observersPILED)
                 observer.OnCompleted();
-            observers.Clear();
+            observersPILED.Clear();
+
+            foreach (var observer in observersLightLife)
+                observer.OnCompleted();
+            observersLightLife.Clear();
 
             if (ServerThread.IsAlive)
             {
@@ -165,8 +122,26 @@ namespace PILEDServer
                          {
                              string s = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
                              log.Info(s);
-                             PILEDData info = s.FromJson<PILEDData>();                             
-                             foreach (var observer in observers)
+
+                             LightLifeData info = new LightLifeData();
+
+                             if (s.Contains("roomid"))
+                             {
+                                 //Receive Messages from Admin Console
+                                 info = s.FromJson<LightLifeData>();
+                             }
+                             else
+                             {
+                                 //Receive Messages from ControlBox
+                                 info.piled = s.FromJson<PILEDData>();
+                             }
+
+                             //First send data to devices
+                             foreach (var observer in observersPILED)
+                                 observer.OnNext(info.piled);
+
+                             //sencond, log it to database
+                             foreach (var observer in observersLightLife)
                                  observer.OnNext(info);
                          }
                          catch (Exception ex)
@@ -189,7 +164,6 @@ namespace PILEDServer
              }
         }
 
-
         private void AddObservers()
         {
             string[] strInterfaces = ini.Read<string>("Definitions", "Interfaces", "").Split(',');
@@ -200,19 +174,21 @@ namespace PILEDServer
 
                 if (bEnable)
                 {
-                    IObserver<PILEDData> obs = null;
+                    IObserver<PILEDData> obsPILED = null;
+                    IObserver<LightLifeData> obsLightLife = null;
 
-                    if (s == "LTDMX")
-                    {
-                        obs = new LTDMXBase(3);
-                    }
-                    else if (s=="LightLifeLogger")
-                    {
-                        obs = new LightLifeLogger();
-                    }
+                    if (s == "DMX")
+                        obsPILED = new DMX(3);
+                    if (s == "DALI")
+                        obsPILED = new DALI();
+                    if (s == "NEOLINK")
+                        obsPILED = new NeoLink();    
 
-                    if (obs != null)
-                        Subscribe(obs);
+                    else if (s=="LightLifeLogger")                    
+                        obsLightLife = new LightLifeLogger();                
+
+                    if (obsPILED != null) Subscribe(obsPILED);
+                    if (obsLightLife != null) Subscribe(obsLightLife);
                 }
 
             }

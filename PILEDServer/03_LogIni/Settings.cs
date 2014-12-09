@@ -122,24 +122,28 @@ namespace Lumitech.Helpers
 
         public string ReadString(string section, string name, string defaultValue)
         {
-            XmlNode root = doc.DocumentElement;
-            XmlNode s = root.SelectSingleNode('/' + rootName + '/' + section);
-
-            if (s == null)
-                return defaultValue;  //not found
-
-            XmlNode n = s.SelectSingleNode(name);
-
-            if (n == null)
-                return defaultValue;  //not found
-
-            XmlAttributeCollection attrs = n.Attributes;
-
-            foreach (XmlAttribute attr in attrs)
+            try
             {
-                if (attr.Name == "value")
-                    return attr.Value;
+                XmlNode root = doc.DocumentElement;
+                XmlNode s = root.SelectSingleNode('/' + rootName + '/' + section);
+
+                if (s == null)
+                    return defaultValue;  //not found
+
+                XmlNode n = s.SelectSingleNode(name);
+
+                if (n == null)
+                    return defaultValue;  //not found
+
+                XmlAttributeCollection attrs = n.Attributes;
+
+                foreach (XmlAttribute attr in attrs)
+                {
+                    if (attr.Name == "value")
+                        return attr.Value;
+                }
             }
+            catch  { }
 
             return defaultValue;
         }

@@ -7,7 +7,7 @@ namespace Lumitech.Interfaces
 {
     //FW 9.2.2014
     public enum TuneableWhiteType { None, PILED_MM1, PILED_MM2, CWWW};
-    public enum CommInterface { None, Zigbee, ZLL, DMX, DALI }
+    public enum CommInterface { None, Zigbee, ZLL, DMX, DALI, NEOLINK }
 
     public interface IPILed
     {

@@ -40,7 +40,7 @@ namespace Lumitech.Interfaces
 
     public enum DMX_MODE:byte { CCT_MODE=0, RGB_MODE=101, XY_MODE=201 };
 
-    public class PILEDDMX : LTDMXBase
+    public class PILEDDMX : DMX
     {
         public PILEDDMX()
             : base(3)
@@ -49,14 +49,15 @@ namespace Lumitech.Interfaces
     }
 
 
-    public class LTDMXBase : IPILed, IObserver<PILEDData>
+    public class DMX : IPILed, IObserver<PILEDData>
     {
         private const int iDMXBroadCastStartAddress = 501;
+        private const int ARTNET_HEADER_SIZE = 18;
         protected const int MINCCT = 2700;
         protected const int MAXCCT = 6500;
 
         private byte[] buffer = new byte[512+1]; //DMX Start Code byte[0]=0 muss hier mitgeschickt werden, d.h. eigentlich werden 513 bytes geschickt
-        private byte[] artNetData = new byte[18+512];
+        private byte[] artNetData = new byte[ARTNET_HEADER_SIZE + 512];
         private uint handle;
         private  bool done = false;
         private int bytesWritten = 0;
@@ -96,7 +97,13 @@ namespace Lumitech.Interfaces
         public bool useBroadcast
         {
             get { return buseBroadcast; }
-            set { buseBroadcast = value; }
+            set 
+            {
+                buseBroadcast = value;
+                //steuern über Broadcast: Kanal 501=3, Kanal 512=3, auss bei "Address" und Reset
+                setDmxValue(-1, 3);
+                setDmxValue(10, 3);
+            }
         }
 
         private bool bConnected;
@@ -152,7 +159,7 @@ namespace Lumitech.Interfaces
 
         Thread sendThread;
 
-        public LTDMXBase(byte AnzChannels)
+        public DMX(byte AnzChannels)
         {
             int i;
             for (i=0;i<buffer.Length;i++)           buffer[i]=0;
@@ -255,28 +262,10 @@ namespace Lumitech.Interfaces
             //P,B,R--> R,G,B
             setb(new byte[] { b[2], b[0], b[1] });
 
-            if (useBroadcast == false)
-            {
-                setDmxValue(0, (byte) DMX_MODE.RGB_MODE);                
-                setDMXChannels(brightness);
-            }
-            else
-            {
-                //0. Reset
-                //myDMX.ResetDMXBroadCastChannels();
 
-                //1. Start
-                setDmxValueBroadcast(0, 3);
-                setDmxValueBroadcast(11, 3);
+            setDmxValue(0, (byte) DMX_MODE.RGB_MODE);                
+            setDMXChannels(brightness, buseBroadcast);
 
-                Thread.Sleep(100);
-
-                //2. Werte setzen
-                setDmxValueBroadcast(1, (byte)DMX_MODE.RGB_MODE);
-                setDMXChannels(brightness , true);
-
-                Thread.Sleep(100);
-            }
         }
 
         public virtual void setBrightnessOneModule(byte[] b, byte modulenr)
@@ -290,30 +279,10 @@ namespace Lumitech.Interfaces
 
             byte dmxcct = (byte)((CCT - MINCCT) / (MAXCCT - MINCCT) * 255);
 
-            if (useBroadcast == false)
-            {
-                setDmxValue(0, (byte)DMX_MODE.CCT_MODE);
-                setDmxValue(1, b);
-                setDmxValue(2, dmxcct);
-            }
-            else
-            {
-                //0. Reset
-                //myDMX.ResetDMXBroadCastChannels();
+            setDmxValue(0, (byte)DMX_MODE.CCT_MODE);
+            setDmxValue(1, b);
+            setDmxValue(2, dmxcct);
 
-                //1. Start
-                setDmxValueBroadcast(0, 3);
-                setDmxValueBroadcast(11, 3);
-
-                Thread.Sleep(100);
-
-                //2. Werte setzen
-                //setDmxValueBroadcast(0, 3);
-                setDmxValueBroadcast(1, (byte)DMX_MODE.CCT_MODE);
-                setDmxValueBroadcast(2, b);
-                setDmxValueBroadcast(3, dmxcct);
-                //setDmxValueBroadcast(11, 3);
-            }
         }
 
         public virtual void setRGB(byte[] b)
@@ -342,42 +311,27 @@ namespace Lumitech.Interfaces
         public virtual void Flash(byte[] b, byte turns)
         {
             int k;
-
-            if (useBroadcast)
-            {
-                //1. Start
-                setDmxValueBroadcast(0, 3);
-                setDmxValueBroadcast(11, 3);
-
-                setDmxValueBroadcast(1, (byte)DMX_MODE.RGB_MODE);
-            }
-            else
-                setDmxValue(0, (byte)DMX_MODE.RGB_MODE);
+ 
+            setDmxValue(0, (byte)DMX_MODE.RGB_MODE);
 
             for (int i = 0; i < turns; i++)
             {
                 for (k = 0; k <= 5; k++)
                 {
-                    for (uint m = 0; m < b.Length; m++)
+                    for (int m = 0; m < b.Length; m++)
                         if (b[m] > 0)
                         {
-                            if (useBroadcast)
-                                setDmxValueBroadcast(m + 2, (byte)(k * 50));
-                            else
-                                setDmxValue(m + 1, (byte)(k * 50));
+                              setDmxValue(m + 1, (byte)(k * 50));
                         }
 
                     Thread.Sleep(25);
                 }
                 for (k = 5; k >= 0; k--)
                 {
-                    for (uint m = 0; m < b.Length; m++)
+                    for (int m = 0; m < b.Length; m++)
                         if (b[m] > 0)
                         {
-                            if (useBroadcast)
-                                setDmxValueBroadcast(m + 2, (byte)(k * 50));
-                            else
-                                setDmxValue(m + 1, (byte)(k * 50));
+                            setDmxValue(m + 1, (byte)(k * 50));
                         }
 
                     Thread.Sleep(25);
@@ -385,20 +339,11 @@ namespace Lumitech.Interfaces
             }
 
 
-            if (useBroadcast)
-            {
-                setDmxValueBroadcast(1, 0);
-                setDmxValueBroadcast(2, 0);
-                setDmxValueBroadcast(3, 0);
-                setDmxValueBroadcast(4, 0);
-            }
-            else
-            {
-                setDmxValue(0, 0);
-                setDmxValue(1, 0);
-                setDmxValue(2, 0);
-                setDmxValue(3, 0);
-            }
+            setDmxValue(0, 0);
+            setDmxValue(1, 0);
+            setDmxValue(2, 0);
+            setDmxValue(3, 0);
+
         }
 
         public virtual void setXy(Single[] cie, byte b)
@@ -407,33 +352,11 @@ namespace Lumitech.Interfaces
             byte x = (byte)((cie[0] - 0.17) / 0.00188);
             byte y = (byte)((cie[1] - 0.08) / 0.00153);
 
-            if (useBroadcast == false)
-            {
-                setDmxValue(0, (byte) DMX_MODE.XY_MODE);
-                setDmxValue(1, b);
-                setDmxValue(2, x);
-                setDmxValue(3, y);
-            }
-            else
-            {
-                //0. Reset
-                //FW 7.3.2013 --> Problem, PI-LED stellt dann dazwischen immer auf 0
-                //myDMX.ResetDMXBroadCastChannels();
+            setDmxValue(0, (byte) DMX_MODE.XY_MODE);
+            setDmxValue(1, b);
+            setDmxValue(2, x);
+            setDmxValue(3, y);
 
-                //1. Start
-                setDmxValueBroadcast(0, 3);
-                setDmxValueBroadcast(11, 3);
-
-                Thread.Sleep(100);
-
-                //2. Werte setzen
-                //setDmxValueBroadcast(0, 3);
-                setDmxValueBroadcast(1, (byte)DMX_MODE.XY_MODE);
-                setDmxValueBroadcast(2, b);
-                setDmxValueBroadcast(3, x);
-                setDmxValueBroadcast(4, y);
-                //setDmxValueBroadcast(11, 3);
-            }
         }
 #endregion
 
@@ -442,76 +365,85 @@ namespace Lumitech.Interfaces
         {
             //1. Start Resetting
              ResetDMXBroadCastChannels();
+             buseBroadcast = true;
+             try
+             {
+                 setDmxValue(-1, 1); //=501
+                 for (int c = 0; c < 10; c++)
+                     setDmxValue(c, (byte)(10 * c));
 
-             setDmxValueBroadcast(0, 1);
-            for (uint c=1;c<11;c++)
-                setDmxValueBroadcast(c, (byte)(10*c));            
+                 Thread.Sleep(100);
 
-            Thread.Sleep(100);
+                 //2. 
+                 setDmxValue(10, 1);
 
-            //2. 
-            setDmxValueBroadcast(11, 1);
-
-            Thread.Sleep(1000);
-
-            //3. 
-            ResetDMXBroadCastChannels();
+                 Thread.Sleep(1000);
+             }
+             finally
+             {
+                 buseBroadcast = false;
+                 ResetDMXBroadCastChannels();
+             }
         }
 
         public void Address(uint newAddress)
         {
             //1. Start Adressing
             ResetDMXBroadCastChannels();
-            setDmxValueBroadcast(0 , 2);         
-            setDmxValueBroadcast(11, 2);
+            buseBroadcast = true;
+            try
+            {
+                setDmxValue(-1, 2); // 501 + 1 (wird in setDmxValue bei bBroadcast gerechent --> deswegen -1 hier
+                setDmxValue(10, 2);
 
-            Thread.Sleep(100);
+                Thread.Sleep(100);
 
-            //2. 
-            if (newAddress < 256)          
-                setDmxValueBroadcast(1, (byte) newAddress);          
-            else
-                setDmxValueBroadcast(2, (byte) (newAddress-256));
+                //2. 
+                if (newAddress < 256)
+                    setDmxValue(1, (byte)newAddress);
+                else
+                    setDmxValue(2, (byte)(newAddress - 256));
 
-            Thread.Sleep(100);
+                Thread.Sleep(100);
 
-            //2. 
-            if (newAddress < 256)          
-                setDmxValueBroadcast(3, 255);          
-            else
-                setDmxValueBroadcast(4, 255);
+                //2. 
+                if (newAddress < 256)
+                    setDmxValue(3, 255);
+                else
+                    setDmxValue(4, 255);
 
-            Thread.Sleep(1000);
+                Thread.Sleep(1000);
 
-            //3. 
-            ResetDMXBroadCastChannels();
+                //3. 
+            }
+            finally
+            {
+                buseBroadcast = false;
+                ResetDMXBroadCastChannels();
+            }
         }
 
         public void ResetDMXBroadCastChannels()
         {
-            for (uint c=0;c<12;c++)
-                setDmxValueBroadcast(c, 0);
+            for (int c = iDMXBroadCastStartAddress; c < iDMXBroadCastStartAddress+12; c++)
+                setDmxValue(c, 0);
         }
 
         //FW 9.2.2014 - relative channel now: 0..4 --> 1,2,3,4
-        protected void setDmxValue(uint channel, byte value)
+        protected void setDmxValue(int offset, byte value)
         {
-            if ( (iStartAddress + channel) < (buffer.Length-1))
-                buffer[iStartAddress + channel] = value;
+            int channel = 0;
 
-            if ( (18 + iStartAddress + channel - 1) < (artNetData.Length))
-                artNetData[18 + iStartAddress + channel - 1] = value;
-        }
+            if (buseBroadcast)
+                channel = iDMXBroadCastStartAddress + offset + 1;
+            else
+                channel = (int)iStartAddress + offset;
 
-        protected void setDmxValueBroadcast(uint channel, byte value)
-        {
-            //channel: 0(= DMX 501) to 11 (= DMX 512)
-            if ( (iDMXBroadCastStartAddress + channel) <= (buffer.Length-1)) //501+11 <= 513-1
-                buffer[iDMXBroadCastStartAddress + channel] = value;
-
-            if ( (18 + iDMXBroadCastStartAddress + channel - 1) <= (artNetData.Length-1)) // 18+501+11-1 < 530-1
-                artNetData[18 + iDMXBroadCastStartAddress + channel - 1] = value;
-                //artNetData[18 + iDMXBroadCastStartAddress + channel] = value;
+            if (channel >= 1 && channel <= 512)
+            {
+                buffer[channel] = value;
+                artNetData[ARTNET_HEADER_SIZE + channel - 1] = value;
+            }
         }
 
         protected byte getDmxValue(uint channel)
@@ -546,22 +478,11 @@ namespace Lumitech.Interfaces
         {
             if (TWType == TuneableWhiteType.PILED_MM1 || TWType == TuneableWhiteType.PILED_MM2)
             {
-                if (useBroadcast)
-                {
-                    setDmxValueBroadcast(1, b[2]); setDmxValueBroadcast(2, b[0]); setDmxValueBroadcast(3, b[1]);
-                }
-                else
-                {
-                    setDmxValue(1, b[2]); setDmxValue(2, b[0]); setDmxValue(3, b[1]);
-                }
+                setDmxValue(1, b[2]); setDmxValue(2, b[0]); setDmxValue(3, b[1]);
             }
             else
-            {
-                if (useBroadcast)
-                    for (byte i = 1; i <= iCntChannels; i++) setDmxValueBroadcast((uint)(i+1), b[i-1]);
-                else
-                    for (byte i = 1; i <= iCntChannels; i++) setDmxValue(i, b[i-1]);
-            }
+                for (byte i = 1; i <= iCntChannels; i++) setDmxValue(i, b[i - 1]);
+    
         }
 #endregion
 

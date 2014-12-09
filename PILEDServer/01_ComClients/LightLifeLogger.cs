@@ -11,7 +11,7 @@ using PILEDServer;
 
 namespace Lumitech.Interfaces
 {
-    class LightLifeLogger: IObserver<PILEDData>
+    class LightLifeLogger: IObserver<LightLifeData>
     {        
         private string name;
         private LTSQLCommand cmd;
@@ -20,7 +20,7 @@ namespace Lumitech.Interfaces
                                           " values (:1, :2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14)";
 
         private Logger log;
-        private ConcurrentQueue<PILEDData>  dataQueue;
+        private ConcurrentQueue<LightLifeData> dataQueue;
         private Thread logThread; 
         private bool done ;
 
@@ -29,7 +29,7 @@ namespace Lumitech.Interfaces
             log = Logger.GetInstance();
             Settings ini = Settings.GetInstance();
 
-            dataQueue = new ConcurrentQueue<PILEDData>();
+            dataQueue = new ConcurrentQueue<LightLifeData>();
            
             name = ini.ReadAttrib<string>("LightLifeLogger", "name", "");
 
@@ -63,7 +63,7 @@ namespace Lumitech.Interfaces
         }
 
         //Called from UDP Server when new data arrive
-        public virtual void OnNext(PILEDData info)
+        public virtual void OnNext(LightLifeData info)
         {
             //push to queue
             dataQueue.Enqueue(info);
@@ -73,7 +73,7 @@ namespace Lumitech.Interfaces
         {
             try
             {
-                PILEDData info;
+                LightLifeData info;
                 cmd = new LTSQLCommand();   //connect to <Database> implizit
                 cmd.Connection.Open();
 
@@ -84,20 +84,20 @@ namespace Lumitech.Interfaces
                         string stmt = sqlInsert;
                         cmd.prep(stmt);
                         int i = 0;
-                        cmd.Params[i++] = 0; //info.roomid;
-                        cmd.Params[i++] = 0; //info.userid;
-                        cmd.Params[i++] = 0; //info.vlid;
-                        cmd.Params[i++] = 0; //info.sceneid;
-                        cmd.Params[i++] = 0; //info.sequenceid;
-                        cmd.Params[i++] = info.brightness;
-                        cmd.Params[i++] = info.cct;
-                        cmd.Params[i++] = info.xy[0];
-                        cmd.Params[i++] = info.xy[1];
-                        cmd.Params[i++] = (int)info.mode;
-                        cmd.Params[i++] = info.sender;
-                        cmd.Params[i++] = info.receiver;
-                        cmd.Params[i++] = (int)info.msgtype;                        
-                        cmd.Params[i++] = "This is a test";
+                        cmd.Params[i++] = info.roomid;
+                        cmd.Params[i++] = info.userid;
+                        cmd.Params[i++] = info.vlid;
+                        cmd.Params[i++] = info.sceneid;
+                        cmd.Params[i++] = info.sequenceid;
+                        cmd.Params[i++] = info.piled.brightness;
+                        cmd.Params[i++] = info.piled.cct;
+                        cmd.Params[i++] = info.piled.xy[0];
+                        cmd.Params[i++] = info.piled.xy[1];
+                        cmd.Params[i++] = (int)info.piled.mode;
+                        cmd.Params[i++] = info.piled.sender;
+                        cmd.Params[i++] = info.piled.receiver;
+                        cmd.Params[i++] = (int)info.piled.msgtype;                        
+                        cmd.Params[i++] = info.remark;
                         cmd.Exec();
 
                     }

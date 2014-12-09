@@ -32,6 +32,13 @@ struct LightLifeData
 	string receiver;
 	LLMsgType msgtype;
 
+	int roomid;
+	int userid;
+	int vlid;
+	int sceneid;
+	int sequenceid;
+	int stepid;
+
 	LightLifeData(string pSender)
 	{
 		groupid = 0;

@@ -9,7 +9,7 @@ using PILEDServer;
 
 namespace Lumitech.Interfaces
 {
-    class DALIInterface : IPILed, IObserver<PILEDData>
+    class DALI : IPILed, IObserver<PILEDData>
     {
         private Object thisLock = new Object();
         private const int DALI_SEND_SLEEPTIME = 50;
@@ -20,11 +20,6 @@ namespace Lumitech.Interfaces
         private const int RECV_LENGTH = 1;
         private byte[] recvDataArray = new byte[RECV_LENGTH];
 
-        //private byte lastBrightness;
-        //private Single lastCCT = 3000;
-        //private Single[] lastXy = new Single[2];
-        //private byte[] lastRGB = new byte[3];
-        //private ZLLCommand lastCmd;
         private int fadetime = 0;
         public int FadingTime
         {
@@ -37,7 +32,7 @@ namespace Lumitech.Interfaces
        //FW 3.12.2014
        private IDisposable cancellation;
 
-        public DALIInterface()
+        public DALI()
         {
             serial = new SerialPort();
             Settings ini = Settings.GetInstance();
@@ -186,10 +181,6 @@ namespace Lumitech.Interfaces
 
         private void Receive()
         {
-            //Was kommt da zurück ?
-            /*int i = serial.BytesToRead;
-            while (serial.BytesToRead>0)  serial.ReadByte();
-            int b = i * 2;*/
             int i;
             //try
             {
@@ -206,9 +197,9 @@ namespace Lumitech.Interfaces
         public virtual void Subscribe(UDPServer provider)
         {
             Settings ini = Settings.GetInstance();
-            serial.PortName = ini.Read<string>("DALI", "UDP_Address", "127.0.0.1");
+            string[] PortName = ini.Read<string>("DALI", "USBCom", "127.0.0.1").Split(','); //z.B. COM4,19200,8,N,1
 
-            Connect();
+            Connect(PortName[0]); 
             cancellation = provider.Subscribe(this);
         }
 
@@ -231,7 +222,8 @@ namespace Lumitech.Interfaces
         //Called from UDP Server when new data arrive
         public virtual void OnNext(PILEDData info)
         {
-            iStartAddress = (uint)info.groupid;
+            //Currently always broadcast
+            //iStartAddress = (uint)info.groupid;
 
             switch (info.mode)
             {

@@ -70,7 +70,7 @@ struct NeoLinkData
 	unsigned char byMode;
 	unsigned char byAddress;
 
-	unsigned char data[24];
+	unsigned char data[DATA_SIZE];
 
 	unsigned char byGroupUpdate;
 	unsigned char byCRC;
@@ -86,13 +86,13 @@ struct NeoLinkData
 		byAddress = 0x00;
 
 		byGroupUpdate = 0x00;
-		byCRC = 0;
+		byCRC = 0x00;
 		byStop = 0x03;
 	}
 
 	unsigned char* ToByteArray()
 	{
-		std::vector<unsigned char> v;
+		//std::vector<unsigned char> v;
 		int i = 0;
 
 		byArrBuffer[i++] = byStart;

@@ -101,6 +101,7 @@ create table LLData
 	receiver varchar(15) not null,
 	MsgTypeID int not null,	
 	Remark varchar(max),
+	IP varchar(25),
 	added datetime default getdate()
 );
 

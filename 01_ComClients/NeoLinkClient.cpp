@@ -52,7 +52,7 @@ void NeoLinkClient::setCCT(unsigned int cct)
 	nlframe->byMode = NL_CCT;
 
 	//cct in mirek
-	unsigned int mirek = unsigned int(1e6 / cct);
+	unsigned int mirek = (unsigned int)(1e6 / cct);
 
 	v = lumitech::intToBytes(mirek);
 	nlframe->data[0] = v[0];

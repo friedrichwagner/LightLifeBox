@@ -110,7 +110,7 @@ namespace PILEDServer
 
              try
              {
-                 log.Info("UDPServer started");
+                 log.Info("UDPServer started Port="+ listenPort.ToString());
 
                  while (!done)
                  {
@@ -121,7 +121,7 @@ namespace PILEDServer
                          try
                          {
                              string s = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
-                             log.Info(s);
+                             log.Info(groupEP.Address +":"+ s);
 
                              LightLifeData info = new LightLifeData();
 
@@ -135,6 +135,8 @@ namespace PILEDServer
                                  //Receive Messages from ControlBox
                                  info.piled = s.FromJson<PILEDData>();
                              }
+
+                             info.ip = groupEP.Address.ToString(); //always save address as well
 
                              //First send data to devices
                              foreach (var observer in observersPILED)
@@ -185,10 +187,18 @@ namespace PILEDServer
                         obsPILED = new NeoLink();    
 
                     else if (s=="LightLifeLogger")                    
-                        obsLightLife = new LightLifeLogger();                
+                        obsLightLife = new LightLifeLogger();
 
-                    if (obsPILED != null) Subscribe(obsPILED);
-                    if (obsLightLife != null) Subscribe(obsLightLife);
+                    if (obsPILED != null)
+                    {
+                        log.Info("PILED Observer added:" + s);
+                        Subscribe(obsPILED);
+                    }
+                    if (obsLightLife != null)
+                    {
+                        log.Info("LightLife Observer added:" + s);
+                        Subscribe(obsLightLife);
+                    }
                 }
 
             }

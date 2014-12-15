@@ -53,6 +53,7 @@ namespace PILEDServer
         public int sequenceid;
         public int stepid;
         public string remark;
+        public string ip;
 
         public PILEDData piled;
 

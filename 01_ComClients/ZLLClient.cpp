@@ -40,7 +40,7 @@ void ZLLClient::setBrightness(unsigned int val)
 void ZLLClient::setCCT(unsigned int val)
 {
 	data->byCmd = SET_CCT;
-	data->cct = unsigned int(1e6/val); //in Mired
+	data->cct = (unsigned int)(1e6/val); //in Mired
 
 	send();
 }

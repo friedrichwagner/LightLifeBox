@@ -29,7 +29,7 @@ OBJECTS0=$(addprefix  $(ODIR0)/, $(_SOURCES0:.cpp=.o))
 
 #The ComClient files
 #_SOURCES1=baseClient.cpp DaliClient.cpp DMXClient.cpp  serialib.cpp ZLLClient.cpp ftdi.cpp 
-_SOURCES1=baseClient.cpp DaliClient.cpp DMXClient.cpp  serialib.cpp ZLLClient.cpp 
+_SOURCES1=baseClient.cpp DaliClient.cpp DMXClient.cpp  serialib.cpp ZLLClient.cpp NeoLinkClient.cpp LightLifeLogger.cpp
 SOURCES1=$(addprefix  $(SDIR1)/,$(_SOURCES1))
 OBJECTS1=$(addprefix  $(ODIR1)/, $(_SOURCES1:.cpp=.o))
 

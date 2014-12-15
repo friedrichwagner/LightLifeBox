@@ -186,7 +186,11 @@ void PILight::setXYUpDown(float [])
 void PILight::resetDefault()
 {
 	setCCT(255); //hier darf nicht CCT angegeben werden, sondern die POTI Stellung
-	setBrightness(defaultBrightness);	
+	setBrightness(defaultBrightness);
+
+	sslog.str(""); sslog.clear();
+	sslog << "resetDefault()";
+	log->cout(sslog.str());
 }
 
 void PILight::lockCurrState()
@@ -199,7 +203,13 @@ void PILight::lockCurrState()
 			{
 				LightLifeLogger* p = static_cast<LightLifeLogger*>(ComClients[i]);
 				if (p)
+				{
 					p->setLocked();
+
+					sslog.str(""); sslog.clear();
+					sslog << "lockCurrState()";
+					log->cout(sslog.str());
+				}
 			}				
 		}			
 	}	

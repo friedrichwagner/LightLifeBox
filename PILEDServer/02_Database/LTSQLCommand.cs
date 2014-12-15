@@ -111,10 +111,14 @@ namespace Lumitech.Helpers
                     else
                         sb.Replace(":" + (i + 1), "'" + Params[i] + "'");
                 }
+                else if (Params[i] == null)
+                {
+                    sb.Replace(":" + (i + 1), "null");
+                }
                 else //alle anderen Parametertypen numerisch
                 {
                     //Wird "." in "," umgewandelt ?
-                    string s= String.Format("{0}",Params[i]).Replace(",",".");
+                    string s = String.Format("{0}", Params[i]).Replace(",", ".");
                     sb.Replace(":" + (i + 1), s);
                     //sb = Regex.Replace(sb.ToString(), ":" + (i + 1)+"[, s);
                 }

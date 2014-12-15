@@ -52,7 +52,8 @@ namespace ControlBoxTester
             int iConnectedClients = 0;
             PortNr = pPortNr;
 
-            this.tcpListener = new TcpListener(IPAddress.Loopback, PortNr); // Change to IPAddress.Any for internet wide Communication
+            //this.tcpListener = new TcpListener(IPAddress.Loopback, PortNr); // Change to IPAddress.Any for internet wide Communication
+            this.tcpListener = new TcpListener(IPAddress.Any, PortNr); 
             this.listenThread = new Thread(new ThreadStart(ListenForClients));
             this.listenThread.Start();
 

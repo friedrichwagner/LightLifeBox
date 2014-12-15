@@ -5,6 +5,7 @@ bin/
 Debug/*
 !Debug/*.xml
 #!Debug/*.exe
+Thumbs.db
 
 #Visual Studio Code Browsing Database (big file)
 *.sdf

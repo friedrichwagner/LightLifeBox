@@ -41,7 +41,7 @@ namespace lumitech
 	{
 		std::string retstr("MyMachine");
 		std::vector<char> MachineName(MAX_PATH);
-		DWORD size;
+		DWORD size=0;
 		BOOL ret = false;
 		ret = ::GetComputerNameA(&retstr[0], &size);
 

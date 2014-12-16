@@ -6,6 +6,7 @@ Debug/*
 !Debug/*.xml
 #!Debug/*.exe
 Thumbs.db
+*nativecodeanalysis*
 
 #Visual Studio Code Browsing Database (big file)
 *.sdf

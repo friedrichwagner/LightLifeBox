@@ -10,6 +10,7 @@ Button::Button(std::string pSection)
 	done = false;
 	isPressed = false;
 	Section=pSection;
+	Active = true;
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);
@@ -66,18 +67,22 @@ bool Button::getIsPressed()
 unsigned long Button::startListen()
 {  
 	log->cout(this->Name+": Button start listening ...");
-	while (!done) 
-	{	
+	while (!done)
+	{
 		//log->cout(this->Name + ": waiting...");
 		PortVal = getPortVal();
 
-		if (!isPressed && PortVal == -1) ButtonDown();
-		//else if (isPressed && PortVal < 10) ButtonPressed();
-		else if (isPressed && PortVal == 1001) ButtonUp();
-
+		if (Active)
+		{
+			if (!isPressed && PortVal == -1) ButtonDown();
+			//else if (isPressed && PortVal < 10) ButtonPressed();
+			else if (isPressed && PortVal == 1001) ButtonUp();
+		}
 		//lumitech::sleep(threadSleepTime);
 	}
+
 	log->cout(this->Name + ": stop listening...");
+	
 	return 0;
 }
 
@@ -89,7 +94,7 @@ void Button::start()
 void Button::stop()
 {
 	done = true;
-	thisThread.join();
+	if (thisThread.joinable()) thisThread.join();
 }
 
 

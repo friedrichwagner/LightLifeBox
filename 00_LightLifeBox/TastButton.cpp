@@ -50,18 +50,23 @@ unsigned long TastButton::startListen()
 		PortVal = getPortVal();
 		//PortVal2 = getPortVal2();
 
-		if (!isPressed && PortVal == -1) ButtonDown();
-		//else if (isPressed && PortVal < 10) ButtonPressed();
-		else if (isPressed && PortVal == 1001) ButtonUp();
-
-		//if  ( (unsigned long)labs((long)(actualValue - PortVal2)) > delta)
-		if ((PortVal >=0) && (PortVal <= 1000))
+		if (Active)
 		{
-			OnChange(PortVal);
-		}
+			if (!isPressed && PortVal == -1) ButtonDown();
+			//else if (isPressed && PortVal < 10) ButtonPressed();
+			else if (isPressed && PortVal == 1001) ButtonUp();
 
+			//if  ( (unsigned long)labs((long)(actualValue - PortVal2)) > delta)
+			if ((PortVal >= 0) && (PortVal <= 1000))
+			{
+				OnChange(PortVal);
+			}
+		}
 		//lumitech::sleep(threadSleepTime);
 	}
+	
+	log->cout(this->Name + ": stop listening...");
+
 	return 0;
 }
 

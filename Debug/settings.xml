@@ -9,6 +9,7 @@
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
 	<Sleep value="1000"/>	
+	<CommandPort value="1001"/>
   </ControlBox>
   
   <Button1 id="1" name="btnLock">

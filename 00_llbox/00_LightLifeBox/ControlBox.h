@@ -5,12 +5,15 @@
 #include "Settings.h"
 #include "Logger.h"
 #include "TastButton.h"
+#include "RemoteCommands.h"
 
 using namespace std;
 
 class ControlBox : IButtonObserver
 {
 protected:
+	friend class RemoteCommands;
+
 	static ControlBox* _instance;	//Class property!
 
 	//Fields
@@ -28,7 +31,7 @@ protected:
 	//Functions
 	bool Init();
 
-	ControlBox(std::string pName); //private contructor	
+	ControlBox(std::string pName); //private contructor		
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL

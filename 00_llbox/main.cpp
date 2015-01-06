@@ -13,6 +13,7 @@
 #include "DaliClient.h"
 #include "NeoLinkClient.h"
 #include "LightLifeLogger.h"
+#include "RemoteCommands.h"
 
 using namespace std;
 
@@ -145,9 +146,14 @@ void runLightLifeBox(string boxName)
 	if (neolink->getCntClients() > 0) box->Lights[0]->addComClient(neolink);
 	if (ll->getCntClients() > 0) box->Lights[0]->addComClient(ll);
 
+	RemoteCommands* rmCmd = new RemoteCommands(box);
+	rmCmd->start();
+
 	//Prgram loops here endlessly
 	box->EventLoop();
 
+	rmCmd->stop();
+	delete rmCmd;
 
 	box->Lights[0]->removeComClients();
 

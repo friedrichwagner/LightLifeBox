@@ -49,7 +49,8 @@ protected:
 public:
 	Button(std::string pName);
 	~Button();	
-	
+
+	bool Active;
 	bool getIsPressed();
 	string getName();
 	int getID();

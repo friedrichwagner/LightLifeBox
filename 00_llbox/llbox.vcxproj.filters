@@ -88,6 +88,9 @@
       <Filter>01 ComClients</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="00_LightLifeBox\RemoteCommands.cpp">
+      <Filter>00 LightLifeBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01_ComClients\baseClient.h">
@@ -155,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="01_ComClients\LightLifeLogger.h">
       <Filter>01 ComClients</Filter>
+    </ClInclude>
+    <ClInclude Include="00_LightLifeBox\RemoteCommands.h">
+      <Filter>00 LightLifeBox</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

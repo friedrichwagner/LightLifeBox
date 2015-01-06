@@ -19,6 +19,58 @@ create Table LLUser
 	added datetime default getdate()
 );
 
+create Table LLUserInfo
+(
+	DataId identity not null primary key,
+	UserID int NOT NULL ,
+	HelligkeitsSensitivitaet float,
+	Farbempfindlichkeit float,
+	Farbwahrnehming varchar(20),
+	HelligkeitAugen int,
+	Augenfarbe varchar(20),
+	Hauttyp varchar(20),
+	BMI float,
+	Gewicht float,
+	GroesseCM float,
+	Schlaftyp varchar(20),
+	Haendigkeit varchar(20),
+	Lateralitaet varchar(20),
+	Augendominanz varchar(20),
+	Beanspruchungsgrad int,
+	Wachheit int,
+	Blutdruck_Beginn int,
+	Blutdruck_Ende int,
+	HRV_Beginn int,
+	HRV_Ende int,	
+	Antwort1 varchar(50),
+	Antwort2 varchar(50),
+	Lichtexperte varchar(20),
+	Technikaffinität varchar(20),
+	InteresseBeleuchtung varchar(20),
+	Bedarf varchar(20),
+	Bedeutung varchar(20),
+	Berufstätigkeit varchar(20),
+	Bildungsgrad varchar(20),
+	HelligkeitAussen int,
+	TemperaturAussen int,
+	TemperaturInnen int,
+	Luftfeuchtigkeit int,
+	BewoelkungAussen varchar(20),
+	SchneelageCM int,
+	Lerneffekte varchar(20),
+	Feld1 varchar(50),
+	Feld2 varchar(50),
+	Feld3 varchar(50),
+	Feld4 varchar(50),
+	Feld5 varchar(50),
+	Feld6 varchar(50),
+	Feld7 varchar(50),
+	Feld8 varchar(50),
+	Feld9 varchar(50),
+	Feld10 varchar(50),
+	added datetime default getdate()
+);
+
 create Table LLRoom
 (
 	RoomID int primary key,

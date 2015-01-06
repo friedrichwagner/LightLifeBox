@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Settings>
+  <Logging>
+	<debugport value="9999" />
+    <loglevel value="5" />
+  </Logging>
+  <ControlBox name="Box1">
+	<Potis value="Poti1,Poti2,Poti3" />
+	<!--<Potis value="Poti1" />-->
+	<Buttons value="Button1" />
+	<PILights value="Light1" />
+	<Sleep value="1000"/>
+  </ControlBox>
+  <Button1 id="1" name="btnLock">
+	<PortNr value="1234"/>
+	<Sleep value="1000"/>
+	<Testing value="MockButton"/>
+  </Button1>
+  <Poti1 id="1" name="btnBrightness">
+	<PortNr value="1234"/>
+	<Sleep value="1000"/>
+	<Testing value="MockPoti1"/>
+  </Poti1>
+  <Poti2 id="2" name="btnCCT">
+	<PortNr value="12345"/>
+	<Sleep value="1000"/>
+	<Testing value="MockPoti2"/>
+  </Poti2>
+  <Poti3 id="3" name="btnX">
+	<PortNr value="123456"/>
+	<Sleep value="1000"/>
+	<Testing value="MockPoti3"/>
+  </Poti3>
+  <Poti4 id="4" name="btnY">
+	<PortNr value="123456"/>
+	<Sleep value="1000"/>
+	<Testing value="MockPoti4"/>
+  </Poti4>
+  <Light1 id="1" name="liBazille">
+	<Default value="2700,100"/>	
+  </Light1>  
+  
+  <MockButton>
+	<IP value="10.0.0.204"/>
+	<Port value="10000"/>
+  </MockButton>
+  <MockPoti1>
+	<IP value="10.0.0.204"/>
+	<Port value="10000"/>
+  </MockPoti1>
+  <MockPoti2>
+	<IP value="10.0.0.204"/>
+	<Port value="10000"/>
+  </MockPoti2>
+  <MockPoti3>
+	<IP value="10.0.0.204"/>
+	<Port value="10000"/>
+  </MockPoti3>
+  <MockPoti4>
+	<IP value="10.0.0.204"/>
+	<Port value="10000"/>
+  </MockPoti4>
+   
+  <LIGHTLIFESERVER name="LightLifeServer1">
+    <IP-Address value="10.0.0.204" />
+	<IP-Port value="12345" />
+  </LIGHTLIFESERVER>
+ 
+</Settings>

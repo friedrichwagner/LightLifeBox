@@ -2,8 +2,9 @@
 ipch/
 obj/
 bin/
-Debug/*
-!Debug/*.xml
+
+00_llbox/Debug/*
+!00_llbox/Debug/*.xml
 #!Debug/*.exe
 Thumbs.db
 *nativecodeanalysis*
@@ -12,8 +13,8 @@ Thumbs.db
 *.sdf
 *.suo
 
-Release/*
-!Release/*.xml
+00_llbox/Release/*
+!00_llbox/Release/*.xml
 #!Release/*.exe
 
 #gcc *.o directory

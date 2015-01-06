@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="FlashNPrint.Pages.SimpleTest"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" Width="700" PreviewKeyUp="UserControl_PreviewKeyUp" Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.Resources>
+            <sys:Int32 x:Key="fixedInt0">0</sys:Int32>
+            <sys:Int32 x:Key="fixedInt1">1</sys:Int32>
+            <sys:Int32 x:Key="fixedInt2">2</sys:Int32>
+        </Grid.Resources>
+            <Grid VerticalAlignment="Stretch" PreviewKeyUp="UserControl_PreviewKeyUp">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                 <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="0"  Background="LightGray" />
+            <TextBlock TextWrapping="Wrap" Text="FAUF"   FontSize="20" Grid.Column="0" Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBox x:Name="txtFauf"  Height="40" FontSize="24" Background="Yellow"  TextWrapping="Wrap" Text="{Binding Path=head.FAUF, Mode=TwoWay}" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" MaxLength="100" Margin="10" />
+
+            <Border Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="4" Background="LightGray" />
+            <TextBlock TextWrapping="Wrap" Text="Function"  FontSize="20" Grid.Column="0" Grid.Row="1" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap" Text="OK ?" FontSize="20" Grid.Column="1" Grid.Row="1" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap" Text="Not OK ?"  FontSize="20" Grid.Column="2" Grid.Row="1" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+           
+            <Button x:Name="btnConnect" Content="Connect"  Grid.Column="3" Grid.Row="1" Click="btnConnect_Click" Background="LightGray" Margin="10" FontSize="25" Tag="1" />
+
+            <Border Grid.Row="3" Grid.Column="0"  Background="LightGreen" />
+            <TextBlock TextWrapping="Wrap" Text="Phosphor" FontSize="20" Grid.Column="0" Grid.Row="3" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Border Grid.Row="4" Grid.Column="0"  Background="LightBlue" />
+            <TextBlock TextWrapping="Wrap" Text="Blau" FontSize="20" Grid.Column="0" Grid.Row="4" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Border Grid.Row="2" Grid.Column="0"  Background="Red" />
+            <TextBlock TextWrapping="Wrap" Text="Rot" FontSize="20" Grid.Column="0" Grid.Row="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Border Grid.Row="5" Grid.Column="0"  Background="LightGray" />
+            <TextBlock TextWrapping="Wrap" Text="T-Sensor"  FontSize="20" Grid.Column="0" Grid.Row="5" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Border Grid.Row="6" Grid.Column="0"  Background="LightGray" />
+            <TextBlock TextWrapping="Wrap" Text="Eeprom" FontSize="20" Grid.Column="0" Grid.Row="6" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+            <RadioButton x:Name="rbRedOK" Content="" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="Red" Click="rbPhosphorOK_Click" Tag="1" IsChecked="{Binding pos.RedOK, Mode=TwoWay}"/>
+            <RadioButton x:Name="rbRedNOTOK" Content="" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="Red" Click="rbPhosphorOK_Click" Tag="1" IsChecked="{Binding pos.RedOK, Converter={StaticResource oppositeConverter}}"/>
+            <Button x:Name="btnRed" Content="On/Off"  Grid.Column="3" Grid.Row="2" Command="{Binding ToggleLEDCommand}"  CommandParameter="{StaticResource fixedInt0}" Background="LightGray" Margin="10" FontSize="25" Tag="1" />
+
+            <RadioButton x:Name="rbPhosphorOK" Content="" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="Phosphor" Click="rbPhosphorOK_Click" Tag="2" IsChecked="{Binding pos.PhosphorOK, Mode=TwoWay}"/>
+            <RadioButton x:Name="rbPhosphorNOTOK" Content="" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="Phosphor" Click="rbPhosphorOK_Click" Tag="2" IsChecked="{Binding pos.PhosphorOK, Converter={StaticResource oppositeConverter}}"/>
+            <Button x:Name="btnPhosphor" Content="On/Off"  Grid.Column="3" Grid.Row="3" Command="{Binding ToggleLEDCommand}"  CommandParameter="{StaticResource fixedInt1}" Background="LightGray" Margin="10" FontSize="25" Tag="2" />
+
+            <RadioButton x:Name="rbBlueOK" Content="" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="Blue" Click="rbPhosphorOK_Click" Tag="3" IsChecked="{Binding pos.BlueOK, Mode=TwoWay}"/>
+            <RadioButton x:Name="rbBlueNOTOK" Content="" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="Blue" Click="rbPhosphorOK_Click" Tag="3" IsChecked="{Binding pos.BlueOK, Converter={StaticResource oppositeConverter}}"/>
+            <Button x:Name="btnBlue" Content="On/Off"  Grid.Column="3" Grid.Row="4" Command="{Binding ToggleLEDCommand}"  CommandParameter="{StaticResource fixedInt2}" Background="LightGray" Margin="10" FontSize="25" Tag="3" />
+
+            <RadioButton x:Name="rbTSensorOK" Content="" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="TSensor" IsEnabled="False" IsChecked="{Binding pos.TSensorOK}"/>
+            <RadioButton x:Name="rbTSensorNOTOK" Content="" Grid.Column="2" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="TSensor" IsEnabled="False" IsChecked="{Binding pos.TSensorOK, Converter={StaticResource oppositeConverter}}" />
+            <Button x:Name="btnTSensor" Content="Read"  Grid.Column="3" Grid.Row="5" Command="{Binding ReadTemperatureCommand}" Background="LightGray" Margin="10" FontSize="25" Tag="4" />
+
+            <RadioButton x:Name="rbEepromOK" Content="" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="Eeprom" IsEnabled="False" IsChecked="{Binding pos.EepromOK}"/>
+            <RadioButton x:Name="rbEepromNOTOK" Content="" Grid.Column="2" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" GroupName="Eeprom" IsEnabled="False" IsChecked="{Binding pos.EepromOK, Converter={StaticResource oppositeConverter}}"/>
+            <Button x:Name="btnEeprom" Content="Check"  Grid.Column="3" Grid.Row="6" Command="{Binding CheckEepromCommand}" Background="LightGray" Margin="10" FontSize="25" Tag="5" />
+
+            <Button x:Name="btnStartTest" Content="Start Test (F12)" Height="80" FontSize="36" FontWeight="Bold" VerticalAlignment="Bottom" Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="3" Background="LightGray" Margin="10" Click="btnStartTest_Click" />
+
+            <TextBlock TextWrapping="Wrap" Text="Total / OK:"  FontSize="15" Grid.Column="4" Grid.Row="7" FontWeight="Bold" HorizontalAlignment="Left" />
+            <TextBox x:Name="txtCntTotal" Grid.Column="4"  FontSize="20" Grid.Row="7" VerticalAlignment="Center" MaxLength="4" HorizontalAlignment="Left" Width="80" Text="{Binding head.cntTotal}"/>
+            <TextBox x:Name="txtCntOK" Grid.Column="4"  FontSize="20" Grid.Row="7"  VerticalAlignment="Center" MaxLength="4" HorizontalAlignment="Right" Width="80" Text="{Binding head.cntOK}"/>
+        </Grid>
+            
+    </Grid>
+</UserControl>

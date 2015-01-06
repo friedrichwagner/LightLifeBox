@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="ModernUIApp2.Content.Readout2.Step1_Header"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400">
+    <Grid>
+        <ScrollViewer>
+            <StackPanel x:Name="Panel" MinWidth="150">
+                <TextBlock Text="Step1 : Input Header Data" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
+
+                <Grid HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition MinWidth="150"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock HorizontalAlignment="Right" Style="{StaticResource Title}" TextWrapping="Wrap" Text="Produktionsauftrag:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
+                    <ComboBox x:Name="cbFauf"  Text="" Height="40" FontSize="24" Background="Yellow" Grid.Column="1"  Grid.Row="0" VerticalAlignment="Top"  Margin="0,10,0,10" IsEditable="True" LostFocus="cbFauf_LostFocus" TabIndex="0"  />
+
+                    <TextBlock HorizontalAlignment="Right" Style="{StaticResource Title}" TextWrapping="Wrap" Text="Kundenauftrag:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
+                    <ComboBox x:Name="cbKauf" Text="" Height="40" FontSize="24" Background="Yellow" Grid.Column="1"  Grid.Row="1" VerticalAlignment="Top" Margin="0,10,0,10" IsEditable="True" LostFocus="cbFauf_LostFocus" TabIndex="1" />
+
+                    <TextBlock HorizontalAlignment="Right" Style="{StaticResource Title}" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2"/>
+                    <TextBox x:Name="txtUsername" Height="40" FontSize="24" Background="Yellow"  TextWrapping="Wrap" Text="{Binding Path=ltcs.data.KZ}" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" Margin="0,10,0,10" MaxLength="4" TabIndex="2" />
+
+                    <Border Grid.Row="3" Grid.Column="0"  Grid.ColumnSpan="2" Background="LightGray" />
+                    <Border Grid.Row="4" Grid.Column="0"  Grid.ColumnSpan="2" Background="LightGray"  />                    
+                    <TextBlock x:Name="txtArtNr" HorizontalAlignment="Left" Style="{StaticResource Title}" TextWrapping="Wrap" Text="{Binding Path=sap.Fert.Nr}" VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" />
+                    <TextBlock x:Name="txtArtDesc" HorizontalAlignment="Left" Style="{StaticResource Title}" TextWrapping="Wrap" Text="{Binding Path=sap.Fert.Description}" VerticalAlignment="Center" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"/>
+
+                    <TextBlock HorizontalAlignment="Right" Style="{StaticResource Title}" TextWrapping="Wrap" Text="Menge:" VerticalAlignment="Center" Grid.Column="0" Grid.Row="5"/>
+                    <TextBox x:Name="txtMenge" Height="40" FontSize="24" Background="LightGray"  TextWrapping="Wrap" Text="{Binding Path=sap.FaufQty}" VerticalAlignment="Center" Grid.Column="1" Grid.Row="5" Margin="0,10,0,10" IsReadOnly="True" LostFocus="txtMenge_LostFocus" TabIndex="4" />
+
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

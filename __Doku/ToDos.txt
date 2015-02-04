@@ -1,5 +1,5 @@
 ControlBox:
--Integration Drehpoti am Raspi
+-Integration Drehpoti am Raspi // In Progress by Dev_Nico
 -Belastungstests (Anzahl Boxen gleichzeitig)
 -Steuerung Funktionalität der Box von Console aus ?
 	--Sperren/Freigeben von Potis
@@ -18,6 +18,4 @@ Admin-App:
 - Testsequenzen: Wie genau ?
 - Szenen eingeben/modifizieren/löschen
 
-Test
-
-
+test12345

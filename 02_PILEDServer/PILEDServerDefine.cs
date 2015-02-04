@@ -11,6 +11,7 @@ namespace PILEDServer
 {
     public enum PILEDMode
     {
+        PILED_SET_NONE = 0,
         PILED_SET_BRIGHTNESS = 1,
         PILED_SET_CCT = 2,
         PILED_SET_XY = 3,

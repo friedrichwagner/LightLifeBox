@@ -134,16 +134,16 @@ void runLightLifeBox(string boxName)
 	}		
 	lumitech::setSequencePointer((void*) box);
 
-	DMXClient* dmx = new DMXClient();
-	ZLLClient* zll = new ZLLClient();
+	//DMXClient* dmx = new DMXClient();
+	//ZLLClient* zll = new ZLLClient();
 	//DaliClient* dali = new DaliClient();
-	NeoLinkClient* neolink = new NeoLinkClient();
+	//NeoLinkClient* neolink = new NeoLinkClient();
 	LightLifeLogger* ll = new LightLifeLogger(box->getName());
 	
-	if (dmx->getCntClients() > 0) box->Lights[0]->addComClient(dmx);
-	if (zll->getCntClients() > 0) box->Lights[0]->addComClient(zll);
+	//if (dmx->getCntClients() > 0) box->Lights[0]->addComClient(dmx);
+	//if (zll->getCntClients() > 0) box->Lights[0]->addComClient(zll);
 	//if (dali->getCntClients() > 0) box->Lights[0]->addComClient(dali);
-	if (neolink->getCntClients() > 0) box->Lights[0]->addComClient(neolink);
+	//if (neolink->getCntClients() > 0) box->Lights[0]->addComClient(neolink);
 	if (ll->getCntClients() > 0) box->Lights[0]->addComClient(ll);
 
 	RemoteCommands* rmCmd = new RemoteCommands(box);
@@ -158,10 +158,10 @@ void runLightLifeBox(string boxName)
 	box->Lights[0]->removeComClients();
 
 	delete ll;
-	delete neolink;
+	//delete neolink;
 	//delete dali;
-	delete zll;
-	delete dmx;
+	//delete zll;
+	//delete dmx;
 	
 	
 	delete box;

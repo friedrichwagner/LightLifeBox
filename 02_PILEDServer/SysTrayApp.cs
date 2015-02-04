@@ -13,11 +13,15 @@ namespace PILEDServer
         private ContextMenu trayMenu;
         private UDPServer UDPSrv;
 
+        private frmGroups fmGroups = null;
+
         public SysTrayApp()
         {
             // Create a simple tray menu with only one item.
             trayMenu = new ContextMenu();
             trayMenu.MenuItems.Add("Stop", OnStartStop);
+            trayMenu.MenuItems.Add("-");
+            trayMenu.MenuItems.Add("Show Lights", OnShowLights);
             trayMenu.MenuItems.Add("-");
             trayMenu.MenuItems.Add("Exit", OnExit);
 
@@ -69,6 +73,17 @@ namespace PILEDServer
                 UDPSrv.Start();
                 trayMenu.MenuItems[0].Text = "Stop";
             }
+        }
+
+        private void OnShowLights(object sender, EventArgs e)
+        {
+            if (fmGroups == null)
+            {
+                fmGroups = new frmGroups();
+                UDPSrv.fmGroups = fmGroups;
+            }
+
+            fmGroups.Show();
         }
 
         protected override void Dispose(bool isDisposing)

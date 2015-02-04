@@ -190,7 +190,7 @@ namespace Lumitech.Interfaces
         public NeoLink()
         {
             Settings ini = Settings.GetInstance();
-            fadetime = ini.Read<int>("NEOLINK", "Fadetime", 0);
+            fadetime = ini.Read<int>("NeoLink", "Fadetime", 0);
             enumIF = NEOLINK_INTERFACE.NONE;
         }
 
@@ -374,11 +374,11 @@ namespace Lumitech.Interfaces
             cancellation = provider.Subscribe(this);
 
             //First see, if we have a NeoLink Box
-            string strUDPAddress = ini.Read<string>("NOELINK", "UDP_Address", "");
+            string strUDPAddress = ini.Read<string>("NeoLink", "UDP_Address", "");
             if (strUDPAddress.Length>0)
                 Connect(strUDPAddress, UDPPort.ToString());
 
-            string[] strComport = ini.Read<string>("NOELINK", "USBCom", "").Split(',');
+            string[] strComport = ini.Read<string>("NeoLink", "USBCom", "").Split(',');
             if (strComport.Length > 0)
                 Connect(strComport[0]);
 

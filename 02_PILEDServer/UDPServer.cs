@@ -26,6 +26,8 @@ namespace PILEDServer
         private List<IObserver<PILEDData>> observersPILED;
         private List<IObserver<LightLifeData>> observersLightLife;
 
+        public frmGroups fmGroups { get; set; }
+
         public UDPServer()
         {
             log = Logger.GetInstance();
@@ -134,13 +136,21 @@ namespace PILEDServer
                              {
                                  //Receive Messages from ControlBox
                                  info.piled = s.FromJson<PILEDData>();
+
+                                 if (fmGroups!= null)
+                                 {
+                                     fmGroups.UpdateDataTable(info.piled);
+                                 }
                              }
 
                              info.ip = groupEP.Address.ToString(); //always save address as well
 
                              //First send data to devices
                              foreach (var observer in observersPILED)
+                             {
                                  observer.OnNext(info.piled);
+
+                             }
 
                              //sencond, log it to database
                              foreach (var observer in observersLightLife)

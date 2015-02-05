@@ -39,15 +39,16 @@ namespace lumitech
 
 	std::string getComputerNamePlatform()
 	{
-		std::string retstr("MyMachine");
-		std::vector<char> MachineName(MAX_PATH);
-		DWORD size=0;
+		std::string retstr("");
+		//std::vector<char> MachineName(MAX_PATH);
+		char szTemp[MAX_COMPUTERNAME_LENGTH + 1];
+		DWORD size = sizeof(szTemp);
 		BOOL ret = false;
-		ret = ::GetComputerNameA(&retstr[0], &size);
+		ret = ::GetComputerNameA(szTemp, &size);
 
 		if (ret)
 		{
-			retstr = std::string(retstr.begin(), retstr.begin() + size);
+			retstr = std::string(szTemp);
 		}
 
 		return retstr;

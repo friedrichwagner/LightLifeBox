@@ -24,9 +24,6 @@
     <ClCompile Include="01_ComClients\baseClient.cpp">
       <Filter>01 ComClients</Filter>
     </ClCompile>
-    <ClCompile Include="01_ComClients\DMXClient.cpp">
-      <Filter>01 ComClients</Filter>
-    </ClCompile>
     <ClCompile Include="01_ComClients\serialib.cpp">
       <Filter>01 ComClients</Filter>
     </ClCompile>
@@ -38,12 +35,6 @@
     </ClCompile>
     <ClCompile Include="02_DebugServer\tcpstream.cpp">
       <Filter>02 DebugServer</Filter>
-    </ClCompile>
-    <ClCompile Include="01_ComClients\ZLLClient.cpp">
-      <Filter>01 ComClients</Filter>
-    </ClCompile>
-    <ClCompile Include="01_ComClients\DaliClient.cpp">
-      <Filter>01 ComClients</Filter>
     </ClCompile>
     <ClCompile Include="00_LightLifeBox\helpers.cpp">
       <Filter>00 LightLifeBox</Filter>
@@ -81,9 +72,6 @@
     <ClCompile Include="05_Test\IPClient.cpp">
       <Filter>05 Test</Filter>
     </ClCompile>
-    <ClCompile Include="01_ComClients\NeoLinkClient.cpp">
-      <Filter>01 ComClients</Filter>
-    </ClCompile>
     <ClCompile Include="01_ComClients\LightLifeLogger.cpp">
       <Filter>01 ComClients</Filter>
     </ClCompile>
@@ -94,9 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01_ComClients\baseClient.h">
-      <Filter>01 ComClients</Filter>
-    </ClInclude>
-    <ClInclude Include="01_ComClients\DMXClient.h">
       <Filter>01 ComClients</Filter>
     </ClInclude>
     <ClInclude Include="01_ComClients\serialib.h">
@@ -110,12 +95,6 @@
     </ClInclude>
     <ClInclude Include="02_DebugServer\tcpstream.h">
       <Filter>02 DebugServer</Filter>
-    </ClInclude>
-    <ClInclude Include="01_ComClients\ZLLClient.h">
-      <Filter>01 ComClients</Filter>
-    </ClInclude>
-    <ClInclude Include="01_ComClients\DaliClient.h">
-      <Filter>01 ComClients</Filter>
     </ClInclude>
     <ClInclude Include="00_LightLifeBox\helpers.h">
       <Filter>00 LightLifeBox</Filter>
@@ -152,9 +131,6 @@
     </ClInclude>
     <ClInclude Include="05_Test\IPClient.h">
       <Filter>05 Test</Filter>
-    </ClInclude>
-    <ClInclude Include="01_ComClients\NeoLinkClient.h">
-      <Filter>01 ComClients</Filter>
     </ClInclude>
     <ClInclude Include="01_ComClients\LightLifeLogger.h">
       <Filter>01 ComClients</Filter>

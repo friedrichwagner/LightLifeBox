@@ -8,10 +8,11 @@
 #include "ControlBox.h"
 #include "DebugServer.h"
 
-#include "DMXClient.h"
+//FW 5.2.2015 - Only LightLifeLogger 
+/*#include "DMXClient.h"
 #include "ZLLClient.h"
 #include "DaliClient.h"
-#include "NeoLinkClient.h"
+#include "NeoLinkClient.h"*/
 #include "LightLifeLogger.h"
 #include "RemoteCommands.h"
 
@@ -134,16 +135,8 @@ void runLightLifeBox(string boxName)
 	}		
 	lumitech::setSequencePointer((void*) box);
 
-	//DMXClient* dmx = new DMXClient();
-	//ZLLClient* zll = new ZLLClient();
-	//DaliClient* dali = new DaliClient();
-	//NeoLinkClient* neolink = new NeoLinkClient();
 	LightLifeLogger* ll = new LightLifeLogger(box->getName());
 	
-	//if (dmx->getCntClients() > 0) box->Lights[0]->addComClient(dmx);
-	//if (zll->getCntClients() > 0) box->Lights[0]->addComClient(zll);
-	//if (dali->getCntClients() > 0) box->Lights[0]->addComClient(dali);
-	//if (neolink->getCntClients() > 0) box->Lights[0]->addComClient(neolink);
 	if (ll->getCntClients() > 0) box->Lights[0]->addComClient(ll);
 
 	RemoteCommands* rmCmd = new RemoteCommands(box);

@@ -45,10 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="01_ComClients\DALI.cs" />
     <Compile Include="01_ComClients\Interfaces.cs" />
     <Compile Include="01_ComClients\LightLifeLogger.cs" />
-    <Compile Include="01_ComClients\DMX.cs" />
     <Compile Include="01_ComClients\NeoLink.cs" />
     <Compile Include="02_Database\JSONSerialize.cs" />
     <Compile Include="02_Database\LTSQLCommand.cs" />

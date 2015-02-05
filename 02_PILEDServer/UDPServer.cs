@@ -189,12 +189,10 @@ namespace PILEDServer
                     IObserver<PILEDData> obsPILED = null;
                     IObserver<LightLifeData> obsLightLife = null;
 
-                    if (s == "DMX")
-                        obsPILED = new DMX(3);
-                    if (s == "DALI")
-                        obsPILED = new DALI();
-                    if (s == "NEOLINK")
-                        obsPILED = new NeoLink();    
+                    //if (s == "DMX")  obsPILED = new DMX(3);
+                    //if (s == "DALI")  obsPILED = new DALI();
+
+                    if (s == "NEOLINK") obsPILED = new NeoLink();    
 
                     else if (s=="LightLifeLogger")                    
                         obsLightLife = new LightLifeLogger();

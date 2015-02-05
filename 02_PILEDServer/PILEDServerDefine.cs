@@ -27,7 +27,8 @@ namespace PILEDServer
         LL_STOP_TESTSEQUENCE = 31,
         LL_PAUSE_TESTSEQUENCE = 32,
         LL_NEXT_TESTSEQUENCE_STEP = 33,
-        LL_PREV_TESTSEQUENCE_STEP = 34
+        LL_PREV_TESTSEQUENCE_STEP = 34,
+        LL_SET_BUTTONS = 35
     };
 
     public class PILEDData
@@ -55,6 +56,7 @@ namespace PILEDServer
         public int stepid;
         public string remark;
         public string ip;
+        public byte[] buttons = new byte[4];
 
         public PILEDData piled;
 

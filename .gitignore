@@ -1,7 +1,11 @@
 #Ignore Visual Studio intermediate files
 ipch/
 obj/
-bin/
+#bin/
+*.config
+*.pdb
+*.manifest
+*.log
 
 00_llbox/Debug/*
 !00_llbox/Debug/*.xml
@@ -12,6 +16,7 @@ Thumbs.db
 #Visual Studio Code Browsing Database (big file)
 *.sdf
 *.suo
+*.opensdf
 
 00_llbox/Release/*
 !00_llbox/Release/*.xml

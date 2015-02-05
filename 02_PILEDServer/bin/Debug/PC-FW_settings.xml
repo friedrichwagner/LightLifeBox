@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Settings>	
+  <Definitions>
+    <Database value="true" />
+    <Interfaces value="LightLifeLogger" />
+  </Definitions>
+  <UDPServer>
+	<ListenPort value="12345" />
+  </UDPServer>
+  <Database>
+    <DataSource value="LT-WSSQLTEST\SQLEXPRESS" />
+    <InitialCatalog value="LightLife" />
+    <UserID value="ltcs" />
+    <Password value="Lumitech03" />
+  </Database>
+  <!--<LTDMX name="DMXClient1">
+	<Enable value="True" />
+    <UDP-Address value="192.168.4.201" />
+	<UDP-Port value="6454" />
+  </LTDMX>-->
+  <LightLifeLogger name="LLLClient1">
+    <Enable value="True" />
+  </LightLifeLogger>  
+  <Logging>
+    <loglevel value="10" />
+  </Logging>
+</Settings>

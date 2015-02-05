@@ -6,7 +6,7 @@
 #include "Logger.h"
 #include "helpers.h"
 #include "serialib.h"
-#include "PILEDScene.h"
+//#include "PILEDScene.h"
 //#include "ftdi.h"
 
 enum enumClientType { CLIENT_NONE = 1, CLIENT_DMX = 2, CLIENT_DALI = 3, CLIENT_ZIGBEE = 4, CLIENT_ZLL = 5, CLIENT_WEBAPI = 6,  CLIENT_NEOLINK = 7, CLIENT_LIGHTLIFE=8 };

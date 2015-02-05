@@ -8,6 +8,7 @@
 #	-fPIC position independent code (dosen't work sometimes)
 #	-O optimize
 #########################
+SDIRMAIN=./
 SDIR0=./00_LightLifeBox
 SDIR1=./01_ComClients
 SDIR2=./02_DebugServer
@@ -15,21 +16,26 @@ SDIR3=./03_LogIni
 SDIR4=./04_Platform
 SDIR5=./05_Test
 
+ODIR=./_bin
 
-ODIR0=$(SDIR0)/obj
-ODIR1=$(SDIR1)/obj
-ODIR2=$(SDIR2)/obj
-ODIR3=$(SDIR3)/obj
-ODIR4=$(SDIR4)/obj
-ODIR5=$(SDIR5)/obj
+ODIR0=$(ODIR)
+ODIR1=$(ODIR)
+ODIR2=$(ODIR)
+ODIR3=$(ODIR)
+ODIR4=$(ODIR)
+ODIR5=$(ODIR)
+
+#main.cpp
+_SOURCESMAIN=main.cpp
+OBJECTSMAIN=$(addprefix  $(ODIR0)/, $(_SOURCESMAIN:.cpp=.o))
 
 #The LightLifeBox files
-_SOURCES0=Button.cpp ControlBox.cpp helpers.cpp main.cpp PILight.cpp TastButton.cpp
+_SOURCES0=Button.cpp ControlBox.cpp helpers.cpp main.cpp PILight.cpp TastButton.cpp RemoteCommands.cpp
 OBJECTS0=$(addprefix  $(ODIR0)/, $(_SOURCES0:.cpp=.o))
 
 #The ComClient files
 #_SOURCES1=baseClient.cpp DaliClient.cpp DMXClient.cpp  serialib.cpp ZLLClient.cpp ftdi.cpp 
-_SOURCES1=baseClient.cpp DaliClient.cpp DMXClient.cpp  serialib.cpp ZLLClient.cpp  NeoLinkClient.cpp LightLifeLogger.cpp
+_SOURCES1=baseClient.cpp NeoLinkClient.cpp LightLifeLogger.cpp serialib.cpp
 SOURCES1=$(addprefix  $(SDIR1)/,$(_SOURCES1))
 OBJECTS1=$(addprefix  $(ODIR1)/, $(_SOURCES1:.cpp=.o))
 
@@ -53,7 +59,7 @@ _SOURCES5=IPClient.cpp
 SOURCES5=$(addprefix  $(SDIR5)/,$(_SOURCES5))
 OBJECTS5=$(addprefix  $(ODIR5)/, $(_SOURCES5:.cpp=.o))
 
-# the diresw/ptestrunctory where the include files are stored
+# the dir where the include files are stored
 IDIR = -I $(SDIR0) -I $(SDIR1) -I $(SDIR2) -I $(SDIR3) -I $(SDIR4) -I $(SDIR5)
 
 # This is the compiler g++ is for C++ code
@@ -85,12 +91,15 @@ all: $(EXECUTABLE)
 
 # target is the exe. This is dependant on all the *.o files	
 # the command is g++
-$(EXECUTABLE): $(OBJECTS0) $(OBJECTS1) $(OBJECTS2) $(OBJECTS3) $(OBJECTS4) $(OBJECTS5)
+$(EXECUTABLE): $(OBJECTSMAIN) $(OBJECTS0) $(OBJECTS1) $(OBJECTS2) $(OBJECTS3) $(OBJECTS4) $(OBJECTS5)
 	$(CC) $(LDFLAGS) $(OBJECTS0) $(OBJECTS1) $(OBJECTS2) $(OBJECTS3) $(OBJECTS4) $(OBJECTS5) -o $@
 
 # this is the actual compile command
 # it puts all the *.o files into the ../obj dir
 #.cpp.o:
+$(ODIR0)/%.o: $(SDIRMAIN)/%.cpp 
+	$(CC) $(CFLAGS) $< -o $@
+
 $(ODIR0)/%.o: $(SDIR0)/%.cpp 
 	$(CC) $(CFLAGS) $< -o $@
 

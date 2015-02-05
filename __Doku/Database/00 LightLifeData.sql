@@ -12,26 +12,26 @@ values (100, 'Proband/In','0000000001', 'Versuchsperson');
 
 ------------------------------------------------------------
 
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
-values (0, 'No', 'Name', '1.1.2014', 'androgyn', 0);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
+values (0, 'No', 'Name', '1.1.2014', 'androgyn', 0, 'nn', 'test');
 
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
-values (1, 'Fritz', 'Wagner', '18.6.1970', 'male', 1);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
+values (1, 'Fritz', 'Wagner', Cast('1970-06-18' as date), 'male', 1, 'fw', 'test')
 
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
-values (2, 'Hans', 'Hoschopf', '1.1.2014', 'male', 1);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
+values (2, 'Hans', 'Hoschopf', '1.1.2014', 'male', 1, 'hh', 'test');
 
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
-values (3, 'Versuchs', 'Leiterin1', '1.1.2014', 'female', 10);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
+values (3, 'Versuchs', 'Leiterin1', '1.1.2014', 'female', 10, 'vl1', 'test');
 
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
-values (4, 'Versuchs', 'Leiter2', '1.1.2014', 'male', 10);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
+values (4, 'Versuchs', 'Leiter2', '1.1.2014', 'male', 10, 'vl2', 'test');
 
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
-values (5, 'Proband', 'In1', '1.1.2014', 'female', 100);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
+values (5, 'Proband', 'In1', '1.1.2014', 'female', 100, 'pb1', 'test');
 
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID)
-values (6, 'Proband', '2', '1.1.2014', 'male', 100);
+insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
+values (6, 'Proband', '2', '1.1.2014', 'male', 100, 'pb2', 'test');
 
 ------------------------------------------------------------
 

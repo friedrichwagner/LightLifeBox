@@ -13,24 +13,18 @@
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="Administration">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Print LTS Labels" Source="/Pages/Admin.xaml" />
+                <mui:Link DisplayName="Administration" Source="/Pages/Admin.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>  
         <mui:LinkGroup DisplayName="PI-LED Control">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Readout2" Source="/Pages/PILED.xaml" />
+                <mui:Link DisplayName="PI-LED" Source="/Pages/PILED.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>        
 
-        <mui:LinkGroup DisplayName="Test Logging">
+        <mui:LinkGroup DisplayName="Logging">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Simple PI-LED Test" Source="/Pages/Logging.xaml" />
-            </mui:LinkGroup.Links>
-        </mui:LinkGroup>
-
-        <mui:LinkGroup DisplayName="PI-LED Test">
-            <mui:LinkGroup.Links>
-                <mui:Link DisplayName="PI-LED Module Test" Source="/Pages/LEDTest2.xaml" />
+                <mui:Link DisplayName="Logging" Source="/Pages/Logging.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
 

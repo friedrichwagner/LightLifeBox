@@ -10,36 +10,4 @@
     <UserID value="ltcs" />
     <Password value="Lumitech03" />
   </Database>
-  <SAP-Database>
-    <DataSource value="PC-FW\SQLEXPRESS" />
-    <InitialCatalog value="LTP01" />
-    <UserID value="ltcs" />
-    <Password value="Lumitech03" />	
-  </SAP-Database>
-  <LTQC-Database>
-    <DataSource value="PC-FW\SQLEXPRESS" />
-    <InitialCatalog value="LTQC-00-V01" />
-    <UserID value="ltcs" />
-    <Password value="Lumitech03" />
-  </LTQC-Database>  
-  <Labels>
-    <Templates value="C:\LT\03 Labels\50 GlobalLabelTemplateCache\" />
-  </Labels>
-  <Flash>
-    <HexFiles value="d:\temp\" />
-    <AVRPath value="C:\Program Files (x86)\Atmel\Atmel Studio 6.1\atbackend" />
-    <CPUProp1 value="atxmega32a4;pdi;FF00FE00FFE3;2MHz" />
-    <CPUProp2 value="atmega328p;isp;FFD9FD;125kHz" />
-    <CPUProp3 value="atmega168p;isp;E2D9FD;125kHz" />
-  </Flash>
-  <LabelPrinters>
-	<DefaultPrinter value="Printer4"/>
-	<Printer1 value="Produktion neben Laptop;VITA II 106/12;0;0"/>
-	<Printer2 value="Produktion neben Kugel;192.168.4.24;0;0"/>
-	<Printer3 value="ZM400;192.168.4.211;0;0"/>
-	<Printer4 value="GX430t;192.168.4.212;0;0"/>
-  </LabelPrinters>
-  <ExcelExport>
-	<MM2Template value="C:\LT\700110 LTAS\09 FlashNPrint\00 Template MM2.xls" />
-  </ExcelExport>
 </Settings>

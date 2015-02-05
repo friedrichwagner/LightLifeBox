@@ -71,94 +71,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BLogic\ExportToExcel.cs" />
     <Compile Include="BLogic\Login.cs" />
     <Compile Include="MVVM\Base\Messenger.cs" />
     <Compile Include="MVVM\Base\ObservableObject.cs" />
     <Compile Include="MVVM\Base\PropertyObserver.cs" />
     <Compile Include="MVVM\Base\RelayCommand.cs" />
     <Compile Include="MVVM\Converters.cs" />
-    <Compile Include="MVVM\FlashViewModel.cs" />
-    <Compile Include="MVVM\LEDTestVieModel.cs" />
-    <Compile Include="BLogic\LTCSData.cs" />
-    <Compile Include="BLogic\LTQSData.cs" />
-    <Compile Include="BLogic\MMSmall.cs" />
     <Compile Include="MVVM\MainVM.cs" />
-    <Compile Include="MVVM\PrintViewModel.cs" />
-    <Compile Include="MVVM\Readout2.cs" />
-    <Compile Include="BLogic\SCPIBase.cs" />
-    <Compile Include="BLogic\SCPIDevices.cs" />
-    <Compile Include="BLogic\ZBComBase2.cs" />
-    <Compile Include="Content\Printers.xaml.cs">
-      <DependentUpon>Printers.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\LEDTest2\StepListAll.xaml.cs">
-      <DependentUpon>StepListAll.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\LEDTest2\Step7.xaml.cs">
-      <DependentUpon>Step7.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\LEDTest2\Step1.xaml.cs">
-      <DependentUpon>Step1.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\Readout2\Step1_Header.xaml.cs">
-      <DependentUpon>Step1_Header.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\Readout2\Step2_Readout.xaml.cs">
-      <DependentUpon>Step2_Readout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Content\Readout2\StepX_ListAll.xaml.cs">
-      <DependentUpon>StepX_ListAll.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Readout2.xaml.cs">
-      <DependentUpon>Readout2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\LEDTest2.xaml.cs">
-      <DependentUpon>LEDTest2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Print.xaml.cs">
-      <DependentUpon>Print.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\SimpleTest.xaml.cs">
-      <DependentUpon>SimpleTest.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Content\Printers.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\LEDTest2\StepListAll.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\LEDTest2\Step7.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\LEDTest2\Step1.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Readout2\Step1_Header.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Readout2\Step2_Readout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Content\Readout2\StepX_ListAll.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="BLogic\Flash.cs" />
-    <Compile Include="BLogic\LabelPrint.cs" />
     <Compile Include="BLogic\LTSQLCommand.cs" />
-    <Compile Include="BLogic\RawPrinterHelper.cs" />
-    <Compile Include="BLogic\SAPData.cs" />
     <Compile Include="BLogic\Settings.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -179,21 +103,13 @@
       <DependentUpon>SettingsAppearance.xaml</DependentUpon>
     </Compile>
     <Compile Include="Content\SettingsAppearanceViewModel.cs" />
-    <Page Include="Pages\Readout2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\LEDTest2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Pages\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Print.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Pages\Administration.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Settings.xaml">
       <SubType>Designer</SubType>
@@ -202,14 +118,13 @@
     <Compile Include="Pages\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Administration.xaml.cs">
+      <DependentUpon>Administration.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Page Include="Pages\SimpleTest.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -224,9 +139,7 @@
     </Resource>
     <Resource Include="Images\Lumitech.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dialogs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

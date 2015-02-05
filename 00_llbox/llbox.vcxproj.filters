@@ -24,9 +24,6 @@
     <ClCompile Include="01_ComClients\baseClient.cpp">
       <Filter>01 ComClients</Filter>
     </ClCompile>
-    <ClCompile Include="01_ComClients\serialib.cpp">
-      <Filter>01 ComClients</Filter>
-    </ClCompile>
     <ClCompile Include="02_DebugServer\DebugServer.cpp">
       <Filter>02 DebugServer</Filter>
     </ClCompile>
@@ -79,12 +76,12 @@
     <ClCompile Include="00_LightLifeBox\RemoteCommands.cpp">
       <Filter>00 LightLifeBox</Filter>
     </ClCompile>
+    <ClCompile Include="01_ComClients\serialib.cpp">
+      <Filter>01 ComClients</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01_ComClients\baseClient.h">
-      <Filter>01 ComClients</Filter>
-    </ClInclude>
-    <ClInclude Include="01_ComClients\serialib.h">
       <Filter>01 ComClients</Filter>
     </ClInclude>
     <ClInclude Include="02_DebugServer\DebugServer.h">
@@ -137,6 +134,9 @@
     </ClInclude>
     <ClInclude Include="00_LightLifeBox\RemoteCommands.h">
       <Filter>00 LightLifeBox</Filter>
+    </ClInclude>
+    <ClInclude Include="01_ComClients\serialib.h">
+      <Filter>01 ComClients</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

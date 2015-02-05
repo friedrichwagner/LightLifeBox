@@ -15,6 +15,8 @@ create Table LLUser
 	Birthday datetime not null,
 	Gender	varchar(15)  not null,
 	Remark varchar(max),
+	Username varchar(20),
+	Password varchar(20),
 	RoleID int not null,
 	added datetime default getdate()
 );

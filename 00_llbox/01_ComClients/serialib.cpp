@@ -1,7 +1,6 @@
 #include "serialib.h"
 #include "helpers.h"
-#include "ftd2xx.h"
-
+//#include "ftd2xx.h"
 
 serialib::serialib(string paramPort, int paramBaud, bool paramUseDMXWrite)
 {

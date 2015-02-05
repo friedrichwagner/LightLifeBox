@@ -49,7 +49,7 @@ namespace LightLife.Pages
         {
             try
             {
-                if (!dc.login.IsLoggedIn  && e.Source.OriginalString != "/Pages/Settings.xaml")
+                if (!dc.login.IsLoggedIn  && e.Source.OriginalString != "/Pages/Login.xaml")
                 {
                     dc.Login(txtUsername.Text, txtPassword.Password);
                     //NavigationCommands.GoToPage.Execute("/Pages/SimpleTest.xaml", null);
@@ -69,10 +69,10 @@ namespace LightLife.Pages
 
         private void UserControl_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            if ((e.Key == Key.Enter))            
+                if ((e.Key == Key.Enter))            
             {
                 //Just try to navigate in order that OnNavigatingFrom is called
-                NavigationCommands.GoToPage.Execute("/Pages/SimpleTest.xaml", null);
+                NavigationCommands.GoToPage.Execute("/Pages/Settings.xaml", null);
 
             }
             

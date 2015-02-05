@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ModernUIApp2.Pages.Readout2"
+﻿<UserControl x:Class="ModernUIApp2.Pages.Administration"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" PreviewKeyUp="UserControl_PreviewKeyUp">
     <Grid Style="{StaticResource ContentRoot}">
-        <mui:ModernTab Layout="List" SelectedSource="/Content/Readout2/Step1_Header.xaml" SnapsToDevicePixels="False">
+        <mui:ModernTab Layout="List" SelectedSource="/Content/Administration/Step1_Header.xaml" SnapsToDevicePixels="False">
             <mui:ModernTab.Links>
                 <mui:Link DisplayName="Step 1: Header Data" Source="/Content/Readout2/Step1_Header.xaml"/>
                 <mui:Link DisplayName="Step 2: Readout/Print" Source="/Content/Readout2/Step2_Readout.xaml" />

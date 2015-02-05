@@ -16,24 +16,26 @@ SDIR3=./03_LogIni
 SDIR4=./04_Platform
 SDIR5=./05_Test
 
-ODIR0=$(SDIR0)/obj
-ODIR1=$(SDIR1)/obj
-ODIR2=$(SDIR2)/obj
-ODIR3=$(SDIR3)/obj
-ODIR4=$(SDIR4)/obj
-ODIR5=$(SDIR5)/obj
+ODIR=./_bin
+
+ODIR0=$(ODIR)
+ODIR1=$(ODIR)
+ODIR2=$(ODIR)
+ODIR3=$(ODIR)
+ODIR4=$(ODIR)
+ODIR5=$(ODIR)
 
 #main.cpp
 _SOURCESMAIN=main.cpp
 OBJECTSMAIN=$(addprefix  $(ODIR0)/, $(_SOURCESMAIN:.cpp=.o))
 
 #The LightLifeBox files
-_SOURCES0=Button.cpp ControlBox.cpp helpers.cpp main.cpp PILight.cpp TastButton.cpp
+_SOURCES0=Button.cpp ControlBox.cpp helpers.cpp main.cpp PILight.cpp TastButton.cpp RemoteCommands.cpp
 OBJECTS0=$(addprefix  $(ODIR0)/, $(_SOURCES0:.cpp=.o))
 
 #The ComClient files
 #_SOURCES1=baseClient.cpp DaliClient.cpp DMXClient.cpp  serialib.cpp ZLLClient.cpp ftdi.cpp 
-_SOURCES1=baseClient.cpp DaliClient.cpp DMXClient.cpp  serialib.cpp ZLLClient.cpp NeoLinkClient.cpp LightLifeLogger.cpp
+_SOURCES1=baseClient.cpp NeoLinkClient.cpp LightLifeLogger.cpp serialib.cpp
 SOURCES1=$(addprefix  $(SDIR1)/,$(_SOURCES1))
 OBJECTS1=$(addprefix  $(ODIR1)/, $(_SOURCES1:.cpp=.o))
 

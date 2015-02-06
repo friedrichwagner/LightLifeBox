@@ -49,7 +49,7 @@ namespace LightLife.Pages
         {
             try
             {
-                if (!dc.login.IsLoggedIn  && e.Source.OriginalString != "/Pages/Login.xaml")
+                if (!dc.login.IsLoggedIn && (e.Source.OriginalString != "/Pages/Login.xaml" && e.Source.OriginalString != "/Pages/Settings.xaml"))
                 {
                     dc.Login(txtUsername.Text, txtPassword.Password);
                     //NavigationCommands.GoToPage.Execute("/Pages/SimpleTest.xaml", null);

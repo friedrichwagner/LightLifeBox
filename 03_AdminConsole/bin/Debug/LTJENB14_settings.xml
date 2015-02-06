@@ -2,7 +2,7 @@
 <Settings>
 	<Pages>
 		<StartPage value="/Pages/Login.xaml" />
-		<PagesVisible value="Administration;PI-LED Control;Test Logging;Settings" />
+		<PagesVisible value="Administration;PI-LED Control;Logging;Settings" />
 	</Pages>
   <Database>
     <DataSource value="LT-WSSQLTEST\SQLEXPRESS" />

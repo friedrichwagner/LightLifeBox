@@ -71,12 +71,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BLogic\LLSQL.cs" />
+    <Compile Include="BLogic\Logger.cs" />
+    <Compile Include="BLogic\AdminBase.cs" />
     <Compile Include="BLogic\Login.cs" />
     <Compile Include="MVVM\Base\Messenger.cs" />
     <Compile Include="MVVM\Base\ObservableObject.cs" />
     <Compile Include="MVVM\Base\PropertyObserver.cs" />
     <Compile Include="MVVM\Base\RelayCommand.cs" />
     <Compile Include="MVVM\Converters.cs" />
+    <Compile Include="MVVM\Admin.cs" />
     <Compile Include="MVVM\MainVM.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

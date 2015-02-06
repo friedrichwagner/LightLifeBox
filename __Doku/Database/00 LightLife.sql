@@ -23,7 +23,7 @@ create Table LLUser
 
 create Table LLUserInfo
 (
-	DataId identity not null primary key,
+	DataId int identity not null primary key,
 	UserID int NOT NULL ,
 	HelligkeitsSensitivitaet float,
 	Farbempfindlichkeit float,

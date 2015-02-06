@@ -9,9 +9,15 @@
     <Grid Style="{StaticResource ContentRoot}">
         <mui:ModernTab Layout="List" SelectedSource="/Content/Administration/Step1_Header.xaml" SnapsToDevicePixels="False">
             <mui:ModernTab.Links>
-                <mui:Link DisplayName="Step 1: Header Data" Source="/Content/Readout2/Step1_Header.xaml"/>
-                <mui:Link DisplayName="Step 2: Readout/Print" Source="/Content/Readout2/Step2_Readout.xaml" />
-                <mui:Link DisplayName="Step 3: List All/Export" Source="/Content/Readout2/StepX_ListAll.xaml" />
+                <mui:Link DisplayName="Probanden" Source="/Content/Admin/Probanden.xaml"/>
+                <mui:Link DisplayName="UserInfo" Source="/Content/Admin/UserInfo.xaml" />
+                <mui:Link DisplayName="----------" Source="/" />
+                <mui:Link DisplayName="Rollen" Source="/Content/Admin/Roles.xaml" />
+                <mui:Link DisplayName="Räume" Source="/Content/Admin/Rooms.xaml" />
+                <mui:Link DisplayName="Gruppen" Source="/Content/Admin/Groups.xaml" />
+                <mui:Link DisplayName="Leuchten" Source="/Content/Admin/Lights.xaml" />
+                <mui:Link DisplayName="Szenen" Source="/Content/Admin/Scenes.xaml" />
+                <mui:Link DisplayName="Gruppen" Source="/Content/Admin/Groups.xaml" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
     </Grid>

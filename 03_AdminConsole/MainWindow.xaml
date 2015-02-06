@@ -21,14 +21,12 @@
                 <mui:Link DisplayName="PI-LED" Source="/Pages/PILED.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>        
-
         <mui:LinkGroup DisplayName="Logging">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="Logging" Source="/Pages/Logging.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-
-        <mui:LinkGroup DisplayName="settings" GroupKey="settings">
+        <mui:LinkGroup DisplayName="Settings">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="About" Source="/Pages/Settings.xaml" />
             </mui:LinkGroup.Links>
@@ -36,6 +34,6 @@
     </mui:ModernWindow.MenuLinkGroups>
 
     <mui:ModernWindow.TitleLinks>
-        <mui:Link DisplayName="settings" Source="/Pages/Settings.xaml" />
+        <mui:Link DisplayName="About" Source="/Pages/Settings.xaml" />
     </mui:ModernWindow.TitleLinks>
 </mui:ModernWindow>

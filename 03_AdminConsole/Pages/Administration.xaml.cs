@@ -7,9 +7,9 @@ namespace ModernUIApp2.Pages
     /// <summary>
     /// Interaction logic for Settings.xaml
     /// </summary>
-    public partial class Readout2 : UserControl
+    public partial class Administration : UserControl
     {
-        public Readout2()
+        public Administration()
         {
             InitializeComponent();
         }

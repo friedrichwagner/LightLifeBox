@@ -9,15 +9,14 @@ using FirstFloor.ModernUI.Presentation;
 using FirstFloor.ModernUI.Windows.Controls;
 using System.Data.SqlClient;
 using Lumitech.Helpers;
-using LightLife;
 
-namespace LightLifeAdminConsole.MVVM
+namespace LightLife
 {
     class AdminVM //: NotifyPropertyChanged
     {
         //Singleton
         private static AdminVM _instance;
-        private SqlConnection sqlCon;
+        public SqlConnection sqlCon;
 
 
         private AdminVM()

@@ -75,6 +75,9 @@
     <Compile Include="BLogic\Logger.cs" />
     <Compile Include="BLogic\AdminBase.cs" />
     <Compile Include="BLogic\Login.cs" />
+    <Compile Include="Content\Admin\Roles.xaml.cs">
+      <DependentUpon>Roles.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\Base\Messenger.cs" />
     <Compile Include="MVVM\Base\ObservableObject.cs" />
     <Compile Include="MVVM\Base\PropertyObserver.cs" />
@@ -82,6 +85,10 @@
     <Compile Include="MVVM\Converters.cs" />
     <Compile Include="MVVM\Admin.cs" />
     <Compile Include="MVVM\MainVM.cs" />
+    <Page Include="Content\Admin\Roles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

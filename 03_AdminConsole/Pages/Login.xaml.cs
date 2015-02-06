@@ -21,7 +21,6 @@ namespace LightLife.Pages
             this.Loaded += OnLoaded;
 
             dc = MainVM.GetInstance();     
-
         }
 
         void OnLoaded(object sender, RoutedEventArgs e)
@@ -72,7 +71,7 @@ namespace LightLife.Pages
                 if ((e.Key == Key.Enter))            
             {
                 //Just try to navigate in order that OnNavigatingFrom is called
-                NavigationCommands.GoToPage.Execute("/Pages/Settings.xaml", null);
+                NavigationCommands.GoToPage.Execute("/Pages/Administration.xaml", null);
 
             }
             

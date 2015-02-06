@@ -20,7 +20,7 @@ namespace LightLife
         public string updateSQL;
         public string deleteSQL;
 
-        public SQLSet()
+        public SQLSet(int n)
         {
             selectSQL = String.Empty;
             insertSQL = String.Empty;
@@ -32,16 +32,16 @@ namespace LightLife
     public static class LLSQL
     {
         // Only Select
-        private static SQLSet LLRole = new SQLSet();
-        private static SQLSet LLRoom = new SQLSet();
-        private static SQLSet LLGroup = new SQLSet();
-        private static SQLSet LLFixture = new SQLSet();
-        private static SQLSet LLScene = new SQLSet();
-        private static SQLSet LLData = new SQLSet();
+        public static SQLSet LLRole = new SQLSet();
+        public static SQLSet LLRoom = new SQLSet();
+        public static SQLSet LLGroup = new SQLSet();
+        public static SQLSet LLFixture = new SQLSet();
+        public static SQLSet LLScene = new SQLSet();
+        public static SQLSet LLData = new SQLSet();
 
         //Select, Insert, Update, NO Delete
-        private static SQLSet LLUser = new SQLSet();
-        private static SQLSet LLUSerInfo = new SQLSet();
+        public static SQLSet LLUser = new SQLSet();
+        public static SQLSet LLUSerInfo = new SQLSet();
         
         public static void InitSQLs()
         {

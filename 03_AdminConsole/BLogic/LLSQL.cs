@@ -13,15 +13,17 @@ using Lumitech.Helpers;
 
 namespace LightLife
 {
-    public struct SQLSet
+    public class SQLSet
     {
+        public string tablename;
         public string selectSQL;
         public string insertSQL;
         public string updateSQL;
         public string deleteSQL;
 
-        public SQLSet(int n)
+        public SQLSet(string tname)
         {
+            tablename = tname;
             selectSQL = String.Empty;
             insertSQL = String.Empty;
             updateSQL = String.Empty;
@@ -31,34 +33,47 @@ namespace LightLife
 
     public static class LLSQL
     {
-        // Only Select
-        public static SQLSet LLRole = new SQLSet();
-        public static SQLSet LLRoom = new SQLSet();
-        public static SQLSet LLGroup = new SQLSet();
-        public static SQLSet LLFixture = new SQLSet();
-        public static SQLSet LLScene = new SQLSet();
-        public static SQLSet LLData = new SQLSet();
-
-        //Select, Insert, Update, NO Delete
-        public static SQLSet LLUser = new SQLSet();
-        public static SQLSet LLUSerInfo = new SQLSet();
+        public static IDictionary<string, SQLSet> tables;
+        public static SqlConnection sqlCon;
         
         public static void InitSQLs()
         {
-            LLRole.selectSQL = "select * from LLRole oder by RoleID";
-            LLRoom.selectSQL = "select * from LLRoom oder by RoomID";
-            LLGroup.selectSQL = "select * from LLGroup oder by GroupID";
-            LLFixture.selectSQL = "select * from LLFixture oder by FixtureID";
-            LLScene.selectSQL = "select * from LLScene oder by SceneID";
-            LLData.selectSQL = "select * from LLData oder by DataID";
+            
 
-            LLUser.selectSQL = "select * from LLUser";
-            LLUser.insertSQL = "insert into LLUser() values()";
-            LLUser.updateSQL = "update LLUser set where ";
+            Settings ini = Settings.GetInstance();
 
-            LLUSerInfo.selectSQL = "select * from LLUserInfo";
-            LLUSerInfo.insertSQL = "insert into LLUserInfo() values()";
-            LLUSerInfo.updateSQL = "update LLUserInfo set where ";
+            SqlConnectionStringBuilder sqlsb = new SqlConnectionStringBuilder();
+            sqlsb.DataSource = ini.ReadString("Database", "DataSource", "");
+            sqlsb.InitialCatalog = ini.ReadString("Database", "InitialCatalog", "");
+            sqlsb.UserID = ini.ReadString("Database", "UserID", "");
+            sqlsb.Password = ini.ReadString("Database", "Password", "");
+
+            sqlCon = new SqlConnection(sqlsb.ConnectionString);
+
+            tables = new Dictionary<string, SQLSet>();
+            tables.Add("LLRole", new SQLSet("LLRole"));
+            tables.Add("LLRoom", new SQLSet("LLRoom"));
+            tables.Add("LLGroup", new SQLSet("LLGroup"));
+            tables.Add("LLFixture", new SQLSet("LLFixture"));
+            tables.Add("LLScene", new SQLSet("LLScene"));
+            tables.Add("LLData", new SQLSet("LLData"));
+            tables.Add("LLUser", new SQLSet("LLUser"));
+            tables.Add("LLUserInfo", new SQLSet("LLUSerInfo"));
+
+            tables["LLRole"].selectSQL = "select * from LLRole oder by RoleID";
+            tables["LLRoom"].selectSQL = "select * from LLRoom oder by RoomID";
+            tables["LLGroup"].selectSQL = "select * from LLGroup oder by GroupID";
+            tables["LLFixture"].selectSQL = "select * from LLFixture oder by FixtureID";
+            tables["LLScene"].selectSQL = "select * from LLScene oder by SceneID";
+            tables["LLData"].selectSQL = "select * from LLData oder by DataID";
+
+            tables["LLUser"].selectSQL = "select * from LLUser";
+            tables["LLUser"].insertSQL = "insert into LLUser() values()";
+            tables["LLUser"].updateSQL = "update LLUser set where ";
+
+            tables["LLUserInfo"].selectSQL = "select * from LLUserInfo";
+            tables["LLUserInfo"].insertSQL = "insert into LLUserInfo() values()";
+            tables["LLUserInfo"].updateSQL = "update LLUserInfo set where ";
         }
     }
 }

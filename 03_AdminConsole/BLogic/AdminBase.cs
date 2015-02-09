@@ -19,6 +19,7 @@ namespace LightLife
         private SqlConnection _con;
         private SQLSet _sqlset;
         private LTSQLCommand _sql;
+        //private DataTable _table;
 
         public AdminBase(SqlConnection con, SQLSet sqlset)
         {
@@ -31,20 +32,23 @@ namespace LightLife
                 _con.Open();
 
             _sql = new LTSQLCommand(con);
-
+            
             
         }
 
-        public virtual SqlDataReader select(string filter)
+        public virtual DataTable select(string filter)
         {
+            DataTable table = new DataTable();
+
             if (_sqlset.selectSQL != string.Empty)
             {
                 _sql.prep(_sqlset.selectSQL + " " + filter);
                 _sql.Exec();
-                return _sql.dr;
+                
+                table.Load(_sql.dr);                
             }
 
-            return null;
+            return table;
         }
 
         public virtual int insert(string filter)

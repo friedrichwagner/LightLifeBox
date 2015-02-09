@@ -21,8 +21,11 @@ namespace LightLife
             try
             {
                 InitializeComponent();
+
+                LLSQL.InitSQLs();
+
                 dc = MainVM.GetInstance(this.MenuLinkGroups, this);                
-                DataContext= dc;
+                DataContext= dc;                
 
                 Settings ini = Settings.GetInstance();
                 ContentSource = new Uri(ini.ReadString("Pages", "StartPage", ""), UriKind.Relative); //LoginPage

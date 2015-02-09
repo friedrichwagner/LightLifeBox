@@ -142,9 +142,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\faviconCAIE033I.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

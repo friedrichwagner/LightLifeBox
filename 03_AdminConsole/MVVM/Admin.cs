@@ -16,31 +16,16 @@ namespace LightLife
     {
         //Singleton
         private static AdminVM _instance;
-        public SqlConnection sqlCon;
-
 
         private AdminVM()
         {           
-            Settings ini = Settings.GetInstance();
-
-            SqlConnectionStringBuilder sqlsb = new SqlConnectionStringBuilder();
-            sqlsb.DataSource = ini.ReadString("Database", "DataSource", "");
-            sqlsb.InitialCatalog = ini.ReadString("Database", "InitialCatalog", "");
-            sqlsb.UserID = ini.ReadString("Database", "UserID", "");
-            sqlsb.Password = ini.ReadString("Database", "Password", "");
-            sqlCon = new SqlConnection(sqlsb.ConnectionString);
-        }
-
-        public static AdminVM GetInstance(LinkGroupCollection pLG, MainWindow mw)
-        {
-            if (_instance == null)
-                _instance = new AdminVM();
-
-            return _instance;
         }
 
         public static AdminVM GetInstance()
         {
+            if (_instance == null)
+                _instance = new AdminVM();
+
             return _instance;
         }
     }

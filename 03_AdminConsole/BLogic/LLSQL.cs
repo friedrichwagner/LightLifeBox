@@ -60,12 +60,12 @@ namespace LightLife
             tables.Add("LLUser", new SQLSet("LLUser"));
             tables.Add("LLUserInfo", new SQLSet("LLUSerInfo"));
 
-            tables["LLRole"].selectSQL = "select * from LLRole oder by RoleID";
-            tables["LLRoom"].selectSQL = "select * from LLRoom oder by RoomID";
-            tables["LLGroup"].selectSQL = "select * from LLGroup oder by GroupID";
-            tables["LLFixture"].selectSQL = "select * from LLFixture oder by FixtureID";
-            tables["LLScene"].selectSQL = "select * from LLScene oder by SceneID";
-            tables["LLData"].selectSQL = "select * from LLData oder by DataID";
+            tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
+            tables["LLRoom"].selectSQL = "select * from LLRoom order by RoomID";
+            tables["LLGroup"].selectSQL = "select * from LLGroup order by GroupID";
+            tables["LLFixture"].selectSQL = "select * from LLFixture order by FixtureID";
+            tables["LLScene"].selectSQL = "select * from LLScene order by SceneID";
+            tables["LLData"].selectSQL = "select * from LLData order by DataID";
 
             tables["LLUser"].selectSQL = "select * from LLUser";
             tables["LLUser"].insertSQL = "insert into LLUser() values()";

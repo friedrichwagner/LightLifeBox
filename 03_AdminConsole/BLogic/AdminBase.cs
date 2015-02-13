@@ -15,7 +15,6 @@ namespace LightLife
 {
     public class AdminBase
     {
-        private LTSQLCommand _cmd;
         private SqlConnection _con;
         private SQLSet _sqlset;
         private LTSQLCommand _sql;
@@ -23,8 +22,6 @@ namespace LightLife
 
         public AdminBase(SqlConnection con, SQLSet sqlset)
         {
-            _cmd = new LTSQLCommand(con);
-            _cmd.Connection.Open();
             this._sqlset = sqlset;
             this._con = con;
 
@@ -32,8 +29,7 @@ namespace LightLife
                 _con.Open();
 
             _sql = new LTSQLCommand(con);
-            
-            
+
         }
 
         public virtual DataTable select(string filter)
@@ -83,7 +79,5 @@ namespace LightLife
 
             return 0;
         }
-        
-
     }
 }

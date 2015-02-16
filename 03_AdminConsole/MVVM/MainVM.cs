@@ -32,17 +32,9 @@ namespace LightLifeAdminConsole.MVVM
             MainWin = mw;
             
             Settings ini = Settings.GetInstance();
-            pagesVisible = ini.ReadString("Pages", "PagesVisible", "");
+            pagesVisible = ini.ReadString("Pages", "PagesVisible", "");           
 
-            SqlConnectionStringBuilder sqlsb = new SqlConnectionStringBuilder();
-            sqlsb.DataSource = ini.ReadString("Database", "DataSource", "");
-            sqlsb.InitialCatalog = ini.ReadString("Database", "InitialCatalog", "");
-            sqlsb.UserID = ini.ReadString("Database", "UserID", "");
-            sqlsb.Password = ini.ReadString("Database", "Password", "");
-
-            sqlCon = new SqlConnection(sqlsb.ConnectionString);
-
-            login = new ConsoleLogin(sqlCon);
+            login = new ConsoleLogin(LLSQL.sqlCon);
         }
 
         public static MainVM GetInstance(LinkGroupCollection pLG, MainWindow mw)

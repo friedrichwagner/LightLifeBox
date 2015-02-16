@@ -156,6 +156,7 @@ namespace Lumitech
 
                 dr=cmd.ExecuteReader();
                 //cmd.ExecuteReader();
+                //cmd.ExecuteReader();
 
                 if (dr.HasRows) ret=1;
                 else ret=0;

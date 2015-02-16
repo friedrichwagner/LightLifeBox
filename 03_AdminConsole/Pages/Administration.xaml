@@ -9,15 +9,14 @@
     <Grid Style="{StaticResource ContentRoot}">
         <mui:ModernTab Layout="List" SelectedSource="/Content/Administration/Step1_Header.xaml" SnapsToDevicePixels="False">
             <mui:ModernTab.Links>
-                <mui:Link DisplayName="Probanden" Source="/Content/Admin/Probanden.xaml"/>
-                <mui:Link DisplayName="UserInfo" Source="/Content/Admin/UserInfo.xaml" />
+                <mui:Link DisplayName="Probanden" Source="/Content/Admin/Roles.xaml#LLUser"/>
+                <mui:Link DisplayName="UserInfo" Source="/Content/Admin/Roles.xaml#LLUserInfo" />
                 <mui:Link DisplayName="----------" Source="/" />
-                <mui:Link DisplayName="Rollen" Source="/Content/Admin/Roles.xaml" />
-                <mui:Link DisplayName="Räume" Source="/Content/Admin/Rooms.xaml" />
-                <mui:Link DisplayName="Gruppen" Source="/Content/Admin/Groups.xaml" />
-                <mui:Link DisplayName="Leuchten" Source="/Content/Admin/Lights.xaml" />
-                <mui:Link DisplayName="Szenen" Source="/Content/Admin/Scenes.xaml" />
-                <mui:Link DisplayName="Gruppen" Source="/Content/Admin/Groups.xaml" />
+                <mui:Link DisplayName="Rollen" Source="/Content/Admin/Roles.xaml#LLRole" />
+                <mui:Link DisplayName="Räume" Source="/Content/Admin/Roles.xaml#LLRoom" />
+                <mui:Link DisplayName="Gruppen" Source="/Content/Admin/Roles.xaml#LLGroup" />
+                <mui:Link DisplayName="Leuchten" Source="/Content/Admin/Roles.xaml#LLFixture" />
+                <mui:Link DisplayName="Szenen" Source="/Content/Admin/Roles.xaml#LLScene" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
     </Grid>

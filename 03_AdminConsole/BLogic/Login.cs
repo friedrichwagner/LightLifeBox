@@ -57,6 +57,8 @@ namespace LightLife
                 RoleId = Int32.Parse(cmd.dr["RoleId"].ToString());
             }
 
+            cmd.dr.Close();
+
             return IsLoggedIn;
         }
     }

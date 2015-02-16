@@ -13,7 +13,7 @@
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="Administration">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Administration" Source="/Pages/Admin.xaml" />
+                <mui:Link DisplayName="Administration" Source="/Pages/Admininistration.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="PI-LED Control">

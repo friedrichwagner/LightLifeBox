@@ -1,5 +1,5 @@
 ﻿<mui:ModernWindow x:Class="LightLife.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mui="http://firstfloorsoftware.com/ModernUI"
         Title="Light Life - Admin Console" IsTitleVisible="True"        
@@ -15,12 +15,12 @@
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="Administration" Source="/Pages/Admin.xaml" />
             </mui:LinkGroup.Links>
-        </mui:LinkGroup>  
+        </mui:LinkGroup>
         <mui:LinkGroup DisplayName="PI-LED Control">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="PI-LED" Source="/Pages/PILED.xaml" />
             </mui:LinkGroup.Links>
-        </mui:LinkGroup>        
+        </mui:LinkGroup>
         <mui:LinkGroup DisplayName="Logging">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="Logging" Source="/Pages/Logging.xaml" />

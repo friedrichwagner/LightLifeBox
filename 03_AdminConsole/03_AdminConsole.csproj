@@ -48,6 +48,18 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Data.Services" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Data.Services.Design" />
+    <Reference Include="System.Data.SqlServerCe, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>obj\Debug\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlXml" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
@@ -75,6 +87,21 @@
     <Compile Include="BLogic\Logger.cs" />
     <Compile Include="BLogic\AdminBase.cs" />
     <Compile Include="BLogic\Login.cs" />
+    <Compile Include="Content\Database_info.xaml.cs">
+      <DependentUpon>Database_info.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\UserInfo2.xaml.cs">
+      <DependentUpon>UserInfo2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\UserInfo_Tab1.xaml.cs">
+      <DependentUpon>UserInfo_Tab1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\UserInfo_Tab2.xaml.cs">
+      <DependentUpon>UserInfo_Tab2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\UserInfo_Tab3.xaml.cs">
+      <DependentUpon>UserInfo_Tab3.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\Base\Messenger.cs" />
     <Compile Include="MVVM\Base\ObservableObject.cs" />
     <Compile Include="MVVM\Base\PropertyObserver.cs" />
@@ -82,6 +109,27 @@
     <Compile Include="MVVM\Converters.cs" />
     <Compile Include="MVVM\Admin.cs" />
     <Compile Include="MVVM\MainVM.cs" />
+    <Compile Include="SQL_Functions.cs" />
+    <Page Include="Content\Database_info.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\UserInfo2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\UserInfo_Tab1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\UserInfo_Tab2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\UserInfo_Tab3.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

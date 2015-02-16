@@ -20,7 +20,7 @@ namespace LightLife
         public string updateSQL;
         public string deleteSQL;
 
-        public SQLSet()
+        public SQLSet(int n)
         {
             selectSQL = String.Empty;
             insertSQL = String.Empty;

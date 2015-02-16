@@ -1,19 +1,18 @@
-﻿<UserControl x:Class="ModernUIApp2.Pages.Settings"
+﻿<UserControl x:Class="LightLifeAdminConsole.Content.UserInfo2"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" PreviewKeyUp="UserControl_PreviewKeyUp">
+             d:DesignHeight="300" d:DesignWidth="300">
     <Grid Style="{StaticResource ContentRoot}">
-        <mui:ModernTab Layout="List" SelectedSource="/Content/About.xaml">
+        <mui:ModernTab SelectedSource="/Content/UserInfo_Tab1.xaml" Layout="Tab">
             <mui:ModernTab.Links>
-                <mui:Link DisplayName="About" Source="/Content/About.xaml" />
-                <mui:Link DisplayName="Basic Informations" Source="/Content/Database_info.xaml" />
-                <mui:Link DisplayName="Further Informations" Source="/Content/UserInfo2.xaml"/>
+                <mui:Link DisplayName="Page 1" Source="/Content/UserInfo_Tab1.xaml" />
+                <mui:Link DisplayName="Page 2" Source="/Content/UserInfo_Tab2.xaml" />
+                <mui:Link DisplayName="Page 3" Source="/Content/UserInfo_Tab3.xaml" />
             </mui:ModernTab.Links>
         </mui:ModernTab>
-    
     </Grid>
 </UserControl>

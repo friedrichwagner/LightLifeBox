@@ -43,7 +43,28 @@ namespace PILEDServer
         public string receiver;
         public LLMsgType msgtype;
 
-        public PILEDData() { }
+        public PILEDData() 
+        {
+            Reset();
+        }
+
+        public void Reset()
+        {
+            mode = PILEDMode.PILED_SET_CCT;
+            groupid = 0; //Broadcast
+            cct = 3000;
+            brightness = 255;
+            xy[0] = 0.0; xy[1] = 0.0;
+            rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
+            sender = String.Empty;
+            receiver = String.Empty;
+            msgtype = LLMsgType.LL_SET_LIGHTS;
+        }
+        
+        public override string ToString()
+        {
+            return String.Format("g:{0} --> m:{1} b:{2} cct:{3} xy:{4:0.000}/{5:0.000} rgb:{6} / {7} / {8} s->r:{9}->{10} mt:{11}", groupid, mode, brightness, cct, xy[0], xy[1], rgb[0], rgb[1], rgb[2], sender, receiver, msgtype);
+        }
     }
 
     public class LightLifeData

@@ -131,7 +131,6 @@ namespace Lumitech
             }
 
             this.cmd.CommandText = sb.ToString();
-            Debug.Print(this.cmd.CommandText);
             return this.cmd.CommandText;
         }
 
@@ -155,8 +154,6 @@ namespace Lumitech
                 Debug.Print(cmd.CommandText);
 
                 dr=cmd.ExecuteReader();
-                //cmd.ExecuteReader();
-                //cmd.ExecuteReader();
 
                 if (dr.HasRows) ret=1;
                 else ret=0;

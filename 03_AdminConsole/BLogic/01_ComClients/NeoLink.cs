@@ -8,6 +8,9 @@ using Lumitech.Helpers;
 using System.Net.Sockets;
 using System.Net;
 using PILEDServer;
+using LightLifeAdminConsole.MVVM;
+using System.Diagnostics;
+using System.Collections.Concurrent;
 
 namespace Lumitech.Interfaces
 {
@@ -111,6 +114,25 @@ namespace Lumitech.Interfaces
             return nlFrame;
         }
 
+        /*public NeoLinkData (NeoLinkData oldFrame)
+        {
+            byStart = oldFrame.byStart;
+            byMode = oldFrame.byMode;
+            byAddress = oldFrame.byAddress;
+
+            byGroupUpdate = oldFrame.byGroupUpdate;
+            byCRC = oldFrame.byCRC;
+            byStop = oldFrame.byStop;
+
+            data = new Byte[DATA_SIZE];
+            for (int i = 0; i < data.Length; i++)
+                data[i] = oldFrame.data[i];
+
+            byArrBuffer = new Byte[NL_BUFFER_SIZE];
+            for (int i = 0; i < byArrBuffer.Length; i++)
+                byArrBuffer[i] = oldFrame.byArrBuffer[i];
+        }*/
+
         public byte[] ToByteArray()
         {
             int i = 0;
@@ -119,7 +141,7 @@ namespace Lumitech.Interfaces
             byArrBuffer[i++] = byMode;
             byArrBuffer[i++] = byAddress;
 
-            for (int k = 0; k < DATA_SIZE; k++) byArrBuffer[i++] = 0;
+            for (int k = 0; k < DATA_SIZE; k++) byArrBuffer[i++] = data[k];
 
             byArrBuffer[i++] = byGroupUpdate;
             byArrBuffer[i++] = calcCRC();
@@ -135,7 +157,7 @@ namespace Lumitech.Interfaces
 
             crc8 = 0;
             //Achtung: m startet mit 4 (Brightness), nicht 0
-            for (m = 4; m < num; m++)
+            for (m = 3; m < num; m++)
             {
                 x = byArrBuffer[m];
                 for (k = 0; k < 8; k++)
@@ -156,15 +178,21 @@ namespace Lumitech.Interfaces
 
     class NeoLink : IPILed, IObserver<PILEDData>
     {
-        private NeoLinkData nlFrame = NeoLinkData.NewFrame();
+        //private NeoLinkData nlFrame = NeoLinkData.NewFrame();
         private Object thisLock = new Object();
+        private ConcurrentQueue<NeoLinkData> frameQueue;
+        private Thread sendThread;
+        private bool done = false;
+        private Logger log;
 
         UdpClient udpclient = new UdpClient();
-        private const int UDPPort = 1025; // PortNr of NeoLinkBox = 1025
+        private string _UDPAddress;
+        private int _UDPPort ;
         NEOLINK_INTERFACE enumIF;
         private IDisposable cancellation;
 
         private SerialPort serial;
+        private string _Comport;
         private const int BAUDRATE = 19200;
         private const int DATABITS = 8;
         private const int RECVARRAYSIZE = 30;
@@ -184,17 +212,34 @@ namespace Lumitech.Interfaces
                 byFadetime = BitConverter.GetBytes((UInt16)(fadetime / 100));
             }
         }
-
         private byte[] byFadetime = new byte[2] {0,0};
+
+        private int _sendDelay;
+        private byte _groupid;
 
         public NeoLink()
         {
+            log = Logger.GetInstance();
             Settings ini = Settings.GetInstance();
             fadetime = ini.Read<int>("NeoLink", "Fadetime", 0);
-            enumIF = NEOLINK_INTERFACE.NONE;
-        }
+            _sendDelay = ini.Read<int>("NeoLink", "SendDelayTimeMS", 200);
 
-        #region IPILed-Interface
+            _UDPAddress = ini.Read<string>("NeoLink", "UDP-Address", "");
+            _UDPPort = ini.Read<int>("NeoLink", "UDP-Port", 1025); //PortNr of NeoLinkBox = 1025
+
+            _Comport = ini.Read<string>("NeoLink", "USBCom", "");
+
+            enumIF = NEOLINK_INTERFACE.NONE;
+            _groupid = 0;
+
+            frameQueue = new ConcurrentQueue<NeoLinkData>();
+
+            done = false;
+            sendThread = new Thread(new ThreadStart(DoSendFrames));
+            sendThread.Start();
+        }
+        
+#region IPILed-Interface
         public bool Connect(string portname)
         {
             serial = new SerialPort();
@@ -214,11 +259,11 @@ namespace Lumitech.Interfaces
             return serial.IsOpen;
         }
 
-        public bool Connect(string IPAddress, string PortNr)
+        public bool Connect(string IPAddress, int PortNr)
         {
             enumIF = NEOLINK_INTERFACE.UDP;
 
-            udpclient.Connect(IPAddress, Int16.Parse(PortNr));
+            udpclient.Connect(IPAddress, PortNr);
 
             return true;
         }
@@ -266,8 +311,10 @@ namespace Lumitech.Interfaces
 
         public void setBrightness(byte val)
         {
+            NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_BRIGHTNESS;
-
+            nlFrame.byAddress = _groupid;
+            
             //brightness
             nlFrame.data[0] = val;
 
@@ -275,7 +322,7 @@ namespace Lumitech.Interfaces
             nlFrame.data[1] = byFadetime[0];
             nlFrame.data[2] = byFadetime[1];
 
-            Send();
+            frameQueue.Enqueue(nlFrame);
             lastBrightness = val;
         }
 
@@ -284,7 +331,6 @@ namespace Lumitech.Interfaces
             setRGB(b);
         }
 
-
         public void setBrightnessOneModule(byte[] b, byte notused)
         {
             setBrightness(b);
@@ -292,7 +338,9 @@ namespace Lumitech.Interfaces
 
         public void setCCT(Single CCT, byte brightness)
         {
+            NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_CCT;
+            nlFrame.byAddress = _groupid;
 
 	        //cct in mirek
 	        int mirek = (int)(1e6 / CCT);
@@ -306,14 +354,16 @@ namespace Lumitech.Interfaces
             nlFrame.data[2] = byFadetime[0];
             nlFrame.data[3] = byFadetime[1];
 
-            Send();
+            frameQueue.Enqueue(nlFrame);
 
             lastCCT = CCT;
         }
 
         public void setXy(Single[] cie, byte brightness)
         {
+            NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_XY;
+            nlFrame.byAddress = _groupid;
 
             byte[] b2 = BitConverter.GetBytes((UInt16)(65536 * cie[0]));
             nlFrame.data[0] = b2[0];
@@ -323,7 +373,7 @@ namespace Lumitech.Interfaces
             nlFrame.data[2] = b2[0];
             nlFrame.data[3] = b2[1];
 
-            Send();
+            frameQueue.Enqueue(nlFrame);
 
             lastXy = cie;
         }
@@ -331,20 +381,57 @@ namespace Lumitech.Interfaces
 
         public void setRGB(byte[] b)
         {
-            nlFrame.byMode = (byte)NeoLinkMode.NL_RGB;           
+            NeoLinkData nlFrame = NeoLinkData.NewFrame();
+            nlFrame.byMode = (byte)NeoLinkMode.NL_RGB;
+            nlFrame.byAddress = _groupid;
 
             nlFrame.data[0] = b[0];
             nlFrame.data[1] = b[1];
             nlFrame.data[2] = b[2];
 
-            Send();
+            frameQueue.Enqueue(nlFrame);
 
             lastRGB = b;
 
         }
         #endregion
 
-        private void Send(bool waitReceive = false)
+        private void DoSendFrames()
+        {
+            try
+            {
+                NeoLinkData frame;
+                while (!done)
+                {
+                    while (frameQueue.TryDequeue(out frame))
+                    {
+                        Send(frame);
+                        Thread.Sleep(_sendDelay);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+
+            }
+            finally {  }
+        }
+
+        private void Send(NeoLinkData frame)
+        {
+            lock (thisLock)
+            {
+                frame.ToByteArray();
+
+                if (enumIF == NEOLINK_INTERFACE.USB)
+                    serial.Write(frame.byArrBuffer, 0, frame.byArrBuffer.Length);
+                else if (enumIF == NEOLINK_INTERFACE.UDP)
+                    udpclient.Send(frame.byArrBuffer, frame.byArrBuffer.Length);
+            }
+        }
+
+        /*private void Send(bool waitReceive = false)
         {
             lock (thisLock)
             {
@@ -352,7 +439,7 @@ namespace Lumitech.Interfaces
 
                 if (enumIF == NEOLINK_INTERFACE.USB)
                     serial.Write(nlFrame.byArrBuffer, 0, nlFrame.byArrBuffer.Length);
-                else if (enumIF == NEOLINK_INTERFACE.USB)
+                else if (enumIF == NEOLINK_INTERFACE.UDP)
                     udpclient.Send(nlFrame.byArrBuffer,nlFrame.byArrBuffer.Length);
 
                 if (waitReceive)
@@ -363,69 +450,68 @@ namespace Lumitech.Interfaces
         private void Receive()
         {
             //tbd
-        }
+        }*/
 
 #region Observer Pattern
 
-        public virtual void Subscribe(UDPServer provider)
+        public virtual void Subscribe(IObservable<PILEDData> provider)
         {
             Settings ini = Settings.GetInstance();
 
             cancellation = provider.Subscribe(this);
 
             //First see, if we have a NeoLink Box
-            string strUDPAddress = ini.Read<string>("NeoLink", "UDP-Address", "");
-            if (strUDPAddress.Length>0)
-                Connect(strUDPAddress, UDPPort.ToString());
+            if (_UDPAddress.Length>0)
+                Connect(_UDPAddress, _UDPPort);
 
-            string[] strComport = ini.Read<string>("NeoLink", "USBCom", "").Split(',');
-            if (strComport.Length > 0)
-                Connect(strComport[0]);
+            
+            if (_Comport.Length > 0)
+                Connect(_Comport);
 
         }
 
         public virtual void Unsubscribe()
         {
+            done = true;
             cancellation.Dispose();
         }
 
         //Called from UDP Server when closing application
         public virtual void OnCompleted()
         {
+            done = true;
             Disconnect();
         }
 
         public virtual void OnError(Exception e)
         {
-
+            Debug.Print("NeoLink.OnError:" + e.Message);
+            log.Error("NeoLink.OnError:" + e.Message);
         }
 
         //Called from UDP Server when new data arrive
         public virtual void OnNext(PILEDData info)
         {
-            nlFrame.byAddress = (byte)info.groupid;
+            _groupid= info.groupid;
+            Debug.Print("NeoLink.OnNext:"+info.ToString());
 
             switch (info.mode)
             {
-                case PILEDMode.PILED_SET_BRIGHTNESS:
-                    this.setBrightness((byte)info.brightness);
+                case PILEDMode.SET_BRIGHTNESS:
+                    this.setBrightness(info.brightness);
                     break;
-                case PILEDMode.PILED_SET_CCT:
-                    this.setCCT(info.cct, (byte)info.brightness);
+                case PILEDMode.SET_CCT:
+                    this.setCCT(info.cct, info.brightness);
                     break;
-                case PILEDMode.PILED_SET_XY:
-                    float[] f = new float[2];
-                    f[0] = (float)info.xy[0]; f[1] = (float)info.xy[1];
-                    this.setXy(f, (byte)info.brightness);
+                case PILEDMode.SET_XY:
+                    this.setXy(info.xy, info.brightness);
                     break;
-                case PILEDMode.PILED_SET_RGB:
-                    byte[] b = new byte[3];
-                    b[0] = (byte)info.rgb[0]; b[1] = (byte)info.rgb[1]; b[2] = (byte)info.rgb[2];
-                    this.setRGB(b);
+                case PILEDMode.SET_RGB:
+                      this.setRGB(info.rgb);
                     break;
             }
         }
+#endregion
 
- #endregion
     }
 }

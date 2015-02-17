@@ -36,8 +36,9 @@
         <TextBox  Name="txtUsername"  Style="{StaticResource TextBoxStyle}" Margin="10,0,10,30" Background="{StaticResource brushWatermarkBackground}"/>
 
         <TextBlock Style="{StaticResource Title}" Text="Password:" />
+        
         <PasswordBox  Name="txtPassword"  Style="{StaticResource PasswordBoxStyle}" Margin="10,0,10,30" Background="{StaticResource brushWatermarkBackground}"/>
 
-        <Button x:Name="btnStartTest" Style="{StaticResource ButtonStyle}" Content="LOGIN"  Margin="10,0,10,10" Command="NavigationCommands.GoToPage" CommandParameter="/Pages/Administration.xaml"/>
+        <Button x:Name="btnLogin" Style="{StaticResource ButtonStyle}" Content="LOGIN"  Margin="10,0,10,10" Click="btnLogin_Click"/>
     </StackPanel>
 </UserControl>

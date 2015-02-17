@@ -13,12 +13,15 @@
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="Administration">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Administration" Source="/Pages/Admininistration.xaml" />
+                <mui:Link DisplayName="Administration" Source="/Pages/Administration.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>  
         <mui:LinkGroup DisplayName="PI-LED Control">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="PI-LED" Source="/Pages/PILED.xaml" />
+                <mui:Link DisplayName="CCT/XY" Source="/Content/PILED/XY.xaml" />
+                <mui:Link DisplayName="RGB" Source="/Content/PILED/RGB.xaml" />
+                <mui:Link DisplayName="CCT" Source="/Content/PILED/CCT.xaml" />
+                <mui:Link DisplayName="Scenes" Source="/Content/PILED/Scenes.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>        
         <mui:LinkGroup DisplayName="Logging">

@@ -32,7 +32,6 @@ namespace LightLife
         public ConsoleLogin(SqlConnection con)
         {
             cmd = new LTSQLCommand(con);
-            cmd.Connection.Open();
             IsLoggedIn = false;
             FirstName = String.Empty;
             LastName = String.Empty;

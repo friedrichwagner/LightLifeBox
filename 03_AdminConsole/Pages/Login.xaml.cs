@@ -36,25 +36,19 @@ namespace LightLife.Pages
         {
             ClearInputs();
 
-            if (dc.login.IsLoggedIn)
-            {
-                dc.MainWin.MenuLinkGroups = dc.UpdateMenu(false);
-                dc.MainWin.ContentSource =  new Uri("/Pages/Login.xaml", UriKind.Relative); //LoginPage
-                dc.MainWin.ResizeMode = ResizeMode.NoResize;
-            }
+            dc.login.IsLoggedIn = false;
+            dc.MainWin.MenuLinkGroups = dc.UpdateMenu();
+            dc.MainWin.ContentSource = new Uri("/Pages/Login.xaml", UriKind.Relative); //LoginPage
+            dc.MainWin.ResizeMode = ResizeMode.NoResize;
         }
 
         public void OnNavigatingFrom(FirstFloor.ModernUI.Windows.Navigation.NavigatingCancelEventArgs e) 
         {
             try
             {
-                if (!dc.login.IsLoggedIn && (e.Source.OriginalString != "/Pages/Login.xaml" && e.Source.OriginalString != "/Pages/Settings.xaml"))
-                {
-                    dc.Login(txtUsername.Text, txtPassword.Password);
-                    //NavigationCommands.GoToPage.Execute("/Pages/SimpleTest.xaml", null);
-                    //this.Content = new Uri("Pages/SimpleTest.xaml", UriKind.Relative);
-                    dc.MainWin.ResizeMode = ResizeMode.CanResizeWithGrip;
-                }
+                if (!dc.login.IsLoggedIn) 
+                    e.Cancel = true;
+                //else NavigationCommands.GoToPage.Execute("/Pages/Administration.xaml", null);
             }
             catch (Exception ex)
             {
@@ -66,15 +60,34 @@ namespace LightLife.Pages
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e) { }
 
+
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                dc.DoLogin(txtUsername.Text, txtPassword.Password);
+            }
+            catch (Exception ex)
+            {
+
+                ModernDialog.ShowMessage(ex.Message, "Error", MessageBoxButton.OK);
+                ClearInputs();
+            }
+        }
+
         private void UserControl_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-                if ((e.Key == Key.Enter))            
+            try
             {
-                //Just try to navigate in order that OnNavigatingFrom is called
-                NavigationCommands.GoToPage.Execute("/Pages/Administration.xaml", null);
-
+                if ((e.Key == Key.Enter))
+                    dc.DoLogin(txtUsername.Text, txtPassword.Password);
             }
-            
+            catch (Exception ex)
+            {
+
+                ModernDialog.ShowMessage(ex.Message, "Error", MessageBoxButton.OK);
+                ClearInputs();
+            }         
         }
 
         private void ClearInputs()
@@ -83,7 +96,5 @@ namespace LightLife.Pages
             txtUsername.Text = String.Empty;
             txtPassword.Password = String.Empty;
         }
-
-
     }
 }

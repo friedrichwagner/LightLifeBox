@@ -15,7 +15,6 @@ namespace LightLife
     public partial class MainWindow : ModernWindow
     {
         private MainVM dc;
-
         public MainWindow()
         {            
             try
@@ -29,6 +28,7 @@ namespace LightLife
 
                 Settings ini = Settings.GetInstance();
                 ContentSource = new Uri(ini.ReadString("Pages", "StartPage", ""), UriKind.Relative); //LoginPage
+                
                 this.ResizeMode = ResizeMode.NoResize;           
             }
             catch (Exception ex)
@@ -37,19 +37,20 @@ namespace LightLife
             }
         }
 
-
         private void ModernWindow_Loaded(object sender, RoutedEventArgs e)
         {
             AppearanceManager.Current.AccentColor = Color.FromRgb(0xe5, 0x14, 0x00);
             Left = 0;
             Top = 0;
 
-            MenuLinkGroups = dc.UpdateMenu(false);
+           MenuLinkGroups = dc.UpdateMenu();
         }
 
         private void ModernWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            PiledVM p = PiledVM.GetInstance();
 
+            p.Done();
         }
     }
 }

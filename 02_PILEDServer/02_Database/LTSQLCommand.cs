@@ -126,7 +126,7 @@ namespace Lumitech.Helpers
             }
 
             this.cmd.CommandText = sb.ToString();
-            Debug.Print(this.cmd.CommandText);
+            Debug.Print(cmd.CommandText);
             return this.cmd.CommandText;
         }
 

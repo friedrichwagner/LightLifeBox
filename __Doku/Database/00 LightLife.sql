@@ -142,6 +142,7 @@ create table LLData
 (
 	DataID int identity NOT NULL primary key,
 	RoomID int not null,
+	GroupID int not null,
 	UserID int not null,	
 	VLID int not null,
 	SceneID int not null,
@@ -150,7 +151,7 @@ create table LLData
 	CCT	int,
 	x float , 
 	y float,
-	pimode int not null,	
+	pimode varchar(15) not null,	
 	sender varchar(15) not null,
 	receiver varchar(15) not null,
 	MsgTypeID int not null,	
@@ -201,6 +202,14 @@ create table LLPILedMode
 	PILEDMode varchar(20),
 	Remark varchar(max),
 	added datetime default getdate()
+);
+
+
+create table LLRoomGroup
+(
+	RoomID int not null,
+	GroupID int not null,
+	primary key (RoomId, GroupID)
 );
 
 

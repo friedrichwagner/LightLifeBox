@@ -19,11 +19,13 @@ namespace LightLifeAdminConsole.MVVM
         private static MainVM _instance;
         public MainWindow MainWin { get; private set; }
 
-        private SqlConnection sqlCon;
         public LinkGroupCollection NewMenuLinkGroups { get; private set; }
         public LinkGroupCollection OldMenuLinkGroups { get; set; }
         private string pagesVisible;
         public ConsoleLogin login;
+
+        private string uname;
+        private string pwd;
 
         private MainVM(LinkGroupCollection pLG, MainWindow mw)
         {
@@ -32,9 +34,15 @@ namespace LightLifeAdminConsole.MVVM
             MainWin = mw;
             
             Settings ini = Settings.GetInstance();
-            pagesVisible = ini.ReadString("Pages", "PagesVisible", "");           
+            pagesVisible = ini.ReadString("Pages", "PagesVisible", "");
 
+            //Automatic Login ?
             login = new ConsoleLogin(LLSQL.sqlCon);
+
+            uname = ini.ReadString("Login", "Username", "");
+            pwd = ini.ReadString("Login", "Password", "");
+
+            login.CheckUser(uname, pwd);
         }
 
         public static MainVM GetInstance(LinkGroupCollection pLG, MainWindow mw)
@@ -50,18 +58,19 @@ namespace LightLifeAdminConsole.MVVM
             return _instance;
         }
 
-        public LinkGroupCollection UpdateMenu(bool loggedIn)
+        public LinkGroupCollection UpdateMenu()
         {
             this.NewMenuLinkGroups.Clear();
-            if (loggedIn)
+            if (login.IsLoggedIn)
             {
+                MainWin.Title = "Light Life - Admin Console / " + login.FirstName + " " + login.LastName;
                 return DisplayMenuItems(pagesVisible);
-            }
+            } 
             else
-                login.IsLoggedIn = false;
-
-            //return DisplayMenuItems(pagesVisible);
-            return DisplayMenuItems("login");
+            {
+                MainWin.Title = "Light Life - Admin Console";
+                return DisplayMenuItems("login");
+            }
        }
 
        public LinkGroupCollection DisplayMenuItems(string list)
@@ -86,15 +95,14 @@ namespace LightLifeAdminConsole.MVVM
             return NewMenuLinkGroups;
        }
 
-        public void Login(string uname, string pwd)
+        public void DoLogin(string uname, string pwd)
         {
-            if (login.CheckUser(uname, pwd))
-            {
-                MainWin.MenuLinkGroups = UpdateMenu(true);
-            }
-            else
+            login.CheckUser(uname, pwd);
+
+            if (!login.IsLoggedIn)
                 throw new ArgumentException("Wrong Username/Password!");
 
+            MainWin.MenuLinkGroups = UpdateMenu();            
        }
     }
 }

@@ -186,26 +186,17 @@ namespace PILEDServer
 
                 if (bEnable)
                 {
-                    IObserver<PILEDData> obsPILED = null;
-                    IObserver<LightLifeData> obsLightLife = null;
-
-                    //if (s == "DMX")  obsPILED = new DMX(3);
-                    //if (s == "DALI")  obsPILED = new DALI();
-
-                    if (s == "NEOLINK") obsPILED = new NeoLink();    
-
-                    else if (s=="LightLifeLogger")                    
-                        obsLightLife = new LightLifeLogger();
-
-                    if (obsPILED != null)
+                    if (s.ToLower() == "neolink")
                     {
-                        log.Info("PILED Observer added:" + s);
-                        Subscribe(obsPILED);
+                        NeoLink nl = new NeoLink();
+                        nl.Subscribe(this);
                     }
-                    if (obsLightLife != null)
+
+
+                    if (s.ToLower() == "lightlifelogger")
                     {
-                        log.Info("LightLife Observer added:" + s);
-                        Subscribe(obsLightLife);
+                        LightLifeLogger ll = new LightLifeLogger();
+                        ll.Subscribe(this);
                     }
                 }
 

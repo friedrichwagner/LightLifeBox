@@ -71,12 +71,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BLogic\01_ComClients\Interfaces.cs" />
+    <Compile Include="BLogic\01_ComClients\LightLifeLogger.cs" />
+    <Compile Include="BLogic\01_ComClients\NeoLink.cs" />
+    <Compile Include="BLogic\01_ComClients\PILEDServerDefine.cs" />
+    <Compile Include="BLogic\CIEChart.cs" />
     <Compile Include="BLogic\LLSQL.cs" />
     <Compile Include="BLogic\Logger.cs" />
     <Compile Include="BLogic\AdminBase.cs" />
     <Compile Include="BLogic\Login.cs" />
+    <Compile Include="BLogic\Photometric.cs" />
     <Compile Include="Content\Admin\Roles.xaml.cs">
       <DependentUpon>Roles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\PILED\XY.xaml.cs">
+      <DependentUpon>XY.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\PILED\RGB.xaml.cs">
+      <DependentUpon>RGB.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\PILED\CCT.xaml.cs">
+      <DependentUpon>CCT.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\Base\Messenger.cs" />
     <Compile Include="MVVM\Base\ObservableObject.cs" />
@@ -86,6 +101,18 @@
     <Compile Include="MVVM\Admin.cs" />
     <Compile Include="MVVM\MainVM.cs" />
     <Page Include="Content\Admin\Roles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\PILED\XY.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Content\PILED\RGB.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Content\PILED\CCT.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -126,6 +153,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="MVVM\PiledVM.cs" />
     <Compile Include="Pages\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -147,7 +175,11 @@
     </Resource>
     <Resource Include="Images\Lumitech.jpg" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\CIE1931.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

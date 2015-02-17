@@ -35,41 +35,19 @@ values (6, 'Proband', '2', '1.1.2014', 'male', 100, 'pb2', 'test');
 
 ------------------------------------------------------------
 
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (0, 'Dummy Raum', '1','');
+delete from LLRoom;
 
 insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (1, 'Testraum 1', '1:1','CCT=2700&Brightness=50');
+values (0, 'Dummy Raum', '','');
 
 insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (2, 'Testraum 2', '1:1','CCT=2700&Brightness=50');
+values (1, 'Testraum 1', '','');
 
 insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (3, 'Vorraum', '','CCT=2700&Brightness=50');
+values (2, 'Testraum 2', '','');
 
 insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (10, 'Box11', '1:10, Helligkeit', null);
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (11, 'Box12', '1:10, CCT', null);
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (12, 'Box13', '1:10, Judd', null);
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (13, 'Box13', '1:10, All', null);
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (20, 'Box21', '1:10, Helligkeit', null);
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (21, 'Box22', '1:10, CCT', null);
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (22, 'Box23', '1:10, Judd', null);
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (23, 'Box23', '1:10, All', null);
+values (3, 'Vorraum', '','');
 
 ------------------------------------------------------------
 
@@ -81,38 +59,32 @@ values (2, 'AREA','Kiteo K-Aera 60x60');
 
 ------------------------------------------------------------
 
-insert into LLGroup (GroupID, Name, Remark)
-values (1, 'Gruppe Testraum1','');
+delete from LLGroup;
 
 insert into LLGroup (GroupID, Name, Remark)
-values (2, 'Gruppe Testraum2','');
+values (0, 'Alle','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (3, 'Gruppe Vorraum','');
+values (1, 'Testraum1','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (10, 'Gruppe Box11','');
+values (2, 'Testraum2','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (11, 'Gruppe Box12','');
+values (3, 'Vorraum','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (12, 'Gruppe Box13','');
+values (10, 'Box T1','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (13, 'Gruppe Box14','');
+values (20, 'Box T2','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (20, 'Gruppe Box21','');
+values (30, 'Box V1','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (21, 'Gruppe Box22','');
+values (40, 'Box Reserve','');
 
-insert into LLGroup (GroupID, Name, Remark)
-values (22, 'Gruppe Box23','');
-
-insert into LLGroup (GroupID, Name, Remark)
-values (23, 'Gruppe Box24','');
 
 ------------------------------------------------------------
 
@@ -281,3 +253,16 @@ values(0, 'No Scene', 0,0,0,0,0,'');
 ----------
 insert into LLTestSequenceDefinition (SequenceDefID, SequenceName, StepID, Remark) 
 values(0, 'No Sequence', 0, null);
+
+----------
+insert into LLRoomGroup(RoomID, GroupID) values (1,1);
+insert into LLRoomGroup(RoomID, GroupID) values (1,10);
+
+insert into LLRoomGroup(RoomID, GroupID) values (2,2);
+insert into LLRoomGroup(RoomID, GroupID) values (2,20);
+
+insert into LLRoomGroup(RoomID, GroupID) values (2,3);
+insert into LLRoomGroup(RoomID, GroupID) values (3,30);
+insert into LLRoomGroup(RoomID, GroupID) values (3,40);
+
+

@@ -33,15 +33,16 @@ namespace LightLife
 
     public static class LLSQL
     {
-        public static IDictionary<string, SQLSet> tables;
         public static SqlConnection sqlCon;
+        public static LTSQLCommand cmd;
+        public static IDictionary<string, SQLSet> tables;
+        public static IDictionary<int, string> llgroups;
+        public static IDictionary<int, string> llrooms;
         
         public static void InitSQLs()
         {
-            
-
             Settings ini = Settings.GetInstance();
-
+            
             SqlConnectionStringBuilder sqlsb = new SqlConnectionStringBuilder();
             sqlsb.DataSource = ini.ReadString("Database", "DataSource", "");
             sqlsb.InitialCatalog = ini.ReadString("Database", "InitialCatalog", "");
@@ -49,6 +50,7 @@ namespace LightLife
             sqlsb.Password = ini.ReadString("Database", "Password", "");
 
             sqlCon = new SqlConnection(sqlsb.ConnectionString);
+            cmd = new LTSQLCommand(sqlCon);
 
             tables = new Dictionary<string, SQLSet>();
             tables.Add("LLRole", new SQLSet("LLRole"));
@@ -74,6 +76,68 @@ namespace LightLife
             tables["LLUserInfo"].selectSQL = "select * from LLUserInfo";
             tables["LLUserInfo"].insertSQL = "insert into LLUserInfo() values()";
             tables["LLUserInfo"].updateSQL = "update LLUserInfo set where ";
+
+            if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
+
+            llgroups = new Dictionary<int, string>();
+            getDict(ref llgroups, tables["LLGroup"], "GroupID, Name");
+
+            llrooms = new Dictionary<int, string>();
+            getDict(ref llrooms, tables["LLRoom"], "RoomID, Name");
+        }
+
+        private static void getDict(ref IDictionary<int, string> dict, SQLSet s, string fields)
+        {
+            try
+            {
+                string stmt = "select " + fields + " from " + s.tablename;
+                cmd.prep(stmt);
+                cmd.Exec();
+
+                //Always add a "-1" entry
+                dict.Add(-1, "");
+                
+                while (cmd.dr.Read())
+                {
+                    dict.Add(cmd.dr.GetInt32(0), cmd.dr.GetString(1));
+                }
+
+                cmd.dr.Close();
+
+            }
+            catch
+            {
+                throw;
+            }
+
+
         }
     }
+
+    public static class Extensions
+    {
+        public static Dictionary<TKey, TRow> TableToDictionary<TKey,TRow>(
+            this DataTable table,
+            Func<DataRow, TKey> getKey,
+            Func<DataRow, TRow> getRow)
+        {
+            return table
+                .Rows
+                .OfType<DataRow>()
+                .ToDictionary(getKey, getRow);
+        }
+    }
+
+    /*public static void SampleUsage()
+        {
+            DataTable t = new DataTable();
+
+            var dictionary = t.TableToDictionary(
+                row => row.Field<int>("ID"),
+                row => new {
+                    Age = row.Field<int>("Age"),
+                    Name = row.Field<string>("Name"),
+                    Address = row.Field<string>("Address"),
+                });
+        }*/
 }

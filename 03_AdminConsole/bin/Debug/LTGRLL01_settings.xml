@@ -2,7 +2,7 @@
 <Settings>
 	<Pages>
 		<StartPage value="/Pages/Login.xaml" />
-		<PagesVisible value="Administration;PI-LED Control;Boxen;Settings" />
+		<PagesVisible value="Administration;PI-LED Control;Test Logging;Settings" />
 		<Interfaces value="LightLifeLogger,NeoLink" />
 	</Pages>
 	<Login>
@@ -19,8 +19,8 @@
 	<Enable value="True" />
   </LightLifeLogger>    
   <NeoLink name="NeoLinkClient1">
-	<UDP-Address value="192.168.4.12" />
-	<UDP-Port value="1025" />
+	<UDP-Address value="127.0.0.1" />
+	<UDP-Port value="6454" />
 	<SendDelayTimeMS value="200" />
 	<Enable value="True" />
   </NeoLink>      

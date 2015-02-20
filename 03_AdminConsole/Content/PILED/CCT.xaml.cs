@@ -1,33 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 using LightLifeAdminConsole.MVVM;
+using FirstFloor.ModernUI.Windows;
 
 namespace LightLifeAdminConsole.Content.PILED
 {
     /// <summary>
-    /// Interaction logic for RGB.xaml
+    /// Interaction logic for CCT.xaml
     /// </summary>
-    public partial class RGB : UserControl
+    public partial class CCT : UserControl, IContent
     {
         private PiledVM dc;
 
-        public RGB()
+        public CCT()
         {
             InitializeComponent();
             dc = PiledVM.GetInstance();
             DataContext = dc;
         }
+
+        public void OnFragmentNavigation(FirstFloor.ModernUI.Windows.Navigation.FragmentNavigationEventArgs e) 
+        {
+            //damit in den CCT Mode umgeschalten wird
+            dc.CCT = dc.lldata.piled.cct;
+        }
+
+        public void OnNavigatedFrom(FirstFloor.ModernUI.Windows.Navigation.NavigationEventArgs e) { }
+        public void OnNavigatedTo(FirstFloor.ModernUI.Windows.Navigation.NavigationEventArgs e) 
+        {
+            //damit in den CCT Mode umgeschalten wird
+            dc.CCT = dc.lldata.piled.cct;
+        }
+
+        public void OnNavigatingFrom(FirstFloor.ModernUI.Windows.Navigation.NavigatingCancelEventArgs e) { }
     }
 }

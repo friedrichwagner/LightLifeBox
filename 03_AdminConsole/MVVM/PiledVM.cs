@@ -60,7 +60,7 @@ namespace LightLifeAdminConsole.MVVM
             get { return (byte)lldata.piled.brightness; }
             set
             {
-                if (lldata.piled.brightness != value)
+                //if (lldata.piled.brightness != value)
                 {
                     lldata.piled.mode = PILEDMode.SET_BRIGHTNESS;
                     lldata.piled.brightness = value;
@@ -75,7 +75,7 @@ namespace LightLifeAdminConsole.MVVM
             get { return lldata.piled.cct; }
             set
             {
-                if (lldata.piled.cct != value)
+                //if (lldata.piled.cct != value)
                 {
                     lldata.piled.mode = PILEDMode.SET_CCT;
                     lldata.piled.cct = value;
@@ -92,7 +92,7 @@ namespace LightLifeAdminConsole.MVVM
             get { return lldata.piled.r; }
             set
             {
-                if (lldata.piled.r != value)
+                //if (lldata.piled.r != value)
                 {
                     lldata.piled.mode = PILEDMode.SET_RGB;
                     lldata.piled.r = value;
@@ -107,7 +107,7 @@ namespace LightLifeAdminConsole.MVVM
             get { return lldata.piled.g; }
             set
             {
-                if (lldata.piled.g != value)
+                //if (lldata.piled.g != value)
                 {
                     lldata.piled.mode = PILEDMode.SET_RGB;
                     lldata.piled.g = value;
@@ -122,7 +122,7 @@ namespace LightLifeAdminConsole.MVVM
             get { return lldata.piled.b; }
             set
             {
-                if (lldata.piled.b != value)
+                //if (lldata.piled.b != value)
                 {
                     lldata.piled.mode = PILEDMode.SET_RGB;
                     lldata.piled.b = value;
@@ -137,7 +137,7 @@ namespace LightLifeAdminConsole.MVVM
             get { return lldata.piled.x; }
             set
             {
-                if (lldata.piled.x != value)
+                //if (lldata.piled.x != value)
                 {
                     lldata.piled.mode = PILEDMode.SET_XY;
                     lldata.piled.x = value;
@@ -153,7 +153,7 @@ namespace LightLifeAdminConsole.MVVM
             get { return lldata.piled.y; }
             set
             {
-                if (lldata.piled.y != value)
+                //if (lldata.piled.y != value)
                 {
                     lldata.piled.mode = PILEDMode.SET_XY;
                     lldata.piled.y = value;

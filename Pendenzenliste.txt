@@ -1,0 +1,16 @@
+Admin Console:
+-Test mit NeoLink Box
+-Implementierung "Senden an Räume" = mehrere Gruppen
+-Steuerung Controlboxen
+-Implementierung Interface PILEDServer bzw. Controlboxen
+
+llbox:
+-Einbindung "wiringpi" library
+
+
+PILEDServer:
+-Änderung aus ADmin Console übernehmen: PILEDServerDefines.cs, ....
+
+
+
+

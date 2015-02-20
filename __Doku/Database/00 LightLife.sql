@@ -21,6 +21,8 @@ create Table LLUser
 	added datetime default getdate()
 );
 
+drop table LLUSerInfo;
+
 create Table LLUserInfo
 (
 	DataId int identity not null primary key,
@@ -70,8 +72,21 @@ create Table LLUserInfo
 	Feld8 varchar(50),
 	Feld9 varchar(50),
 	Feld10 varchar(50),
-	added datetime default getdate()
+	added datetime default getdate(),
+	updated datetime
 );
+
+CREATE TRIGGER trUpdateLLUSerInfo on LLUserInfo
+   AFTER UPDATE
+AS 
+BEGIN
+	Update LLUserInfo set updated = getdate()
+	from inserted i, LLUserInfo a
+	where i.DataId = a.DataId
+END
+GO
+
+
 
 create Table LLRoom
 (

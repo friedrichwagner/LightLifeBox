@@ -21,7 +21,8 @@
                 <mui:Link DisplayName="CCT/XY" Source="/Content/PILED/XY.xaml" />
                 <mui:Link DisplayName="RGB" Source="/Content/PILED/RGB.xaml" />
                 <mui:Link DisplayName="CCT" Source="/Content/PILED/CCT.xaml" />
-                <mui:Link DisplayName="Scenes" Source="/Content/PILED/Scenes.xaml" />
+                <mui:Link DisplayName="Szenen" Source="/Content/PILED/Scenes.xaml" />
+                <mui:Link DisplayName="Standard-Sequenzen" Source="/Content/PILED/Sequences.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>        
         <mui:LinkGroup DisplayName="Logging">
@@ -29,9 +30,11 @@
                 <mui:Link DisplayName="Logging" Source="/Pages/Logging.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="Settings">
+        <mui:LinkGroup DisplayName="Boxen">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="About" Source="/Pages/Settings.xaml" />
+                <mui:Link DisplayName="About" Source="/Conent/Box.xaml#1" />
+                <mui:Link DisplayName="About" Source="/Conent/Box.xaml#2" />
+                <mui:Link DisplayName="About" Source="/Conent/Box.xaml#3" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>

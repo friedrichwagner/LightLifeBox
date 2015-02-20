@@ -65,25 +65,25 @@ insert into LLGroup (GroupID, Name, Remark)
 values (0, 'Alle','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (1, 'Testraum1','');
+values (200, 'Testraum1','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (2, 'Testraum2','');
+values (201, 'Testraum2','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (3, 'Vorraum','');
+values (202, 'Vorraum','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (10, 'Box T1','');
+values (203, 'Box T1','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (20, 'Box T2','');
+values (204, 'Box T2','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (30, 'Box V1','');
+values (205, 'Box V1','');
 
 insert into LLGroup (GroupID, Name, Remark)
-values (40, 'Box Reserve','');
+values (206, 'Box Reserve','');
 
 
 ------------------------------------------------------------

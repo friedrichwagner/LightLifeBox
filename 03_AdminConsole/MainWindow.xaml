@@ -31,9 +31,7 @@
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="Boxen">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Box #1" Source="/Conent/Box.xaml#1" />
-                <mui:Link DisplayName="Box #2" Source="/Conent/Box.xaml#2" />
-                <mui:Link DisplayName="Box #3" Source="/Conent/Box.xaml#3" />
+                <mui:Link DisplayName="Control-Boxes" Source="/Pages/ControlBox.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>

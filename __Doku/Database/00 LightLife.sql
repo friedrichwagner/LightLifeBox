@@ -192,25 +192,33 @@ and d.SceneID = s.SceneID
 and d.SequenceID=q.SequenceDefID
 and d.MsgTypeId = m.MsgID
 
-create table LLTestSequenceDefinition
+drop table LLTestSequenceDefinition;
+drop table LLTestSequence;
+
+create table LLTestSequenceHead
 (
-	SequenceDefID int not null,
-	SequenceName varchar(50),
-	StepID int not null,
+	SequenceID int not null,
+	UserID int not null,
+	VLID int not null,
 	Remark varchar(max),
 	added datetime default getdate(),
-	primary key (SequenceDefID,StepID)
+	primary key (SequenceID)
 );
 
-create table LLTestSequence
+drop table  LLTestSequencePos;
+create table LLTestSequencePos
 (
 	SequenceID int identity NOT NULL primary key,
-	SequenceDefID int not null,
 	StepID int not null,
-	Action varchar(50), --START, STOP, PAUSE, RUNNING
+	pimode varchar(20) not null,
+	Brightness int not null,
+	CCT	int,
+	x float , 
+	y float,
 	Remark varchar(max),
 	added datetime default getdate()
 );
+
 create table LLPILedMode
 (
 	PIledID int not null primary key,

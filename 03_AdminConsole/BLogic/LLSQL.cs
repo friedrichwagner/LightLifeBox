@@ -56,6 +56,8 @@ namespace LightLife
         public static IDictionary<int, string> sequences;
         public static IDictionary<int, PILEDScene> llscenes;
         public static DataTable llroomgroup;
+        public static DataTable llusers;
+        public static IDictionary<int, string> probanden;
         
         public static void InitSQLs()
         {
@@ -113,13 +115,20 @@ namespace LightLife
 
             llroomgroup = new DataTable(tables["LLRoomGroup"].tablename);
             getDataTable(ref llroomgroup, tables["LLRoomGroup"]);
+
+            llusers = new DataTable(tables["LLUser"].tablename);
+            getDataTable(ref llusers, tables["LLUser"]);
+
+            probanden = new Dictionary<int, string>();
+            getDict(ref probanden, tables["LLUser"], "UserID, Concat(FirstName, ' ', Lastname)", " where RoleId=100");
         }
 
-        private static void getDict(ref IDictionary<int, string> dict, SQLSet s, string fields)
+        private static void getDict(ref IDictionary<int, string> dict, SQLSet s, string fields, string filter="")
         {
             try
             {
                 string stmt = "select " + fields + " from " + s.tablename;
+                if (filter.Length > 0) stmt += " " + filter;
                 cmd.prep(stmt);
                 cmd.Exec();
 

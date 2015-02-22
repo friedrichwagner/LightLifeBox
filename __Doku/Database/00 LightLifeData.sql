@@ -228,6 +228,8 @@ values (34, 'PREV_TESTSEQUENCE_STEP', null);
 
 ---------
 
+delete from LlPILedMode;
+
 insert into LlPILedMode(PiledID, PILEDMode, Remark)
 values (0, 'NO_MODE', null);
 
@@ -235,13 +237,13 @@ insert into LlPILedMode(PiledID, PILEDMode, Remark)
 values (1, 'SET_BRIGHTNESS', null);
 
 insert into LlPILedMode(PiledID, PILEDMode, Remark)
-values (2, 'LL_SET_CCT', null);
+values (2, 'SET_CCT', null);
 
 insert into LlPILedMode(PiledID, PILEDMode, Remark)
-values (3, 'LL_SET_XY', null);
+values (3, 'SET_XY', null);
 
 insert into LlPILedMode(PiledID, PILEDMode, Remark)
-values (4, 'LL_SET_RGB', null);
+values (4, 'SET_RGB', null);
 
 insert into LlPILedMode(PiledID, PILEDMode, Remark)
 values (99, 'LL_SET_LOCKED', 'Lock current lightstate, used in LightLife Control Boxes');

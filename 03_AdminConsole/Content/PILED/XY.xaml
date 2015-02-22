@@ -6,50 +6,38 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              mc:Ignorable="d" Loaded="UserControl_Loaded" >
              
-    <Grid Style="{StaticResource ContentRoot}">
+    <Grid Style="{StaticResource ContentRoot}" Margin="0">
         <ScrollViewer>
             <Grid x:Name="grdCIE">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="500" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="220" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="4"  Background="LightGray" />
-                <TextBlock Text="Room:" Style="{StaticResource Heading2}" Grid.Row="0" Grid.Column="0" Margin="10"/>
-                <ComboBox  x:Name="cbRoom" Width="120" Grid.Row="0" Grid.Column="1" Margin="10" ItemsSource="{Binding rooms}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedRoom, Mode=TwoWay}" />
+                <StackPanel  Grid.Row="0" Grid.Column="0" Margin="0" Orientation="Horizontal">
+                    <TextBlock Text="CCT:" Width="40" Style="{StaticResource Heading2}"  Margin="10" HorizontalAlignment="Right" />
+                    <TextBox  x:Name="txtCCT"  Width="60" Margin="10" Text="{Binding Path=CCT, Mode=TwoWay}" MaxLength="4" HorizontalAlignment="Left" LostFocus="txtCCT_LostFocus"/>
+                </StackPanel>
 
-                <TextBlock Text="Group:" Style="{StaticResource Heading2}" Grid.Row="0" Grid.Column="2" Margin="10"/>
-                <ComboBox  x:Name="cbGroup" Width="120" Grid.Row="0" Grid.Column="3" Margin="10" ItemsSource="{Binding groups}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedGroup, Mode=TwoWay}" />
+                <StackPanel  Grid.Row="1" Grid.Column="0" Margin="0" Orientation="Horizontal">
+                    <TextBlock Text="x:" Width="40" Style="{StaticResource Heading2}" Margin="10" HorizontalAlignment="Right"/>
+                    <TextBox  x:Name="txtX" Width="60" Margin="10" Text="{Binding Path=X, Mode=TwoWay, ConverterCulture='de-DE', StringFormat={}{0:0.000}}" MaxLength="5" TabIndex="1" GotFocus="txtX_GotFocus" LostFocus="txtX_LostFocus" HorizontalAlignment="Left"/>
+                    <Label x:Name="lblX" Content="..."  VerticalContentAlignment="Center" />
+                </StackPanel>
 
-                <TextBlock Text="CCT:" Style="{StaticResource Heading2}" Grid.Row="1" Grid.Column="0" Margin="10" HorizontalAlignment="Right" />
-                <TextBox  x:Name="txtCCT"  Width="60" Grid.Row="1" Grid.Column="1" Margin="10" Text="{Binding Path=CCT, Mode=TwoWay}" MaxLength="4" HorizontalAlignment="Left" LostFocus="txtCCT_LostFocus"/>
-                
-                <TextBlock Text="x:" Style="{StaticResource Heading2}" Grid.Row="2" Grid.Column="0" Margin="10" HorizontalAlignment="Right"/>
-                <TextBox  x:Name="txtX" Width="60" Grid.Row="2" Grid.Column="1" Margin="10" Text="{Binding Path=X, Mode=TwoWay, ConverterCulture='de-DE', StringFormat={}{0:0.000}}" MaxLength="5" TabIndex="1" GotFocus="txtX_GotFocus" LostFocus="txtX_LostFocus" HorizontalAlignment="Left"/>
-                <Label x:Name="lblX" Grid.Row="2" Grid.Column="1" Content="..." HorizontalAlignment="Right" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                
-                <TextBlock Text="y:" Style="{StaticResource Heading2}" Grid.Row="2" Grid.Column="2" Margin="10" HorizontalAlignment="Right"/>
-                <TextBox  x:Name="txtY" Width="60" Grid.Row="2" Grid.Column="3" Margin="10" Text="{Binding Path=Y, Mode=TwoWay, ConverterCulture='de-DE', StringFormat={}{0:0.000}}" MaxLength="5" TabIndex="2" GotFocus="txtX_GotFocus" LostFocus="txtX_LostFocus" HorizontalAlignment="Left"/>
-                <Label x:Name="lblY" Grid.Row="2" Grid.Column="3" Content="..." HorizontalAlignment="Right" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                
-                <Canvas x:Name="cnvCIE" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4"  MouseDown="Image_MouseDown" Margin="0" MouseMove="cnvCIE_MouseMove">
+                <StackPanel  Grid.Row="1" Grid.Column="1" Margin="0" Orientation="Horizontal">
+                    <TextBlock Text="y:" Width="40" Style="{StaticResource Heading2}" Margin="10"/>
+                    <TextBox  x:Name="txtY" Width="60" Margin="10" Text="{Binding Path=Y, Mode=TwoWay, ConverterCulture='de-DE', StringFormat={}{0:0.000}}" MaxLength="5" TabIndex="2" GotFocus="txtX_GotFocus" LostFocus="txtX_LostFocus" HorizontalAlignment="Left"/>
+                    <Label x:Name="lblY" Content="..." VerticalContentAlignment="Center"/>
+                </StackPanel>
+                <Canvas x:Name="cnvCIE" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4"  MouseDown="Image_MouseDown" Margin="0" MouseMove="cnvCIE_MouseMove">
                     <Image Name="imgCIE"  Source="/Images/CIE1931.png" Height="500" Margin="0"/>
                 </Canvas>
-
-                <TextBlock Text="Brightness:" Style="{StaticResource Heading2}" Grid.Row="4" Grid.Column="0" Margin="10"/>
-                <TextBox  x:Name="txtBrightness" Width="60" Grid.Row="4" Grid.Column="1" Margin="10" Text="{Binding Path=Brightness, Mode=TwoWay}" MaxLength="3"/>
-                <Slider x:Name="slBrightness" Margin="10" Minimum="0" Maximum="255" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4"  IsSnapToTickEnabled="True" TickFrequency="10" TickPlacement="Both" Value="{Binding Path=Brightness, Mode=TwoWay , Delay=200}"/>
-
             </Grid>
            
         </ScrollViewer>

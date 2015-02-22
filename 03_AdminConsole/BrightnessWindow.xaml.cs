@@ -28,7 +28,7 @@ namespace LightLifeAdminConsole
             Hide();
         }
 
-        public void Close()
+        public new void Close()
         {
             this.Closing -= ModernWindow_Closing;
             //Add closing logic here.

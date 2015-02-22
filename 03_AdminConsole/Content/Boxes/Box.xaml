@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="LightLifeAdminConsole.Content.Boxes.Box"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             mc:Ignorable="d">
+    <Grid Style="{StaticResource ContentRoot}">
+        <ScrollViewer>
+            <Grid Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Proband:" Style="{StaticResource Heading2}"  Margin="10" Width="80"/>
+                    <ComboBox x:Name="cbProbanden" Margin="10"  Width="250" ItemsSource="{Binding probanden}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedProband, Mode=TwoWay}"/>
+                    <Button x:Name="btnShowProband" Content=">>" Margin="10"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right">
+                    <Button x:Name="btnStart" Content="Start" Margin="0" Click="btnStart_Click" Tag="START"/>
+                    <Button x:Name="btnPause" Content="Pause" Margin="0" Click="btnStart_Click" Tag="PAUSE"/>                    
+                    <Button x:Name="btnPrev" Content="Prev" Margin="0" Click="btnStart_Click" Tag="PREV"/>
+                    <Button x:Name="btnNext" Content=">>" Margin="0" Click="btnStart_Click" Tag="NEXT"/>
+                    <Button x:Name="btnStop" Content="Stop" Margin="0" Click="btnStart_Click" Tag="STOP"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <TextBlock Text="Remark:" Style="{StaticResource Heading2}"  Margin="10" Width="80" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txtRemark"  Height="80" MaxLength="250"/>
+                </StackPanel>
+
+                <DataGrid x:Name="dgBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10"/>
+            </Grid>
+            
+        </ScrollViewer>
+    </Grid>
+</UserControl>

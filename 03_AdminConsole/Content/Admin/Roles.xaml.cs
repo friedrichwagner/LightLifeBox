@@ -17,11 +17,6 @@ namespace LightLifeAdminConsole.Content.Admin
         public Roles()
         {
             InitializeComponent();
-
-           
-
-
-
         }
 
         public void OnFragmentNavigation(FirstFloor.ModernUI.Windows.Navigation.FragmentNavigationEventArgs e)

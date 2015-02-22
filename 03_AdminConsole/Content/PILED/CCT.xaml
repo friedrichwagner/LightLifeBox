@@ -5,40 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              mc:Ignorable="d" >
-             
-    <Grid Style="{StaticResource ContentRoot}">
+
+    <Grid Style="{StaticResource ContentRoot}" Margin="0">
         <ScrollViewer>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <Border Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="4"  Background="LightGray" />
-                <TextBlock Text="Room:" Style="{StaticResource Heading2}" Grid.Row="0" Grid.Column="0" Margin="10"/>
-                <ComboBox  x:Name="cbRoom" Width="100" Grid.Row="0" Grid.Column="1" Margin="10" ItemsSource="{Binding rooms}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedRoom, Mode=TwoWay}" />
-         
-                <TextBlock Text="Group:" Style="{StaticResource Heading2}" Grid.Row="0" Grid.Column="2" Margin="10"/>
-                <ComboBox  x:Name="cbGroup" Width="100" Grid.Row="0" Grid.Column="3" Margin="10" ItemsSource="{Binding groups}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedGroup, Mode=TwoWay}" />
-
-                <TextBlock Text="Brightness:" Style="{StaticResource Heading2}" Grid.Row="1" Grid.Column="0" Margin="10"/>
-                <!--<TextBox  x:Name="txtBrightness" Width="100" Grid.Row="1" Grid.Column="1" Margin="10" IsReadOnly="True" Text="{Binding ElementName=slBrightness, Path=Value, StringFormat={}{0:0}}"/>-->
-                <TextBox  x:Name="txtBrightness" Width="100" Grid.Row="1" Grid.Column="1" Margin="10" Text="{Binding Path=Brightness, Mode=TwoWay}" MaxLength="3"/>
-                <Slider x:Name="slBrightness" Margin="10" Minimum="0" Maximum="255" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4"  IsSnapToTickEnabled="True" TickFrequency="10" TickPlacement="Both" Value="{Binding Path=Brightness, Mode=TwoWay , Delay=200}"/>
-
-                <TextBlock Text="CCT:" Style="{StaticResource Heading2}" Grid.Row="3" Grid.Column="0" Margin="10" />
-                <TextBox  x:Name="txtCCT"  Width="100" Grid.Row="3" Grid.Column="1" Margin="10" Text="{Binding Path=CCT, Mode=TwoWay}" MaxLength="4"/>
-                <Slider x:Name="slCCT" Margin="10" Minimum="2500" Maximum="7000" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" IsSnapToTickEnabled="True" TickFrequency="25" TickPlacement="Both" Value="{Binding Path=CCT, Mode=TwoWay, Delay=200}"/>
-            </Grid>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">            
+                    <TextBlock Text="CCT:" Style="{StaticResource Heading2}" Margin="10" />
+                    <TextBox  x:Name="txtCCT"  Width="100" Margin="10" Text="{Binding Path=CCT, Mode=TwoWay}" MaxLength="4"/>                    
+                </StackPanel>
+                <Slider x:Name="slCCT" Width="500" Margin="10" Minimum="2500" Maximum="7000" IsSnapToTickEnabled="True" TickFrequency="25" Value="{Binding Path=CCT, Mode=TwoWay, Delay=200}"/>
+            </StackPanel>
         </ScrollViewer>
     </Grid>
 </UserControl>

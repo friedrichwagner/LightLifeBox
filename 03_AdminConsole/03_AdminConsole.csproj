@@ -75,6 +75,7 @@
     <Compile Include="BLogic\01_ComClients\LightLifeLogger.cs" />
     <Compile Include="BLogic\01_ComClients\NeoLink.cs" />
     <Compile Include="BLogic\01_ComClients\PILEDServerDefine.cs" />
+    <Compile Include="BLogic\Box.cs" />
     <Compile Include="BLogic\CIEChart.cs" />
     <Compile Include="BLogic\LLSQL.cs" />
     <Compile Include="BLogic\Logger.cs" />
@@ -86,6 +87,9 @@
     </Compile>
     <Compile Include="Content\Admin\Roles.xaml.cs">
       <DependentUpon>Roles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\Boxes\Box.xaml.cs">
+      <DependentUpon>Box.xaml</DependentUpon>
     </Compile>
     <Compile Include="Content\PILED\Sequence.xaml.cs">
       <DependentUpon>Sequence.xaml</DependentUpon>
@@ -103,6 +107,7 @@
     <Compile Include="MVVM\Base\ObservableObject.cs" />
     <Compile Include="MVVM\Base\PropertyObserver.cs" />
     <Compile Include="MVVM\Base\RelayCommand.cs" />
+    <Compile Include="MVVM\BoxVM.cs" />
     <Compile Include="MVVM\Converters.cs" />
     <Compile Include="MVVM\Admin.cs" />
     <Compile Include="MVVM\MainVM.cs" />
@@ -111,6 +116,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Content\Admin\Roles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\Boxes\Box.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -155,6 +164,10 @@
       <DependentUpon>SettingsAppearance.xaml</DependentUpon>
     </Compile>
     <Compile Include="Content\SettingsAppearanceViewModel.cs" />
+    <Page Include="Pages\ControlBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -168,6 +181,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="MVVM\PiledVM.cs" />
+    <Compile Include="Pages\ControlBox.xaml.cs">
+      <DependentUpon>ControlBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -194,6 +210,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

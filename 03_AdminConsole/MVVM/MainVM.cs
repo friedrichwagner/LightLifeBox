@@ -27,6 +27,8 @@ namespace LightLifeAdminConsole.MVVM
         private string uname;
         private string pwd;
 
+        public BrightnessWindow wndBrightness;
+
         private MainVM(LinkGroupCollection pLG, MainWindow mw)
         {
             this.NewMenuLinkGroups = new LinkGroupCollection();
@@ -42,7 +44,7 @@ namespace LightLifeAdminConsole.MVVM
             uname = ini.ReadString("Login", "Username", "");
             pwd = ini.ReadString("Login", "Password", "");
 
-            login.CheckUser(uname, pwd);
+            login.CheckUser(uname, pwd);            
         }
 
         public static MainVM GetInstance(LinkGroupCollection pLG, MainWindow mw)
@@ -104,5 +106,16 @@ namespace LightLifeAdminConsole.MVVM
 
             MainWin.MenuLinkGroups = UpdateMenu();            
        }
+
+        public void ShowBrightnessWindow()
+        {
+            if (wndBrightness == null)
+                wndBrightness = new BrightnessWindow();
+
+            if (wndBrightness.Visibility == Visibility.Hidden)
+                wndBrightness.Show();            
+            else
+                wndBrightness.Hide();
+        }
     }
 }

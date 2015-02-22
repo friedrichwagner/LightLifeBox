@@ -81,8 +81,14 @@
     <Compile Include="BLogic\AdminBase.cs" />
     <Compile Include="BLogic\Login.cs" />
     <Compile Include="BLogic\Photometric.cs" />
+    <Compile Include="BrightnessWindow.xaml.cs">
+      <DependentUpon>BrightnessWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Content\Admin\Roles.xaml.cs">
       <DependentUpon>Roles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\PILED\Sequence.xaml.cs">
+      <DependentUpon>Sequence.xaml</DependentUpon>
     </Compile>
     <Compile Include="Content\PILED\XY.xaml.cs">
       <DependentUpon>XY.xaml</DependentUpon>
@@ -100,9 +106,17 @@
     <Compile Include="MVVM\Converters.cs" />
     <Compile Include="MVVM\Admin.cs" />
     <Compile Include="MVVM\MainVM.cs" />
+    <Page Include="BrightnessWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Content\Admin\Roles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\PILED\Sequence.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Content\PILED\XY.xaml">
       <Generator>MSBuild:Compile</Generator>

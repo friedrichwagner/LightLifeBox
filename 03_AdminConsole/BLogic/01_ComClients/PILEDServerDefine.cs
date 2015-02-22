@@ -19,7 +19,9 @@ namespace PILEDServer
         SET_BRIGHTNESS = 1,
         SET_CCT = 2,
         SET_XY = 3,
-        SET_RGB = 4,
+        SET_RGB = 4, 
+        SET_SEQUENCE = 5,
+        SET_SCENE = 6,
         SET_LOCKED = 99,
     };
 
@@ -52,9 +54,8 @@ namespace PILEDServer
         public byte groupid 
         {
             get { return _groupid; }
-            set { groupid = value; }
+            set { _groupid = value; }
         }
-
 
         private int _cct;
         public int cct
@@ -126,6 +127,20 @@ namespace PILEDServer
             set { checkRGB(ref _rgb[2], value); }
         }
 
+        private byte _sceneid;
+        public byte sceneid
+        {
+            get { return _sceneid; }
+            set { _sceneid = value; }
+        }
+
+        private byte _sequenceid;
+        public byte sequenceid
+        {
+            get { return _sequenceid; }
+            set { _sequenceid = value; }
+        }
+
         public string sender;
         public string receiver;
         public LLMsgType msgtype;
@@ -133,6 +148,23 @@ namespace PILEDServer
         public PILEDData()
         {
             Reset();           
+        }
+
+        public PILEDData(PILEDMode m, byte br, int cct, float x, float y, byte r, byte g, byte b, string psender, string preceiver)
+        {
+            mode = m;
+            _groupid = 0; //Broadcast
+            _cct = cct;
+            _brightness = br;
+            _xy[0] = x; _xy[1] = y;
+            _rgb[0] = r; _rgb[1] = g; _rgb[2] = b;
+
+            sender = psender;
+            receiver = preceiver;
+            msgtype = LLMsgType.LL_SET_LIGHTS;
+
+            _sequenceid = 0;
+            _sceneid = 0;
         }
 
         public void Reset()
@@ -146,6 +178,9 @@ namespace PILEDServer
             sender = String.Empty;
             receiver = String.Empty;
             msgtype = LLMsgType.LL_SET_LIGHTS;
+
+            _sequenceid = 0;
+            _sceneid = 0;
         }
 
         public override string ToString()

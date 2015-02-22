@@ -10,6 +10,7 @@ using System.ComponentModel;
 using Lumitech;
 using System.Data;
 using Lumitech.Helpers;
+using PILEDServer;
 
 namespace LightLife
 {
@@ -31,6 +32,20 @@ namespace LightLife
         }
     };
 
+    public class PILEDScene
+    {
+        public int ID;
+        public string Name {get; private set;}
+        public PILEDData piledata;
+
+        public PILEDScene(int id, string name, PILEDData d)
+        {
+            ID = id;
+            Name = name;
+            piledata = d;
+        }
+    }
+
     public static class LLSQL
     {
         public static SqlConnection sqlCon;
@@ -38,6 +53,9 @@ namespace LightLife
         public static IDictionary<string, SQLSet> tables;
         public static IDictionary<int, string> llgroups;
         public static IDictionary<int, string> llrooms;
+        public static IDictionary<int, string> sequences;
+        public static IDictionary<int, PILEDScene> llscenes;
+        public static DataTable llroomgroup;
         
         public static void InitSQLs()
         {
@@ -61,6 +79,7 @@ namespace LightLife
             tables.Add("LLData", new SQLSet("LLData"));
             tables.Add("LLUser", new SQLSet("LLUser"));
             tables.Add("LLUserInfo", new SQLSet("LLUSerInfo"));
+            tables.Add("LLRoomGroup", new SQLSet("LLRoomGroup"));
 
             tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
             tables["LLRoom"].selectSQL = "select * from LLRoom order by RoomID";
@@ -68,6 +87,7 @@ namespace LightLife
             tables["LLFixture"].selectSQL = "select * from LLFixture order by FixtureID";
             tables["LLScene"].selectSQL = "select * from LLScene order by SceneID";
             tables["LLData"].selectSQL = "select * from LLData order by DataID";
+            tables["LLRoomGroup"].selectSQL = "select * from LLRoomGroup order by RoomID, GroupID";
 
             tables["LLUser"].selectSQL = "select * from LLUser";
             tables["LLUser"].insertSQL = "insert into LLUser() values()";
@@ -84,6 +104,15 @@ namespace LightLife
 
             llrooms = new Dictionary<int, string>();
             getDict(ref llrooms, tables["LLRoom"], "RoomID, Name");
+
+            sequences = new Dictionary<int, string>();
+            getSequences(ref sequences);
+
+            llscenes = new Dictionary<int, PILEDScene>();
+            getScenes(ref llscenes, tables["LLScene"]);
+
+            llroomgroup = new DataTable(tables["LLRoomGroup"].tablename);
+            getDataTable(ref llroomgroup, tables["LLRoomGroup"]);
         }
 
         private static void getDict(ref IDictionary<int, string> dict, SQLSet s, string fields)
@@ -109,8 +138,46 @@ namespace LightLife
             {
                 throw;
             }
+        }
 
+        private static void getScenes(ref IDictionary<int, PILEDScene> dict, SQLSet s)
+        {
+            try
+            {
+                string stmt = "select SceneID, SceneName, pimode, Brightness, CCT, x, y from " + s.tablename;
+                cmd.prep(stmt);
+                cmd.Exec();
 
+                
+                while (cmd.dr.Read())
+                {
+                    dict.Add(cmd.dr.GetInt32(0), new PILEDScene(cmd.dr.GetInt32(0), cmd.dr.GetString(1),
+                        new PILEDData((PILEDMode)(cmd.dr.GetInt32(2)), (byte)cmd.dr.GetInt32(3), cmd.dr.GetInt32(4), (float)cmd.dr.GetDouble(5), (float)cmd.dr.GetDouble(6), (byte)0, (byte)0, (byte)0, "AdminConsole", "Lights")));
+                }
+
+                cmd.dr.Close();
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private static void getSequences(ref IDictionary<int, string> dict)
+        {
+            dict.Add(0, "Sequenzen Stoppen");
+            dict.Add(1, "Standard Tagesverlauf");
+            dict.Add(2, "RGB Sequenz");
+            dict.Add(3, "Demo-Tagesverlauf");
+        }
+
+        private static void getDataTable(ref DataTable t, SQLSet s)
+        {
+            cmd.prep(s.selectSQL);
+            cmd.Exec();
+
+            t.Load(cmd.dr);         
         }
     }
 

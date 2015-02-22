@@ -35,6 +35,14 @@ namespace Lumitech.Interfaces
         Single getTemperature();
     }
 
+    //FW 21.2.2015
+    public interface INeoLink : IPILed
+    {
+        void setSequence(byte id, byte brightness);
+        void setScene(byte  id);
+    }
+
+
     public interface IMemoryMap: ILTEF
     {
         int MMVersion { get; }

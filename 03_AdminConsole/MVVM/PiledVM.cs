@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Lumitech.Helpers;
 using PILEDServer;
 using Lumitech.Interfaces;
 using LightLife;
 using MvvmFoundation.Wpf;
 using System.Diagnostics;
-using System.Threading;
+using System.Data;
 
 
 namespace LightLifeAdminConsole.MVVM
@@ -21,6 +18,7 @@ namespace LightLifeAdminConsole.MVVM
         private Settings ini;
         private List<IObserver<PILEDData>> observersPILED;
         private List<IObserver<LightLifeData>> observersLightLife;
+        //public BrightnessWindow wndBrightness;
 
         public IDictionary<int, string> rooms { get { return LLSQL.llrooms; } }
         private int _selectedRoom;
@@ -29,7 +27,8 @@ namespace LightLifeAdminConsole.MVVM
             get { return _selectedRoom; }
             set
             {
-                _selectedRoom = value;                
+                _selectedRoom = value;
+                lldata.roomid = value;
                 if (_selectedRoom  > -1)                
                     SelectedGroup = -1;
                 RaisePropertyChanged("SelectedRoom");
@@ -45,8 +44,40 @@ namespace LightLifeAdminConsole.MVVM
             {
                 _selectedGroup = value;
                 if (_selectedGroup > -1)
+                {
                     SelectedRoom = -1;
+                    lldata.piled.groupid = (byte)value;
+                }
                 RaisePropertyChanged("SelectedGroup");
+            }
+        }
+
+        //Sequences werden von NeoLink Box vorgegeben
+        public IDictionary<int, string> sequences { get { return LLSQL.sequences; } }
+        private int _selectedSequence;
+        public int SelectedSequence
+        {
+            get { return _selectedSequence; }
+            set
+            {
+                lldata.sequenceid = value;
+                lldata.piled.sequenceid = (byte)value; //Aufruf von Sequenz aus Box (=Tagesverlauf, RGB Sequenz)
+                _selectedSequence = value;
+                RaisePropertyChanged("SelectedSequence");
+            }
+        }
+
+        //Szenen kommen aus Datenbank, nicht aus NeoLink, Zigbee
+        public IDictionary<int, PILEDScene> scenes { get { return LLSQL.llscenes; } }
+        private int _selectedScene;
+        public int SelectedScene
+        {
+            get { return _selectedScene; }
+            set
+            {
+                lldata.sceneid = value;
+                _selectedScene = value;
+                RaisePropertyChanged("SelectedScene");
             }
         }
 
@@ -192,26 +223,82 @@ namespace LightLifeAdminConsole.MVVM
             MainVM m = MainVM.GetInstance();
             lldata.userid = m.login.UserId;
             lldata.vlid = m.login.UserId;
+            lldata.roomid = -1; //no room selected
 
-            _selectedGroup = 0; //Broadcast
-            _selectedRoom = -1;
+            _selectedGroup = lldata.piled.groupid; //Broadcast
+            _selectedRoom = lldata.roomid;
         }
 
         public void Notify()
+        {
+
+            if (lldata.roomid > -1)
+            {
+                byte oldgroup = lldata.piled.groupid;
+
+                DataRow[] result = LLSQL.llroomgroup.Select("roomid=" + lldata.roomid.ToString());
+                foreach (DataRow row in result)
+                {
+                    lldata.piled.groupid = (byte)row.Field<int>(1);
+                    NotifyGroup();
+                }
+
+                lldata.piled.groupid = oldgroup;
+            }
+            else
+                NotifyGroup();         
+
+            //UI Thread verzögert 200ms
+            //Thread.Sleep(200);
+        }
+
+        private void NotifyGroup()
         {
             DateTime n = DateTime.Now;
             Debug.Print(n.ToString() + ":" + (n.ToString()));
 
             //First send data to devices
             foreach (var observer in observersPILED)
-                observer.OnNext(lldata.piled);           
+                observer.OnNext(lldata.piled);
 
             //sencond, log it to database
             foreach (var observer in observersLightLife)
                 observer.OnNext(lldata);
+        }
 
-            //UI Thread verzögert 200ms
-            //Thread.Sleep(200);
+        public void ApplySequence()
+        {
+            lldata.piled.mode = PILEDMode.SET_SEQUENCE;
+            Notify(); //Observers
+        }
+
+        public void ApplyScene()
+        {
+            if (lldata.sceneid > 0)
+            {
+                lldata.piled.mode = PILEDMode.SET_SCENE;
+                //lldata.sceneid = _selectedScene; //already done in field
+                lldata.piled.mode = LLSQL.llscenes[lldata.sceneid].piledata.mode;
+                lldata.piled.msgtype = LLMsgType.LL_CALL_SCENE;
+
+                if (lldata.piled.mode == PILEDMode.SET_CCT)
+                {
+                    //2 mal senden, zuerst CCT, dann Helligkeit
+                    CCT = LLSQL.llscenes[lldata.sceneid].piledata.cct;
+
+                }
+
+                if (lldata.piled.mode == PILEDMode.SET_CCT)
+                {
+                    //2 mal senden, zuerst xy, dann Helligkeit
+                    X = LLSQL.llscenes[lldata.sceneid].piledata.x;
+                    Y = LLSQL.llscenes[lldata.sceneid].piledata.y;
+                }
+
+                Brightness = LLSQL.llscenes[lldata.sceneid].piledata.brightness;
+
+                lldata.piled.msgtype = LLMsgType.LL_SET_LIGHTS;
+            }
         }
 
         private void AddObservers()

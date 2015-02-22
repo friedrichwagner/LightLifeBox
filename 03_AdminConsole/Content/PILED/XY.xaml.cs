@@ -37,7 +37,7 @@ namespace LightLifeAdminConsole.Content.PILED
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             CIEChart.DrawPlanck(cnvCIE);
-            CIEChart.DrawPILedTriangle(cnvCIE);
+            CIEChart.DrawPILedTriangle(cnvCIE);            
         }
 
         private void txtX_GotFocus(object sender, RoutedEventArgs e)

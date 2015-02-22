@@ -6,6 +6,7 @@ using System.Windows.Media;
 using LightLifeAdminConsole.MVVM;
 using Lumitech;
 using Lumitech.Helpers;
+using System.Windows.Input;
 
 namespace LightLife
 {
@@ -49,8 +50,26 @@ namespace LightLife
         private void ModernWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             PiledVM p = PiledVM.GetInstance();
-
+            if (dc.wndBrightness != null)
+                dc.wndBrightness.Close();
             p.Done();
+        }
+
+        private void ModernWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if ((e.Key == Key.F12))
+                {
+                    dc.ShowBrightnessWindow();
+                    e.Handled = true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ModernDialog.ShowMessage(ex.Message, "Error", MessageBoxButton.OK);
+            } 
         }
     }
 }

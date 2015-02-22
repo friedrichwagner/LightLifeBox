@@ -176,7 +176,7 @@ namespace Lumitech.Interfaces
 
     }
 
-    class NeoLink : IPILed, IObserver<PILEDData>
+    class NeoLink : INeoLink, IObserver<PILEDData>
     {
         //private NeoLinkData nlFrame = NeoLinkData.NewFrame();
         private Object thisLock = new Object();
@@ -239,7 +239,7 @@ namespace Lumitech.Interfaces
             sendThread.Start();
         }
         
-#region IPILed-Interface
+#region INeoLink-Interface
         public bool Connect(string portname)
         {
             serial = new SerialPort();
@@ -392,8 +392,49 @@ namespace Lumitech.Interfaces
             frameQueue.Enqueue(nlFrame);
 
             lastRGB = b;
-
         }
+
+        public void setSequence(byte id, byte brightness)
+        {
+            NeoLinkData nlFrame = NeoLinkData.NewFrame();
+            nlFrame.byMode = (byte)NeoLinkMode.NL_SEQUENCES_CALL;
+            nlFrame.byAddress = _groupid;
+
+
+            if (id > 0)
+            {
+                nlFrame.data[0] = id;
+                nlFrame.data[1] = (byte)DateTime.Now.Hour;
+                nlFrame.data[2] = (byte)DateTime.Now.Minute;
+                nlFrame.data[3] = (byte)(brightness / 255.0 * 100.0); //in % !!
+                nlFrame.data[4] = (byte)DateTime.Today.Day;
+                nlFrame.data[5] = (byte)DateTime.Today.Month;
+            }
+            else //Sequenz stoppen
+            {
+                nlFrame.data[0] = id;
+                nlFrame.data[1] = (byte)24;
+                nlFrame.data[2] = (byte)60;
+                nlFrame.data[3] = (byte)0;
+                nlFrame.data[4] = (byte)0;
+                nlFrame.data[5] = (byte)0;
+            }
+
+            frameQueue.Enqueue(nlFrame);
+        }
+
+        public void setScene(byte id)
+        {
+            NeoLinkData nlFrame = NeoLinkData.NewFrame();
+            nlFrame.byMode = (byte)NeoLinkMode.NL_SCENES;
+            nlFrame.byAddress = _groupid;
+
+            nlFrame.data[0] = id;
+            nlFrame.data[1] = 3; //Szene aufrufen
+
+            frameQueue.Enqueue(nlFrame);
+        }
+
         #endregion
 
         private void DoSendFrames()
@@ -508,6 +549,12 @@ namespace Lumitech.Interfaces
                     break;
                 case PILEDMode.SET_RGB:
                       this.setRGB(info.rgb);
+                    break;
+                case PILEDMode.SET_SCENE:
+                    this.setScene(info.sceneid);
+                    break;
+                case PILEDMode.SET_SEQUENCE:
+                    this.setSequence(info.sequenceid, info.brightness);
                     break;
             }
         }

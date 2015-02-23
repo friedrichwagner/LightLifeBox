@@ -33,9 +33,10 @@
                     <Button x:Name="btnStop" Content="Stop" Margin="0" Click="btnStart_Click" Tag="STOP"/>
                 </StackPanel>
 
-                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                    <TextBlock Text="Remark:" Style="{StaticResource Heading2}"  Margin="10" Width="80" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="txtRemark"  Height="80" MaxLength="250"/>
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                    <TextBlock Text="Remark:" Style="{StaticResource Heading2}"  Margin="10" Width="80" HorizontalAlignment="Left"/>                    
+                    <TextBox x:Name="txtRemark"  Height="40" Width="500" MaxLength="250" MaxLines="2" Text="{Binding SelectedRemark}" TextWrapping="Wrap"/>
+                    <Button x:Name="btnUpdate" Content="Update" Margin="10" Click="btnUpdate_Click"/>
                 </StackPanel>
 
                 <DataGrid x:Name="dgBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10"/>

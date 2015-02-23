@@ -16,7 +16,18 @@ namespace LightLifeAdminConsole.MVVM
         public IDictionary<int, Box> boxes;
 
         public int cntBoxes { get { return boxes.Count; } }
-        public int SelectedBox { get; set; }
+
+        private int _selectedBox;
+        public int SelectedBox
+        {
+            get { return _selectedBox; }
+            set
+            {
+                _selectedBox = value;
+                RaisePropertyChanged("SelectedProband");
+                RaisePropertyChanged("SelectedRemark");
+            }
+        }
 
         public IDictionary<int, string> probanden { get { return LLSQL.probanden; } }
 
@@ -40,6 +51,25 @@ namespace LightLifeAdminConsole.MVVM
                 RaisePropertyChanged("SelectedProband");
             }
         }
+
+        private string _selectedRemark;
+        public string SelectedRemark
+        {
+            get
+            {
+                if (_selectedProband > -1)
+                    return boxes[SelectedBox].Remark;
+                else
+                    return _selectedRemark;
+            }
+            set
+            {
+                if (_selectedProband > -1)
+                    boxes[SelectedBox].Remark = value;
+                _selectedRemark = value;
+                RaisePropertyChanged("SelectedRemark");
+            }
+        }
            
         public static BoxVM GetInstance()
         {
@@ -61,7 +91,7 @@ namespace LightLifeAdminConsole.MVVM
         private void getBoxes(ref IDictionary<int, Box> b)
         {
             int n=ini.Read<int>("Pages", "NrOfBoxes", 3);
-            for (int i=0; i < n; i++)
+            for (int i=1; i <= n; i++)
             {
                 b.Add(i, new Box(i));
             }

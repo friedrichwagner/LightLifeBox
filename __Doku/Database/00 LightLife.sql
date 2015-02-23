@@ -195,9 +195,11 @@ and d.MsgTypeId = m.MsgID
 drop table LLTestSequenceDefinition;
 drop table LLTestSequence;
 
+drop table  LLTestSequenceHead;
 create table LLTestSequenceHead
 (
 	SequenceID int not null,
+	BoxID int not null,
 	UserID int not null,
 	VLID int not null,
 	Remark varchar(max),
@@ -208,7 +210,7 @@ create table LLTestSequenceHead
 drop table  LLTestSequencePos;
 create table LLTestSequencePos
 (
-	SequenceID int identity NOT NULL primary key,
+	SequenceID int NOT NULL,
 	StepID int not null,
 	pimode varchar(20) not null,
 	Brightness int not null,
@@ -216,7 +218,8 @@ create table LLTestSequencePos
 	x float , 
 	y float,
 	Remark varchar(max),
-	added datetime default getdate()
+	added datetime default getdate(),
+	primary key(SequenceID, StepID)
 );
 
 create table LLPILedMode

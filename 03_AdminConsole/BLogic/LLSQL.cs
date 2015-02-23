@@ -82,6 +82,8 @@ namespace LightLife
             tables.Add("LLUser", new SQLSet("LLUser"));
             tables.Add("LLUserInfo", new SQLSet("LLUSerInfo"));
             tables.Add("LLRoomGroup", new SQLSet("LLRoomGroup"));
+            tables.Add("LLTestSequenceHead", new SQLSet("LLTestSequenceHead"));
+            tables.Add("LLTestSequencePos", new SQLSet("LLTestSequencePos"));
 
             tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
             tables["LLRoom"].selectSQL = "select * from LLRoom order by RoomID";
@@ -98,6 +100,14 @@ namespace LightLife
             tables["LLUserInfo"].selectSQL = "select * from LLUserInfo";
             tables["LLUserInfo"].insertSQL = "insert into LLUserInfo() values()";
             tables["LLUserInfo"].updateSQL = "update LLUserInfo set where ";
+
+            tables["LLTestSequenceHead"].selectSQL = "select * from LLTestSequenceHead";
+            tables["LLTestSequenceHead"].insertSQL = "insert into LLTestSequenceHead(SequenceID, BoxID, UserID, VLId, remark) values(:1,:2,:3,:4, :5)";
+            tables["LLTestSequenceHead"].updateSQL = "update LLTestSequenceHead set Remark=:1 where sequenceID=:2";
+
+            tables["LLTestSequencePos"].selectSQL = "select * from LLTestSequencePos";
+            tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, StepID, pimode, Brightness, CCT, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8)";
+            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:1, CCT=:2, x=:3, y=:4, remark=:5 where sequenceID=:6 and stepid=:7";
 
             if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
 

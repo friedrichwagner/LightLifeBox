@@ -18,7 +18,12 @@ namespace LightLife
         private SqlConnection _con;
         private SQLSet _sqlset;
         private LTSQLCommand _sql;
-        //private DataTable _table;
+        
+        public SqlTransaction Transaction
+        {
+            get { return _sql.Transaction; }
+            set { _sql.Transaction = value; }
+        }
 
         public AdminBase(SqlConnection con, SQLSet sqlset)
         {
@@ -47,22 +52,28 @@ namespace LightLife
             return table;
         }
 
-        public virtual int insert(string filter)
+        public virtual int insert(string[] p)
         {
             if (_sqlset.insertSQL != string.Empty)
             {
-                _sql.prep(_sqlset.deleteSQL + " " + filter);
+                _sql.prep(_sqlset.insertSQL);
+                for (int i = 0; i < p.Length; i++)
+                    _sql.Params[i] = p[i];
+
                 return _sql.Exec();
             }
 
             return 0;
         }
 
-        public virtual int update(string filter)
+        public virtual int update(string filter, string[] p)
         {
             if (_sqlset.updateSQL != string.Empty)
             {
-                _sql.prep(_sqlset.deleteSQL + " " + filter);
+                _sql.prep(_sqlset.updateSQL + " " + filter);
+                for (int i = 0; i < p.Length; i++)
+                    _sql.Params[i] = p[i];
+
                 return _sql.Exec();
             }
 

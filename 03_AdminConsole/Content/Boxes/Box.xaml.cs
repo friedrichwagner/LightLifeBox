@@ -22,7 +22,7 @@ namespace LightLifeAdminConsole.Content.Boxes
         }
         public void OnFragmentNavigation(FirstFloor.ModernUI.Windows.Navigation.FragmentNavigationEventArgs e)
         {
-            dc.SelectedBox = Int32.Parse(e.Fragment)-1;
+            dc.SelectedBox = Int32.Parse(e.Fragment);
         }
 
 
@@ -45,6 +45,11 @@ namespace LightLifeAdminConsole.Content.Boxes
             {
                 FirstFloor.ModernUI.Windows.Controls.ModernDialog.ShowMessage(ex.Message, "Error", MessageBoxButton.OK);
             }
+        }
+
+        private void btnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            dc.boxes[dc.SelectedBox].UpdateRemark(dc.SelectedRemark);
         }
     }
 }

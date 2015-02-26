@@ -315,13 +315,17 @@ namespace Lumitech.Interfaces
         {
             nlFrame.byMode = (byte)NeoLinkMode.NL_XY;
 
-            byte[] b2 = BitConverter.GetBytes((UInt16)(65536 * cie[0]));
+            byte[] b2 = BitConverter.GetBytes((UInt16)(65535 * cie[0]));
             nlFrame.data[0] = b2[0];
             nlFrame.data[1] = b2[1];
 
-            b2 = BitConverter.GetBytes((UInt16)(65536 * cie[1]));
+            b2 = BitConverter.GetBytes((UInt16)(65535 * cie[1]));
             nlFrame.data[2] = b2[0];
             nlFrame.data[3] = b2[1];
+
+            //fadetime            
+            nlFrame.data[4] = byFadetime[0];
+            nlFrame.data[5] = byFadetime[1];
 
             Send();
 

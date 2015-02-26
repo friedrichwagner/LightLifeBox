@@ -58,7 +58,7 @@ namespace Lumitech.Interfaces
 	    NL_SCENES = 13,
 	    NL_SEQUENCES_CALL = 14,
 	    NL_SEQUENCES_SET = 15,
-	    NL_XY = 16			//tbd
+	    NL_XY = 16
     };
 
     enum NeoLinkSubMode_NETWORK : byte
@@ -215,7 +215,8 @@ namespace Lumitech.Interfaces
         private byte[] byFadetime = new byte[2] {0,0};
 
         private int _sendDelay;
-        private byte _groupid;
+        //private byte _groupid;
+        public byte groupid { get; set; }
 
         public NeoLink()
         {
@@ -230,7 +231,7 @@ namespace Lumitech.Interfaces
             _Comport = ini.Read<string>("NeoLink", "USBCom", "");
 
             enumIF = NEOLINK_INTERFACE.NONE;
-            _groupid = 0;
+            groupid = 0;
 
             frameQueue = new ConcurrentQueue<NeoLinkData>();
 
@@ -313,7 +314,7 @@ namespace Lumitech.Interfaces
         {
             NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_BRIGHTNESS;
-            nlFrame.byAddress = _groupid;
+            nlFrame.byAddress = groupid;
             
             //brightness
             nlFrame.data[0] = val;
@@ -340,7 +341,7 @@ namespace Lumitech.Interfaces
         {
             NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_CCT;
-            nlFrame.byAddress = _groupid;
+            nlFrame.byAddress = groupid;
 
 	        //cct in mirek
 	        int mirek = (int)(1e6 / CCT);
@@ -363,15 +364,19 @@ namespace Lumitech.Interfaces
         {
             NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_XY;
-            nlFrame.byAddress = _groupid;
+            nlFrame.byAddress = groupid;
 
-            byte[] b2 = BitConverter.GetBytes((UInt16)(65536 * cie[0]));
+            byte[] b2 = BitConverter.GetBytes((UInt16)(65535 * cie[0]));
             nlFrame.data[0] = b2[0];
             nlFrame.data[1] = b2[1];
 
-            b2 = BitConverter.GetBytes((UInt16)(65536 * cie[1]));
+            b2 = BitConverter.GetBytes((UInt16)(65535 * cie[1]));
             nlFrame.data[2] = b2[0];
             nlFrame.data[3] = b2[1];
+
+            //fadetime            
+            nlFrame.data[4] = byFadetime[0];
+            nlFrame.data[5] = byFadetime[1];
 
             frameQueue.Enqueue(nlFrame);
 
@@ -383,7 +388,7 @@ namespace Lumitech.Interfaces
         {
             NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_RGB;
-            nlFrame.byAddress = _groupid;
+            nlFrame.byAddress = groupid;
 
             nlFrame.data[0] = b[0];
             nlFrame.data[1] = b[1];
@@ -394,11 +399,22 @@ namespace Lumitech.Interfaces
             lastRGB = b;
         }
 
+        public void identify()
+        {
+            NeoLinkData nlFrame = NeoLinkData.NewFrame();
+            nlFrame.byMode = (byte)NeoLinkMode.NL_IDENTIFY;
+            nlFrame.byAddress = groupid;
+
+            nlFrame.data[0] = 2; //Blinkdauer in sekunden
+
+            frameQueue.Enqueue(nlFrame);
+        }
+
         public void setSequence(byte id, byte brightness)
         {
             NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_SEQUENCES_CALL;
-            nlFrame.byAddress = _groupid;
+            nlFrame.byAddress = groupid;
 
 
             if (id > 0)
@@ -427,7 +443,7 @@ namespace Lumitech.Interfaces
         {
             NeoLinkData nlFrame = NeoLinkData.NewFrame();
             nlFrame.byMode = (byte)NeoLinkMode.NL_SCENES;
-            nlFrame.byAddress = _groupid;
+            nlFrame.byAddress = groupid;
 
             nlFrame.data[0] = id;
             nlFrame.data[1] = 3; //Szene aufrufen
@@ -533,7 +549,7 @@ namespace Lumitech.Interfaces
         //Called from UDP Server when new data arrive
         public virtual void OnNext(PILEDData info)
         {
-            _groupid= info.groupid;
+            groupid= info.groupid;
             Debug.Print("NeoLink.OnNext:"+info.ToString());
 
             switch (info.mode)
@@ -555,6 +571,10 @@ namespace Lumitech.Interfaces
                     break;
                 case PILEDMode.SET_SEQUENCE:
                     this.setSequence(info.sequenceid, info.brightness);
+                    break;
+
+                case PILEDMode.IDENTIFY:
+                    this.identify();
                     break;
             }
         }

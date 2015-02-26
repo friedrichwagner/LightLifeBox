@@ -29,8 +29,11 @@ namespace LightLifeAdminConsole.MVVM
             {
                 _selectedRoom = value;
                 lldata.roomid = value;
-                if (_selectedRoom  > -1)                
+                if (_selectedRoom > -1)
+                {
                     SelectedGroup = -1;
+                    SelectedLight = -1;
+                }
                 RaisePropertyChanged("SelectedRoom");
             }
         } 
@@ -46,9 +49,28 @@ namespace LightLifeAdminConsole.MVVM
                 if (_selectedGroup > -1)
                 {
                     SelectedRoom = -1;
-                    lldata.piled.groupid = (byte)value;
+                    SelectedLight = -1;
+                    lldata.piled.groupid = (byte)(value);
                 }
                 RaisePropertyChanged("SelectedGroup");
+            }
+        }
+
+        public IDictionary<int, string> lights { get { return LLSQL.lllights; } }
+        private int _selectedLight;
+        public int SelectedLight
+        {
+            get { return _selectedLight; }
+            set
+            {
+                _selectedLight = value;
+                if (_selectedLight > -1)
+                {
+                    SelectedRoom = -1;
+                    SelectedGroup = -1;
+                    lldata.piled.groupid = (byte)value;
+                }
+                RaisePropertyChanged("SelectedLight");
             }
         }
 
@@ -225,7 +247,8 @@ namespace LightLifeAdminConsole.MVVM
             lldata.vlid = m.login.UserId;
             lldata.roomid = -1; //no room selected
 
-            _selectedGroup = lldata.piled.groupid; //Broadcast
+            _selectedLight = -1;
+            _selectedGroup = lldata.piled.groupid; //Broadcast            
             _selectedRoom = lldata.roomid;
         }
 
@@ -270,6 +293,19 @@ namespace LightLifeAdminConsole.MVVM
         {
             lldata.piled.mode = PILEDMode.SET_SEQUENCE;
             Notify(); //Observers
+        }
+
+        public void Identify()
+        {
+            lldata.piled.mode = PILEDMode.IDENTIFY;
+            Notify(); //Observers
+
+            //So ginge es auch direkt
+            /*if (observersPILED[0] is NeoLink)
+            {
+                (observersPILED[0] as NeoLink).groupid = lldata.piled.groupid;
+                (observersPILED[0] as NeoLink).identify();
+            }*/
         }
 
         public void ApplyScene()

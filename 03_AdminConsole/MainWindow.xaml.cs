@@ -53,6 +53,8 @@ namespace LightLife
             if (dc.wndBrightness != null)
                 dc.wndBrightness.Close();
             p.Done();
+
+            LLSQL.Done();
         }
 
         private void ModernWindow_PreviewKeyDown(object sender, KeyEventArgs e)

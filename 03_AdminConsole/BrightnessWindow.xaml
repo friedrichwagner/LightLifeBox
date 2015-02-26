@@ -14,21 +14,25 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="2"  Grid.RowSpan="2" Background="LightGray" />
+                <Border Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="2"  Grid.RowSpan="3" Background="LightGray" />
                 <TextBlock Text="Room:" Style="{StaticResource Heading2}" Grid.Row="0" Grid.Column="0" Margin="10"/>
                 <ComboBox  x:Name="cbRoom" Width="100" Grid.Row="0" Grid.Column="1" Margin="10" ItemsSource="{Binding rooms}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedRoom, Mode=TwoWay}" />
 
                 <TextBlock Text="Group:" Style="{StaticResource Heading2}" Grid.Row="1" Grid.Column="0" Margin="10"/>
                 <ComboBox  x:Name="cbGroup" Width="100" Grid.Row="1" Grid.Column="1" Margin="10" ItemsSource="{Binding groups}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedGroup, Mode=TwoWay}" />
 
+                <TextBlock Text="Light:" Style="{StaticResource Heading2}" Grid.Row="2" Grid.Column="0" Margin="10" MouseMove="TextBlock_MouseMove"/>
+                <ComboBox  x:Name="cbLight" Width="100" Grid.Row="2" Grid.Column="1" Margin="10" ItemsSource="{Binding lights}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedLight, Mode=TwoWay}" />
+
                 <!--<TextBlock Text="Brightness:" Style="{StaticResource Heading2}" Grid.Row="1" Grid.Column="0" Margin="10"/>-->
-                <StackPanel  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                <StackPanel  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
                     <TextBox  x:Name="txtBrightness" Width="100" Margin="10" Text="{Binding Path=Brightness, Mode=TwoWay}" MaxLength="3"/>
                     <Slider x:Name="slBrightness" Height="300" Orientation= "Vertical" Margin="10" Minimum="0" Maximum="255"   IsSnapToTickEnabled="True" TickFrequency="10" TickPlacement="Both" Value="{Binding Path=Brightness, Mode=TwoWay , Delay=200}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" VerticalAlignment="Bottom"/>
                 </StackPanel>

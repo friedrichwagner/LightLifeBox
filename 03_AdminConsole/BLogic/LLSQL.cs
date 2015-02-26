@@ -53,6 +53,7 @@ namespace LightLife
         public static IDictionary<string, SQLSet> tables;
         public static IDictionary<int, string> llgroups;
         public static IDictionary<int, string> llrooms;
+        public static IDictionary<int, string> lllights;
         public static IDictionary<int, string> sequences;
         public static IDictionary<int, PILEDScene> llscenes;
         public static DataTable llroomgroup;
@@ -117,6 +118,9 @@ namespace LightLife
             llrooms = new Dictionary<int, string>();
             getDict(ref llrooms, tables["LLRoom"], "RoomID, Name");
 
+            lllights = new Dictionary<int, string>();
+            getDict(ref lllights, tables["LLFixture"], "FixtureID, Name");
+
             sequences = new Dictionary<int, string>();
             getSequences(ref sequences);
 
@@ -130,7 +134,13 @@ namespace LightLife
             getDataTable(ref llusers, tables["LLUser"]);
 
             probanden = new Dictionary<int, string>();
-            getDict(ref probanden, tables["LLUser"], "UserID, Concat(FirstName, ' ', Lastname)", " where RoleId=100");
+            getDict(ref probanden, tables["LLUser"], "UserID,  (FirstName+ ' '+ Lastname)", " where RoleId=100");
+        }
+
+        public static void Done()
+        {
+            if (LLSQL.sqlCon.State == System.Data.ConnectionState.Open)
+                LLSQL.sqlCon.Close();
         }
 
         private static void getDict(ref IDictionary<int, string> dict, SQLSet s, string fields, string filter="")

@@ -22,6 +22,9 @@ namespace PILEDServer
         SET_RGB = 4, 
         SET_SEQUENCE = 5,
         SET_SCENE = 6,
+
+        IDENTIFY=50,
+
         SET_LOCKED = 99,
     };
 

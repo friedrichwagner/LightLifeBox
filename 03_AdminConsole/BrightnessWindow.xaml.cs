@@ -52,5 +52,13 @@ namespace LightLifeAdminConsole
                     Hide();
             }
         }
+
+        private void TextBlock_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dc.SelectedLight>-1)
+            {
+                dc.Identify();
+            }
+        }
     }
 }

@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Windows;
-using System.Media;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Collections.Generic;
-using MvvmFoundation.Wpf;
 using FirstFloor.ModernUI.Presentation;
-using FirstFloor.ModernUI.Windows.Controls;
-using System.Data.SqlClient;
 using Lumitech.Helpers;
-using LightLife;
+using LightLifeAdminConsole.Data;
 
 namespace LightLifeAdminConsole.MVVM
 {

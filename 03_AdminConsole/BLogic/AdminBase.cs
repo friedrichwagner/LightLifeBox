@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
-using MvvmFoundation.Wpf;
-using System.Windows.Input;
-using System.ComponentModel;
-using Lumitech;
+﻿using System.Data.SqlClient;
 using System.Data;
 using Lumitech.Helpers;
+using LightLifeAdminConsole.Data;
 
-namespace LightLife
+namespace LightLifeAdminConsole
 {
     public class AdminBase
     {

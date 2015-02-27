@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using FirstFloor.ModernUI.Windows.Navigation;
 
-namespace ModernUIApp2.Pages
+namespace LightLifeAdminConsole.Pages
 {
     /// <summary>
     /// Interaction logic for Settings.xaml

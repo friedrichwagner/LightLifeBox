@@ -6,7 +6,7 @@ using FirstFloor.ModernUI.Windows.Controls;
 using FirstFloor.ModernUI.Windows;
 using LightLifeAdminConsole.MVVM;
 
-namespace LightLife.Pages
+namespace LightLifeAdminConsole.Pages
 {
     /// <summary>
     /// Interaction logic for Home.xaml

@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.IO;
 
 
-namespace LightLife.Content
+namespace LightLifeAdminConsole.Content
 {
     /// <summary>
     /// Interaction logic for About.xaml

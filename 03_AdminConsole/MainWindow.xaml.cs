@@ -7,8 +7,9 @@ using LightLifeAdminConsole.MVVM;
 using Lumitech;
 using Lumitech.Helpers;
 using System.Windows.Input;
+using LightLifeAdminConsole.Data;
 
-namespace LightLife
+namespace LightLifeAdminConsole
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

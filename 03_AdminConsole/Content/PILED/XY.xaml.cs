@@ -6,7 +6,7 @@ using LightLifeAdminConsole.MVVM;
 using LightLife;
 using Lumitech.Helpers;
 using FirstFloor.ModernUI.Windows;
-using PILEDServer;
+using LightLife.Data;
 
 namespace LightLifeAdminConsole.Content.PILED
 {

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO.Ports;
 using System.Threading;
 using Lumitech.Helpers;
 using System.Net.Sockets;
-using System.Net;
-using PILEDServer;
-using LightLifeAdminConsole.MVVM;
+using LightLife.Data;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 

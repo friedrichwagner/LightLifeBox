@@ -10,7 +10,7 @@ using System.ComponentModel;
 using Lumitech;
 using Lumitech.Helpers;
 
-namespace LightLife
+namespace LightLifeAdminConsole
 {
 
     class ConsoleLogin

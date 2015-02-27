@@ -5,7 +5,7 @@ using System.Xml;
 using System.Diagnostics;
 using System.Windows;
 
-namespace Lumitech
+namespace Lumitech.Helpers
 {
     //Singleton: There can only be one
     //http://www.codeproject.com/Articles/42354/The-Art-of-Logging

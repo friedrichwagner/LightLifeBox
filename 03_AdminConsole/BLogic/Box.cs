@@ -1,11 +1,13 @@
-﻿using System;
+﻿using LightLife;
+using LightLifeAdminConsole.Data;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LightLife
+namespace LightLifeAdminConsole
 {
 
     public enum BoxStatus { NONE, STARTED, STOPPED, PAUSED};

@@ -4,6 +4,7 @@ using FirstFloor.ModernUI.Windows;
 using FirstFloor.ModernUI.Windows.Controls;
 using LightLife;
 using System.Windows;
+using LightLifeAdminConsole.Data;
 
 namespace LightLifeAdminConsole.Content.Admin
 {

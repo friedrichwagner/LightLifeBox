@@ -30,26 +30,5 @@ namespace LightLifeAdminConsole.Content.Boxes
         public void OnNavigatedTo(FirstFloor.ModernUI.Windows.Navigation.NavigationEventArgs e) {}
 
         public void OnNavigatingFrom(FirstFloor.ModernUI.Windows.Navigation.NavigatingCancelEventArgs e) { }
-
-        private void btnStart_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            try
-            {
-                if ((sender as Button).Tag.ToString().Equals("START")) dc.boxes[dc.SelectedBox].StartSequence();
-                if ((sender as Button).Tag.ToString().Equals("STOP")) dc.boxes[dc.SelectedBox].StopSequence();
-                if ((sender as Button).Tag.ToString().Equals("PAUSE")) dc.boxes[dc.SelectedBox].PauseSequence();
-                if ((sender as Button).Tag.ToString().Equals("PREV")) dc.boxes[dc.SelectedBox].PrevStep();
-                if ((sender as Button).Tag.ToString().Equals("NEXT")) dc.boxes[dc.SelectedBox].NextStep();
-            }
-            catch (Exception ex)
-            {
-                FirstFloor.ModernUI.Windows.Controls.ModernDialog.ShowMessage(ex.Message, "Error", MessageBoxButton.OK);
-            }
-        }
-
-        private void btnUpdate_Click(object sender, RoutedEventArgs e)
-        {
-            dc.boxes[dc.SelectedBox].UpdateRemark(dc.SelectedRemark);
-        }
     }
 }

@@ -26,17 +26,17 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right">
-                    <Button x:Name="btnStart" Content="Start" Margin="0" Click="btnStart_Click" Tag="START"/>
-                    <Button x:Name="btnPause" Content="Pause" Margin="0" Click="btnStart_Click" Tag="PAUSE"/>                    
-                    <Button x:Name="btnPrev" Content="Prev" Margin="0" Click="btnStart_Click" Tag="PREV"/>
-                    <Button x:Name="btnNext" Content=">>" Margin="0" Click="btnStart_Click" Tag="NEXT"/>
-                    <Button x:Name="btnStop" Content="Stop" Margin="0" Click="btnStart_Click" Tag="STOP"/>
+                    <Button x:Name="btnStart" Content="Start" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="START" IsEnabled="{Binding BtnStartEnabled}"/>
+                    <Button x:Name="btnPause" Content="Pause" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="PAUSE" IsEnabled="{Binding BtnPauseEnabled}"/>
+                    <Button x:Name="btnPrev" Content="Prev" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="PREV" IsEnabled="{Binding BtnPrevEnabled}"/>
+                    <Button x:Name="btnNext" Content=">>" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="NEXT" IsEnabled="{Binding BtnNextEnabled}"/>
+                    <Button x:Name="btnStop" Content="Stop" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="STOP" IsEnabled="{Binding BtnStopEnabled}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                     <TextBlock Text="Remark:" Style="{StaticResource Heading2}"  Margin="10" Width="80" HorizontalAlignment="Left"/>                    
                     <TextBox x:Name="txtRemark"  Height="40" Width="500" MaxLength="250" MaxLines="2" Text="{Binding SelectedRemark}" TextWrapping="Wrap"/>
-                    <Button x:Name="btnUpdate" Content="Update" Margin="10" Click="btnUpdate_Click"/>
+                    <Button x:Name="btnUpdate" Content="Update" Margin="10" Command="{Binding doSequenceCommand}" CommandParameter="UPDATE" IsEnabled="{Binding BtnUpdateEnabled}"/>
                 </StackPanel>
 
                 <DataGrid x:Name="dgBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10"/>

@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
-using MvvmFoundation.Wpf;
-using System.Windows.Input;
-using System.ComponentModel;
-using Lumitech;
 using System.Data;
 using Lumitech.Helpers;
-using PILEDServer;
+using LightLife.Data;
 
-namespace LightLife
+namespace LightLifeAdminConsole.Data
 {
     public class SQLSet
     {

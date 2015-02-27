@@ -43,38 +43,43 @@ namespace LightLifeAdminConsole
 
         public void StartSequence()
         {
-            if ((State != BoxStatus.STOPPED) && (State != BoxStatus.PAUSED) && (State != BoxStatus.NONE)) 
-                    throw new ArgumentOutOfRangeException("Testsquenz nicht gestoppt!");
+            if ((State != BoxStatus.STOPPED) && (State != BoxStatus.PAUSED) && (State != BoxStatus.NONE))
+                throw new ArgumentException("Testsquenz nicht gestoppt!");
 
-            if (ProbandID <0 ) throw new ArgumentOutOfRangeException("Kein Proband!");
+            if (ProbandID < 0) throw new ArgumentException("Kein Proband!");
                      
             InsertSequence();
-            StepID = 0;
+            StepID = 1;
             State = BoxStatus.STARTED;
+            UpdateHeadState();
         }
 
         public void StopSequence()
         {
-            if (State != BoxStatus.STARTED) throw new ArgumentOutOfRangeException("Testsquenz nicht gestartet!");
+            if (State != BoxStatus.STARTED) throw new ArgumentException("Testsquenz nicht gestartet!");
             State = BoxStatus.STOPPED;
+            UpdateHeadState();
         }
 
         public void PauseSequence()
         {
-            if (State != BoxStatus.STARTED) throw new ArgumentOutOfRangeException("Testsquenz nicht gestartet!");
+            if (State != BoxStatus.STARTED) throw new ArgumentException("Testsquenz nicht gestartet!");
             State = BoxStatus.PAUSED;
+            UpdateHeadState();
         }
 
         public void PrevStep()
         {
             if (StepID>0)
                 StepID--;
+            UpdateHeadState();
         }
 
         public void NextStep()
         {
             if (StepID < 4)
                 StepID++;
+            UpdateHeadState();
 
         }
 
@@ -144,7 +149,13 @@ namespace LightLifeAdminConsole
             string stmt = "update LLTestSequenceHead set remark='"+txt+"' where sequenceID="+SequenceID.ToString();
             LLSQL.cmd.prep(stmt);
             LLSQL.cmd.Exec();
+        }
 
+        private void UpdateHeadState()
+        {
+            string stmt = "update LLTestSequenceHead set Status='" + State.ToString() + "', ActualStep=" + StepID.ToString() +" where sequenceID=" + SequenceID.ToString();
+            LLSQL.cmd.prep(stmt);
+            LLSQL.cmd.Exec();
         }
     }
 }

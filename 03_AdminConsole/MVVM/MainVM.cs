@@ -3,6 +3,7 @@ using System.Windows;
 using FirstFloor.ModernUI.Presentation;
 using Lumitech.Helpers;
 using LightLifeAdminConsole.Data;
+using FirstFloor.ModernUI.Windows.Controls;
 
 namespace LightLifeAdminConsole.MVVM
 {
@@ -11,6 +12,17 @@ namespace LightLifeAdminConsole.MVVM
         //Singleton
         private static MainVM _instance;
         public MainWindow MainWin { get; private set; }
+
+        private string _errorText;
+        public string ErrorText
+        {
+            get { return _errorText; }
+            set
+            {
+                _errorText = value;
+                ModernDialog.ShowMessage(_errorText, "Error", MessageBoxButton.OK);
+            }
+        }
 
         public LinkGroupCollection NewMenuLinkGroups { get; private set; }
         public LinkGroupCollection OldMenuLinkGroups { get; set; }

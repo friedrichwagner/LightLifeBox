@@ -8,6 +8,8 @@ using MvvmFoundation.Wpf;
 using System.Diagnostics;
 using System.Data;
 using LightLifeAdminConsole.Data;
+using FirstFloor.ModernUI.Windows.Controls;
+using System.Windows;
 
 
 namespace LightLifeAdminConsole.MVVM
@@ -19,7 +21,17 @@ namespace LightLifeAdminConsole.MVVM
         private Settings ini;
         private List<IObserver<PILEDData>> observersPILED;
         private List<IObserver<LightLifeData>> observersLightLife;
-        //public BrightnessWindow wndBrightness;
+        
+        private string _errorText;
+        public string ErrorText
+        {
+            get { return _errorText; }
+            set
+            {
+                _errorText = value;
+                ModernDialog.ShowMessage(_errorText, "Error", MessageBoxButton.OK);
+            }
+        }
 
         public IDictionary<int, string> rooms { get { return LLSQL.llrooms; } }
         private int _selectedRoom;
@@ -104,8 +116,8 @@ namespace LightLifeAdminConsole.MVVM
             }
         }
 
-        private string _ErrorText;
-        public string ErrorText { get { return _ErrorText; } private set { _ErrorText = value; RaisePropertyChanged("ErrorText"); } }
+        //private string _ErrorText;
+        //public string ErrorText { get { return _ErrorText; } private set { _ErrorText = value; RaisePropertyChanged("ErrorText"); } }
 
         //public PILEDData piled;
         public LightLifeData lldata;
@@ -255,22 +267,28 @@ namespace LightLifeAdminConsole.MVVM
 
         public void Notify()
         {
-
-            if (lldata.roomid > -1)
+            try
             {
-                byte oldgroup = lldata.piled.groupid;
-
-                DataRow[] result = LLSQL.llroomgroup.Select("roomid=" + lldata.roomid.ToString());
-                foreach (DataRow row in result)
+                if (lldata.roomid > -1)
                 {
-                    lldata.piled.groupid = (byte)row.Field<int>(1);
-                    NotifyGroup();
-                }
+                    byte oldgroup = lldata.piled.groupid;
 
-                lldata.piled.groupid = oldgroup;
+                    DataRow[] result = LLSQL.llroomgroup.Select("roomid=" + lldata.roomid.ToString());
+                    foreach (DataRow row in result)
+                    {
+                        lldata.piled.groupid = (byte)row.Field<int>(1);
+                        NotifyGroup();
+                    }
+
+                    lldata.piled.groupid = oldgroup;
+                }
+                else
+                    NotifyGroup();
             }
-            else
-                NotifyGroup();         
+            catch (Exception ex)
+            {
+                ErrorText = ex.Message;
+            }
 
             //UI Thread verzögert 200ms
             //Thread.Sleep(200);

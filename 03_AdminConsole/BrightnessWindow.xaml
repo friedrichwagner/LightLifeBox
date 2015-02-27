@@ -6,7 +6,7 @@
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
                   mc:Ignorable="d" 
                   d:DesignHeight="530" d:DesignWidth="200"
-                  Title="PI-LED" Style="{StaticResource BlankWindow}" SizeToContent="WidthAndHeight" MinWidth="100" Closing="ModernWindow_Closing" Loaded="ModernWindow_Loaded" PreviewKeyDown="ModernWindow_PreviewKeyDown">
+                  Title="PI-LED"  Style="{StaticResource BlankWindow}" SizeToContent="WidthAndHeight" MinWidth="100" Closing="ModernWindow_Closing" Loaded="ModernWindow_Loaded" PreviewKeyDown="ModernWindow_PreviewKeyDown">
     <Grid Style="{StaticResource ContentRoot}" Margin="0">
         <ScrollViewer>
             <Grid>

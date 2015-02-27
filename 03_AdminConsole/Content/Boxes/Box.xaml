@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
-             mc:Ignorable="d">
+             mc:Ignorable="d">      
     <Grid Style="{StaticResource ContentRoot}">
         <ScrollViewer>
             <Grid Margin="0">
@@ -18,7 +18,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
+
+                <Border Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="2"  Grid.RowSpan="2" Background="LightGray" />
                 <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="0,0,20,0">
                     <TextBlock Text="Proband:" Style="{StaticResource Heading2}"  Margin="10" Width="80"/>
                     <ComboBox x:Name="cbProbanden" Margin="10"  Width="250" ItemsSource="{Binding probanden}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedProband, Mode=TwoWay}"/>
@@ -26,6 +27,7 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right">
+                    <TextBox x:Name="txtSequenceID" Width="40" Margin="10" Text="{Binding SequenceID, Mode=TwoWay}"/>
                     <Button x:Name="btnStart" Content="Start" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="START" IsEnabled="{Binding BtnStartEnabled}"/>
                     <Button x:Name="btnPause" Content="Pause" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="PAUSE" IsEnabled="{Binding BtnPauseEnabled}"/>
                     <Button x:Name="btnPrev" Content="Prev" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="PREV" IsEnabled="{Binding BtnPrevEnabled}"/>
@@ -39,7 +41,10 @@
                     <Button x:Name="btnUpdate" Content="Update" Margin="10" Command="{Binding doSequenceCommand}" CommandParameter="UPDATE" IsEnabled="{Binding BtnUpdateEnabled}"/>
                 </StackPanel>
 
-                <DataGrid x:Name="dgBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10"/>
+                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                    <DataGrid x:Name="dgBox"  Margin="10" ItemsSource="{Binding TestSequencePos}" LoadingRow="dgBox_LoadingRow" AutoGeneratingColumn="dgBox_AutoGeneratingColumn"> </DataGrid>
+                    <Button x:Name="btnRefresh" Content="Refresh" Width="100" Height="30" HorizontalAlignment="Right"/>
+                </StackPanel>
             </Grid>
             
         </ScrollViewer>

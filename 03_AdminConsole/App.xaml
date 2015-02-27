@@ -11,6 +11,8 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converters:BoolToOppositeBoolConverter x:Key="oppositeConverter" />
+            <converters:DataTriggerValueBindingConverter x:Key="dataTriggerValueBindingConverter"/>
+            
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
             <SolidColorBrush x:Key="brushWatermarkBackground" Color="LightGray" />

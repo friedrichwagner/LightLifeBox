@@ -202,6 +202,8 @@ create table LLTestSequenceHead
 	BoxID int not null,
 	UserID int not null,
 	VLID int not null,
+	Status varchar(10) not null default 'NONE',
+	ActualStep int not null default 0,
 	Remark varchar(max),
 	added datetime default getdate(),
 	primary key (SequenceID)
@@ -221,6 +223,13 @@ create table LLTestSequencePos
 	added datetime default getdate(),
 	primary key(SequenceID, StepID)
 );
+
+Create TRIGGER [LLTestSequenceHead_Delete] ON LLTestSequenceHead
+after delete
+AS
+begin
+	delete from LLTestSequencePos where SequenceID in (select SequenceID from deleted);
+END;
 
 create table LLPILedMode
 (

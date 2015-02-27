@@ -9,6 +9,7 @@ using MvvmFoundation.Wpf;
 using FirstFloor.ModernUI.Windows.Controls;
 using LightLifeAdminConsole.Data;
 using System.Windows;
+using System.Data;
 
 namespace LightLifeAdminConsole.MVVM
 {
@@ -19,6 +20,48 @@ namespace LightLifeAdminConsole.MVVM
         private static BoxVM _instance;
         private Settings ini;
         public IDictionary<int, Box> boxes;
+
+        public int SequenceID
+        {
+            get {
+                if (SelectedBox > 0) return boxes[SelectedBox].SequenceID;
+                else return -1;
+            }
+            set {
+                //tbd: Reload Sequence
+                RaisePropertyChanged("SequenceID");
+                RaisePropertyChanged("StepID");
+            }
+        }
+
+        public int StepID
+        {
+            get {
+                if (SelectedBox > 0) return boxes[SelectedBox].StepID;
+                else return -1;
+            }
+        }
+
+        private AdminBase _testSequencePos;
+        public DataView TestSequencePos 
+        {
+            get {
+                if (SelectedBox > 0)
+                    return _testSequencePos.select(" where SequenceID=" + boxes[SelectedBox].SequenceID.ToString()).DefaultView;
+                else return null;
+            }
+
+        }
+
+        private string _errorText;
+        public string ErrorText 
+        {
+            get { return _errorText;  }
+            set { 
+                _errorText = value;
+                ModernDialog.ShowMessage(_errorText, "Error", MessageBoxButton.OK);
+            }
+        }
 
         public int cntBoxes { get { return boxes.Count; } }
 
@@ -31,6 +74,8 @@ namespace LightLifeAdminConsole.MVVM
                 _selectedBox = value;
                 RaisePropertyChanged("SelectedProband");
                 RaisePropertyChanged("SelectedRemark");
+                RaisePropertyChanged("TestSequencePos");
+                RaisePropertyChanged("SequenceID");
             }
         }
 
@@ -113,6 +158,7 @@ namespace LightLifeAdminConsole.MVVM
             boxes = new Dictionary<int, Box>();
             getBoxes(ref boxes);
             _selectedProband = -1;
+            _testSequencePos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
         }
 
         private void getBoxes(ref IDictionary<int, Box> b)
@@ -141,10 +187,12 @@ namespace LightLifeAdminConsole.MVVM
                 RaisePropertyChanged("BtnNextEnabled");
                 RaisePropertyChanged("BtnPauseEnabled");
                 RaisePropertyChanged("BtnUpdateEnabled");
+                RaisePropertyChanged("TestSequencePos");
+                RaisePropertyChanged("SequenceID");
             }
             catch (Exception ex)
             {
-                ModernDialog.ShowMessage(ex.Message, "Error", MessageBoxButton.OK);
+                ErrorText = ex.Message;
             }
         }
 
@@ -163,11 +211,11 @@ namespace LightLifeAdminConsole.MVVM
                         else return false;
 
                 case BoxUIButtons.PREV:
-                        if (boxes[SelectedBox].State == BoxStatus.STARTED && boxes[SelectedBox].StepID>0) return true; 
+                        if (boxes[SelectedBox].State == BoxStatus.STARTED && boxes[SelectedBox].StepID > 1) return true; 
                         else return false;
 
                 case BoxUIButtons.NEXT:
-                         if (boxes[SelectedBox].State == BoxStatus.STARTED && boxes[SelectedBox].StepID < 3) return true; 
+                         if (boxes[SelectedBox].State == BoxStatus.STARTED && boxes[SelectedBox].StepID < 4) return true; 
                          else return false; 
 
                 case BoxUIButtons.PAUSE:
@@ -177,11 +225,9 @@ namespace LightLifeAdminConsole.MVVM
                 case BoxUIButtons.UPDATE:
                          if (boxes[SelectedBox].State == BoxStatus.STARTED) return true; 
                          else return false;
-
             }
 
             return false;
-
         }
     }
 }

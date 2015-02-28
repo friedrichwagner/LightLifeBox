@@ -7,6 +7,7 @@
 #include <string>
 #include "ControlBox.h"
 #include "DebugServer.h"
+#include "helpers.h"
 
 //FW 5.2.2015 - Only LightLifeLogger 
 /*#include "DMXClient.h"

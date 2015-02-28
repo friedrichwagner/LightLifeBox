@@ -12,40 +12,41 @@
 enum enumClientType { CLIENT_NONE = 1, CLIENT_DMX = 2, CLIENT_DALI = 3, CLIENT_ZIGBEE = 4, CLIENT_ZLL = 5, CLIENT_WEBAPI = 6,  CLIENT_NEOLINK = 7, CLIENT_LIGHTLIFE=8 };
 //enum enumInterfaceType {IF_NONE, IF_USB, IF_UDP };
 
-struct IPSocket
+struct UDPSendSocket
 {
 	bool isValid;
+
 	std::string IPAddress;
 	int IPPort;
-	int socketNr;
-	struct sockaddr_in serverAddress;
+	int _socket;
+	struct sockaddr_in serverAddress; //sendto address
 
-	IPSocket(std::string paramIPAddress, int paramIPPort)
+	UDPSendSocket(std::string paramIPAddress, int paramIPPort)
 	{
 		IPAddress= paramIPAddress;
 		IPPort = paramIPPort;
-		socketNr=socket(AF_INET,SOCK_DGRAM,0); //UDP
-		isValid=false;
+		_socket = socket(AF_INET, SOCK_DGRAM, 0); //UDP
+		isValid = false;
 
 		//if (socketNr == INVALID_SOCKET)
-		if (socketNr < 0 ) 
+		if (_socket < 0)
 		{
-			isValid=false;
+			isValid = false;
 		}
 
 		serverAddress.sin_family = AF_INET;
 		serverAddress.sin_addr.s_addr=inet_addr(IPAddress.c_str());
-		serverAddress.sin_port=htons(IPPort);
+		serverAddress.sin_port = htons(IPPort);
 
-		isValid=true;
+		isValid = true;
 	}
 
-	~IPSocket()
+	~UDPSendSocket()
 	{
 #ifdef WIN32
-		if(isValid) closesocket(socketNr);
+		if (isValid) closesocket(_socket);
 #else
-		if(isValid) close(socketNr);
+		if(isValid) close(_socket);
 #endif
 	}
 
@@ -56,11 +57,61 @@ struct IPSocket
 		if (isValid)
 		{
 			//ret=sendto(socketNr,cdata, cnt,0, (struct sockaddr *)&serverAddress,sizeof(serverAddress));			
-			ret=sendto(socketNr, (char*) cdata, cnt,0, reinterpret_cast<sockaddr*>(&serverAddress),sizeof(serverAddress));
+			ret = sendto(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&serverAddress), sizeof(serverAddress));
 
 			//Do I need the close here ?
 			//closesocket(socketNr);
 		}
+
+		return ret;
+	}
+};
+
+struct UDPRecvSocket
+{
+	bool isValid;
+
+	std::string IPAddress;
+	int IPPort;
+	int _socket;
+	struct sockaddr_in serverAddress; //sendto address
+	struct sockaddr_in remoteAddress;
+
+	UDPRecvSocket(int paramIPPort)
+	{
+		//IPAddress = INADDR_ANY;
+		IPPort = paramIPPort;
+		_socket = socket(AF_INET, SOCK_DGRAM, 0); //UDP
+		isValid = false;
+
+		//if (socketNr == INVALID_SOCKET)
+		if (_socket < 0) return;
+	
+		serverAddress.sin_family = AF_INET;
+		serverAddress.sin_addr.s_addr = inet_addr(INADDR_ANY);
+		serverAddress.sin_port = htons(IPPort);
+
+		if (::bind(_socket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) return;
+
+		isValid = true;
+	}
+
+	~UDPRecvSocket()
+	{
+#ifdef WIN32
+		if (isValid) closesocket(_socket);
+#else
+		if (isValid) close(_socket);
+#endif
+	}
+
+	int receive(unsigned char* cdata, int cnt)
+	{
+		int ret = -1;
+		int addrLength;
+		ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
+		if (ret<0)
+			cdata[ret] = '\0';
 
 		return ret;
 	}
@@ -76,7 +127,7 @@ protected:
 	//enumInterfaceType ifType;
 	Settings* ini;
 	//std::vector<std::string> IPAddresses;
-	std::vector<IPSocket*> IPClients;
+	std::vector<UDPSendSocket*> IPClients;
 	int IPPort;
 	Logger* log;
 

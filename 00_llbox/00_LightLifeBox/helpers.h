@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <iostream>
 
 #ifdef WIN32
@@ -32,10 +33,13 @@ public:
 };
 
 
-class splitstring : public string {
+class splitstring : public string 
+{
     vector<string> flds;
+	map<string, string> mapdata;
 public:
     splitstring(char *s) : string(s) { };
 	splitstring(string s) : string(s) { };
     vector<string>& split(char delim, int rep=0);
+	map<string, string>& split2map(char delimOuter, char delimInner); //param1=123;param2=456;param3=789 --> delimOuter=';' delimInner='="
 };

@@ -239,13 +239,32 @@ create table LLPILedMode
 	added datetime default getdate()
 );
 
-
 create table LLRoomGroup
 (
 	RoomID int not null,
 	GroupID int not null,
 	primary key (RoomId, GroupID)
 );
+
+create Table LLBox
+(
+	BoxID int primary key,
+	Name varchar(50) not null,
+	active int default 1,
+	Remark varchar(max),	
+	added datetime default getdate()
+);
+
+
+
+
+
+
+
+
+
+
+
 
 
 

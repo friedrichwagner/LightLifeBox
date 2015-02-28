@@ -7,7 +7,7 @@ ControlBox::ControlBox(std::string pName)
 {
 	isDone = false;
 
-	this->ID = 1;
+	this->ID = 0;
 	this->Name = pName;
 	
 	ini = Settings::getInstance();
@@ -50,6 +50,8 @@ bool ControlBox::Init()
 	//If name not found in settings return immediately
 	string s = ini->ReadAttribute("ControlBox", "name", "");
 	if (ini->ReadAttribute("ControlBox", "name","") != this->Name) return false;
+
+	this->ID = ini->Read<int>("ControlBox", "BoxNr", 0);
 
 	//1. get the Buttons
 	ini->ReadStringVector("ControlBox", "Buttons", "", &flds);

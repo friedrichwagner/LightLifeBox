@@ -74,7 +74,7 @@
     <Compile Include="BLogic\01_ComClients\Interfaces.cs" />
     <Compile Include="BLogic\01_ComClients\LightLifeLogger.cs" />
     <Compile Include="BLogic\01_ComClients\NeoLink.cs" />
-    <Compile Include="BLogic\01_ComClients\PILEDServerDefine.cs" />
+    <Compile Include="BLogic\LightLifeData.cs" />
     <Compile Include="BLogic\Box.cs" />
     <Compile Include="BLogic\CIEChart.cs" />
     <Compile Include="BLogic\LLSQL.cs" />

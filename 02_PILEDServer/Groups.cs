@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LightLife.Data;
 
 namespace PILEDServer
 {
@@ -35,12 +36,12 @@ namespace PILEDServer
             //dt.Columns.Add("sender", typeof(string));
             //dt.Columns.Add("receiver", typeof(string));
 
-            dt.Rows.Add(1, 0, 0, 0, 0, PILEDMode.PILED_SET_NONE, DateTime.Now);
-            dt.Rows.Add(2, 0, 0, 0, 0, PILEDMode.PILED_SET_NONE, DateTime.Now);
-            dt.Rows.Add(3, 0, 0, 0, 0, PILEDMode.PILED_SET_NONE, DateTime.Now);
-            dt.Rows.Add(4, 0, 0, 0, 0, PILEDMode.PILED_SET_NONE, DateTime.Now);
-            dt.Rows.Add(5, 0, 0, 0, 0, PILEDMode.PILED_SET_NONE, DateTime.Now);
-            dt.Rows.Add(6, 0, 0, 0, 0, PILEDMode.PILED_SET_NONE, DateTime.Now);
+            dt.Rows.Add(1, 0, 0, 0, 0, PILEDMode.SET_NONE, DateTime.Now);
+            dt.Rows.Add(2, 0, 0, 0, 0, PILEDMode.SET_NONE, DateTime.Now);
+            dt.Rows.Add(3, 0, 0, 0, 0, PILEDMode.SET_NONE, DateTime.Now);
+            dt.Rows.Add(4, 0, 0, 0, 0, PILEDMode.SET_NONE, DateTime.Now);
+            dt.Rows.Add(5, 0, 0, 0, 0, PILEDMode.SET_NONE, DateTime.Now);
+            dt.Rows.Add(6, 0, 0, 0, 0, PILEDMode.SET_NONE, DateTime.Now);
 
             dgvGroups.DataSource = dt;
         }

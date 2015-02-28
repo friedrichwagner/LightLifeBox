@@ -17,7 +17,7 @@ LightLifeLogger::LightLifeLogger(string boxname)
 
 	//Kann es nur einen geben ?
 	if (flds.size() >=1 ) 
-		IPClients.push_back(new IPSocket(flds[0], IPPort));
+		IPClients.push_back(new UDPSendSocket(flds[0], IPPort));
 
 	lldata = new LightLifeData(boxname);
 }

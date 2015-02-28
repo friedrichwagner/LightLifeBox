@@ -5,11 +5,13 @@
     <loglevel value="5" />
   </Logging>
   <ControlBox name="Box1">
+	<BoxNr value="1" />
 	<Potis value="Poti1,Poti2,Poti3" />
 	<!--<Potis value="Poti1" />-->
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
 	<Sleep value="1000"/>
+	<Command-Port value="9998"/>
   </ControlBox>
   <Button1 id="1" name="btnLock">
 	<PortNr value="1234"/>
@@ -64,5 +66,6 @@
   <LIGHTLIFESERVER name="LightLifeServer1">
     <IP-Address value="127.0.0.1" />
 	<IP-Port value="12345" />
+	<Command-Port value="9998"/>
   </LIGHTLIFESERVER>
  </Settings>

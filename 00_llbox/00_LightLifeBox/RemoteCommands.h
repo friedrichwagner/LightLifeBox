@@ -6,6 +6,9 @@
 #include "ControlBox.h"
 #include <queue>
 #include "Logger.h"
+#include "BaseClient.h"
+
+#define recvBufSize	255
 
 //Forward Declaration
 class ControlBox;
@@ -16,8 +19,17 @@ using namespace std;
 
 struct RemoteCommand
 {
-	short cmdId;
-	string			  cmdParams;
+	short	cmdId;
+	string	cmdParams;
+
+	int ToString(unsigned char* buf)
+	{
+		buf[0] = (unsigned char) cmdId;
+		memcpy(&buf[1], cmdParams.c_str(), cmdParams.length());
+
+		return (cmdParams.length() + 1);
+	}
+
 };
 
 class RemoteCommands
@@ -27,7 +39,10 @@ class RemoteCommands
 		bool done;
 		Logger* log;
 		Settings* ini;
-		int listenPort;
+		UDPSendSocket* _sendSock;
+		UDPRecvSocket* _recvSock;
+		unsigned char recvBuf[recvBufSize+1];
+		unsigned char sendBuf[recvBufSize + 1];
 
 		virtual unsigned long Pull(void);
 		virtual unsigned long Push(void);
@@ -58,4 +73,5 @@ class RemoteCommands
 
 		void stop();
 		void start();
+		int send(RemoteCommand);
 };

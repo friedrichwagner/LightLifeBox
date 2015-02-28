@@ -20,6 +20,11 @@ IBaseClient::~IBaseClient()
 		delete USBClients[i];
 	}
 
+	for (unsigned int i=0; i < IPClients.size(); i++)
+	{
+		delete IPClients[i];
+	}
+
 #ifdef USE_FTDI
 	for (unsigned int i=0; i < FTDIClients.size(); i++)
 	{

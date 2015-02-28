@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
 using Lumitech.Helpers;
 using System.Threading;
 using System.Collections.Concurrent;
-using PILEDServer;
+using LightLife.Data;
+using System.Diagnostics;
 
 namespace Lumitech.Interfaces
 {
@@ -38,7 +34,7 @@ namespace Lumitech.Interfaces
             logThread.Start();
         }
 
-        public virtual void Subscribe(UDPServer provider)
+        public virtual void Subscribe(IObservable<LightLifeData> provider)
         {
             cancellation = provider.Subscribe(this);
         }
@@ -59,7 +55,7 @@ namespace Lumitech.Interfaces
 
         public virtual void OnError(Exception e)
         {
-
+            Debug.Print(e.Message);
         }
 
         //Called from UDP Server when new data arrive
@@ -67,7 +63,7 @@ namespace Lumitech.Interfaces
         {
             //push to queue
             dataQueue.Enqueue(info);
-        }
+        }         
 
         private void StartLogger()
         {
@@ -93,15 +89,17 @@ namespace Lumitech.Interfaces
                         cmd.Params[i++] = info.piled.cct;
                         cmd.Params[i++] = info.piled.xy[0];
                         cmd.Params[i++] = info.piled.xy[1];
-                        cmd.Params[i++] = (int)info.piled.mode;
+                        cmd.Params[i++] = info.piled.mode.ToString();
                         cmd.Params[i++] = info.piled.sender;
                         cmd.Params[i++] = info.piled.receiver;
                         cmd.Params[i++] = (int)info.piled.msgtype;                        
                         cmd.Params[i++] = info.remark;
                         cmd.Params[i++] = info.ip;
                         cmd.Params[i++] = info.piled.groupid;
-                        cmd.Exec();
 
+                        //FW 16.2.2015: auskommentiert, damit nicht soviel in die DB geschreiben wird beim Testen
+                        //cmd.Exec();
+                        
                     }
                 }
             }

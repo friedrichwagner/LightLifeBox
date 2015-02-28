@@ -268,3 +268,10 @@ insert into LLRoomGroup(RoomID, GroupID) values (3,30);
 insert into LLRoomGroup(RoomID, GroupID) values (3,40);
 
 
+----------
+insert into LLBox(BoxID, Name) values (1,'Box Raum 1');
+insert into LLBox(BoxID, Name) values (2,'Box Raum 2');
+insert into LLBox(BoxID, Name) values (3,'Box 1 Vorraum');
+insert into LLBox(BoxID, Name) values (4,'Box 2 Vorraum - Reserve');
+
+

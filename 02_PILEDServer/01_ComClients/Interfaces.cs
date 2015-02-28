@@ -12,7 +12,7 @@ namespace Lumitech.Interfaces
     public interface IPILed
     {
         bool Connect(string comport);
-        bool Connect(string startAddress, string UDPPort);
+        bool Connect(string startAddress, int UDPPort);
         bool Disconnect();
         bool isConnected { get; }
         void Flash(byte[] b, byte cnt);
@@ -34,6 +34,14 @@ namespace Lumitech.Interfaces
         string getVersion();
         Single getTemperature();
     }
+
+    //FW 21.2.2015
+    public interface INeoLink : IPILed
+    {
+        void setSequence(byte id, byte brightness);
+        void setScene(byte  id);
+    }
+
 
     public interface IMemoryMap: ILTEF
     {

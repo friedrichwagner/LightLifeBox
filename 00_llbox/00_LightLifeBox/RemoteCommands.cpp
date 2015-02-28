@@ -12,13 +12,12 @@ RemoteCommands::RemoteCommands(ControlBox* pBox)
 {
 	ini = Settings::getInstance();
 	log = Logger::getInstance();
-
-	this->listenPort = ini->Read<int>("ControlBox", "CommandPort", 1001);
-	box = pBox; 
+	box = pBox;
 	done = false;
-
-
 	cmdQ = new queue<RemoteCommand>();
+
+	_sendSock = new UDPSendSocket(ini->Read<string>("LIGHTLIFESERVER", "IP-Address", "127.0.0.1"), ini->Read<int>("LIGHTLIFESERVER", "CommandPort", 9998));
+	_recvSock = new UDPRecvSocket(ini->Read<int>("ControlBox", "CommandPort", 9998));
 }
 
 RemoteCommands::~RemoteCommands()
@@ -40,19 +39,39 @@ void RemoteCommands::start()
 	spawnPullThread();
 }
 
+int RemoteCommands::send(RemoteCommand cmd)
+{
+	if (_sendSock->isValid)
+	{
+		memset(&sendBuf[0], 0, recvBufSize);
+		int len = cmd.ToString(&sendBuf[0]);
+		return _sendSock->send(&sendBuf[0], len); 
+	}
+
+	return -1;
+}
+
+
 unsigned long RemoteCommands::Push(void)
 {
 	log->cout("RemoteCommand PUSH Thread started ...");
 	while (!done)
 	{
-		//Wait for Remote commands on UDP
-
-		RemoteCommand cmd1;
-		if (cmd1.cmdId > 0)
+		if (_recvSock->isValid)
 		{
-			cmdQ->push(cmd1);
-		}
+			//blocking
+			memset(&recvBuf[0], 0, recvBufSize);
+			int ret = _recvSock->receive(&recvBuf[0], recvBufSize);
 
+			RemoteCommand cmd1;
+			cmd1.cmdId = recvBuf[0];
+			cmd1.cmdParams = string((const char*)&recvBuf[1]);
+
+			if (cmd1.cmdId > 0)
+				cmdQ->push(cmd1);
+		}
+		else
+			done = true;
 	}
 
 	log->cout("RemoteCommand PUSH Thread stopped!");
@@ -109,20 +128,32 @@ void RemoteCommands::ExecuteCommands(RemoteCommand cmd)
 void RemoteCommands::DiscoverCommand(RemoteCommand cmd)
 {
 	//Send Back Name of Controlbox
-	string s = box->Name;
+	cmd.cmdParams = "BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
+	send(cmd);
 }
 
 void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 {
-	//Wie kommen die Daten cmd.cmdParams
-	for (unsigned int i = 0; i < box->Buttons.size(); i++)
+	//buttons=00;potis=1111;
+	splitstring s = cmd.cmdParams;
+	map<string, string> flds = s.split2map(';','=');
+
+	if (flds.size() < 2) return;
+
+ 	for (unsigned int i = 0; i < box->Buttons.size(); i++)
 	{
-		box->Buttons[i]->Active = false;
+		if (flds["buttons"].at(i) == '1')
+			box->Buttons[i]->Active = true;
+		else
+			box->Buttons[i]->Active = false;
 	}
 
 	for (unsigned int i = 0; i < box->Potis.size(); i++)
 	{
-		box->Potis[i]->Active = false;
+		if (flds["potis"].at(i) == '1')
+			box->Potis[i]->Active = true;
+		else
+			box->Potis[i]->Active = false;
 	}
 }
 

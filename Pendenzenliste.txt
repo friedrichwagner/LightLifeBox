@@ -1,6 +1,4 @@
 Admin Console:
--Test mit NeoLink Box
--Implementierung "Senden an Räume" = mehrere Gruppen
 -Steuerung Controlboxen
 -Implementierung Interface PILEDServer bzw. Controlboxen
 

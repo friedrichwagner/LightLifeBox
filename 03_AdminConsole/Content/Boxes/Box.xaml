@@ -26,9 +26,9 @@
                     <Button x:Name="btnShowProband" Content=">>" Margin="10"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right">
-                    <TextBox x:Name="txtSequenceID" Width="40" Margin="10" Text="{Binding SequenceID, Mode=TwoWay}"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right">                    
                     <Button x:Name="btnStart" Content="Start" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="START" IsEnabled="{Binding BtnStartEnabled}"/>
+                    <TextBox x:Name="txtSequenceID" Width="40" Margin="10" Text="{Binding SequenceID, Mode=OneWay}" LostFocus="txtSequenceID_LostFocus"/>
                     <Button x:Name="btnPause" Content="Pause" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="PAUSE" IsEnabled="{Binding BtnPauseEnabled}"/>
                     <Button x:Name="btnPrev" Content="Prev" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="PREV" IsEnabled="{Binding BtnPrevEnabled}"/>
                     <Button x:Name="btnNext" Content=">>" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="NEXT" IsEnabled="{Binding BtnNextEnabled}"/>
@@ -42,8 +42,8 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
-                    <DataGrid x:Name="dgBox"  Margin="10" ItemsSource="{Binding TestSequencePos}" LoadingRow="dgBox_LoadingRow" AutoGeneratingColumn="dgBox_AutoGeneratingColumn"> </DataGrid>
-                    <Button x:Name="btnRefresh" Content="Refresh" Width="100" Height="30" HorizontalAlignment="Right"/>
+                    <DataGrid x:Name="dgBox"  Margin="10" ItemsSource="{Binding TestSequencePos}" AutoGeneratingColumn="dgBox_AutoGeneratingColumn" LoadingRow="dgBox_LoadingRow" />
+                    <Button x:Name="btnRefresh" Content="Refresh" Width="100" Height="30" HorizontalAlignment="Right" Click="btnRefresh_Click"/>
                 </StackPanel>
             </Grid>
             

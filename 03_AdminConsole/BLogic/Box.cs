@@ -2,6 +2,7 @@
 using LightLifeAdminConsole.Data;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace LightLifeAdminConsole
 {
 
-    public enum BoxStatus { NONE, STARTED, STOPPED, PAUSED};
+    public enum BoxStatus { NONE, STARTED, STOPPED, PAUSED, FINISHED};
     public enum TestSequence { NONE, BRIGHTNESS, CCT, JUDD, ALL };
 
     class Box
@@ -36,9 +37,41 @@ namespace LightLifeAdminConsole
             TestSequenceOder = new List<TestSequence>(4);
             State = BoxStatus.NONE;
             SequenceID = -1;
+            Remark = String.Empty;
+            StepID = 0;
 
             head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
             pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+        }
+
+        public Box(DataTable dt)
+        {
+            SequenceID = dt.Rows[0].Field<int>("SequenceID");
+            BoxNr = dt.Rows[0].Field<int>("BoxID");
+            ProbandID = dt.Rows[0].Field<int>("UserID");
+            State = GetStatefromString(dt.Rows[0].Field<string>("Status"));
+            StepID = dt.Rows[0].Field<int>("ActualStep"); ;
+            Remark = dt.Rows[0].Field<string>("Remark");
+
+            head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
+            pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+
+            TestSequenceOder = new List<TestSequence>(4);  
+            GetTestSequenceOrder();
+        }
+
+        public static Box ReloadSequence(int id)
+        {
+            AdminBase head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
+            DataTable dt = head.select(" where SequenceID=" + id.ToString());
+
+            if (dt.Rows.Count < 1) throw new ArgumentException("Sequence ID does not exist!");
+
+            //BoxStatus State = GetStatefromString(dt.Rows[0].Field<string>("Status"));
+            //if (State == BoxStatus.FINISHED) throw new ArgumentException("TestSequence already finished!");
+
+            Box newBox = new Box(dt);
+            return newBox;
         }
 
         public void StartSequence()
@@ -157,5 +190,29 @@ namespace LightLifeAdminConsole
             LLSQL.cmd.prep(stmt);
             LLSQL.cmd.Exec();
         }
+
+        private static BoxStatus GetStatefromString(string s)
+        {
+            if (s.Equals("STARTED")) return BoxStatus.STARTED;
+            if (s.Equals("STOPPED")) return BoxStatus.STOPPED;
+            if (s.Equals("PAUSED")) return BoxStatus.PAUSED;
+            if (s.Equals("FINISHED")) return BoxStatus.FINISHED;
+            
+            return BoxStatus.NONE;
+        }
+
+        private void GetTestSequenceOrder()
+        {
+            DataTable dt = pos.select(" where SequenceID=" + SequenceID.ToString() + " order by StepID");
+
+            foreach( DataRow row in dt.Rows)
+            {
+                if (row.Field<string>("pimode").Equals("CCT")) TestSequenceOder.Add(TestSequence.CCT);
+                if (row.Field<string>("pimode").Equals("BRIGHTNESS")) TestSequenceOder.Add(TestSequence.BRIGHTNESS);
+                if (row.Field<string>("pimode").Equals("JUDD")) TestSequenceOder.Add(TestSequence.JUDD);
+                if (row.Field<string>("pimode").Equals("ALL")) TestSequenceOder.Add(TestSequence.ALL);
+            }
+        }
     }
 }
+

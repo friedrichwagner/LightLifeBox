@@ -27,11 +27,9 @@ namespace LightLifeAdminConsole.MVVM
                 if (SelectedBox > 0) return boxes[SelectedBox].SequenceID;
                 else return -1;
             }
-            set {
-                //tbd: Reload Sequence
-                RaisePropertyChanged("SequenceID");
-                RaisePropertyChanged("StepID");
-            }
+            /*set {
+                ReloadSequence(value);                
+            }*/
         }
 
         public int StepID
@@ -50,7 +48,6 @@ namespace LightLifeAdminConsole.MVVM
                     return _testSequencePos.select(" where SequenceID=" + boxes[SelectedBox].SequenceID.ToString()).DefaultView;
                 else return null;
             }
-
         }
 
         private string _errorText;
@@ -71,11 +68,14 @@ namespace LightLifeAdminConsole.MVVM
             get { return _selectedBox; }
             set
             {
-                _selectedBox = value;
-                RaisePropertyChanged("SelectedProband");
-                RaisePropertyChanged("SelectedRemark");
-                RaisePropertyChanged("TestSequencePos");
-                RaisePropertyChanged("SequenceID");
+                if (value > 0 && value <= cntBoxes)
+                {
+                    _selectedBox = value;
+                    RaisePropertyChanged("SelectedProband");
+                    RaisePropertyChanged("SelectedRemark");
+                    RaisePropertyChanged("TestSequencePos");
+                    RaisePropertyChanged("SequenceID");
+                }
             }
         }
 
@@ -186,7 +186,7 @@ namespace LightLifeAdminConsole.MVVM
                 RaisePropertyChanged("BtnPrevEnabled");
                 RaisePropertyChanged("BtnNextEnabled");
                 RaisePropertyChanged("BtnPauseEnabled");
-                RaisePropertyChanged("BtnUpdateEnabled");
+                RaisePropertyChanged("BtnUpdateEnabled");                
                 RaisePropertyChanged("TestSequencePos");
                 RaisePropertyChanged("SequenceID");
             }
@@ -194,6 +194,11 @@ namespace LightLifeAdminConsole.MVVM
             {
                 ErrorText = ex.Message;
             }
+        }
+
+        public void RefreshPos()
+        {
+            RaisePropertyChanged("TestSequencePos");
         }
 
         private bool BtnEnabled(BoxUIButtons btn)
@@ -223,11 +228,52 @@ namespace LightLifeAdminConsole.MVVM
                          else return false; 
 
                 case BoxUIButtons.UPDATE:
-                         if (boxes[SelectedBox].State == BoxStatus.STARTED) return true; 
-                         else return false;
+                         //if (boxes[SelectedBox].State == BoxStatus.STARTED) return true; 
+                         //else 
+                        //kann immer upgedated werden
+                         return true;
             }
 
             return false;
+        }
+
+        public void ReloadSequence(int seqID)
+        {
+            try
+            {
+                Box newBox = Box.ReloadSequence(seqID);
+
+                boxes[newBox.BoxNr] = newBox;
+                
+                _selectedBox = newBox.BoxNr;
+                _selectedProband = newBox.ProbandID;
+                _selectedRemark = newBox.Remark;
+
+                ErrorText = "TestSequence already finished!";
+
+                RaiseAllProperties();
+            }
+            catch (Exception ex)
+            {
+                ErrorText = ex.Message;
+            }
+
+        }
+
+        private void RaiseAllProperties()
+        {
+            RaisePropertyChanged("SelectedProband");
+            RaisePropertyChanged("SelectedRemark");
+            RaisePropertyChanged("TestSequencePos");
+            RaisePropertyChanged("BtnStartEnabled");
+            RaisePropertyChanged("BtnStopEnabled");
+            RaisePropertyChanged("BtnPrevEnabled");
+            RaisePropertyChanged("BtnNextEnabled");
+            RaisePropertyChanged("BtnPauseEnabled");
+            RaisePropertyChanged("BtnUpdateEnabled");
+            RaisePropertyChanged("TestSequencePos");
+            RaisePropertyChanged("SequenceID");
+            RaisePropertyChanged("StepID");
         }
     }
 }

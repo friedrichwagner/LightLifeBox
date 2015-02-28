@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Settings>
+	<Pages>
+		<StartPage value="/Pages/Login.xaml" />
+		<PagesVisible value="Administration;PI-LED Control;Test Logging;Settings" />
+	</Pages>
+  <Database>
+    <DataSource value="PC-FW\SQLEXPRESS" />
+    <InitialCatalog value="LightLife" />
+    <UserID value="ltcs" />
+    <Password value="Lumitech03" />
+  </Database>
+</Settings>

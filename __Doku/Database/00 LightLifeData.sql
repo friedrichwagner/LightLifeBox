@@ -266,12 +266,12 @@ insert into LLRoomGroup(RoomID, GroupID) values (2,20);
 insert into LLRoomGroup(RoomID, GroupID) values (2,3);
 insert into LLRoomGroup(RoomID, GroupID) values (3,30);
 insert into LLRoomGroup(RoomID, GroupID) values (3,40);
-
-
 ----------
-insert into LLBox(BoxID, Name) values (1,'Box Raum 1');
-insert into LLBox(BoxID, Name) values (2,'Box Raum 2');
-insert into LLBox(BoxID, Name) values (3,'Box 1 Vorraum');
-insert into LLBox(BoxID, Name) values (4,'Box 2 Vorraum - Reserve');
+insert into LLBox(BoxID, Name, BOXIP) values (1,'Box Raum 1', '127.0.0.1');
+insert into LLBox(BoxID, Name, BOXIP) values (2,'Box Raum 2', '127.0.0.1');
+insert into LLBox(BoxID, Name, BOXIP) values (3,'Box 1 Vorraum', '127.0.0.1');
+insert into LLBox(BoxID, Name, BOXIP) values (4,'Box 2 Vorraum - Reserve', '127.0.0.1');
+
+
 
 

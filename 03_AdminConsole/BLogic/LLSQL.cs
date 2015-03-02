@@ -79,6 +79,7 @@ namespace LightLifeAdminConsole.Data
             tables.Add("LLRoomGroup", new SQLSet("LLRoomGroup"));
             tables.Add("LLTestSequenceHead", new SQLSet("LLTestSequenceHead"));
             tables.Add("LLTestSequencePos", new SQLSet("LLTestSequencePos"));
+            tables.Add("LLBox", new SQLSet("LLBox"));
 
             tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
             tables["LLRoom"].selectSQL = "select * from LLRoom order by RoomID";
@@ -103,6 +104,9 @@ namespace LightLifeAdminConsole.Data
             tables["LLTestSequencePos"].selectSQL = "select * from LLTestSequencePos";
             tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, StepID, pimode, Brightness, CCT, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8)";
             tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:1, CCT=:2, x=:3, y=:4, remark=:5 where sequenceID=:6 and stepid=:7";
+
+            tables["LLBox"].selectSQL = "select * from LLBox";
+            tables["LLBox"].updateSQL = "update LLBox set active=:1 where boxid=:2";
 
             if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
 

@@ -249,7 +249,8 @@ namespace LightLifeAdminConsole.MVVM
                 _selectedProband = newBox.ProbandID;
                 _selectedRemark = newBox.Remark;
 
-                ErrorText = "TestSequence already finished!";
+                if (boxes[newBox.BoxNr].State == BoxStatus.FINISHED)
+                    ErrorText = "TestSequence already finished!";
 
                 RaiseAllProperties();
             }

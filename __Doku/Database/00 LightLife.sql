@@ -246,9 +246,11 @@ create table LLRoomGroup
 	primary key (RoomId, GroupID)
 );
 
+drop table LLBox;
 create Table LLBox
 (
 	BoxID int primary key,
+	BoxIP varchar(15) not null,
 	Name varchar(50) not null,
 	active int default 1,
 	Remark varchar(max),	

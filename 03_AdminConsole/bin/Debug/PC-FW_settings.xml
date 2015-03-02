@@ -4,7 +4,6 @@
 		<StartPage value="/Pages/Login.xaml" />
 		<PagesVisible value="Administration;PI-LED Control;Boxen;Settings" />
 		<Interfaces value="LightLifeLogger,NeoLink" />
-		<NrOfBoxes value="3" />
 	</Pages>
 	<Login>
 		<Username value="nn" />
@@ -25,4 +24,8 @@
 	<SendDelayTimeMS value="200" />
 	<Enable value="True" />
   </NeoLink>      
+  <ControlBox>
+	<NrOfBoxes value="4" />
+	<Command-Port value="9998" />
+  </ControlBox>
 </Settings>

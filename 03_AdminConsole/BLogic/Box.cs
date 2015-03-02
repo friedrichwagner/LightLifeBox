@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LightLifeAdminConsole
 {
-
+    public enum enumRemoteCommand { DISCOVER = 1, ENABLE_BUTTONS = 2, SET_PILED = 3, GET_PILED = 4 };
     public enum BoxStatus { NONE, STARTED, STOPPED, PAUSED, FINISHED};
     public enum TestSequence { NONE, BRIGHTNESS, CCT, JUDD, ALL };
 
@@ -19,6 +20,8 @@ namespace LightLifeAdminConsole
         public int BoxNr { get; private set; }
         public int ProbandID { get; set; }
         public BoxStatus State { get; set; }
+        public IPAddress BoxIP { get; private set; }
+        public bool IsActive { get; private set; }
 
         public int SequenceID { get; private set; }
         public string Remark { get; set; }
@@ -28,36 +31,53 @@ namespace LightLifeAdminConsole
 
         private AdminBase head;
         private AdminBase pos;
+        private AdminBase boxdata;
+        private LLUDPClient udp;
 
         public Box(int boxnr)
         {
-            BoxNr = boxnr;
-            ProbandID = -1;
-
-            TestSequenceOder = new List<TestSequence>(4);
-            State = BoxStatus.NONE;
-            SequenceID = -1;
-            Remark = String.Empty;
-            StepID = 0;
-
-            head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
-            pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+            InitBox(boxnr);
         }
 
         public Box(DataTable dt)
         {
-            SequenceID = dt.Rows[0].Field<int>("SequenceID");
-            BoxNr = dt.Rows[0].Field<int>("BoxID");
+            InitBox(dt.Rows[0].Field<int>("BoxID"));
+
+            SequenceID = dt.Rows[0].Field<int>("SequenceID");           
             ProbandID = dt.Rows[0].Field<int>("UserID");
             State = GetStatefromString(dt.Rows[0].Field<string>("Status"));
-            StepID = dt.Rows[0].Field<int>("ActualStep"); ;
+            StepID = dt.Rows[0].Field<int>("ActualStep");
             Remark = dt.Rows[0].Field<string>("Remark");
+ 
+            GetTestSequenceOrder();
+        }
+
+        private void InitBox(int boxnr)
+        {
+            BoxNr = boxnr;
+            ProbandID = -1;
+            State = BoxStatus.NONE;
+            SequenceID = -1;
+            Remark = String.Empty;
+            StepID = 0;
+            IsActive = false;
+            BoxIP = IPAddress.Loopback;
+            TestSequenceOder = new List<TestSequence>(4);
 
             head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
             pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+            boxdata = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
+            DataTable dt = boxdata.select("where boxID=" + BoxNr.ToString());
 
-            TestSequenceOder = new List<TestSequence>(4);  
-            GetTestSequenceOrder();
+
+            if (dt.Rows.Count > 0)
+            {
+                IsActive = (dt.Rows[0].Field<int>("active") == 1) ? true : false;
+                BoxIP = IPAddress.Parse(dt.Rows[0].Field<string>("BoxIP"));
+
+                udp = new LLUDPClient(BoxIP);
+                bool b = Ping();
+            }
         }
 
         public static Box ReloadSequence(int id)
@@ -212,6 +232,13 @@ namespace LightLifeAdminConsole
                 if (row.Field<string>("pimode").Equals("JUDD")) TestSequenceOder.Add(TestSequence.JUDD);
                 if (row.Field<string>("pimode").Equals("ALL")) TestSequenceOder.Add(TestSequence.ALL);
             }
+        }
+
+        public bool Ping()
+        {
+            IDictionary<string, string> d =  udp.sendAndReceive(enumRemoteCommand.DISCOVER, "");
+
+            return false;
         }
     }
 }

@@ -232,10 +232,17 @@ unsigned char PILight::getGroup()
 }
 
 
-
 void PILight::setLog()
 {
 	sslog.str(""); sslog.clear();
 	sslog << "b:" << brightness << " cct:" << cct << " x:" << xy[0] << " y:" << xy[1] << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
 	log->cout(sslog.str());
+}
+
+string PILight::getFullState()
+{
+	ostringstream ss;
+	ss << "mode=" << piledMode << ";brightness=" << brightness << ";cct=" << cct << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2] << ";groupid=" << groupid << ";fadetime=" << fadetime
+		<< ";defaultcct=" << defaultCct << ";defaultbrightness=" << defaultBrightness;
+	return ss.str();
 }

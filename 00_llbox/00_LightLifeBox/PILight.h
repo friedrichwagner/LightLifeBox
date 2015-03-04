@@ -63,4 +63,6 @@ public:
 	void removeComClient(IBaseClient*);
 	void removeComClients();
 	void updateClients();
+
+	string getFullState();
 };

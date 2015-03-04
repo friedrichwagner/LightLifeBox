@@ -128,7 +128,7 @@ void RemoteCommands::ExecuteCommands(RemoteCommand cmd)
 void RemoteCommands::DiscoverCommand(RemoteCommand cmd)
 {
 	//Send Back Name of Controlbox
-	cmd.cmdParams = "BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
+	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
 	send(cmd);
 }
 
@@ -155,18 +155,51 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 		else
 			box->Potis[i]->Active = false;
 	}
+
+	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID);
+	send(cmd);
 }
 
 void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 {
-	//Wie kommen die Daten cmd.cmdParams
-	box->Lights[0]->setBrightness(123);
+	splitstring s = cmd.cmdParams;
+	map<string, string> flds = s.split2map(';', '=');
+
+	int pimode = lumitech::stoi(flds["mode"]);
+	unsigned int br = lumitech::stoi(flds["brightness"]);
+	unsigned int cct = lumitech::stoi(flds["cct"]);
+	unsigned int rgb[3];
+	rgb[0] = lumitech::stoi(flds["r"]); rgb[1] = lumitech::stoi(flds["g"]); rgb[2] = lumitech::stoi(flds["b"]);
+
+	float xy[2];
+	xy[0] = lumitech::stof(flds["x"]); xy[1] = lumitech::stof(flds["y"]);
+
+	switch (pimode)
+	{
+		case CCT_MODE:
+			box->Lights[0]->setCCT(cct);
+			box->Lights[0]->setBrightness(br);
+			break;
+
+		case XY_MODE:
+			box->Lights[0]->setXY(xy);
+			box->Lights[0]->setBrightness(br);
+
+			break;
+
+		case RGB_MODE:
+			box->Lights[0]->setRGB(rgb);
+			break;
+	}
+
+	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID);
+	send(cmd);
 }
 
 void RemoteCommands::GetPILEDCommand(RemoteCommand cmd)
 {
-	//Wie kommen die Daten cmd.cmdParams
-	box->Lights[0]->setBrightness(123);
+	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";" + box->Lights[0]->getFullState();
+	send(cmd);
 }
 
 

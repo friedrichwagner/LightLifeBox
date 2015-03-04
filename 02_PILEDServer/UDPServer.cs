@@ -7,6 +7,7 @@ using System.Threading;
 using Lumitech.Helpers;
 using Lumitech.Interfaces;
 using LightLife.Data;
+using System.Threading.Tasks;
 
 namespace PILEDServer
 {
@@ -14,7 +15,7 @@ namespace PILEDServer
     {
         private bool done;
         private int listenPort;
-        private Thread ServerThread;
+        //private Thread ServerThread;
         private Logger log;
         private Settings ini;
         private  UdpClient listener;
@@ -41,7 +42,7 @@ namespace PILEDServer
 
             AddObservers();
 
-            ServerThread = new Thread(new ThreadStart(StartListener));
+            //ServerThread = new Thread(new ThreadStart(StartListener));
 
             //PILEDData p = new PILEDData();
             //string s=p.ToJson();
@@ -75,13 +76,16 @@ namespace PILEDServer
 
         public void Start()
         {
-            if (!ServerThread.IsAlive)
+            /*if (!ServerThread.IsAlive)
             {
                 ServerThread = new Thread(new ThreadStart(StartListener));
                 ServerThread.Start();
             }
+             bisStarted = ServerThread.IsAlive;
+             */
 
-            bisStarted = ServerThread.IsAlive;
+            //Alternativ
+            StartListener2();
         }
 
         public void Stop()
@@ -94,14 +98,94 @@ namespace PILEDServer
                 observer.OnCompleted();
             observersLightLife.Clear();
 
-            if (ServerThread.IsAlive)
+            /*if (ServerThread.IsAlive)
             {
                 done = true;
                 listener.Close();
-                ServerThread.Join();
+               ServerThread.Join();
             }
 
-            bisStarted = ServerThread.IsAlive;
+            bisStarted = ServerThread.IsAlive;*/
+    
+            //Alternativ
+            done = true;
+            listener.Close();   
+        }
+
+        private  void StartListener2()
+        {
+            Task.Run(async () =>
+            {
+                using (listener = new UdpClient(listenPort))
+                {
+                    try
+                    {
+                        log.Info("UDPServer started Port=" + listenPort.ToString());
+                        while (!done)
+                        {
+                            bisStarted = true;
+                            var receivedResults = await listener.ReceiveAsync();
+                            string s = Encoding.ASCII.GetString(receivedResults.Buffer);
+                            
+
+                            if (s.Length > 0)
+                            {
+                                try
+                                {
+                                    log.Info(receivedResults.RemoteEndPoint.Address + ":" + s);
+
+                                    LightLifeData info = new LightLifeData();
+
+                                    if (s.Contains("roomid"))
+                                    {
+                                        //Receive Messages from Admin Console
+                                        info = s.FromJson<LightLifeData>();
+                                    }
+                                    else
+                                    {
+                                        //Receive Messages from ControlBox
+                                        info.piled = s.FromJson<PILEDData>();
+
+                                        if (fmGroups != null)
+                                        {
+                                            fmGroups.UpdateDataTable(info.piled);
+                                        }
+                                    }
+
+                                    info.ip = receivedResults.RemoteEndPoint.Address.ToString(); //always save address as well
+
+                                    //First send data to devices
+                                    foreach (var observer in observersPILED)
+                                    {
+                                        observer.OnNext(info.piled);
+
+                                    }
+
+                                    //sencond, log it to database
+                                    foreach (var observer in observersLightLife)
+                                        observer.OnNext(info);
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.Error(ex.Message);
+                                }
+
+                            }
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        log.Error(e.Message);
+                    }
+                    finally
+                    {
+                        log.Info("UDPServer stopped");
+                        done = true;
+                        bisStarted = false;
+                    }
+                }
+            });
         }
 
 

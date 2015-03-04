@@ -1,17 +1,14 @@
-﻿using LightLife;
-using LightLifeAdminConsole.Data;
+﻿using LightLifeAdminConsole.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LightLifeAdminConsole
 {
-    public enum enumRemoteCommand { DISCOVER = 1, ENABLE_BUTTONS = 2, SET_PILED = 3, GET_PILED = 4 };
     public enum BoxStatus { NONE, STARTED, STOPPED, PAUSED, FINISHED};
     public enum TestSequence { NONE, BRIGHTNESS, CCT, JUDD, ALL };
 
@@ -32,7 +29,7 @@ namespace LightLifeAdminConsole
         private AdminBase head;
         private AdminBase pos;
         private AdminBase boxdata;
-        private LLUDPClient udp;
+        private LLRemoteCommand rCmd;
 
         public Box(int boxnr)
         {
@@ -75,8 +72,9 @@ namespace LightLifeAdminConsole
                 IsActive = (dt.Rows[0].Field<int>("active") == 1) ? true : false;
                 BoxIP = IPAddress.Parse(dt.Rows[0].Field<string>("BoxIP"));
 
-                udp = new LLUDPClient(BoxIP);
-                bool b = Ping();
+                rCmd = new LLRemoteCommand(BoxIP);
+                rCmd.bAsync = false;
+                IsActive = rCmd.Ping();
             }
         }
 
@@ -234,11 +232,9 @@ namespace LightLifeAdminConsole
             }
         }
 
-        public bool Ping()
+        private void ReceiveUDP(IDictionary<string, string> d)
         {
-            IDictionary<string, string> d =  udp.sendAndReceive(enumRemoteCommand.DISCOVER, "");
 
-            return false;
         }
     }
 }

@@ -60,6 +60,18 @@ namespace LightLifeAdminConsole.MVVM
             }
         }
 
+        private string _infoText;
+        public string InfoText
+        {
+            get { return _infoText; }
+            set
+            {
+                _infoText = value;
+                ModernDialog.ShowMessage(_infoText, "Info", MessageBoxButton.OK);
+            }
+        }
+
+
         public int cntBoxes { get { return boxes.Count; } }
 
         private int _selectedBox;
@@ -75,6 +87,8 @@ namespace LightLifeAdminConsole.MVVM
                     RaisePropertyChanged("SelectedRemark");
                     RaisePropertyChanged("TestSequencePos");
                     RaisePropertyChanged("SequenceID");
+                    if (boxes[SelectedBox].IsActive == false)
+                        InfoText = "Box #" + _selectedBox.ToString() + " is inactive!";
                 }
             }
         }
@@ -204,6 +218,7 @@ namespace LightLifeAdminConsole.MVVM
         private bool BtnEnabled(BoxUIButtons btn)
         {
             if (SelectedBox < 1) return false;
+            if (!boxes[SelectedBox].IsActive) return false;
 
             switch (btn)
             {

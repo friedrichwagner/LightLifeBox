@@ -82,7 +82,7 @@
     <Compile Include="BLogic\AdminBase.cs" />
     <Compile Include="BLogic\Login.cs" />
     <Compile Include="BLogic\Photometric.cs" />
-    <Compile Include="BLogic\UDP.cs" />
+    <Compile Include="BLogic\LLRemoteCommands.cs" />
     <Compile Include="BrightnessWindow.xaml.cs">
       <DependentUpon>BrightnessWindow.xaml</DependentUpon>
     </Compile>

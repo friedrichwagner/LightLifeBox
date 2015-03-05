@@ -1,7 +1,7 @@
 using System;
+using System.Windows;
 using System.IO;
 using System.Xml;
-using System.Windows.Forms;
 using System.Diagnostics;
 
 namespace Lumitech.Helpers
@@ -47,17 +47,18 @@ namespace Lumitech.Helpers
 
         public static Logger GetInstance(int loglevel)
         {
-            string fname = Application.ProductName + ".log";
+            string fname = System.Reflection.Assembly.GetEntryAssembly().Location.Replace(".exe", ".log");
             _instance = Logger.GetInstance(fname, loglevel);
             return _instance;
         }
 
         public static Logger GetInstance()
         {
-            string fname = Application.ProductName + ".log";
+            string fname = System.Reflection.Assembly.GetEntryAssembly().Location.Replace(".exe",".log");
             _instance = Logger.GetInstance(fname, iLogLevel);
             return _instance;
         }
+
 
         private Logger(string logfilename, int loglevel)
         {
@@ -65,7 +66,8 @@ namespace Lumitech.Helpers
 
             this.LogFileName = logfilename;
 
-            LogFilePath = AppDomain.CurrentDomain.BaseDirectory + logfilename;
+            //LogFilePath = AppDomain.CurrentDomain.BaseDirectory + logfilename;
+            LogFilePath = logfilename;
 
             if (!File.Exists(LogFilePath))
             {

@@ -41,11 +41,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\ModernUI.WPF.1.0.6\lib\net45\FirstFloor.ModernUI.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Visual Studio Tools for Office\PIA\Office14\Microsoft.Office.Interop.Excel.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -67,21 +62,42 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\04_Common\01_ComClients\Interfaces.cs">
+      <Link>01_ComClients\Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\01_ComClients\LightLifeLogger.cs">
+      <Link>01_ComClients\LightLifeLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\01_ComClients\NeoLink.cs">
+      <Link>01_ComClients\NeoLink.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\LightLifeData.cs">
+      <Link>04_ComClients\LightLifeData.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\LightLifeGlobalDefines.cs">
+      <Link>04_ComClients\LightLifeGlobalDefines.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\Logger.cs">
+      <Link>04_ComClients\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\LTSQLCommand.cs">
+      <Link>04_ComClients\LTSQLCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\Photometric.cs">
+      <Link>04_ComClients\Photometric.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\Settings.cs">
+      <Link>04_ComClients\Settings.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BLogic\01_ComClients\Interfaces.cs" />
-    <Compile Include="BLogic\01_ComClients\LightLifeLogger.cs" />
-    <Compile Include="BLogic\01_ComClients\NeoLink.cs" />
-    <Compile Include="BLogic\LightLifeData.cs" />
     <Compile Include="BLogic\Box.cs" />
     <Compile Include="BLogic\CIEChart.cs" />
     <Compile Include="BLogic\LLSQL.cs" />
-    <Compile Include="BLogic\Logger.cs" />
     <Compile Include="BLogic\AdminBase.cs" />
     <Compile Include="BLogic\Login.cs" />
-    <Compile Include="BLogic\Photometric.cs" />
     <Compile Include="BLogic\LLRemoteCommands.cs" />
     <Compile Include="BrightnessWindow.xaml.cs">
       <DependentUpon>BrightnessWindow.xaml</DependentUpon>
@@ -144,8 +160,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="BLogic\LTSQLCommand.cs" />
-    <Compile Include="BLogic\Settings.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

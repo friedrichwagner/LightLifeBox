@@ -8,6 +8,7 @@ using MvvmFoundation.Wpf;
 using System.Diagnostics;
 using System.Data;
 using LightLifeAdminConsole.Data;
+
 using FirstFloor.ModernUI.Windows.Controls;
 using System.Windows;
 

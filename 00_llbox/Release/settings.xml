@@ -5,11 +5,15 @@
     <loglevel value="10" />
   </Logging>
   <ControlBox name="Box1">
+	<BoxNr value="1" />
 	<Potis value="Poti1,Poti2,Poti3" />
 	<!--<Potis value="Poti1" />-->
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
 	<Sleep value="1000"/>
+	<Admin-Console-IP value="127.0.0.1"/>
+	<Send-Command-Port value="1748"/>
+	<Receive-Command-Port value="1749"/>		
   </ControlBox>
   <Button1 id="1" name="btnLock">
 	<PortNr value="1234"/>
@@ -31,6 +35,7 @@
 	<Sleep value="1000"/>
 	<Testing value="MockPoti3"/>
   </Poti3>
+  
   <Light1 id="1" name="liBazille">
 	<Default value="2700,100"/>	
   </Light1>  
@@ -55,6 +60,11 @@
 	<IP value="127.0.0.1"/>
 	<Port value="10000"/>
   </MockPoti4>
+  
+  <LightLifeServer name="LightLifeServer1">
+    <UDP-Address value="127.0.0.1" />
+	<UDP-Port value="1747" />
+  </LightLifeServer>   
    
   <DMX name="DMXClient1">
     <IP-Address value="192.168.4.200" />

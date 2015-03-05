@@ -20,7 +20,7 @@
   </LightLifeLogger>    
   <NeoLink name="NeoLinkClient1">
 	<UDP-Address value="127.0.0.1" />
-	<UDP-Port value="6454" />
+	<UDP-Port value="1025" />
 	<SendDelayTimeMS value="200" />
 	<Enable value="True" />
   </NeoLink>      

@@ -16,8 +16,9 @@ RemoteCommands::RemoteCommands(ControlBox* pBox)
 	done = false;
 	cmdQ = new queue<RemoteCommand>();
 
-	_sendSock = new UDPSendSocket(ini->Read<string>("LIGHTLIFESERVER", "IP-Address", "127.0.0.1"), ini->Read<int>("LIGHTLIFESERVER", "CommandPort", 9998));
-	_recvSock = new UDPRecvSocket(ini->Read<int>("ControlBox", "CommandPort", 9998));
+	_sendSock = new UDPSendSocket(ini->Read<string>("ControlBox", "Admin-Console-IP", "127.0.0.1"), ini->Read<int>("ControlBox", "Send-Command-Port", 1748));
+	int p = ini->Read<int>("ControlBox", "Receive-Command-Port", 1749);
+	_recvSock = new UDPRecvSocket(p);
 }
 
 RemoteCommands::~RemoteCommands()

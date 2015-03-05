@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using LightLife.Data;
 using System.Diagnostics;
 using System.Collections.Concurrent;
+using LightLifeGlobalDefines;
 
 namespace Lumitech.Interfaces
 {
@@ -221,7 +222,7 @@ namespace Lumitech.Interfaces
             _sendDelay = ini.Read<int>("NeoLink", "SendDelayTimeMS", 200);
 
             _UDPAddress = ini.Read<string>("NeoLink", "UDP-Address", "");
-            _UDPPort = ini.Read<int>("NeoLink", "UDP-Port", 1025); //PortNr of NeoLinkBox = 1025
+            _UDPPort = ini.Read<int>("NeoLink", "UDP-Port", (int)LightLifePorts.NEOLINK_BOX_UDP); //PortNr of NeoLinkBox = 1025
 
             _Comport = ini.Read<string>("NeoLink", "USBCom", "");
 

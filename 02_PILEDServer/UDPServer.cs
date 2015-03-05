@@ -8,6 +8,7 @@ using Lumitech.Helpers;
 using Lumitech.Interfaces;
 using LightLife.Data;
 using System.Threading.Tasks;
+using LightLifeGlobalDefines;
 
 namespace PILEDServer
 {
@@ -36,7 +37,7 @@ namespace PILEDServer
             ini = Settings.GetInstance();
 
             done = false;
-            listenPort = ini.Read<int>("UDPServer", "ListenPort",12345);
+            listenPort = ini.Read<int>("UDPServer", "ListenPort", (int)LightLifePorts.PILED_SERVER_LISTEN_UDP);
             observersPILED = new List<IObserver<PILEDData>>();
             observersLightLife = new List<IObserver<LightLifeData>>();
 

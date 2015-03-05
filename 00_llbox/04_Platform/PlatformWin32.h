@@ -61,11 +61,13 @@ template <class T>
 T fromString(const std::string& s)
 {
     std::istringstream ss(s);
-    T result;
-    ss >> result;    // TODO handle errors
 
+    T result;
+	ss >> result;    // TODO handle errors
+	
     return result;
 }
+
 
 
 

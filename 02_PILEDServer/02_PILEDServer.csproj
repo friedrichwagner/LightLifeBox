@@ -43,23 +43,45 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="01_ComClients\Interfaces.cs" />
-    <Compile Include="01_ComClients\LightLifeLogger.cs" />
-    <Compile Include="01_ComClients\NeoLink.cs" />
-    <Compile Include="02_Database\JSONSerialize.cs" />
-    <Compile Include="02_Database\LTSQLCommand.cs" />
-    <Compile Include="02_Database\Photometric.cs" />
-    <Compile Include="03_LogIni\Logger.cs" />
-    <Compile Include="03_LogIni\Settings.cs" />
+    <Compile Include="..\04_Common\01_ComClients\Interfaces.cs">
+      <Link>01_ComClients\Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\01_ComClients\LightLifeLogger.cs">
+      <Link>01_ComClients\LightLifeLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\01_ComClients\NeoLink.cs">
+      <Link>01_ComClients\NeoLink.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\JSONSerialize.cs">
+      <Link>04_Common\JSONSerialize.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\LightLifeData.cs">
+      <Link>04_Common\LightLifeData.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\LightLifeGlobalDefines.cs">
+      <Link>04_Common\LightLifeGlobalDefines.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\Logger.cs">
+      <Link>04_Common\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\LTSQLCommand.cs">
+      <Link>04_Common\LTSQLCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\Photometric.cs">
+      <Link>04_Common\Photometric.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\Settings.cs">
+      <Link>04_Common\Settings.cs</Link>
+    </Compile>
     <Compile Include="Groups.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Groups.Designer.cs">
       <DependentUpon>Groups.cs</DependentUpon>
     </Compile>
-    <Compile Include="LightLifeData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SysTrayApp.cs">

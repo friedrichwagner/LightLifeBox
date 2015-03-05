@@ -70,7 +70,9 @@ T Settings::Read(string Section, string name, T defaultValue)
 
 	try
 	{
-		s=ReadString(Section, name, "");		
+		s = ReadString(Section, name, toString<T>(defaultValue));
+		if (s.empty())
+			return defaultValue;
 		ret = fromString<T>(s);
 	}
 	catch(...)
@@ -90,6 +92,9 @@ T Settings::ReadAttrib(string Section, string name, T defaultValue)
 	try
 	{
 		s=ReadAttribute(Section, name, "");		
+		if (s.empty())
+			return defaultValue;
+
 		ret = fromString<T>(s);
 	}
 	catch(...)

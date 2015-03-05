@@ -11,7 +11,9 @@
 	<Buttons value="Button1" />
 	<PILights value="Light1" />
 	<Sleep value="1000"/>
-	<Command-Port value="9998"/>
+	<Admin-Console-IP value="127.0.0.1"/>
+	<Send-Command-Port value="1748"/>
+	<Receive-Command-Port value="1749"/>	
   </ControlBox>
   <Button1 id="1" name="btnLock">
 	<PortNr value="1234"/>
@@ -63,9 +65,9 @@
 	<Port value="10000"/>
   </MockPoti4>
    
-  <LIGHTLIFESERVER name="LightLifeServer1">
-    <IP-Address value="127.0.0.1" />
-	<IP-Port value="12345" />
-	<Command-Port value="9998"/>
-  </LIGHTLIFESERVER>
+  <LightLifeServer name="LightLifeServer1">
+    <UDP-Address value="127.0.0.1" />
+	<UDP-Port value="1747" />
+  </LightLifeServer> 
+
  </Settings>

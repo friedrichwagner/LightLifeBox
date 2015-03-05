@@ -5,7 +5,7 @@
     <Interfaces value="LightLifeLogger" />
   </Definitions>
   <UDPServer>
-	<ListenPort value="12345" />
+	<ListenPort value="1747" />
   </UDPServer>
   <Database>
     <DataSource value="LT-WSSQLTEST\SQLEXPRESS" />

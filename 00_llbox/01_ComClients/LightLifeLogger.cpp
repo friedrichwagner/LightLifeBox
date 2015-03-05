@@ -6,14 +6,14 @@
 LightLifeLogger::LightLifeLogger(string boxname)
 {
 	clientType = CLIENT_LIGHTLIFE;
-	Name= ini->ReadAttribute("LIGHTLIFESERVER", "name", "LightLife1");
+	Name= ini->ReadAttribute("LightLifeServer", "name", "LightLife1");
 	
 	vector<string> flds;
 
 	//es kann nur einen geben
 	//flds.clear();
-	ini->ReadStringVector("LIGHTLIFESERVER", "IP-Address","", &flds);
-	IPPort = ini->Read<int>("LIGHTLIFESERVER", "IP-Port", 1025);
+	ini->ReadStringVector("LightLifeServer", "UDP-Address","", &flds);
+	IPPort = ini->Read<int>("LightLifeServer", "UDP-Port", 1025);
 
 	//Kann es nur einen geben ?
 	if (flds.size() >=1 ) 

@@ -21,7 +21,7 @@ namespace Lumitech.Helpers
 
         public SqlDataReader dr;
         private Stopwatch sw = new Stopwatch();
-        private Logger log;
+        //private Logger log;
 
         public SqlConnection Connection
         {
@@ -47,21 +47,21 @@ namespace Lumitech.Helpers
             sqlsb.Password = ini.ReadString("Database", "Password", "");
             cmd.Connection = new SqlConnection(sqlsb.ConnectionString);
 
-            log = Logger.GetInstance();
+            //log = Logger.GetInstance();
         }
 
         public LTSQLCommand(SqlConnection con)
         {
             cmd.Connection = con;
             //cmd.Transaction = null;
-            log = Logger.GetInstance();
+            //log = Logger.GetInstance();
         }
 
         public LTSQLCommand(SqlConnection con, SqlTransaction tr)
         {
             cmd.Connection = con;
             cmd.Transaction = tr;
-            log = Logger.GetInstance();
+            //log = Logger.GetInstance();
         }
 
         public int prep(string cmdText)
@@ -111,9 +111,13 @@ namespace Lumitech.Helpers
                     else
                         sb.Replace(":" + (i + 1), "'" + Params[i] + "'");
                 }
-                else if (Params[i] == null)
+                else if (Params[i] is Boolean)
                 {
-                    sb.Replace(":" + (i + 1), "null");
+                    sb.Replace(":" + (i + 1), "'" + Params[i] + "'");
+                }
+                else if (Params[i] is DateTime)
+                {
+                    sb.Replace(":" + (i + 1), "'" + Params[i] + "'");
                 }
                 else //alle anderen Parametertypen numerisch
                 {
@@ -126,7 +130,7 @@ namespace Lumitech.Helpers
             }
 
             this.cmd.CommandText = sb.ToString();
-            Debug.Print(cmd.CommandText);
+			Debug.Print(cmd.CommandText);
             return this.cmd.CommandText;
         }
 
@@ -146,10 +150,10 @@ namespace Lumitech.Helpers
                 //returns SqlDataReader
                 if (dr!= null) dr.Close();
 
-                if (log !=  null) log.Debug(cmd.CommandText);
+                //if (log !=  null) log.Debug(cmd.CommandText);
+                Debug.Print(cmd.CommandText);
 
                 dr=cmd.ExecuteReader();
-                //cmd.ExecuteReader();
 
                 if (dr.HasRows) ret=1;
                 else ret=0;
@@ -158,7 +162,8 @@ namespace Lumitech.Helpers
             {
                 //return RowsAffected (int)
                 if (dr != null) dr.Close();
-                if (log != null) log.Debug(cmd.CommandText);
+                //if (log != null) log.Debug(cmd.CommandText);
+                Debug.Print(cmd.CommandText);
                 ret=cmd.ExecuteNonQuery();
             }
             sw.Stop();

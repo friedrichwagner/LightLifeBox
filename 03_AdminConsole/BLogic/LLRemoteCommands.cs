@@ -11,25 +11,43 @@ namespace LightLifeAdminConsole
 
     class RemoteCommandBase
     {
+        public const int RECVBUF_LEN = 30;
         private const int TIMEOUT_INTERVAL = 5000;
         protected IPAddress _ip;
-        private const int _port = 9998;
-        protected UdpClient client;
+        protected int _sendport;
+        protected int _listenport;
+        protected UdpClient sendClient;
+        protected  Socket receiveSock;
         private IPEndPoint receivedfromEP = new IPEndPoint(IPAddress.Any, 0);
+        private byte[] recvBuf = new byte[RECVBUF_LEN];
+
         public SocketException sockEx;
         public ReceiveDataDelegate ReceiveData;
         public bool bAsync;
 
-        public RemoteCommandBase(IPAddress ip)
+        public RemoteCommandBase(IPAddress ip, int sendport, int listenport)
         {
             _ip = ip;
-            client = new UdpClient();
-            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            client.ExclusiveAddressUse = false; // only if you want to send/receive on same machine
-            client.Client.ReceiveTimeout = TIMEOUT_INTERVAL;
-            client.EnableBroadcast = true;
+            _sendport = sendport;
+            _listenport = listenport;
             sockEx = null;
             bAsync = false;
+
+            sendClient = new UdpClient();
+            sendClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            sendClient.ExclusiveAddressUse = false; // only if you want to send/receive on same machine
+            sendClient.Client.ReceiveTimeout = TIMEOUT_INTERVAL;
+
+            var remoteEP = new IPEndPoint(_ip, _sendport);
+            sendClient.Connect(remoteEP);
+
+
+            var listenEP = new IPEndPoint(IPAddress.Any, _listenport);
+            receiveSock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            receiveSock.ExclusiveAddressUse = false;
+            receiveSock.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            receiveSock.ReceiveTimeout = TIMEOUT_INTERVAL;
+            receiveSock.Bind(receivedfromEP);
         }
 
         protected int send(enumRemoteCommand cmd, string data)
@@ -37,13 +55,15 @@ namespace LightLifeAdminConsole
             try
             {
                 sockEx = null;
-                var remoteEP = new IPEndPoint(_ip, _port);
+                var remoteEP = new IPEndPoint(_ip, _sendport);
                 string s = ((Int32)cmd).ToString() + data;
 
                 Byte[] sendBytes = Encoding.ASCII.GetBytes(s);
 
                 //Shoot and forget
-                return client.Send(sendBytes, sendBytes.Length, remoteEP);
+                //return sendClient.Send(sendBytes, sendBytes.Length, remoteEP);
+                return sendClient.Send(sendBytes, sendBytes.Length);
+
                 /*client.Connect(remoteEP);
                 client.BeginSend(sendBytes, sendBytes.Length, null, null);
                 return sendBytes.Length;*/
@@ -66,16 +86,17 @@ namespace LightLifeAdminConsole
             try
             {
                 sockEx = null;
-                var remoteEP = new IPEndPoint(_ip, _port);
                 string s = ((Int32)cmd).ToString() + data;
 
                 Byte[] sendBytes = Encoding.ASCII.GetBytes(s);
-
-                client.Send(sendBytes, sendBytes.Length, remoteEP);
+                //sendClient.Send(sendBytes, sendBytes.Length, remoteEP);
+                sendClient.Send(sendBytes, sendBytes.Length);
 
                 // Blocks until a message returns on this socket from a remote host.
-                Byte[] receiveBytes = client.Receive(ref remoteEP);
-                string returnData = Encoding.ASCII.GetString(receiveBytes);
+                //Byte[] receiveBytes = sendClient.Receive(ref remoteEP);
+                int len = receiveSock.Receive(recvBuf);
+
+                string returnData = Encoding.ASCII.GetString(recvBuf);
 
                 return str2Dict(returnData);
             }
@@ -96,15 +117,16 @@ namespace LightLifeAdminConsole
         {
             try
             {
-                sockEx = null;
-                var remoteEP = new IPEndPoint(_ip, _port);
+                sockEx = null;                
                 string s = ((Int32)cmd).ToString() + data;
 
+                EndPoint ep = receivedfromEP;
+                IAsyncResult iar = receiveSock.BeginReceiveFrom(recvBuf, 0, RECVBUF_LEN, SocketFlags.None, ref ep, new AsyncCallback(recvAsync), receiveSock);
+
                 Byte[] sendBytes = Encoding.ASCII.GetBytes(s);
-
-                client.Send(sendBytes, sendBytes.Length, remoteEP);
-
-                IAsyncResult iar = client.BeginReceive(recvAsync, client);
+                sendClient.Send(sendBytes, sendBytes.Length);
+                //iar.AsyncWaitHandle.WaitOne();
+                
             }
             catch (SocketException se)
             {
@@ -118,11 +140,13 @@ namespace LightLifeAdminConsole
 
         protected void recvAsync(IAsyncResult result)
         {
-            IPEndPoint receivedfromEP = new IPEndPoint(IPAddress.Any, 0);
+            Socket recvSock = (Socket)result.AsyncState;
+            EndPoint clientEP = receivedfromEP;
+            int msgLen = recvSock.EndReceiveFrom(result, ref clientEP);
 
-            UdpClient client = (UdpClient)result.AsyncState;
-            byte[] receiveBytes = client.EndReceive(result, ref receivedfromEP);
-            string returnData = Encoding.ASCII.GetString(receiveBytes);
+            string returnData = Encoding.ASCII.GetString(recvBuf);
+
+            //result.AsyncWaitHandle.Close();
 
             if (ReceiveData!= null)
             {
@@ -178,8 +202,8 @@ namespace LightLifeAdminConsole
 
     class LLRemoteCommand : RemoteCommandBase
     {
-        public LLRemoteCommand(IPAddress ip)
-            : base(ip)
+        public LLRemoteCommand(IPAddress ip, int sendp, int recvp)
+            : base(ip, sendp, recvp)
         {
             //ReceiveData += ReceiveUDP;
         }

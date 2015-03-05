@@ -8,6 +8,7 @@ using Lumitech;
 using Lumitech.Helpers;
 using System.Windows.Input;
 using LightLifeAdminConsole.Data;
+using System.Text;
 
 namespace LightLifeAdminConsole
 {
@@ -22,6 +23,14 @@ namespace LightLifeAdminConsole
             try
             {
                 InitializeComponent();
+
+                string s = "Lumitech LightLife"; //asciisum=1747
+                byte[] barr = Encoding.ASCII.GetBytes(s);
+                int asciisum = 0;
+                foreach (byte b in barr)
+                {
+                    asciisum += b;
+                }
 
                 LLSQL.InitSQLs();
 

@@ -6,14 +6,19 @@ using System.Data.SqlClient;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using LightLifeGlobalDefines;
 
 namespace LightLifeAdminConsole
 {
     public enum BoxStatus { NONE, STARTED, STOPPED, PAUSED, FINISHED};
     public enum TestSequence { NONE, BRIGHTNESS, CCT, JUDD, ALL };
+    public enum BoxPotis : byte { BRIGHTNESS, CCT, JUDD };
 
     class Box
     {
+        private const byte NUM_POTIS = 3;
+        private const byte NUM_BUTTONS = 2;
+
         public int BoxNr { get; private set; }
         public int ProbandID { get; set; }
         public BoxStatus State { get; set; }
@@ -30,6 +35,9 @@ namespace LightLifeAdminConsole
         private AdminBase pos;
         private AdminBase boxdata;
         private LLRemoteCommand rCmd;
+
+        private byte[] PotisActive = new byte[NUM_POTIS];
+        private byte[] ButtonsActive = new byte[NUM_BUTTONS];
 
         public Box(int boxnr)
         {
@@ -72,10 +80,12 @@ namespace LightLifeAdminConsole
                 IsActive = (dt.Rows[0].Field<int>("active") == 1) ? true : false;
                 BoxIP = IPAddress.Parse(dt.Rows[0].Field<string>("BoxIP"));
 
-                rCmd = new LLRemoteCommand(BoxIP);
+                rCmd = new LLRemoteCommand(BoxIP, (int)LightLifePorts.CONTROL_BOX_LISTEN_UDP, (int)LightLifePorts.ADMIN_CONSOL_LISTEN_UDP);
                 rCmd.bAsync = false;
                 IsActive = rCmd.Ping();
             }
+
+            setPotisActive(TestSequence.NONE);
         }
 
         public static Box ReloadSequence(int id)
@@ -103,6 +113,7 @@ namespace LightLifeAdminConsole
             StepID = 1;
             State = BoxStatus.STARTED;
             UpdateHeadState();
+            EnableBoxButtons();
         }
 
         public void StopSequence()
@@ -110,6 +121,7 @@ namespace LightLifeAdminConsole
             if (State != BoxStatus.STARTED) throw new ArgumentException("Testsquenz nicht gestartet!");
             State = BoxStatus.STOPPED;
             UpdateHeadState();
+            EnableBoxButtons();
         }
 
         public void PauseSequence()
@@ -117,6 +129,7 @@ namespace LightLifeAdminConsole
             if (State != BoxStatus.STARTED) throw new ArgumentException("Testsquenz nicht gestartet!");
             State = BoxStatus.PAUSED;
             UpdateHeadState();
+            EnableBoxButtons();
         }
 
         public void PrevStep()
@@ -124,6 +137,7 @@ namespace LightLifeAdminConsole
             if (StepID>0)
                 StepID--;
             UpdateHeadState();
+            EnableBoxButtons();
         }
 
         public void NextStep()
@@ -131,6 +145,7 @@ namespace LightLifeAdminConsole
             if (StepID < 4)
                 StepID++;
             UpdateHeadState();
+            EnableBoxButtons();
 
         }
 
@@ -230,6 +245,46 @@ namespace LightLifeAdminConsole
                 if (row.Field<string>("pimode").Equals("JUDD")) TestSequenceOder.Add(TestSequence.JUDD);
                 if (row.Field<string>("pimode").Equals("ALL")) TestSequenceOder.Add(TestSequence.ALL);
             }
+        }
+
+        private void setPotisActive(TestSequence s)
+        {
+            int i = 0;
+            PotisActive[(byte)BoxPotis.BRIGHTNESS] = 0; PotisActive[(byte)BoxPotis.CCT] = 0; PotisActive[(byte)BoxPotis.JUDD] = 0;
+            for (i = 0; i < ButtonsActive.Length; i++) ButtonsActive[i] = 1;
+
+                switch (s)
+                {
+                    case TestSequence.NONE:
+                        //all inactive
+                        for (i = 0; i < ButtonsActive.Length; i++) ButtonsActive[i] = 0;
+                        break;
+                    case TestSequence.BRIGHTNESS:
+                        PotisActive[(byte)BoxPotis.BRIGHTNESS] = 1;
+                        break;
+                    case TestSequence.CCT:
+                        PotisActive[(byte)BoxPotis.CCT] = 1;
+                        break;
+                    case TestSequence.JUDD:
+                        PotisActive[(byte)BoxPotis.JUDD] = 1;
+                        break;
+                    case TestSequence.ALL:
+                        PotisActive[(byte)BoxPotis.BRIGHTNESS] = 1; PotisActive[(byte)BoxPotis.CCT] = 1; PotisActive[(byte)BoxPotis.JUDD] = 1;
+                        break;
+                    default:
+                        break;
+
+                }
+        }
+
+        private void EnableBoxButtons()
+        {
+            if (State != BoxStatus.STARTED)  setPotisActive(TestSequence.NONE);                
+            else setPotisActive(TestSequenceOder[StepID]);
+
+            string Params = ";potis=" + PotisActive[(byte)BoxPotis.BRIGHTNESS] + PotisActive[(byte)BoxPotis.CCT] + PotisActive[(byte)BoxPotis.JUDD] +
+                            ";buttons=" + ButtonsActive[0] + ButtonsActive[1];
+           rCmd.EnableButtons(Params);           
         }
 
         private void ReceiveUDP(IDictionary<string, string> d)

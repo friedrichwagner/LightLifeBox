@@ -57,7 +57,7 @@ int main(int argc, char * argv[])
 			//dbgSrv= DebugServer::getInstance();
 			//log->addClient((IObserver*)dbgSrv);
 			
-			string boxName="ControlBox1";		
+			string boxName="";		
 
 	#ifdef USE_FTDI
 			ftdi::CreateDeviceInfoList();
@@ -85,7 +85,7 @@ int main(int argc, char * argv[])
 	}
 
 	if (dbgSrv != NULL)
-	{
+	{		
 		log->removeClients();
 		delete dbgSrv;		
 	}

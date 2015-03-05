@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Diagnostics;
 
 namespace LightLifeAdminConsole
 {
@@ -11,8 +12,8 @@ namespace LightLifeAdminConsole
 
     class RemoteCommandBase
     {
-        public const int RECVBUF_LEN = 30;
-        private const int TIMEOUT_INTERVAL = 5000;
+        public const int RECVBUF_LEN = 256;
+        private const int TIMEOUT_INTERVAL = 3000;
         protected IPAddress _ip;
         protected int _sendport;
         protected int _listenport;
@@ -47,7 +48,16 @@ namespace LightLifeAdminConsole
             receiveSock.ExclusiveAddressUse = false;
             receiveSock.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             receiveSock.ReceiveTimeout = TIMEOUT_INTERVAL;
-            receiveSock.Bind(receivedfromEP);
+            receiveSock.Bind(listenEP);
+        }
+
+        public void Close()
+        {
+            //if (sendClient.Client.Connected)
+                sendClient.Close();
+
+            //if (sendClient.Client.Connected)
+                receiveSock.Close();
         }
 
         protected int send(enumRemoteCommand cmd, string data)
@@ -56,9 +66,8 @@ namespace LightLifeAdminConsole
             {
                 sockEx = null;
                 var remoteEP = new IPEndPoint(_ip, _sendport);
-                string s = ((Int32)cmd).ToString() + data;
 
-                Byte[] sendBytes = Encoding.ASCII.GetBytes(s);
+                Byte[] sendBytes = Encoding.ASCII.GetBytes(data);
 
                 //Shoot and forget
                 //return sendClient.Send(sendBytes, sendBytes.Length, remoteEP);
@@ -94,18 +103,21 @@ namespace LightLifeAdminConsole
 
                 // Blocks until a message returns on this socket from a remote host.
                 //Byte[] receiveBytes = sendClient.Receive(ref remoteEP);
-                int len = receiveSock.Receive(recvBuf);
+                int len = receiveSock.Receive(recvBuf, RECVBUF_LEN, SocketFlags.None);
 
                 string returnData = Encoding.ASCII.GetString(recvBuf);
+                Debug.Print(returnData);
 
                 return str2Dict(returnData);
             }
             catch (SocketException se)
             {
                 sockEx = se;
+                Debug.Print(se.Message);
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.Print(ex.Message);
                 throw;
             }
             return str2Dict("");

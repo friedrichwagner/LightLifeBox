@@ -52,6 +52,7 @@ int RemoteCommands::send(RemoteCommand cmd)
 {
 	if (_sendSock->isValid)
 	{
+		log->cout("send:" + cmd.cmdParams);
 		memset(&sendBuf[0], 0, recvBufSize);
 		int len = cmd.ToString(&sendBuf[0]);
 		return _sendSock->send(&sendBuf[0], len); 
@@ -73,8 +74,11 @@ unsigned long RemoteCommands::Push(void)
 			int ret = _recvSock->receive(&recvBuf[0], recvBufSize);
 
 			RemoteCommand cmd1;
-			cmd1.cmdId = recvBuf[0];
+			cmd1.cmdId = recvBuf[0] - char('0'); //Command kommt als ASCII "1" = 49 dezimal --> 49-48=1
 			cmd1.cmdParams = string((const char*)&recvBuf[1]);
+
+			log->cout("RemoteCommand received:" + lumitech::itos(cmd1.cmdId));
+			log->cout("Params:" + cmd1.cmdParams);
 
 			if (cmd1.cmdId > 0)
 				cmdQ->push(cmd1);

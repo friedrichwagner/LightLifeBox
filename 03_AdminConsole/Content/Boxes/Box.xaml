@@ -39,6 +39,7 @@
                     <TextBlock Text="Remark:" Style="{StaticResource Heading2}"  Margin="10" Width="80" HorizontalAlignment="Left"/>                    
                     <TextBox x:Name="txtRemark"  Height="40" Width="500" MaxLength="250" MaxLines="2" Text="{Binding SelectedRemark}" TextWrapping="Wrap"/>
                     <Button x:Name="btnUpdate" Content="Update" Margin="10" Command="{Binding doSequenceCommand}" CommandParameter="UPDATE" IsEnabled="{Binding BtnUpdateEnabled}"/>
+                    <mui:ModernProgressRing IsActive="{Binding IsBusy}" Width="40" Height="40" Style="{Binding CircleProgressRingStyle}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">

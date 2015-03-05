@@ -16,26 +16,26 @@
 
 	<ControlBox1 name="ControlBox1">
 		<BoxNr value="1" />
-		<Send-Command-Port value="1748"/>
-		<Receive-Command-Port value="1749"/>	
+		<Send-Command-Port value="1749"/>
+		<Receive-Command-Port value="1748"/>	
 	</ControlBox1>
 
 	<ControlBox2 name="ControlBox2">
 		<BoxNr value="2" />
-		<Send-Command-Port value="1758"/>
-		<Receive-Command-Port value="1759"/>	
+		<Send-Command-Port value="1759"/>
+		<Receive-Command-Port value="1758"/>	
 	</ControlBox2>
 
 	<ControlBox3 name="ControlBox3">
 		<BoxNr value="3" />
-		<Send-Command-Port value="1768"/>
-		<Receive-Command-Port value="1769"/>	
+		<Send-Command-Port value="1769"/>
+		<Receive-Command-Port value="1768"/>	
 	</ControlBox3>
 	
 	<ControlBox4 name="ControlBox4">
 		<BoxNr value="4" />
-		<Send-Command-Port value="1778"/>
-		<Receive-Command-Port value="1779"/>	
+		<Send-Command-Port value="1779"/>
+		<Receive-Command-Port value="1778"/>	
 	</ControlBox4>
 	
   <Button1 id="1" name="btnLock">

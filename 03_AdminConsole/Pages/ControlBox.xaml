@@ -11,6 +11,7 @@
                 <mui:Link DisplayName="Box #1" Source="/Content/Boxes/Box.xaml#1"/>
                 <mui:Link DisplayName="Box #2" Source="/Content/Boxes/Box.xaml#2"/>
                 <mui:Link DisplayName="Box #3" Source="/Content/Boxes/Box.xaml#3"/>
+                <mui:Link DisplayName="Box #4" Source="/Content/Boxes/Box.xaml#4"/>
             </mui:ModernTab.Links>
         </mui:ModernTab>
     </Grid>

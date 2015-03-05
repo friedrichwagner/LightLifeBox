@@ -32,6 +32,8 @@ namespace LightLifeAdminConsole.MVVM
             }*/
         }
 
+        public bool IsBusy { get; private set { RaisePropertyChanged("IsBusy"); } } //Display Wait Cursor
+
         public int StepID
         {
             get {
@@ -87,8 +89,19 @@ namespace LightLifeAdminConsole.MVVM
                     RaisePropertyChanged("SelectedRemark");
                     RaisePropertyChanged("TestSequencePos");
                     RaisePropertyChanged("SequenceID");
-                    if (boxes[SelectedBox].IsActive == false)
-                        InfoText = "Box #" + _selectedBox.ToString() + " is inactive!";
+                    try
+                    {
+                        IsBusy = true;
+                        boxes[SelectedBox].Ping();
+                        IsBusy = false;
+                        if (boxes[SelectedBox].IsActive == false)
+                            InfoText = "Box #" + _selectedBox.ToString() + " is inactive!";
+                    }
+                    catch(Exception ex)
+                    {
+                        IsBusy = false;
+                        ErrorText = ex.Message;
+                    }
                 }
             }
         }
@@ -167,17 +180,24 @@ namespace LightLifeAdminConsole.MVVM
 
         private BoxVM()
         {
-            ini = Settings.GetInstance();
+            try
+            {
+                ini = Settings.GetInstance();
 
-            boxes = new Dictionary<int, Box>();
-            getBoxes(ref boxes);
-            _selectedProband = -1;
-            _testSequencePos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+                boxes = new Dictionary<int, Box>();
+                getBoxes(ref boxes);
+                _selectedProband = -1;
+                _testSequencePos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+            }
+            catch (Exception ex)
+            {
+                ErrorText = ex.Message;
+            }
         }
 
         private void getBoxes(ref IDictionary<int, Box> b)
         {
-            int n=ini.Read<int>("Pages", "NrOfBoxes", 3);
+            int n=ini.Read<int>("ControlBox", "NrOfBoxes", 4);
             for (int i=1; i <= n; i++)
             {
                 b.Add(i, new Box(i));
@@ -256,7 +276,7 @@ namespace LightLifeAdminConsole.MVVM
         {
             try
             {
-                Box newBox = Box.ReloadSequence(seqID);
+                Box newBox = Box.ReloadSequence(seqID, ref boxes);
 
                 boxes[newBox.BoxNr] = newBox;
                 

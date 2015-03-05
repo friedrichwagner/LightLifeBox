@@ -231,7 +231,6 @@ namespace lumitech
 	void waitSequenceThread()
 	{
 		WaitForSingleObject(hSequenceThread, INFINITE);
-
 		CloseHandle(hSequenceThread);
 	}
 

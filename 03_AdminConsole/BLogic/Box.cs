@@ -82,7 +82,6 @@ namespace LightLifeAdminConsole
                 int recvport =  dt.Rows[0].Field<int>("recvPort");
                 int sendport = dt.Rows[0].Field<int>("sendPort");
 
-
                 rCmd = new LLRemoteCommand(BoxIP, sendport, recvport);
                 rCmd.bAsync = false;
                 IsActive = rCmd.Ping();
@@ -91,18 +90,32 @@ namespace LightLifeAdminConsole
             setPotisActive(TestSequence.NONE);
         }
 
-        public static Box ReloadSequence(int id)
+        public static Box ReloadSequence(int pSeqid, ref IDictionary<int, Box> boxes)
         {
             AdminBase head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
-            DataTable dt = head.select(" where SequenceID=" + id.ToString());
+            DataTable dt = head.select(" where SequenceID=" + pSeqid.ToString());
 
             if (dt.Rows.Count < 1) throw new ArgumentException("Sequence ID does not exist!");
+
+            int bnr = dt.Rows[0].Field<int>("BoxID");
+            boxes[bnr].Close(); //Close down sending and receiving sockets
 
             //BoxStatus State = GetStatefromString(dt.Rows[0].Field<string>("Status"));
             //if (State == BoxStatus.FINISHED) throw new ArgumentException("TestSequence already finished!");
 
             Box newBox = new Box(dt);
             return newBox;
+        }
+
+        public bool Ping()
+        {
+            IsActive = rCmd.Ping();
+            return IsActive;
+        }
+
+        public void Close()
+        {
+            rCmd.Close();
         }
 
         public void StartSequence()

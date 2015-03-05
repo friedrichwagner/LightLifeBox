@@ -57,7 +57,7 @@ int main(int argc, char * argv[])
 			//dbgSrv= DebugServer::getInstance();
 			//log->addClient((IObserver*)dbgSrv);
 			
-			string boxName="Box1";		
+			string boxName="ControlBox1";		
 
 	#ifdef USE_FTDI
 			ftdi::CreateDeviceInfoList();
@@ -141,23 +141,19 @@ void runLightLifeBox(string boxName)
 	if (ll->getCntClients() > 0) box->Lights[0]->addComClient(ll);
 
 	RemoteCommands* rmCmd = new RemoteCommands(box);
+
+	//TEST
 	rmCmd->start();
 
 	//Prgram loops here endlessly
 	box->EventLoop();
 
-	rmCmd->stop();
-	delete rmCmd;
+	//rmCmd->stop();
+	delete rmCmd; // delete macht eh "rmCmd->stop();"
 
 	box->Lights[0]->removeComClients();
 
 	delete ll;
-	//delete neolink;
-	//delete dali;
-	//delete zll;
-	//delete dmx;
-	
-	
 	delete box;
 }
 

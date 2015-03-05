@@ -88,10 +88,14 @@ struct UDPRecvSocket
 		if (_socket < 0) return;
 	
 		serverAddress.sin_family = AF_INET;
-		serverAddress.sin_addr.s_addr = inet_addr(INADDR_ANY);
+		serverAddress.sin_addr.s_addr = INADDR_ANY;
 		serverAddress.sin_port = htons(IPPort);
 
-		if (::bind(_socket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) return;
+		if (::bind(_socket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0)
+		{
+			int err = GetLastError();
+			return;
+		}
 
 		isValid = true;
 	}
@@ -108,8 +112,9 @@ struct UDPRecvSocket
 	int receive(unsigned char* cdata, int cnt)
 	{
 		int ret = -1;
-		int addrLength;
-		ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
+		//int addrLength;
+		//ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
+		ret = recv(_socket, (char*)cdata, cnt, 0);
 		if (ret<0)
 			cdata[ret] = '\0';
 

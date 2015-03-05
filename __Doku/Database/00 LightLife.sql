@@ -251,6 +251,8 @@ create Table LLBox
 (
 	BoxID int primary key,
 	BoxIP varchar(15) not null,
+	sendPort int not null, -- Port on which the AdminConsole sends RemoteCommands to this Box
+	recvPort int not null, -- Port on which the AdminConsole listens to incoming RemoteCommands from this Box
 	Name varchar(50) not null,
 	active int default 1,
 	Remark varchar(max),	

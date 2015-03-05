@@ -130,7 +130,7 @@ namespace Lumitech.Helpers
             }
 
             this.cmd.CommandText = sb.ToString();
-			Debug.Print(cmd.CommandText);
+
             return this.cmd.CommandText;
         }
 

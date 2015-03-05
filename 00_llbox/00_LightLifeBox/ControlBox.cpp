@@ -48,13 +48,13 @@ bool ControlBox::Init()
 	vector<string> flds;
 
 	//If name not found in settings return immediately
-	string s = ini->ReadAttribute("ControlBox", "name", "");
-	if (ini->ReadAttribute("ControlBox", "name","") != this->Name) return false;
+	string s = ini->ReadAttribute(this->Name, "name", "");
+	if (s.length() == 0) return false;
 
-	this->ID = ini->Read<int>("ControlBox", "BoxNr", 0);
+	this->ID = ini->Read<int>(this->Name, "BoxNr", 0);
 
 	//1. get the Buttons
-	ini->ReadStringVector("ControlBox", "Buttons", "", &flds);
+	ini->ReadStringVector("ControlBox_General", "Buttons", "", &flds);
 	for (unsigned int i = 0; i< flds.size(); i++)
 	{
 		if (ini->ReadAttrib<int>(flds[i], "id", 0) > 0)
@@ -66,7 +66,7 @@ bool ControlBox::Init()
 	}
 
 	//2. Get the Potis
-	ini->ReadStringVector("ControlBox", "Potis","", &flds);
+	ini->ReadStringVector("ControlBox_General", "Potis","", &flds);
 	for (unsigned  int i=0; i< flds.size(); i++)
 	{
 		if (ini->ReadAttrib<int>(flds[i], "id", 0) > 0)
@@ -78,14 +78,14 @@ bool ControlBox::Init()
 	}
 
 	//3. get the Lights
-	ini->ReadStringVector("ControlBox", "PILights","", &flds);
+	ini->ReadStringVector("ControlBox_General", "PILights","", &flds);
 	for (unsigned  int i=0; i< flds.size(); i++)
 	{
 		if (ini->ReadAttrib<int>(flds[i],"id",0) > 0)
 			Lights.push_back(new PILight(flds[i]));
 	}
 
-	threadSleepTime = ini->Read<int>("ControlBox", "Sleep", 100);
+	threadSleepTime = ini->Read<int>("ControlBox_General", "Sleep", 100);
 	return true;
 }
 
@@ -98,7 +98,7 @@ bool ControlBox::EventLoop()
 		//log->cout("------------Controlbox::EventLoop-------------");
 
 #ifdef _DEBUG
-	//c= lumitech::waitOnKeyPress();
+	//char c= lumitech::waitOnKeyPress();
 	//if (c == 3) isDone = true;
 #endif
 

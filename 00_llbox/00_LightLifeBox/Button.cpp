@@ -53,6 +53,8 @@ int Button::getPortVal()
 		//if (len < 0) done = true;
 		return val;
 	}
+	else
+		done = true;
 
 #endif
 

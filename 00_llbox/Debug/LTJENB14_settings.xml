@@ -1,20 +1,43 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <Settings>
-  <Logging>
-	<debugport value="9999" />
-    <loglevel value="5" />
-  </Logging>
-  <ControlBox name="Box1">
-	<BoxNr value="1" />
-	<Potis value="Poti1,Poti2,Poti3" />
-	<!--<Potis value="Poti1" />-->
-	<Buttons value="Button1" />
-	<PILights value="Light1" />
-	<Sleep value="1000"/>
-	<Admin-Console-IP value="127.0.0.1"/>
-	<Send-Command-Port value="1748"/>
-	<Receive-Command-Port value="1749"/>	
-  </ControlBox>
+	<Logging>
+		<debugport value="9999" />
+		<loglevel value="5" />
+	</Logging>
+	
+	<ControlBox_General>
+		<BoxNr value="1" />
+		<Potis value="Poti1,Poti2,Poti3" />
+		<Buttons value="Button1" />
+		<PILights value="Light1" />
+		<Sleep value="1000"/>
+		<Admin-Console-IP value="127.0.0.1"/>
+	</ControlBox_General>
+
+	<ControlBox1 name="ControlBox1">
+		<BoxNr value="1" />
+		<Send-Command-Port value="1748"/>
+		<Receive-Command-Port value="1749"/>	
+	</ControlBox1>
+
+	<ControlBox2 name="ControlBox2">
+		<BoxNr value="2" />
+		<Send-Command-Port value="1758"/>
+		<Receive-Command-Port value="1759"/>	
+	</ControlBox2>
+
+	<ControlBox3 name="ControlBox3">
+		<BoxNr value="3" />
+		<Send-Command-Port value="1768"/>
+		<Receive-Command-Port value="1769"/>	
+	</ControlBox3>
+	
+	<ControlBox4 name="ControlBox4">
+		<BoxNr value="4" />
+		<Send-Command-Port value="1778"/>
+		<Receive-Command-Port value="1779"/>	
+	</ControlBox4>
+	
   <Button1 id="1" name="btnLock">
 	<PortNr value="1234"/>
 	<Sleep value="1000"/>

@@ -67,6 +67,9 @@ class RemoteCommands
 		void EnableButtonsCommand(RemoteCommand);
 		void SetPILEDCommand(RemoteCommand);
 		void GetPILEDCommand(RemoteCommand);
+
+		//Lock Handling
+		void go();
 	public:
 		RemoteCommands(ControlBox* pBox);
 		~RemoteCommands();

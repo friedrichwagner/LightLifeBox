@@ -79,8 +79,11 @@ namespace LightLifeAdminConsole
             {
                 IsActive = (dt.Rows[0].Field<int>("active") == 1) ? true : false;
                 BoxIP = IPAddress.Parse(dt.Rows[0].Field<string>("BoxIP"));
+                int recvport =  dt.Rows[0].Field<int>("recvPort");
+                int sendport = dt.Rows[0].Field<int>("sendPort");
 
-                rCmd = new LLRemoteCommand(BoxIP, (int)LightLifePorts.CONTROL_BOX_LISTEN_UDP, (int)LightLifePorts.ADMIN_CONSOL_LISTEN_UDP);
+
+                rCmd = new LLRemoteCommand(BoxIP, sendport, recvport);
                 rCmd.bAsync = false;
                 IsActive = rCmd.Ping();
             }

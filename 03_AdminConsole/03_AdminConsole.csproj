@@ -72,22 +72,22 @@
       <Link>01_ComClients\NeoLink.cs</Link>
     </Compile>
     <Compile Include="..\04_Common\LightLifeData.cs">
-      <Link>04_ComClients\LightLifeData.cs</Link>
+      <Link>04_Common\LightLifeData.cs</Link>
     </Compile>
     <Compile Include="..\04_Common\LightLifeGlobalDefines.cs">
-      <Link>04_ComClients\LightLifeGlobalDefines.cs</Link>
+      <Link>04_Common\LightLifeGlobalDefines.cs</Link>
     </Compile>
     <Compile Include="..\04_Common\Logger.cs">
-      <Link>04_ComClients\Logger.cs</Link>
+      <Link>04_Common\Logger.cs</Link>
     </Compile>
     <Compile Include="..\04_Common\LTSQLCommand.cs">
-      <Link>04_ComClients\LTSQLCommand.cs</Link>
+      <Link>04_Common\LTSQLCommand.cs</Link>
     </Compile>
     <Compile Include="..\04_Common\Photometric.cs">
-      <Link>04_ComClients\Photometric.cs</Link>
+      <Link>04_Common\Photometric.cs</Link>
     </Compile>
     <Compile Include="..\04_Common\Settings.cs">
-      <Link>04_ComClients\Settings.cs</Link>
+      <Link>04_Common\Settings.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

@@ -3,10 +3,13 @@
 #include "RemoteCommands.h"
 #include <sstream>
 #include <mutex>
+#include <condition_variable>
 
 using namespace std;
 
 mutex mtx;
+condition_variable cv;
+bool ready = false;
 
 RemoteCommands::RemoteCommands(ControlBox* pBox)
 {
@@ -16,13 +19,13 @@ RemoteCommands::RemoteCommands(ControlBox* pBox)
 	done = false;
 	cmdQ = new queue<RemoteCommand>();
 
-	_sendSock = new UDPSendSocket(ini->Read<string>("ControlBox", "Admin-Console-IP", "127.0.0.1"), ini->Read<int>("ControlBox", "Send-Command-Port", 1748));
-	int p = ini->Read<int>("ControlBox", "Receive-Command-Port", 1749);
+	_sendSock = new UDPSendSocket(ini->Read<string>("ControlBox_General", "Admin-Console-IP", "127.0.0.1"), ini->Read<int>(box->getName(), "Send-Command-Port", 1748));
+	int p = ini->Read<int>(box->getName(), "Receive-Command-Port", 1749);
 	_recvSock = new UDPRecvSocket(p);
 }
 
 RemoteCommands::~RemoteCommands()
-{
+{	
 	stop();
 	delete cmdQ;
 }
@@ -30,6 +33,11 @@ RemoteCommands::~RemoteCommands()
 void RemoteCommands::stop()
 {
 	done = true;
+	go();	
+
+	delete _sendSock;
+	delete _recvSock;
+
 	if (threadPull.joinable())  threadPull.join();
 	if (threadPush.joinable())  threadPush.join();
 }
@@ -70,6 +78,8 @@ unsigned long RemoteCommands::Push(void)
 
 			if (cmd1.cmdId > 0)
 				cmdQ->push(cmd1);
+
+			go();
 		}
 		else
 			done = true;
@@ -82,9 +92,14 @@ unsigned long RemoteCommands::Push(void)
 
 unsigned long RemoteCommands::Pull(void)
 {
+	unique_lock<std::mutex> lck(mtx);
+
 	log->cout("RemoteCommand PULL Thread started ...");
 	while (!done)
 	{
+		//while (!ready) 
+		cv.wait(lck);
+
 		if (!cmdQ->empty())
 		{
 			ExecuteCommands(cmdQ->front());
@@ -95,6 +110,13 @@ unsigned long RemoteCommands::Pull(void)
 	log->cout("RemoteCommand PULL Thread stopped!");
 
 	return 0;
+}
+
+void RemoteCommands::go()
+{
+	unique_lock<std::mutex> lck(mtx);
+	ready = true;
+	cv.notify_all();
 }
 
 void RemoteCommands::ExecuteCommands(RemoteCommand cmd)

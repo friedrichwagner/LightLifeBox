@@ -267,10 +267,10 @@ insert into LLRoomGroup(RoomID, GroupID) values (2,3);
 insert into LLRoomGroup(RoomID, GroupID) values (3,30);
 insert into LLRoomGroup(RoomID, GroupID) values (3,40);
 ----------
-insert into LLBox(BoxID, Name, BOXIP) values (1,'Box Raum 1', '127.0.0.1');
-insert into LLBox(BoxID, Name, BOXIP) values (2,'Box Raum 2', '127.0.0.1');
-insert into LLBox(BoxID, Name, BOXIP) values (3,'Box 1 Vorraum', '127.0.0.1');
-insert into LLBox(BoxID, Name, BOXIP) values (4,'Box 2 Vorraum - Reserve', '127.0.0.1');
+insert into LLBox(BoxID, Name, BOXIP, sendPort, recvPort) values (1,'Box Raum 1', '127.0.0.1', 1748, 1749);
+insert into LLBox(BoxID, Name, BOXIP, sendPort, recvPort) values (2,'Box Raum 2', '127.0.0.1', 1758, 1759);
+insert into LLBox(BoxID, Name, BOXIP, sendPort, recvPort) values (3,'Box 1 Vorraum', '127.0.0.1',1768, 1769);
+insert into LLBox(BoxID, Name, BOXIP, sendPort, recvPort) values (4,'Box 2 Vorraum - Reserve', '127.0.0.1', 1778, 1779);
 
 
 

@@ -7,18 +7,18 @@
 NeoLinkClient::NeoLinkClient()
 {
 	clientType = CLIENT_NEOLINK;
-	Name= ini->ReadAttribute("NEOLINK", "name", "NeoLinkClient");
+	Name= ini->ReadAttribute("NeoLink", "name", "NeoLinkClient");
 	
 	vector<string> flds;
 
 	//es kann nur einen geben
 	//flds.clear();
-	ini->ReadStringVector("NEOLINK", "IP-Address","", &flds);
-	IPPort = ini->Read<int>("NEOLINK", "IP-Port", 1025);
+	ini->ReadStringVector("NeoLink", "UDP-Address","", &flds);
+	IPPort = ini->Read<int>("NeoLink", "UDP-Port", 1025);
 
 	//Kann es nur einen geben ?
 	if (flds.size() >=1 ) 
-		IPClients.push_back(new IPSocket(flds[0], IPPort));
+		IPClients.push_back(new UDPSendSocket(flds[0], IPPort));
 
 	nlframe = new NeoLinkData();
 	nlframe->byAddress = NL_GROUP_BROADCAST;

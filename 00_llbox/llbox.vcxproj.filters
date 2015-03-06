@@ -79,6 +79,9 @@
     <ClCompile Include="01_ComClients\serialib.cpp">
       <Filter>01 ComClients</Filter>
     </ClCompile>
+    <ClCompile Include="01_ComClients\NeoLinkClient.cpp">
+      <Filter>01 ComClients</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01_ComClients\baseClient.h">
@@ -136,6 +139,9 @@
       <Filter>00 LightLifeBox</Filter>
     </ClInclude>
     <ClInclude Include="01_ComClients\serialib.h">
+      <Filter>01 ComClients</Filter>
+    </ClInclude>
+    <ClInclude Include="01_ComClients\NeoLinkClient.h">
       <Filter>01 ComClients</Filter>
     </ClInclude>
   </ItemGroup>

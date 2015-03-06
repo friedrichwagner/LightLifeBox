@@ -55,6 +55,9 @@ namespace LightLifeAdminConsole
             Remark = dt.Rows[0].Field<string>("Remark");
  
             GetTestSequenceOrder();
+
+            UpdateHeadState();
+            EnableBoxButtons();
         }
 
         private void InitBox(int boxnr)
@@ -104,6 +107,7 @@ namespace LightLifeAdminConsole
             //if (State == BoxStatus.FINISHED) throw new ArgumentException("TestSequence already finished!");
 
             Box newBox = new Box(dt);
+
             return newBox;
         }
 
@@ -162,7 +166,6 @@ namespace LightLifeAdminConsole
                 StepID++;
             UpdateHeadState();
             EnableBoxButtons();
-
         }
 
         public void getSequenceOrder()

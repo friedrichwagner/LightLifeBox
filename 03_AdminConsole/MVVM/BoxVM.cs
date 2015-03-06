@@ -32,7 +32,7 @@ namespace LightLifeAdminConsole.MVVM
             }*/
         }
 
-        public bool IsBusy { get; private set { RaisePropertyChanged("IsBusy"); } } //Display Wait Cursor
+        public bool IsBusy { get; private set; } //Display Wait Cursor
 
         public int StepID
         {

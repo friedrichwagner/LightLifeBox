@@ -62,7 +62,8 @@ unsigned long TastButton::startListen()
 				OnChange(PortVal);
 			}
 		}
-		//lumitech::sleep(threadSleepTime);
+		else
+			log->cout("TastButton(" + this->Name + ") InActive! Val=" + lumitech::itos(PortVal));
 	}
 	
 	log->cout(this->Name + ": stop listening...");

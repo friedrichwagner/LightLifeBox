@@ -93,7 +93,11 @@ struct UDPRecvSocket
 
 		if (::bind(_socket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0)
 		{
+#ifdef WIN32
 			int err = GetLastError();
+#else
+			//int err=errno;
+#endif
 			return;
 		}
 

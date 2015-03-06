@@ -10,7 +10,7 @@ Button::Button(std::string pSection)
 	done = false;
 	isPressed = false;
 	Section=pSection;
-	Active = true;
+	Active = false; //Box muss von Admin Console aktiviert werden
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);
@@ -80,7 +80,8 @@ unsigned long Button::startListen()
 			//else if (isPressed && PortVal < 10) ButtonPressed();
 			else if (isPressed && PortVal == 1001) ButtonUp();
 		}
-		//lumitech::sleep(threadSleepTime);
+		else
+			log->cout("Button(" + this->Name + ") InActive! Val=" + lumitech::itos(PortVal));
 	}
 
 	log->cout(this->Name + ": stop listening...");

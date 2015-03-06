@@ -6,7 +6,6 @@
   </Logging>
   
 	<ControlBox_General>
-		<BoxNr value="1" />
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1" />
 		<PILights value="Light1" />

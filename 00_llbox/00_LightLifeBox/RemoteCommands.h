@@ -44,17 +44,17 @@ class RemoteCommands
 		unsigned char recvBuf[recvBufSize+1];
 		unsigned char sendBuf[recvBufSize + 1];
 
-		virtual unsigned long Pull(void);
-		virtual unsigned long Push(void);
+		unsigned long Pull(void);
+		unsigned long Push(void);
 
 		std::thread threadPush;
-		virtual void spawnPushThread()
+		void spawnPushThread()
 		{
 			threadPush = std::thread(&RemoteCommands::Push, this);
 		};
 
 		std::thread threadPull;
-		virtual void spawnPullThread()
+		void spawnPullThread()
 		{
 			threadPull = std::thread(&RemoteCommands::Pull, this);
 		};

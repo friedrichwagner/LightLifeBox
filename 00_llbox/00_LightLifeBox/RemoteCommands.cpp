@@ -1,5 +1,3 @@
-#pragma once
-
 #include "RemoteCommands.h"
 #include <sstream>
 #include <mutex>
@@ -77,7 +75,7 @@ unsigned long RemoteCommands::Push(void)
 			cmd1.cmdId = recvBuf[0] - char('0'); //Command kommt als ASCII "1" = 49 dezimal --> 49-48=1
 			cmd1.cmdParams = string((const char*)&recvBuf[1]);
 
-			log->cout("RemoteCommand received:" + lumitech::itos(cmd1.cmdId));
+			log->cout("RemoteCommand received:" + lumitech::itos(cmd1.cmdId) + " cntReceived=" + lumitech::itos(ret));
 			log->cout("Params:" + cmd1.cmdParams);
 
 			if (cmd1.cmdId > 0)

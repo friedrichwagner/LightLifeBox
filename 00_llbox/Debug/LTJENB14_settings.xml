@@ -6,7 +6,6 @@
 	</Logging>
 	
 	<ControlBox_General>
-		<BoxNr value="1" />
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1" />
 		<PILights value="Light1" />
@@ -88,4 +87,11 @@
     <UDP-Address value="127.0.0.1" />
 	<UDP-Port value="1747" />
   </LightLifeServer> 
+  
+  <NeoLink name="NeoLinkClient1">
+	<UDP-Address value="192.168.4.168" />
+	<UDP-Port value="1025" />
+	<SendDelayTimeMS value="200" />
+	<Enable value="True" />
+  </NeoLink>    
  </Settings>

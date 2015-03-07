@@ -122,5 +122,11 @@ namespace LightLifeAdminConsole.MVVM
             else
                 wndBrightness.Hide();
         }
+
+        public void ShowAboutBox()
+        {
+            ModernWindow wnd = new AboutWindow();
+            wnd.ShowDialog();
+        }
     }
 }

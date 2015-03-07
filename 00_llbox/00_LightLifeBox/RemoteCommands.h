@@ -13,7 +13,8 @@
 //Forward Declaration
 class ControlBox;
 
-enum enumRemoteCommand { REMOTECMD_DISCOVER = 1, REMOTECMD_ENABLE_BUTTONS = 2, REMOTECMD_SET_PILED = 3, REMOTECMD_GET_PILED = 4 };
+enum enumRemoteReceiveCommand { REMOTE_RECVCMD_DISCOVER = 1, REMOTE_RECVCMD_ENABLE_BUTTONS = 2, REMOTE_RECVCMD_SET_PILED = 3, REMOTE_RECVCMD_GET_PILED = 4};
+enum enumRemoteSendCommand { REMOTE_SENDCMD_LOCK = 10 };
 
 using namespace std;
 
@@ -59,14 +60,18 @@ class RemoteCommands
 			threadPull = std::thread(&RemoteCommands::Pull, this);
 		};
 
+		int send(RemoteCommand);
+
 		queue<RemoteCommand>* cmdQ;
-		void ExecuteCommands(RemoteCommand);
+		void ExecuteReceiveCommands(RemoteCommand);
 
 		//Individual Commands
 		void DiscoverCommand(RemoteCommand);
 		void EnableButtonsCommand(RemoteCommand);
 		void SetPILEDCommand(RemoteCommand);
 		void GetPILEDCommand(RemoteCommand);
+
+		void SendLock(enumRemoteSendCommand id, string params);
 
 		//Lock Handling
 		void go();
@@ -76,5 +81,7 @@ class RemoteCommands
 
 		void stop();
 		void start();
-		int send(RemoteCommand);
+
+		void SendRemoteCommand(enumRemoteSendCommand, string); // to AdminConsole
+		
 };

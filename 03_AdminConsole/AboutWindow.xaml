@@ -1,0 +1,28 @@
+﻿<mui:ModernWindow x:Class="LightLifeAdminConsole.AboutWindow"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                  xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+                  mc:Ignorable="d" Title="Light Life - About"  IsTitleVisible="False" Style="{StaticResource BlankWindow}" WindowStyle="None"  ResizeMode="NoResize"  SizeToContent="WidthAndHeight" MinWidth="300" MinHeight="200" Initialized="ModernWindow_Initialized" PreviewKeyUp="ModernWindow_PreviewKeyUp">
+    <ScrollViewer>
+        <StackPanel >
+            <TextBlock x:Name="txtVersion" Style="{StaticResource Heading2}" TextWrapping="Wrap" Text="Light Life Admin Console"/>
+            <TextBlock x:Name="txtBuild" TextWrapping="Wrap" Text="123123" VerticalAlignment="Top"/>
+            <mui:BBCodeBlock Text="&#13;&#10;" />
+            
+            <TextBlock Text="Project Partners:" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
+            <mui:BBCodeBlock BBCode="[size=20] » [url=http://www.lumitech.com]Lumitech Produktion und Entwicklung[/url] [/size]" />
+            <Image Height="30"  VerticalAlignment="Top"  Source="/Images/Lumitech.jpg"/>
+            <mui:BBCodeBlock Text="&#13;&#10;" />
+
+            <mui:BBCodeBlock BBCode="[color=#707791] [size=20] » [url=http://www.joanneum.at/en/materials.html]Joanneum Research -  Materials[/url] [/size] [/color]" />
+            <mui:BBCodeBlock BBCode="[color=#bfad6f] [size=20] » [url=http://www.joanneum.at/en/policies.html]Joanneum Research -  Policies[/url] [/size] [/color]" />
+            <Image Height="70"  VerticalAlignment="Top" Source="/Images/joanneum-research.png" />
+            <mui:BBCodeBlock Text="&#13;&#10;" />
+
+            <mui:BBCodeBlock BBCode="[size=20] » [url=http://www.tugraz.at/fakultaeten/architektur/]TU Graz - Architektur[/url] [/size]" />
+            <Image Height="90"  VerticalAlignment="Top" Source="/Images/TU-Graz.gif" />
+        </StackPanel>
+    </ScrollViewer>
+</mui:ModernWindow>

@@ -99,7 +99,7 @@ namespace LightLifeAdminConsole.MVVM
                 lldata.sequenceid = value;
                 lldata.piled.sequenceid = (byte)value; //Aufruf von Sequenz aus Box (=Tagesverlauf, RGB Sequenz)
                 _selectedSequence = value;
-                RaisePropertyChanged("SelectedSequence");
+                RaisePropertyChanged("SelectedSequence");                
             }
         }
 

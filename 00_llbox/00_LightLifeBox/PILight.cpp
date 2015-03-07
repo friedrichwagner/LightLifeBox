@@ -14,7 +14,7 @@ PILight::PILight(std::string pSection)
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);
-	this->groupid = ini->Read<int>(pSection, "groupid", 0);
+	this->groupid = 0;// Default = broadcast, wird mit RemoteCommand "Discover" gesetzt  ini->Read<int>(pSection, "groupid", 0);
 
 	defaultBrightness = 255;
 	defaultCct = 2700;
@@ -185,12 +185,12 @@ void PILight::setXYUpDown(float [])
 
 void PILight::resetDefault()
 {
-	setCCT(255); //hier darf nicht CCT angegeben werden, sondern die POTI Stellung
-	setBrightness(defaultBrightness);
-
 	sslog.str(""); sslog.clear();
 	sslog << "resetDefault()";
 	log->cout(sslog.str());
+
+	setCCT(255); //hier darf nicht CCT angegeben werden, sondern die POTI Stellung
+	setBrightness(defaultBrightness);
 }
 
 void PILight::lockCurrState()
@@ -235,7 +235,7 @@ unsigned char PILight::getGroup()
 void PILight::setLog()
 {
 	sslog.str(""); sslog.clear();
-	sslog << "b:" << brightness << " cct:" << cct << " x:" << xy[0] << " y:" << xy[1] << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
+	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << " x:" << xy[0] << " y:" << xy[1] << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
 	log->cout(sslog.str());
 }
 

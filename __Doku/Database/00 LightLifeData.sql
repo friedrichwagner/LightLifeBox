@@ -35,55 +35,11 @@ values (6, 'Proband', '2', '1.1.2014', 'male', 100, 'pb2', 'test');
 
 ------------------------------------------------------------
 
-delete from LLRoom;
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (0, 'Dummy Raum', '','');
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (1, 'Testraum 1', '','');
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (2, 'Testraum 2', '','');
-
-insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
-values (3, 'Vorraum', '','');
-
-------------------------------------------------------------
-
 insert into LLFixtureType (FTypeID, Name, Remark)
 values (1, 'SOVT','Kiteo SOVT Campus');
 
 insert into LLFixtureType (FTypeID, Name, Remark)
 values (2, 'AREA','Kiteo K-Aera 60x60');
-
-------------------------------------------------------------
-
-delete from LLGroup;
-
-insert into LLGroup (GroupID, Name, Remark)
-values (0, 'Alle','');
-
-insert into LLGroup (GroupID, Name, Remark)
-values (200, 'Testraum1','');
-
-insert into LLGroup (GroupID, Name, Remark)
-values (201, 'Testraum2','');
-
-insert into LLGroup (GroupID, Name, Remark)
-values (202, 'Vorraum','');
-
-insert into LLGroup (GroupID, Name, Remark)
-values (203, 'Box T1','');
-
-insert into LLGroup (GroupID, Name, Remark)
-values (204, 'Box T2','');
-
-insert into LLGroup (GroupID, Name, Remark)
-values (205, 'Box V1','');
-
-insert into LLGroup (GroupID, Name, Remark)
-values (206, 'Box Reserve','');
 
 
 ------------------------------------------------------------
@@ -256,21 +212,68 @@ values(0, 'No Scene', 0,0,0,0,0,'');
 insert into LLTestSequenceDefinition (SequenceDefID, SequenceName, StepID, Remark) 
 values(0, 'No Sequence', 0, null);
 
-----------
-insert into LLRoomGroup(RoomID, GroupID) values (1,1);
-insert into LLRoomGroup(RoomID, GroupID) values (1,10);
+------------------------------------------------------------
 
-insert into LLRoomGroup(RoomID, GroupID) values (2,2);
-insert into LLRoomGroup(RoomID, GroupID) values (2,20);
+delete from LLRoom;
 
-insert into LLRoomGroup(RoomID, GroupID) values (2,3);
-insert into LLRoomGroup(RoomID, GroupID) values (3,30);
-insert into LLRoomGroup(RoomID, GroupID) values (3,40);
+insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
+values (0, 'Alle', '','');
+
+insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
+values (1, 'Testraum 1', '','');
+
+insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
+values (2, 'Testraum 2', '','');
+
+insert into LLRoom(RoomID, Name, Remark, DefaultSettings)
+values (3, 'Vorraum', '','');
+
+------------------------------------------------------------
+
+delete from LLGroup;
+
+insert into LLGroup (GroupID, Name, Remark)
+values (0, 'Alle','');
+
+insert into LLGroup (GroupID, Name, Remark)
+values (200, 'Testraum1','');
+
+insert into LLGroup (GroupID, Name, Remark)
+values (201, 'Testraum2','');
+
+insert into LLGroup (GroupID, Name, Remark)
+values (202, 'Vorraum','');
+
+insert into LLGroup (GroupID, Name, Remark)
+values (203, 'Box T1','');
+
+insert into LLGroup (GroupID, Name, Remark)
+values (204, 'Box T2','');
+
+insert into LLGroup (GroupID, Name, Remark)
+values (205, 'Box V1','');
+
+insert into LLGroup (GroupID, Name, Remark)
+values (206, 'Box Reserve','');
 ----------
-insert into LLBox(BoxID, Name, BOXIP, sendPort, recvPort) values (1,'Box Raum 1', '127.0.0.1', 1748, 1749);
-insert into LLBox(BoxID, Name, BOXIP, sendPort, recvPort) values (2,'Box Raum 2', '127.0.0.1', 1758, 1759);
-insert into LLBox(BoxID, Name, BOXIP, sendPort, recvPort) values (3,'Box 1 Vorraum', '127.0.0.1',1768, 1769);
-insert into LLBox(BoxID, Name, BOXIP, sendPort, recvPort) values (4,'Box 2 Vorraum - Reserve', '127.0.0.1', 1778, 1779);
+
+delete from LLRoomGroup;
+
+insert into LLRoomGroup(RoomID, GroupID) values (0,0);
+insert into LLRoomGroup(RoomID, GroupID) values (1,200);
+insert into LLRoomGroup(RoomID, GroupID) values (1,203);
+
+insert into LLRoomGroup(RoomID, GroupID) values (2,201);
+insert into LLRoomGroup(RoomID, GroupID) values (2,204);
+
+insert into LLRoomGroup(RoomID, GroupID) values (3,202);
+insert into LLRoomGroup(RoomID, GroupID) values (3,205);
+
+----------
+insert into LLBox(BoxID, Name, BOXIP, GroupID, sendPort, recvPort) values (1,'Box Raum 1', '127.0.0.1', 203, 1748, 1749);
+insert into LLBox(BoxID, Name, BOXIP, GroupID, sendPort, recvPort) values (2,'Box Raum 2', '127.0.0.1', 204, 1758, 1759);
+insert into LLBox(BoxID, Name, BOXIP, GroupID, sendPort, recvPort) values (3,'Box 1 Vorraum', '127.0.0.1', 205, 1768, 1769);
+insert into LLBox(BoxID, Name, BOXIP, GroupID, sendPort, recvPort) values (4,'Box 2 Vorraum - Reserve', '127.0.0.1', 206, 1778, 1779);
 
 
 

@@ -76,7 +76,8 @@ string Settings::ReadString(string Section, string name, string defaultValue)
 			xNode=xMainNode.getChildNode(Section.c_str()).getChildNode(name.c_str());
 			if (!xNode.isEmpty())
 			{
-				s = (char*) xNode.getAttribute("value");				
+				if (xNode.isAttributeSet("value"))
+					s = (char*) xNode.getAttribute("value");				
 			}
 		}
 		catch(...)
@@ -100,7 +101,8 @@ string Settings::ReadAttribute(string Section, string attr, string defaultValue)
 			xNode=xMainNode.getChildNode(Section.c_str());
 			if (!xNode.isEmpty())
 			{
-				s = (char*) xNode.getAttribute(attr.c_str());				
+				if (xNode.isAttributeSet(attr.c_str()))
+					s = (char*) xNode.getAttribute(attr.c_str());				
 			}
 		}
 		catch(...)

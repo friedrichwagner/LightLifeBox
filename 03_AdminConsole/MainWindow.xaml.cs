@@ -9,6 +9,7 @@ using Lumitech.Helpers;
 using System.Windows.Input;
 using LightLifeAdminConsole.Data;
 using System.Text;
+using System.IO;
 
 namespace LightLifeAdminConsole
 {
@@ -18,19 +19,25 @@ namespace LightLifeAdminConsole
     public partial class MainWindow : ModernWindow
     {
         private MainVM dc;
+        public RelayCommand AboutCommand { get; private set; }
+
         public MainWindow()
         {            
             try
             {
                 InitializeComponent();
 
-                string s = "Lumitech LightLife"; //asciisum=1747
+                /*string s = "Lumitech LightLife"; //asciisum=1747
                 byte[] barr = Encoding.ASCII.GetBytes(s);
                 int asciisum = 0;
                 foreach (byte b in barr)
                 {
                     asciisum += b;
-                }
+                }*/
+
+                PathGeometry geom = new PathGeometry();
+                Geometry g = new RectangleGeometry(new Rect(0, 0, 28, 28));
+                geom.AddGeometry(g);
 
                 LLSQL.InitSQLs();
 
@@ -40,7 +47,10 @@ namespace LightLifeAdminConsole
                 Settings ini = Settings.GetInstance();
                 ContentSource = new Uri(ini.ReadString("Pages", "StartPage", ""), UriKind.Relative); //LoginPage
                 
-                this.ResizeMode = ResizeMode.NoResize;           
+                this.ResizeMode = ResizeMode.CanMinimize;
+
+                AboutCommand = new RelayCommand(o => DisplayAboutBox(o));
+                LinkNavigator.Commands.Add(new Uri("cmd://About", UriKind.Absolute), AboutCommand);
             }
             catch (Exception ex)
             {
@@ -83,5 +93,11 @@ namespace LightLifeAdminConsole
                 ModernDialog.ShowMessage(ex.Message, "Error", MessageBoxButton.OK);
             } 
         }
+
+        private void DisplayAboutBox(object o)
+        {
+            dc.ShowAboutBox();
+        }
+
     }
 }

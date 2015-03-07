@@ -32,7 +32,15 @@ namespace LightLifeAdminConsole.MVVM
             }*/
         }
 
-        public bool IsBusy { get; private set; } //Display Wait Cursor
+        private bool _IsBusy;
+        public bool IsBusy 
+        { 
+            get { return _IsBusy; }
+            set {   _IsBusy = value;
+                    RaisePropertyChanged("IsBusy");
+            } //Display Wait Cursor
+        }
+        
 
         public int StepID
         {
@@ -85,13 +93,8 @@ namespace LightLifeAdminConsole.MVVM
                 if (value > 0 && value <= cntBoxes)
                 {
                     _selectedBox = value;
-                    RaisePropertyChanged("SelectedProband");
-                    RaisePropertyChanged("SelectedRemark");
-                    RaisePropertyChanged("TestSequencePos");
-                    RaisePropertyChanged("SequenceID");
                     try
                     {
-                        IsBusy = true;
                         boxes[SelectedBox].Ping();
                         IsBusy = false;
                         if (boxes[SelectedBox].IsActive == false)
@@ -99,7 +102,6 @@ namespace LightLifeAdminConsole.MVVM
                     }
                     catch(Exception ex)
                     {
-                        IsBusy = false;
                         ErrorText = ex.Message;
                     }
                 }
@@ -183,7 +185,6 @@ namespace LightLifeAdminConsole.MVVM
             try
             {
                 ini = Settings.GetInstance();
-
                 boxes = new Dictionary<int, Box>();
                 getBoxes(ref boxes);
                 _selectedProband = -1;
@@ -191,6 +192,7 @@ namespace LightLifeAdminConsole.MVVM
             }
             catch (Exception ex)
             {
+                IsBusy = false;
                 ErrorText = ex.Message;
             }
         }
@@ -214,25 +216,14 @@ namespace LightLifeAdminConsole.MVVM
                 if (cmd.ToUpper() == "PREV") boxes[SelectedBox].PrevStep();
                 if (cmd.ToUpper() == "NEXT") boxes[SelectedBox].NextStep();
                 if (cmd.ToUpper() == "UPDATE") boxes[SelectedBox].UpdateRemark(SelectedRemark);
-
-                RaisePropertyChanged("BtnStartEnabled");
-                RaisePropertyChanged("BtnStopEnabled");
-                RaisePropertyChanged("BtnPrevEnabled");
-                RaisePropertyChanged("BtnNextEnabled");
-                RaisePropertyChanged("BtnPauseEnabled");
-                RaisePropertyChanged("BtnUpdateEnabled");                
-                RaisePropertyChanged("TestSequencePos");
-                RaisePropertyChanged("SequenceID");
+                if (cmd.ToUpper() == "REFRESH") boxes[SelectedBox].Refresh();
+                
+                RaiseAllProperties();
             }
             catch (Exception ex)
             {
                 ErrorText = ex.Message;
             }
-        }
-
-        public void RefreshPos()
-        {
-            RaisePropertyChanged("TestSequencePos");
         }
 
         private bool BtnEnabled(BoxUIButtons btn)
@@ -268,6 +259,8 @@ namespace LightLifeAdminConsole.MVVM
                         //kann immer upgedated werden
                          return true;
             }
+
+            //RaiseAllProperties();
 
             return false;
         }

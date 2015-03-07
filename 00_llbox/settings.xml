@@ -7,7 +7,7 @@
 	
 	<ControlBox_General>
 		<Potis value="Poti1,Poti2,Poti3" />
-		<Buttons value="Button1" />
+		<Buttons value="Button1,Button2" />
 		<PILights value="Light1" />
 		<Sleep value="1000"/>
 		<Admin-Console-IP value="127.0.0.1"/>
@@ -37,26 +37,29 @@
 		<Receive-Command-Port value="1778"/>	
 	</ControlBox4>
 	
-  <Button1 id="1" name="btnLock">
-	<PortNr value="1234"/>
-	<Sleep value="1000"/>
-	<Testing value="MockButton"/>
-  </Button1>
-  <Poti1 id="1" name="btnBrightness">
-	<PortNr value="1234"/>
-	<Sleep value="1000"/>
-	<Testing value="MockPoti1"/>
-  </Poti1>
-  <Poti2 id="2" name="btnCCT">
-	<PortNr value="12345"/>
-	<Sleep value="1000"/>
-	<Testing value="MockPoti2"/>
-  </Poti2>
-  <Poti3 id="3" name="btnJudd">
-	<PortNr value="123456"/>
-	<Sleep value="1000"/>
-	<Testing value="MockPoti3"/>
-  </Poti3>
+	<Button1 id="1" name="btnLock1">
+		<LightLifeButtonType value="1" />
+		<Testing value="MockButton1"/>
+	</Button1>
+	<Button2 id="2" name="btnLock2">
+		<LightLifeButtonType value="1" />
+		<Testing value="MockButton2"/>		
+	 </Button2>  
+	<Poti1 id="3" name="btnBrightness">
+		<LightLifeButtonType value="2" />
+		<Testing value="MockPoti1"/>
+	</Poti1>
+	<Poti2 id="4" name="btnCCT">
+		<LightLifeButtonType value="3" />
+		<Testing value="MockPoti2"/>
+	</Poti2>
+	<Poti3 id="5" name="btnJudd">
+		<LightLifeButtonType value="4" />
+		<Testing value="MockPoti3"/>
+	</Poti3>
+	<Light1 id="1" name="liBazille">
+		<Default value="2700,100"/>	
+	</Light1>  
 
   <Light1 id="1" name="liBazille">
 	<Default value="2700,100"/>	

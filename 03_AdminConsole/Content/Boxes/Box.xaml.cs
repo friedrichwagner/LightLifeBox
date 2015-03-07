@@ -21,18 +21,35 @@ namespace LightLifeAdminConsole.Content.Boxes
 
         public Box()
         {
-            InitializeComponent();
-            dc = BoxVM.GetInstance();
-            DataContext = dc;
-            dgBox.CanUserAddRows = false;
-            dgBox.CanUserDeleteRows = false;
-            dgBox.CanUserReorderColumns = false;
-            dgBox.CanUserSortColumns = false;
+            try
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+
+                InitializeComponent();
+                dc = BoxVM.GetInstance();
+                DataContext = dc;
+                dgBox.CanUserAddRows = false;
+                dgBox.CanUserDeleteRows = false;
+                dgBox.CanUserReorderColumns = false;
+                dgBox.CanUserSortColumns = false;
+            }
+            finally
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            }
 
         }
         public void OnFragmentNavigation(FirstFloor.ModernUI.Windows.Navigation.FragmentNavigationEventArgs e)
         {
-            dc.SelectedBox = Int32.Parse(e.Fragment);
+            try
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                dc.SelectedBox = Int32.Parse(e.Fragment);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            }
         }
 
         public void OnNavigatedFrom(FirstFloor.ModernUI.Windows.Navigation.NavigationEventArgs e)  { }
@@ -43,10 +60,25 @@ namespace LightLifeAdminConsole.Content.Boxes
         {
             if (dc.SelectedBox > 0)
             {
-                /*if (1 == dc.boxes[dc.SelectedBox].StepID)
+                var rowNum = e.Row.GetIndex()+1;
+                if (rowNum == dc.boxes[dc.SelectedBox].StepID)
                     e.Row.Background = Brushes.LightGray;
+                //else e.Row.Background = Brushes.White;
+               /* var row = e.Row.GetIndex();
+                if (row % 2 == 0)
+                {
+                    e.Row.Background = new SolidColorBrush(Colors.LightGray);
+                    e.Row.Foreground = new SolidColorBrush(Colors.White);
+                    e.Row.FontStyle = FontStyles.Italic;
+                }
+
                 else
-                    e.Row.Background = Brushes.White;*/
+                {
+                    // defaults - without these you'll get randomly colored rows
+                    e.Row.Background = new SolidColorBrush(Colors.Green);
+                    e.Row.Foreground = new SolidColorBrush(Colors.Black);
+                    e.Row.FontStyle = FontStyles.Normal;
+                }*/
             }
         }
 
@@ -81,7 +113,7 @@ namespace LightLifeAdminConsole.Content.Boxes
             }
         }
 
-        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        /*private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
             try {
                 dc.RefreshPos();
@@ -90,21 +122,29 @@ namespace LightLifeAdminConsole.Content.Boxes
             {
                 dc.ErrorText = ex.Message;
             }
-        }
+        }*/
 
         private void txtSequenceID_LostFocus(object sender, RoutedEventArgs e)
         {
             try {
 
-                if (Int32.Parse(txtSequenceID.Text) > 0)
+                //if (Int32.Parse(txtSequenceID.Text) > 0)
+                if (dc.boxes[dc.SelectedBox].SequenceID != Int32.Parse(txtSequenceID.Text))
                 {
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
                     dc.ReloadSequence(Int32.Parse(txtSequenceID.Text));
-                    NavigationCommands.GoToPage.Execute("/Content/Boxes/Box.xaml#" + dc.SelectedBox.ToString(), this);
+
+                    if (dc.boxes[dc.SelectedBox].IsActive)
+                        NavigationCommands.GoToPage.Execute("/Content/Boxes/Box.xaml#" + dc.SelectedBox.ToString(), this);
                 }
             }
             catch (Exception ex)
             {
                  dc.ErrorText = ex.Message;
+            }
+            finally
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
             }
         }
     }

@@ -41,6 +41,8 @@ ControlBox* ControlBox::getInstance()
 ControlBox::~ControlBox() 
 { 
 	if (!isDone) stopEventLoop();
+
+	delete rmCmd;
 }
 
 bool ControlBox::Init() 
@@ -86,6 +88,10 @@ bool ControlBox::Init()
 	}
 
 	threadSleepTime = ini->Read<int>("ControlBox_General", "Sleep", 100);
+
+	rmCmd = new RemoteCommands(this);
+	rmCmd->start();
+
 	return true;
 }
 
@@ -144,8 +150,7 @@ string ControlBox::getName()
 
 void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 {
-	string result;
-	string btnName = ((Button*)sender)->getName();
+	LightLifeButtonType btntype = ((Button*)sender)->getBtnType();
 
 	if (Lights.size() == 0) return;
 
@@ -155,8 +160,14 @@ void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 		break;
 
 	case BUTTON_UP:
-		if (btnName == "btnLock") {
+		if (btntype == LOCK) 
+		{
 			Lights[0]->lockCurrState();
+			
+			rmCmd->SendRemoteCommand(REMOTE_SENDCMD_LOCK, "");
+
+			Lights[0]->resetDefault();
+
 		}
 		else {
 			Lights[0]->resetDefault();
@@ -165,17 +176,13 @@ void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 		break;
 
 	case BUTTON_PRESSED:
-		//ss1 << btnName << "(pressed): val=" << val; 	log->cout(ss1.str());
 		break;
 
 	case BUTTON_CHANGE:
 		//ss1 << btnName << "(change): val=" << val; log->cout1(ss1.str());
-
-		if (btnName == "btnLock") Lights[0]->resetDefault();
-		if (btnName == "btnBrightness") Lights[0]->setBrightness(val);
-		if (btnName == "btnCCT") Lights[0]->setCCT(val);
-		//if (btnName == "btnJudd") Lights[0]->setXY(2700);
-		break;
+		if (btntype == BRIGHTNESS)	Lights[0]->setBrightness(val);
+		if (btntype == CCT)			Lights[0]->setCCT(val);
+		if (btntype == JUDD)		Lights[0]->setXY(new float[2] {0.333f, 0.333f});
 		break;
 
 	default:

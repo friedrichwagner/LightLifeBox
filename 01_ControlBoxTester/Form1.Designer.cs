@@ -41,6 +41,7 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.trackBar3 = new System.Windows.Forms.TrackBar();
+            this.button6 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tb1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
@@ -53,8 +54,8 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
-            this.button1.Tag = "MockButton";
-            this.button1.Text = "Lock";
+            this.button1.Tag = "MockButton1";
+            this.button1.Text = "Lock 1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button2_Click);
             this.button1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
@@ -191,11 +192,24 @@
             this.trackBar3.TickFrequency = 10;
             this.trackBar3.Scroll += new System.EventHandler(this.tb1_Scroll);
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(139, 44);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 16;
+            this.button6.Tag = "MockButton2";
+            this.button6.Text = "Lock 2";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
+            this.button6.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button1_MouseUp);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 403);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.trackBar3);
             this.Controls.Add(this.trackBar2);
             this.Controls.Add(this.trackBar1);
@@ -236,6 +250,7 @@
         public System.Windows.Forms.TrackBar trackBar1;
         public System.Windows.Forms.TrackBar trackBar2;
         public System.Windows.Forms.TrackBar trackBar3;
+        private System.Windows.Forms.Button button6;
     }
 }
 

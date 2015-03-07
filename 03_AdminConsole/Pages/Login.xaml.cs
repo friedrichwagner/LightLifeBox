@@ -39,7 +39,7 @@ namespace LightLifeAdminConsole.Pages
             dc.login.IsLoggedIn = false;
             dc.MainWin.MenuLinkGroups = dc.UpdateMenu();
             dc.MainWin.ContentSource = new Uri("/Pages/Login.xaml", UriKind.Relative); //LoginPage
-            dc.MainWin.ResizeMode = ResizeMode.NoResize;
+            dc.MainWin.ResizeMode = ResizeMode.CanMinimize;
         }
 
         public void OnNavigatingFrom(FirstFloor.ModernUI.Windows.Navigation.NavigatingCancelEventArgs e) 

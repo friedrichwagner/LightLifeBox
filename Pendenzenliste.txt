@@ -1,13 +1,13 @@
 Admin Console:
--Steuerung Controlboxen
--Implementierung Interface PILEDServer bzw. Controlboxen
+-Test Steuerung Control Boxen
 
 llbox:
 -Einbindung "wiringpi" library
-
+-ControlBox::notify richtig implementieren
+-JUDD implementieren
 
 PILEDServer:
--Änderung aus ADmin Console übernehmen: PILEDServerDefines.cs, ....
+schon lange nichts mehr gemacht (6.3. FW)
 
 
 

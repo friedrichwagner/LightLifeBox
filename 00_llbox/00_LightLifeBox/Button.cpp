@@ -14,9 +14,9 @@ Button::Button(std::string pSection)
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);
-	this->PortNr = ini->Read<int>(pSection,"PortNr",0);
-	threadSleepTime = ini->Read<int>(pSection, "Sleep", 100);
-	
+	this->btntype = (LightLifeButtonType)ini->Read<int>(pSection, "LightLifeButtonType", (int)(NONE));
+	//this->PortNr = ini->Read<int>(pSection,"PortNr",0);
+	//threadSleepTime = ini->Read<int>(pSection, "Sleep", 100);
 	
 	elapsedTime=0;
 	tstart=0;
@@ -50,7 +50,7 @@ int Button::getPortVal()
 	{
 		int len = -1;
 		int val = tc->getPortVal(&len); //this is blocking when the TestServer is running
-		//if (len < 0) done = true;
+		if (len < 0) done = true;
 		return val;
 	}
 	else
@@ -155,3 +155,9 @@ int Button::getID()
 {
 	return ID;
 }
+
+LightLifeButtonType Button::getBtnType()
+{
+	return btntype;
+}
+

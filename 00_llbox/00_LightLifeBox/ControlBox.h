@@ -32,6 +32,8 @@ protected:
 	bool Init();
 
 	ControlBox(std::string pName); //private contructor		
+
+	RemoteCommands* rmCmd;
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL

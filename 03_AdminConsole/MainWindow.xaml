@@ -37,6 +37,7 @@
     </mui:ModernWindow.MenuLinkGroups>
 
     <mui:ModernWindow.TitleLinks>
-        <mui:Link DisplayName="About" Source="/Pages/Settings.xaml" />
+        <mui:Link DisplayName="Logout" Source="/Pages/Login.xaml" />
+        <mui:Link DisplayName="About" Source="cmd://About" />
     </mui:ModernWindow.TitleLinks>
 </mui:ModernWindow>

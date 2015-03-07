@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <string>
 #include "Settings.h"
 #include "Logger.h"
@@ -10,13 +9,16 @@
 
 using namespace std;
 
+enum LightLifeButtonType : int { NONE=0, LOCK=1, BRIGHTNESS=2, CCT=3, JUDD=4};
+
 class Button
 {
 protected:
 	//Fields
 	volatile bool done;
 	unsigned int ID;
-	unsigned int PortNr;
+	LightLifeButtonType btntype;
+	//unsigned int PortNr;
 	int PortVal;
 	string	Name;
 	string	Section;
@@ -25,7 +27,7 @@ protected:
 	bool isPressed;
 	clock_t tstart, tstop;
 	float elapsedTime;
-	int threadSleepTime;
+	//int threadSleepTime;
 
 	//Functions
 	int getPortVal();
@@ -53,6 +55,7 @@ public:
 	bool Active;
 	bool getIsPressed();
 	string getName();
+	LightLifeButtonType getBtnType();
 	int getID();
 	void stop();
 	void start();

@@ -82,6 +82,15 @@ struct LightLifeData
 		return s.str();
 	}
 
+	string ToSplitString()
+	{
+		ostringstream s;
+
+		s << "groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";x=" << xy[0] << ";y" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2];
+		s << ";sender=" << sender << ";receiver=" << receiver << ";msgtype=" << msgtype;
+		return s.str();
+	}
+
 };
 
 class LightLifeLogger : public IBaseClient

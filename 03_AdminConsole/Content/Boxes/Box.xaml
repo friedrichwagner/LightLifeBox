@@ -4,7 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
-             mc:Ignorable="d">      
+             mc:Ignorable="d">    
+    <UserControl.Resources>
+        <PathGeometry x:Key="RefreshIconData">F1 M 24,13C 27.1521,13 29.9945,14.3258 32,16.4501L 32,11L 35,14L 35,22L 27,22L 24,19L 29.5903,19C 28.217,17.4656 26.2212,16.5 24,16.5C 20.1969,16.5 17.055,19.3306 16.5661,23L 13.0448,23C 13.5501,17.3935 18.262,13 24,13 Z M 24,31.5C 27.8031,31.5 30.945,28.6694 31.4339,25L 34.9552,25C 34.4499,30.6065 29.738,35 24,35C 20.8479,35 18.0055,33.6742 16,31.5499L 16,37L 13,34L 13,26L 21,26L 24,29L 18.4097,29C 19.783,30.5344 21.7787,31.5 24,31.5 Z</PathGeometry>
+        <PathGeometry x:Key="PlayIconData">F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z</PathGeometry>
+        <PathGeometry x:Key="PauseIconData">F1 M 26.9167,23.75L 33.25,23.75L 33.25,52.25L 26.9167,52.25L 26.9167,23.75 Z M 42.75,23.75L 49.0833,23.75L 49.0833,52.25L 42.75,52.25L 42.75,23.75 Z</PathGeometry>
+        <PathGeometry x:Key="PrevIconData">F1 M 57,25L 40.25,38L 57,51L 57,25 Z M 35,25L 18.25,38L 35,51L 35,25 Z</PathGeometry>
+        <PathGeometry x:Key="NextIconData">F1 M 19,25L 35.75,38L 19,51L 19,25 Z M 41,25L 57.75,38L 41,51L 41,25 Z</PathGeometry>
+        <PathGeometry x:Key="StopIconData">M0 0L26 0 26 26 0 26 Z</PathGeometry>
+        <PathGeometry x:Key="ProbandIconData">F1 M 29.9796,22.2C 33.4365,22.2 36.2389,25.0024 36.2389,28.4593C 36.2389,31.9162 33.4365,34.7185 29.9796,34.7185C 26.5228,34.7185 23.7204,31.9162 23.7204,28.4593C 23.7204,25.0024 26.5228,22.2 29.9796,22.2 Z M 23.7204,43.2315C 22.8858,43.6488 21.2167,46.987 21.2167,46.987C 21.2167,46.987 20.3821,48.2388 19.9648,53.2462L 16.2093,51.9944L 17.4611,45.7352C 17.4611,45.7352 19.9648,36.9722 24.9722,36.9723L 34.9869,36.9723C 39.9944,36.9722 42.4981,45.7352 42.4981,45.7352L 43.75,51.9945L 39.9944,53.2463C 39.5772,48.2389 38.7427,46.987 38.7427,46.987C 38.7427,46.987 37.0735,43.6488 36.2389,43.2315L 36.7447,54.6004C 34.8417,55.3427 32.7712,55.75 30.6056,55.75C 27.9657,55.75 25.4672,55.1447 23.2413,54.0654L 23.7204,43.2315 Z M 39,24L 57,24L 57,27L 39,27L 39,24 Z M 39,30L 57,30L 57,33L 39,33L 39,30 Z M 41,36L 57,36L 57,39L 41,39L 41,36 Z M 44,42L 57,42L 57,45L 44,45L 44,42 Z M 46,48L 57,48L 57,51L 46,51L 46,48 Z</PathGeometry>
+        <PathGeometry x:Key="UpdateIconData">F1 M 23.2486,25.076C 22.5889,25.7534 21.9742,26.4933 21.4047,27.296C 20.8351,28.0987 20.3436,28.9607 19.9302,29.8821C 19.5168,30.8035 19.1935,31.7766 18.9604,32.8014C 18.7273,33.8262 18.6107,34.8883 18.6107,35.9878C 18.6107,37.0566 18.724,38.1517 18.9505,39.2733C 19.177,40.3948 19.5508,41.5394 20.072,42.7071C 20.5932,43.8748 21.287,45.07 22.1535,46.2927C 23.0199,47.5154 24.093,48.7601 25.3729,50.0267C 25.7863,50.4358 26.2569,50.902 26.7847,51.4253C 27.3125,51.9487 27.8721,52.5029 28.4637,53.0878C 29.0552,53.6728 29.66,54.2742 30.2779,54.8922C 30.8959,55.5101 31.5017,56.1072 32.0955,56.6833C 33.4677,58.0424 34.8971,59.4586 36.3837,60.9319L 40.6455,56.6239C 39.1765,55.1638 37.7559,53.7542 36.3837,52.3951C 35.8031,51.819 35.2006,51.2252 34.576,50.6139C 33.9515,50.0025 33.3434,49.4011 32.7519,48.8095C 32.1603,48.218 31.6007,47.6605 31.0729,47.1371C 30.5451,46.6138 30.0745,46.1476 29.6611,45.7385C 27.9854,44.0584 26.7242,42.3904 25.8776,40.7345C 25.0309,39.0786 24.6076,37.4678 24.6076,35.9021C 24.6076,34.719 24.8484,33.5777 25.33,32.4781C 25.8116,31.3786 26.5472,30.3406 27.5368,29.3642C 27.7831,29.1179 28.0887,28.8848 28.4538,28.6649C 28.8188,28.445 29.2312,28.2526 29.6908,28.0877C 30.1504,27.9227 30.6518,27.7886 31.1949,27.6852C 31.7381,27.5819 32.3132,27.5302 32.9201,27.5302C 33.5359,27.5302 34.1802,27.5929 34.8531,27.7182C 35.526,27.8436 36.2066,28.0503 36.8949,28.3384C 37.5833,28.6264 38.2782,29.0036 38.9797,29.4698C 39.6812,29.936 40.3684,30.5056 41.0413,31.1785L 45.534,35.6976L 38.5014,42.75L 57,42.75L 57,24.5417L 50.0069,31.4094L 45.4944,26.8705C 44.4916,25.7446 43.4537,24.8275 42.3805,24.1194C 41.3074,23.4113 40.2353,22.8616 39.1644,22.4701C 38.0934,22.0787 37.028,21.8148 35.968,21.6785C 34.9081,21.5421 33.8921,21.474 32.9201,21.474C 31.9129,21.474 30.942,21.563 30.0074,21.7411C 29.0728,21.9193 28.1932,22.17 27.3686,22.4932C 26.5439,22.8165 25.7852,23.198 25.0925,23.6378C 24.3998,24.0777 23.7852,24.5571 23.2486,25.076 Z</PathGeometry>
+
+        <Style TargetType="mui:ModernButton">
+            <Setter Property="EllipseDiameter" Value="40" />
+            <Setter Property="Margin" Value="0,10,4,0" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="IconWidth" Value="20" />
+            <Setter Property="IconHeight" Value="20" />
+        </Style>
+        
+    </UserControl.Resources>
     <Grid Style="{StaticResource ContentRoot}">
         <ScrollViewer>
             <Grid Margin="0">
@@ -22,29 +41,57 @@
                 <Border Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="2"  Grid.RowSpan="2" Background="LightGray" />
                 <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="0,0,20,0">
                     <TextBlock Text="Proband:" Style="{StaticResource Heading2}"  Margin="10" Width="80"/>
-                    <ComboBox x:Name="cbProbanden" Margin="10"  Width="250" ItemsSource="{Binding probanden}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedProband, Mode=TwoWay}"/>
-                    <Button x:Name="btnShowProband" Content=">>" Margin="10"/>
+                    <ComboBox x:Name="cbProbanden" Style="{StaticResource LLTextStyle}"  Margin="10"  Width="250" ItemsSource="{Binding probanden}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedProband, Mode=TwoWay}" IsEnabled="{Binding BtnStartEnabled}"/>
+                    <!--<Button x:Name="btnShowProband" Content=">>" Margin="10"/>-->
+                    <mui:ModernButton x:Name="btnShowProband" IconData="{StaticResource ProbandIconData}" EllipseDiameter="40"  IconHeight="20" IconWidth="20" Command="{Binding doSequenceCommand}" CommandParameter="START"  ToolTip="Probanden Data" />
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right">                    
-                    <Button x:Name="btnStart" Content="Start" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="START" IsEnabled="{Binding BtnStartEnabled}"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right">
+
+                    <Border Margin="5" BorderBrush="SteelBlue" BorderThickness="1" CornerRadius="3">
+                        <StackPanel Orientation="Horizontal" Margin="0">
+                            <mui:ModernButton x:Name="btnStart" IconData="{StaticResource PlayIconData}" Command="{Binding doSequenceCommand}" CommandParameter="START" IsEnabled="{Binding BtnStartEnabled}" ToolTip="Start NEW Sequence" />
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="Sequenz:" />
+                                <TextBox x:Name="txtSequenceID" Width="60" Margin="10" Style="{StaticResource TextBoxStyle}" Text="{Binding SequenceID, Mode=OneWay}" LostFocus="txtSequenceID_LostFocus" MaxLength="3"/>
+                            </StackPanel>
+                            <mui:ModernButton x:Name="btnPause" IconData="{StaticResource PauseIconData}"   Command="{Binding doSequenceCommand}" CommandParameter="PAUSE" IsEnabled="{Binding BtnPauseEnabled}" ToolTip="Pause Sequence"/>
+                            <mui:ModernButton x:Name="btnStop" IconData="{StaticResource StopIconData}"  Command="{Binding doSequenceCommand}" CommandParameter="STOP" IsEnabled="{Binding BtnStopEnabled}" ToolTip="Stop Sequence Completely"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Margin="5" BorderBrush="SteelBlue" BorderThickness="1" CornerRadius="3">
+                        <StackPanel Orientation="Horizontal" Margin="0">
+                            <mui:ModernButton x:Name="btnPrev" IconData="{StaticResource PrevIconData}"  Command="{Binding doSequenceCommand}" CommandParameter="PREV" IsEnabled="{Binding BtnPrevEnabled}" ToolTip="Previous Step"/>
+
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="Step:" />
+                                <TextBox x:Name="txtStepID" Width="30" Margin="10" Style="{StaticResource TextBoxStyle}" Text="{Binding StepID, Mode=OneWay}" LostFocus="txtSequenceID_LostFocus" IsReadOnly="True" MaxLength="1"/>
+                            </StackPanel>
+                            <mui:ModernButton x:Name="btnNext" IconData="{StaticResource NextIconData}"  Command="{Binding doSequenceCommand}" CommandParameter="NEXT" IsEnabled="{Binding BtnNextEnabled}" ToolTip="Next Step"/>                            
+                        </StackPanel>
+                    </Border>
+
+                    <!--<Button x:Name="btnStart" Content="Start" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="START" IsEnabled="{Binding BtnStartEnabled}"/>                    
                     <TextBox x:Name="txtSequenceID" Width="40" Margin="10" Text="{Binding SequenceID, Mode=OneWay}" LostFocus="txtSequenceID_LostFocus"/>
                     <Button x:Name="btnPause" Content="Pause" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="PAUSE" IsEnabled="{Binding BtnPauseEnabled}"/>
                     <Button x:Name="btnPrev" Content="Prev" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="PREV" IsEnabled="{Binding BtnPrevEnabled}"/>
                     <Button x:Name="btnNext" Content=">>" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="NEXT" IsEnabled="{Binding BtnNextEnabled}"/>
-                    <Button x:Name="btnStop" Content="Stop" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="STOP" IsEnabled="{Binding BtnStopEnabled}"/>
+                    <Button x:Name="btnStop" Content="Stop" Margin="0" Command="{Binding doSequenceCommand}" CommandParameter="STOP" IsEnabled="{Binding BtnStopEnabled}"/>-->
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-                    <TextBlock Text="Remark:" Style="{StaticResource Heading2}"  Margin="10" Width="80" HorizontalAlignment="Left"/>                    
-                    <TextBox x:Name="txtRemark"  Height="40" Width="500" MaxLength="250" MaxLines="2" Text="{Binding SelectedRemark}" TextWrapping="Wrap"/>
-                    <Button x:Name="btnUpdate" Content="Update" Margin="10" Command="{Binding doSequenceCommand}" CommandParameter="UPDATE" IsEnabled="{Binding BtnUpdateEnabled}"/>
-                    <mui:ModernProgressRing IsActive="{Binding IsBusy}" Width="40" Height="40" Style="{Binding CircleProgressRingStyle}" />
+                    <TextBlock Text="Remark:" Style="{StaticResource Heading2}"  Margin="10" Width="80" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txtRemark"  Height="40" Width="500" MaxLength="250" MaxLines="2" Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedRemark}" TextWrapping="Wrap"/>
+                    <mui:ModernButton x:Name="btnUpdate" IconData="{StaticResource UpdateIconData}" Command="{Binding doSequenceCommand}" CommandParameter="UPDATE" IsEnabled="{Binding BtnUpdateEnabled}" ToolTip="Update Remark" />
+                    <!--<Button x:Name="btnUpdate" Content="Update" Margin="10" Command="{Binding doSequenceCommand}" CommandParameter="UPDATE" IsEnabled="{Binding BtnUpdateEnabled}"/>
+                    <mui:ModernProgressRing IsActive="{Binding IsBusy}" Width="40" Height="40" Style="{Binding CircleProgressRingStyle}" />-->
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
                     <DataGrid x:Name="dgBox"  Margin="10" ItemsSource="{Binding TestSequencePos}" AutoGeneratingColumn="dgBox_AutoGeneratingColumn" LoadingRow="dgBox_LoadingRow" />
-                    <Button x:Name="btnRefresh" Content="Refresh" Width="100" Height="30" HorizontalAlignment="Right" Click="btnRefresh_Click"/>
+                    <!--<Button x:Name="btnRefresh" Content="Refresh" Width="100" Height="30" HorizontalAlignment="Right" Click="btnRefresh_Click"/>-->
+                    <mui:ModernButton IconData="{StaticResource RefreshIconData}" EllipseDiameter="40" IconWidth="20" IconHeight="20" HorizontalAlignment="Right" Command="{Binding doSequenceCommand}" CommandParameter="REFRESH" ToolTip="Refresh Steps"/>
                 </StackPanel>
             </Grid>
             

@@ -50,10 +50,16 @@ int RemoteCommands::send(RemoteCommand cmd)
 {
 	if (_sendSock->isValid)
 	{
-		log->cout("send:" + cmd.cmdParams);
+		//log->cout("send:" + cmd.cmdParams);
 		memset(&sendBuf[0], 0, recvBufSize);
 		int len = cmd.ToString(&sendBuf[0]);
-		return _sendSock->send(&sendBuf[0], len); 
+		int ret =_sendSock->send(&sendBuf[0], len); 
+
+		if (ret != len)
+		{
+			int errnr = errno;		
+			return ret;
+		}
 	}
 
 	return -1;
@@ -75,8 +81,7 @@ unsigned long RemoteCommands::Push(void)
 			cmd1.cmdId = recvBuf[0] - char('0'); //Command kommt als ASCII "1" = 49 dezimal --> 49-48=1
 			cmd1.cmdParams = string((const char*)&recvBuf[1]);
 
-			log->cout("RemoteCommand received:" + lumitech::itos(cmd1.cmdId) + " cntReceived=" + lumitech::itos(ret));
-			log->cout("Params:" + cmd1.cmdParams);
+			log->cout("RCmd:" + lumitech::itos(cmd1.cmdId) + " Params:" + cmd1.cmdParams);
 
 			if (cmd1.cmdId > 0)
 				cmdQ->push(cmd1);
@@ -104,7 +109,7 @@ unsigned long RemoteCommands::Pull(void)
 
 		if (!cmdQ->empty())
 		{
-			ExecuteCommands(cmdQ->front());
+			ExecuteReceiveCommands(cmdQ->front());
 			cmdQ->pop();
 		}
 	}
@@ -121,22 +126,26 @@ void RemoteCommands::go()
 	cv.notify_all();
 }
 
-void RemoteCommands::ExecuteCommands(RemoteCommand cmd)
+
+//----------------------------------
+//    Remote Commands Handling
+//----------------------------------
+void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 {
 	ostringstream s;
 
 	switch (cmd.cmdId)
 	{
-	case REMOTECMD_DISCOVER:
+	case REMOTE_RECVCMD_DISCOVER:
 		DiscoverCommand(cmd);
 		break;
-	case REMOTECMD_ENABLE_BUTTONS:
+	case REMOTE_RECVCMD_ENABLE_BUTTONS:
 		EnableButtonsCommand(cmd);
 		break;
-	case REMOTECMD_SET_PILED:
+	case REMOTE_RECVCMD_SET_PILED:
 		SetPILEDCommand(cmd);
 		break;
-	case REMOTECMD_GET_PILED:
+	case REMOTE_RECVCMD_GET_PILED:
 		GetPILEDCommand(cmd);
 		break;
 
@@ -147,11 +156,37 @@ void RemoteCommands::ExecuteCommands(RemoteCommand cmd)
 	}
 }
 
-//------------------------
-//Remote Commands
-//------------------------
+void RemoteCommands::SendRemoteCommand(enumRemoteSendCommand cmdId, string params)
+{
+	//Hier in Queue schreiben oder gleich schicken ??
+	//cmdQ->push(cmd);
+	//go();
+
+	ostringstream s;
+
+	switch (cmdId)
+	{
+	case REMOTE_SENDCMD_LOCK:
+		SendLock(cmdId, params);
+		break;
+
+	default:
+		s << "ExecuteCommand: unknown command:" << cmdId << " Data:" << params;
+		log->error(s.str());
+		break;
+	}
+}
+
 void RemoteCommands::DiscoverCommand(RemoteCommand cmd)
 {
+	splitstring s = cmd.cmdParams;
+	map<string, string> flds = s.split2map(';', '=');
+
+	if (flds.size() < 1) return;
+
+	//Gruppe setzen die von dieser Box gesteuert wird
+	box->Lights[0]->setGroup((char)lumitech::stoi(flds["groupid"]));
+
 	//Send Back Name of Controlbox
 	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
 	send(cmd);
@@ -227,4 +262,13 @@ void RemoteCommands::GetPILEDCommand(RemoteCommand cmd)
 	send(cmd);
 }
 
-
+//----------------------------------
+//    Send Remote Commands
+//----------------------------------
+void RemoteCommands::SendLock(enumRemoteSendCommand id, string params)
+{
+	RemoteCommand cmd;
+	cmd.cmdId = id; // do not expect any additional parameters here
+	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";" + box->Lights[0]->getFullState();
+	int ret = send(cmd);
+}

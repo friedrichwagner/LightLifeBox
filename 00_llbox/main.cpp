@@ -140,16 +140,9 @@ void runLightLifeBox(string boxName)
 	
 	if (ll->getCntClients() > 0) box->Lights[0]->addComClient(ll);
 
-	RemoteCommands* rmCmd = new RemoteCommands(box);
-
-	//TEST
-	rmCmd->start();
-
 	//Prgram loops here endlessly
 	box->EventLoop();
 
-	//rmCmd->stop();
-	delete rmCmd; // delete macht eh "rmCmd->stop();"
 
 	box->Lights[0]->removeComClients();
 

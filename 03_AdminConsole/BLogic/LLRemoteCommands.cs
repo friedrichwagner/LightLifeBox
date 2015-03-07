@@ -8,6 +8,7 @@ using System.Diagnostics;
 namespace LightLifeAdminConsole
 {
     public enum enumRemoteCommand { DISCOVER = 1, ENABLE_BUTTONS = 2, SET_PILED = 3, GET_PILED = 4 };
+    public enum enumRemoteGetCommand { SET_LOCKED , SET_DEFAULT };
     public delegate void ReceiveDataDelegate(IDictionary<string, string> d);
 
     class RemoteCommandBase
@@ -49,6 +50,8 @@ namespace LightLifeAdminConsole
             receiveSock.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             receiveSock.ReceiveTimeout = TIMEOUT_INTERVAL;
             receiveSock.Bind(listenEP);
+
+            //StartReceiveAsync();
         }
 
         public void Close()
@@ -124,7 +127,7 @@ namespace LightLifeAdminConsole
         }
 
 
-        //Asynchronous Receive
+        //Send and Asynchronous Receive
         protected void sendAndReceiveAsync(enumRemoteCommand cmd, string data)
         {
             try
@@ -150,19 +153,48 @@ namespace LightLifeAdminConsole
             }
         }
 
+        //Asynchronous Receive --> e.g. Set_Locked from ControlBox
+        protected void StartReceiveAsync()
+        {
+            try
+            {
+                sockEx = null;
+                EndPoint ep = receivedfromEP;
+                IAsyncResult iar = receiveSock.BeginReceiveFrom(recvBuf, 0, RECVBUF_LEN, SocketFlags.None, ref ep, new AsyncCallback(recvAsync), receiveSock);
+            }
+            catch (SocketException se)
+            {
+                sockEx = se;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         protected void recvAsync(IAsyncResult result)
         {
-            Socket recvSock = (Socket)result.AsyncState;
-            EndPoint clientEP = receivedfromEP;
-            int msgLen = recvSock.EndReceiveFrom(result, ref clientEP);
-
-            string returnData = Encoding.ASCII.GetString(recvBuf);
-
-            //result.AsyncWaitHandle.Close();
-
-            if (ReceiveData!= null)
+            try
             {
-                ReceiveData(str2Dict(returnData));
+                Socket recvSock = (Socket)result.AsyncState;
+                EndPoint clientEP = receivedfromEP;
+                int msgLen = recvSock.EndReceiveFrom(result, ref clientEP);
+
+                string returnData = Encoding.ASCII.GetString(recvBuf);
+
+                if (ReceiveData != null)
+                {
+                    ReceiveData(str2Dict(returnData));
+                }
+            }
+            catch (SocketException se)
+            {
+                sockEx = se;
+            }
+            finally
+            {
+                //Restart Receiving
+                StartReceiveAsync();
             }
         }
 
@@ -214,15 +246,16 @@ namespace LightLifeAdminConsole
 
     class LLRemoteCommand : RemoteCommandBase
     {
+        const string PILED_TEMPLATE = ";mode={0};brightness={1};cct={2};r={3};g={4};b={5};x={6};y={7}";
         public LLRemoteCommand(IPAddress ip, int sendp, int recvp)
             : base(ip, sendp, recvp)
         {
             //ReceiveData += ReceiveUDP;
         }
 
-        public bool Ping()
+        public bool Ping(int groupid)
         {
-            return SendAndReceiveBool(enumRemoteCommand.DISCOVER, "");
+            return SendAndReceiveBool(enumRemoteCommand.DISCOVER, ";groupid=" + groupid.ToString());
         }
 
         public bool EnableButtons(string Params)
@@ -230,8 +263,9 @@ namespace LightLifeAdminConsole
             return SendAndReceiveBool(enumRemoteCommand.ENABLE_BUTTONS, Params);
         }
 
-        public bool SetPILED(bool async, string Params)
+        public bool SetPILED(int mode, int brightness, int cct, int[] rgb, float[] xy)
         {
+            string Params = String.Format(PILED_TEMPLATE, mode, brightness, cct, rgb[0], rgb[1], rgb[2], xy[0], xy[1]);
             return SendAndReceiveBool(enumRemoteCommand.SET_PILED, Params);
         }
 

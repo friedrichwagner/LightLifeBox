@@ -251,6 +251,7 @@ create Table LLBox
 (
 	BoxID int primary key,
 	BoxIP varchar(15) not null,
+	GroupID int not null default 0, --Broadcast to all Lights on Zigbee
 	sendPort int not null, -- Port on which the AdminConsole sends RemoteCommands to this Box
 	recvPort int not null, -- Port on which the AdminConsole listens to incoming RemoteCommands from this Box
 	Name varchar(50) not null,

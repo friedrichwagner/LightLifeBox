@@ -76,6 +76,14 @@ void PILight::removeComClient(IBaseClient* c)
 		}
 	}
 }
+IBaseClient* PILight::getComClient(int index)
+{
+	if (ComClients.size() > index)
+		return ComClients[index];
+
+	return NULL;
+}
+
 
 void PILight::updateClients()
 {

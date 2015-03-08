@@ -199,6 +199,10 @@ namespace LightLifeAdminConsole.MVVM
 
         private void getBoxes(ref IDictionary<int, Box> b)
         {
+            //pffh, das ist wohl eher ein schneller Workaround
+            MainVM m = MainVM.GetInstance();
+            Box.VLID= m.login.UserId;
+
             int n=ini.Read<int>("ControlBox", "NrOfBoxes", 4);
             for (int i=1; i <= n; i++)
             {

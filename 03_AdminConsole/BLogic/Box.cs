@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Diagnostics;
 using LightLifeGlobalDefines;
+using LightLife.Data;
 
 namespace LightLifeAdminConsole
 {
@@ -17,8 +18,11 @@ namespace LightLifeAdminConsole
 
     class Box
     {
+        public static int VLID = 0;   //Damit man es zur Box schicken kann
         private const byte NUM_POTIS = 3;
         private const byte NUM_BUTTONS = 2;
+        private const int DEFAULT_CCT = 4000; //K
+        private const int DEFAULT_BRIGHTNESS = 125; //255:2
 
         public int BoxNr { get; private set; }
         public int ProbandID { get; set; }
@@ -41,6 +45,10 @@ namespace LightLifeAdminConsole
         private byte[] PotisActive = new byte[NUM_POTIS];
         private byte[] ButtonsActive = new byte[NUM_BUTTONS];
 
+        private LLMsgType lastmsgtype;
+        private int lastBrightness;
+
+
         public Box(int boxnr)
         {
             InitBox(boxnr);
@@ -60,8 +68,9 @@ namespace LightLifeAdminConsole
 
             if (IsActive)
             {
-                UpdateHeadState();
-                EnableBoxButtons();
+                int brightness=0;
+                if (State == BoxStatus.STARTED) brightness = 100;
+                UpdateVarious(LLMsgType.LL_RELOAD_TESTSEQUENCE, brightness);
             }
         }
 
@@ -77,6 +86,8 @@ namespace LightLifeAdminConsole
             IsActive = false;
             BoxIP = IPAddress.Loopback;
             TestSequenceOder = new List<TestSequence>(4);
+            lastmsgtype = LLMsgType.LL_NONE;
+            lastBrightness = 0;
 
             head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
             pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
@@ -136,59 +147,52 @@ namespace LightLifeAdminConsole
                 throw new ArgumentException("Testsquenz nicht gestoppt!");
 
             if (ProbandID < 0) throw new ArgumentException("Kein Proband!");
-                     
+
             InsertSequence();
             StepID = 1;
             State = BoxStatus.STARTED;
-            UpdateHeadState();
-            EnableBoxButtons();
-            SetBoxToDefault(100);
+            UpdateVarious(LLMsgType.LL_START_TESTSEQUENCE, 0);
         }
 
         public void StopSequence()
         {
             if (State != BoxStatus.STARTED) throw new ArgumentException("Testsquenz nicht gestartet!");
             State = BoxStatus.STOPPED;
-            UpdateHeadState();
-            EnableBoxButtons();
-            SetBoxToDefault(0);
+            UpdateVarious(LLMsgType.LL_STOP_TESTSEQUENCE, 0);
         }
 
         public void PauseSequence()
         {
             if (State != BoxStatus.STARTED) throw new ArgumentException("Testsquenz nicht gestartet!");
             State = BoxStatus.PAUSED;
-            UpdateHeadState();
-            EnableBoxButtons();
-            SetBoxToDefault(0);
+            UpdateVarious(LLMsgType.LL_PAUSE_TESTSEQUENCE, 0);
         }
+
+
 
         public void PrevStep()
         {
             if (StepID > 0)
             {
                 StepID--;
-                SetBoxToDefault(100);
+                UpdateVarious(LLMsgType.LL_PREV_TESTSEQUENCE_STEP, 100);
             }
-            UpdateHeadState();
-            EnableBoxButtons();
         }
 
         public void NextStep()
         {
             if (StepID < 4)
             {
-                SetBoxToDefault(100);
                 StepID++;
-                UpdateHeadState();
-                EnableBoxButtons();
+                UpdateVarious(LLMsgType.LL_NEXT_TESTSEQUENCE_STEP, 100);
             }
             else StopSequence();
         }
 
         public void Refresh()
         {
-            EnableBoxButtons();
+            //EnableBoxButtons();
+            UpdateVarious(lastmsgtype, lastBrightness);
         }
 
         public void getSequenceOrder()
@@ -360,9 +364,28 @@ namespace LightLifeAdminConsole
 
         private void SetBoxToDefault(int brightnessLevel)
         {
-
             //SetCCT + brightness
-            rCmd.SetPILED(1, brightnessLevel, 400, new int[] { 0, 0, 0 }, new float[] { 0f, 0f });
+            rCmd.SetPILED(1, brightnessLevel, DEFAULT_CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f });
+        }
+
+        private void SetBoxTestSequnceState(LLMsgType msgtype)
+        {
+            string Params = ";userid=" + ProbandID + ";vlid=" + Box.VLID + ";sequenceid=" + SequenceID + ";stepid=" + StepID + ";msgtype=" + ((int)msgtype).ToString();
+            rCmd.SetSequence(Params);
+        }
+
+        private void UpdateVarious(LLMsgType msgtype, int brightness)
+        {
+            if (State > BoxStatus.NONE)
+            {
+                lastmsgtype = msgtype;
+                lastBrightness = brightness;
+
+                SetBoxTestSequnceState(msgtype);
+                SetBoxToDefault(brightness); //Set Box to Default Settings
+                EnableBoxButtons(); // Send Controlbox Buttons
+                UpdateHeadState(); // Update Database Table TestSequenceHeader
+            }
         }
     }
 }

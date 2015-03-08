@@ -144,5 +144,8 @@
     <ClInclude Include="01_ComClients\NeoLinkClient.h">
       <Filter>01 ComClients</Filter>
     </ClInclude>
+    <ClInclude Include="00_LightLifeBox\LightLifeData.h">
+      <Filter>00 LightLifeBox</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

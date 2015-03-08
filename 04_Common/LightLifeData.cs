@@ -19,12 +19,11 @@ namespace LightLife.Data
         SET_SCENE = 6,
 
         IDENTIFY=50,
-
-        SET_LOCKED = 99,
     };
 
     public enum LLMsgType
     {
+        LL_NONE = 0,
         LL_SET_LIGHTS = 10,
         LL_CALL_SCENE = 20,
         LL_START_TESTSEQUENCE = 30,
@@ -32,12 +31,14 @@ namespace LightLife.Data
         LL_PAUSE_TESTSEQUENCE = 32,
         LL_NEXT_TESTSEQUENCE_STEP = 33,
         LL_PREV_TESTSEQUENCE_STEP = 34,
-        LL_SET_BUTTONS = 35
+        LL_SET_BUTTONS = 35,
+        LL_RELOAD_TESTSEQUENCE = 36,
+        LL_SET_LOCKED = 99,
     };
 
     public class PILEDData
     {
-        //CIE194
+        //CIE1964
         public static Point wl460nm = new Point(0.1389222, 0.0589201);
         public static Point wl615nm = new Point(0.6730550, 0.3269450);
         public static Point wl560nm = new Point(0.3905251, 0.5623339);

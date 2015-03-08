@@ -37,6 +37,7 @@
     <ClInclude Include="00_LightLifeBox\Button.h" />
     <ClInclude Include="00_LightLifeBox\ControlBox.h" />
     <ClInclude Include="00_LightLifeBox\helpers.h" />
+    <ClInclude Include="00_LightLifeBox\LightLifeData.h" />
     <ClInclude Include="00_LightLifeBox\PILight.h" />
     <ClInclude Include="00_LightLifeBox\RemoteCommands.h" />
     <ClInclude Include="00_LightLifeBox\TastButton.h" />

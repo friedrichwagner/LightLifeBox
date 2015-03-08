@@ -25,7 +25,7 @@ protected:
 	float xy[2];
 	unsigned int rgb[3];
 	unsigned int fadetime;
-	unsigned char groupid;
+	unsigned int groupid;
 
 	std::vector<IBaseClient*> ComClients;
 	enumPILEDMode piledMode;
@@ -63,6 +63,7 @@ public:
 	void removeComClient(IBaseClient*);
 	void removeComClients();
 	void updateClients();
+	IBaseClient* getComClient(int index);
 
 	string getFullState();
 };

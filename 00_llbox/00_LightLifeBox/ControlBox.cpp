@@ -99,6 +99,7 @@ bool ControlBox::EventLoop()
 { 
 	//int c = 0;
 	log->cout("------------- Controlbox::EventLoop-BEGIN ------------- ");
+	rmCmd->NowAddLLLogger(); //ziemlich unsauber
 	while (!isDone)
 	{
 		//log->cout("------------Controlbox::EventLoop-------------");

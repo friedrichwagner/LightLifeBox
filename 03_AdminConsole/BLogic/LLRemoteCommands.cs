@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace LightLifeAdminConsole
 {
-    public enum enumRemoteCommand { DISCOVER = 1, ENABLE_BUTTONS = 2, SET_PILED = 3, GET_PILED = 4 };
+    public enum enumRemoteCommand { DISCOVER = 1, ENABLE_BUTTONS = 2, SET_PILED = 3, GET_PILED = 4, SET_SEQUENCE=5 };
     public enum enumRemoteGetCommand { SET_LOCKED , SET_DEFAULT };
     public delegate void ReceiveDataDelegate(IDictionary<string, string> d);
 
@@ -272,6 +272,11 @@ namespace LightLifeAdminConsole
         public IDictionary<string, string> GetPILED(string Params)
         {
             return SendAndReceiveDict(enumRemoteCommand.GET_PILED, Params);
+        }
+
+        public bool SetSequence(string Params)
+        {
+            return SendAndReceiveBool(enumRemoteCommand.SET_SEQUENCE, Params);
         }
     }
 }

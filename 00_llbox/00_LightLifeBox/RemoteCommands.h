@@ -13,7 +13,7 @@
 //Forward Declaration
 class ControlBox;
 
-enum enumRemoteReceiveCommand { REMOTE_RECVCMD_DISCOVER = 1, REMOTE_RECVCMD_ENABLE_BUTTONS = 2, REMOTE_RECVCMD_SET_PILED = 3, REMOTE_RECVCMD_GET_PILED = 4};
+enum enumRemoteReceiveCommand { REMOTE_RECVCMD_DISCOVER = 1, REMOTE_RECVCMD_ENABLE_BUTTONS = 2, REMOTE_RECVCMD_SET_PILED = 3, REMOTE_RECVCMD_GET_PILED = 4, REMOTE_RECVCMD_SET_SEQUENCE=5};
 enum enumRemoteSendCommand { REMOTE_SENDCMD_LOCK = 10 };
 
 using namespace std;
@@ -33,10 +33,13 @@ struct RemoteCommand
 
 };
 
+class LightLifeLogger; //Forward Deklaration
+
 class RemoteCommands
 {
 	protected:
 		ControlBox* box;
+		LightLifeLogger* lllogger;
 		bool done;
 		Logger* log;
 		Settings* ini;
@@ -70,6 +73,9 @@ class RemoteCommands
 		void EnableButtonsCommand(RemoteCommand);
 		void SetPILEDCommand(RemoteCommand);
 		void GetPILEDCommand(RemoteCommand);
+		void SequenceHandlingCommand(RemoteCommand cmd);
+		void StandardAnswer(RemoteCommand cmd);		
+		
 
 		void SendLock(enumRemoteSendCommand id, string params);
 
@@ -82,6 +88,7 @@ class RemoteCommands
 		void stop();
 		void start();
 
+		void NowAddLLLogger();
 		void SendRemoteCommand(enumRemoteSendCommand, string); // to AdminConsole
 		
 };

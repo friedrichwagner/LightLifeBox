@@ -106,12 +106,16 @@ void Button::ButtonDown(void)
 	isPressed = true;
 	tstart=clock();
 
+	//Gibt eh nur ControlBox
+	if (notifyClients[0] != NULL)
+		notifyClients[0]->notify(this, BUTTON_DOWN, PortVal);
+
 	//log->cout(this->Name + ": ButtonDown");
-	for (unsigned int i = 0; i < notifyClients.size(); i++)
+	/*for (unsigned int i = 0; i < notifyClients.size(); i++)
 	{
 		if (notifyClients[i] != NULL)
 			notifyClients[i]->notify(this, BUTTON_DOWN, PortVal);
-	}
+	}*/
 		
 	//call ControlBox Callback Function
 }
@@ -124,9 +128,12 @@ void Button::ButtonPressed(void)
 	elapsedTime = (((float)tstop)-((float)tstart)); 
 	isPressed = true;
 
-	for (unsigned int i = 0; i < notifyClients.size(); i++)
+	if (notifyClients[0] != NULL)
+		notifyClients[0]->notify(this, BUTTON_PRESSED, PortVal);
+
+	/*for (unsigned int i = 0; i < notifyClients.size(); i++)
 		if (notifyClients[i] != NULL)
-			notifyClients[i]->notify(this, BUTTON_PRESSED, PortVal);
+			notifyClients[i]->notify(this, BUTTON_PRESSED, PortVal);*/
 	//call ControlBox Callback Function
 }
 
@@ -134,11 +141,13 @@ void Button::ButtonUp(void)
 {
 	//log->cout(this->Name + ": ButtonUp");
 	isPressed = false;
+	if (notifyClients[0] != NULL)
+		notifyClients[0]->notify(this, BUTTON_UP, PortVal);
+	
 	//call ControlBox Callback Function
-	for (unsigned  int i = 0; i < notifyClients.size(); i++)
+	/*for (unsigned  int i = 0; i < notifyClients.size(); i++)
 		if (notifyClients[i] != NULL)
-			notifyClients[i]->notify(this, BUTTON_UP, PortVal);
-
+			notifyClients[i]->notify(this, BUTTON_UP, PortVal);*/
 }
 
 void Button::addClient(IButtonObserver* obs)

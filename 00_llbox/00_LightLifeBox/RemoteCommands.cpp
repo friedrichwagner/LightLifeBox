@@ -2,6 +2,7 @@
 #include <sstream>
 #include <mutex>
 #include <condition_variable>
+#include "LightLifeLogger.h"
 
 using namespace std;
 
@@ -20,6 +21,25 @@ RemoteCommands::RemoteCommands(ControlBox* pBox)
 	_sendSock = new UDPSendSocket(ini->Read<string>("ControlBox_General", "Admin-Console-IP", "127.0.0.1"), ini->Read<int>(box->getName(), "Send-Command-Port", 1748));
 	int p = ini->Read<int>(box->getName(), "Receive-Command-Port", 1749);
 	_recvSock = new UDPRecvSocket(p);
+
+	lllogger = NULL;
+}
+
+
+void RemoteCommands::NowAddLLLogger()
+{
+	lllogger = (LightLifeLogger*)box->Lights[0]->getComClient(0); // Assume LightLifeLogger is on pos=0
+
+	if (lllogger == NULL)
+	{
+		log->cout("RemoteCommands: LightLifeLogger is null");
+
+	}
+	else if (lllogger->clientType != CLIENT_LIGHTLIFE)
+	{
+		log->cout("RemoteCommands: Client is not LightLifeLogger");
+		lllogger = NULL;
+	}
 }
 
 RemoteCommands::~RemoteCommands()
@@ -148,6 +168,10 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 	case REMOTE_RECVCMD_GET_PILED:
 		GetPILEDCommand(cmd);
 		break;
+	case REMOTE_RECVCMD_SET_SEQUENCE:
+		SequenceHandlingCommand(cmd);
+		break;
+
 
 	default:
 		s << "ExecuteCommand: unknown command:" << cmd.cmdId << " Data:" << cmd.cmdParams;
@@ -188,8 +212,30 @@ void RemoteCommands::DiscoverCommand(RemoteCommand cmd)
 	box->Lights[0]->setGroup((char)lumitech::stoi(flds["groupid"]));
 
 	//Send Back Name of Controlbox
-	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
-	send(cmd);
+	StandardAnswer(cmd);
+}
+void RemoteCommands::SequenceHandlingCommand(RemoteCommand cmd)
+{
+	splitstring s = cmd.cmdParams;
+	map<string, string> flds = s.split2map(';', '=');
+	
+	if (lllogger != NULL)
+	{
+		lllogger->lldata->roomid = box->ID;
+		lllogger->lldata->userid = lumitech::stoi(flds["userid"]);
+		lllogger->lldata->vlid = lumitech::stoi(flds["vlid"]);
+		lllogger->lldata->sequenceid = lumitech::stoi(flds["sequenceid"]);
+		lllogger->lldata->stepid = lumitech::stoi(flds["stepid"]);
+		lllogger->lldata->msgtype = (LLMsgType)lumitech::stoi(flds["msgtype"]);
+
+		lllogger->logLLEvent();
+	}
+	else
+	{
+		log->error("RemoteCommands: LightLifeLogger is null");
+	}
+
+	StandardAnswer(cmd);
 }
 
 void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
@@ -197,6 +243,7 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 	//buttons=00;potis=1111;
 	splitstring s = cmd.cmdParams;
 	map<string, string> flds = s.split2map(';','=');
+
 
 	if (flds.size() < 2) return;
 
@@ -216,8 +263,18 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 			box->Potis[i]->Active = false;
 	}
 
-	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID);
-	send(cmd);
+	if (lllogger != NULL)
+	{
+		lllogger->lldata->msgtype = LL_SET_BUTTONS;
+		lllogger->logLLEvent();
+	}
+	else
+	{
+		log->error("RemoteCommands: LightLifeLogger is null");
+	}
+
+
+	StandardAnswer(cmd);
 }
 
 void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
@@ -252,13 +309,19 @@ void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 			break;
 	}
 
-	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID);
-	send(cmd);
+	StandardAnswer(cmd);
 }
 
 void RemoteCommands::GetPILEDCommand(RemoteCommand cmd)
 {
 	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";" + box->Lights[0]->getFullState();
+	send(cmd);
+}
+
+void RemoteCommands::StandardAnswer(RemoteCommand cmd)
+{
+	//cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID);
+	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
 	send(cmd);
 }
 

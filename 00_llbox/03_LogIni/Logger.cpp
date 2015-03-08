@@ -153,7 +153,7 @@ void Logger::removeClient(IObserver* obs)
 			std::ostringstream ss1;
 			ss1 << lumitech::currentDateTime() << "\t" << msg;
 			cout(ss1.str());
-			
+
 #if !defined(RASPI)
 			ss1 << endl;
 			//cout("Should not come here on RASPI");

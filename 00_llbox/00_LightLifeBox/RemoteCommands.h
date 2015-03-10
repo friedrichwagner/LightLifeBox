@@ -6,7 +6,7 @@
 #include "ControlBox.h"
 #include <queue>
 #include "Logger.h"
-#include "BaseClient.h"
+//#include "BaseClient.h"
 
 #define recvBufSize	255
 
@@ -34,6 +34,7 @@ struct RemoteCommand
 };
 
 class LightLifeLogger; //Forward Deklaration
+class ControlBox;
 
 class RemoteCommands
 {

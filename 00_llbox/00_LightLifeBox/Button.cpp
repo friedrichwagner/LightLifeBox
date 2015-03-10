@@ -17,11 +17,6 @@ Button::Button(std::string pSection)
 	this->btntype = (LightLifeButtonType)ini->Read<int>(pSection, "LightLifeButtonType", (int)(NONE));
 	//this->PortNr = ini->Read<int>(pSection,"PortNr",0);
 	//threadSleepTime = ini->Read<int>(pSection, "Sleep", 100);
-	
-	elapsedTime=0;
-	tstart=0;
-	tstop=0;
-	PortVal = 1000;
 
 #ifdef _DEBUG
 	string mockObjectName = ini->Read<string>(pSection, "Testing", "");
@@ -43,6 +38,46 @@ Button::~Button()
 #endif
 }
 
+void Button::start()
+{
+	//spawn();
+}
+
+void Button::stop()
+{
+	done = true;
+	//if (thisThread.joinable()) thisThread.join();
+}
+
+
+bool Button::getIsPressed()
+{
+	return isPressed;
+}
+
+/*
+unsigned long Button::startListen()
+{  
+	log->cout(this->Name+": Button start listening ...");
+	while (!done)
+	{
+		//log->cout(this->Name + ": waiting...");
+		PortVal = getPortVal();
+
+		if (Active)
+		{
+			if (!isPressed && PortVal == -1) ButtonDown();
+			else if (isPressed && PortVal == 1001) ButtonUp();
+		}
+		else
+			log->cout("Button(" + this->Name + ") InActive! Val=" + lumitech::itos(PortVal));
+	}
+
+	log->cout(this->Name + ": stop listening...");
+	
+	return 0;
+}
+
 int Button::getPortVal()
 {
 #if defined(_DEBUG) && defined(WIN32)
@@ -62,54 +97,6 @@ int Button::getPortVal()
 	return -100;
 }
 
-bool Button::getIsPressed()
-{
-	return isPressed;
-}
-
-unsigned long Button::startListen()
-{  
-	log->cout(this->Name+": Button start listening ...");
-	while (!done)
-	{
-		//log->cout(this->Name + ": waiting...");
-		PortVal = getPortVal();
-
-		if (Active)
-		{
-			/*if (!isPressed && PortVal == -1) ButtonDown();
-			else if (isPressed && PortVal == 1001) ButtonUp();*/
-		}
-		else
-			log->cout("Button(" + this->Name + ") InActive! Val=" + lumitech::itos(PortVal));
-	}
-
-	log->cout(this->Name + ": stop listening...");
-	
-	return 0;
-}
-
-void Button::start()
-{
-	spawn();
-}
-
-void Button::stop()
-{
-	done = true;
-	if (thisThread.joinable()) thisThread.join();
-}
-
-
-void Button::ButtonEvent(PIButtonTyp t, int delta)
-{
-	if (notifyClients[0] != NULL)
-	if (delta==0)
-		notifyClients[0]->notify(this, BUTTON_PRESSED, 0);
-	else
-		notifyClients[0]->notify(this, BUTTON_PRESSED, delta);
-}
-
 void Button::ButtonDown(void)
 {
 	isPressed = true;
@@ -118,15 +105,6 @@ void Button::ButtonDown(void)
 	//Gibt eh nur ControlBox
 	if (notifyClients[0] != NULL)
 		notifyClients[0]->notify(this, BUTTON_DOWN, PortVal);
-
-	//log->cout(this->Name + ": ButtonDown");
-	/*for (unsigned int i = 0; i < notifyClients.size(); i++)
-	{
-		if (notifyClients[i] != NULL)
-			notifyClients[i]->notify(this, BUTTON_DOWN, PortVal);
-	}*/
-		
-	//call ControlBox Callback Function
 }
 
 void Button::ButtonPressed(void)
@@ -139,11 +117,6 @@ void Button::ButtonPressed(void)
 
 	if (notifyClients[0] != NULL)
 		notifyClients[0]->notify(this, BUTTON_PRESSED, PortVal);
-
-	/*for (unsigned int i = 0; i < notifyClients.size(); i++)
-		if (notifyClients[i] != NULL)
-			notifyClients[i]->notify(this, BUTTON_PRESSED, PortVal);*/
-	//call ControlBox Callback Function
 }
 
 void Button::ButtonUp(void)
@@ -152,11 +125,17 @@ void Button::ButtonUp(void)
 	isPressed = false;
 	if (notifyClients[0] != NULL)
 		notifyClients[0]->notify(this, BUTTON_UP, PortVal);
-	
-	//call ControlBox Callback Function
-	/*for (unsigned  int i = 0; i < notifyClients.size(); i++)
-		if (notifyClients[i] != NULL)
-			notifyClients[i]->notify(this, BUTTON_UP, PortVal);*/
+
+}
+*/
+
+void Button::ButtonEvent(PIButtonTyp t, int delta)
+{
+	if (notifyClients[0] != NULL)
+	if (delta == 0)
+		notifyClients[0]->notify(this, BUTTON_PRESSED, 0);
+	else
+		notifyClients[0]->notify(this, BUTTON_PRESSED, delta);
 }
 
 void Button::addClient(IButtonObserver* obs)

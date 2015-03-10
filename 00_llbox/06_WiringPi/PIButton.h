@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Button.h"
-#include "TastButton.h"
+//#include "Button.h"
+//#include "TastButton.h"
 
 #define A1 27       // Define wiringPIPin27/Physical36  as A1
 #define B1 29       // Define wiringPIPin29/Physical40  as B1
@@ -27,36 +27,12 @@
 enum PIButtonTyp { PIBUTTON_BRIGHTNESS = 0, PIBUTTON_CCT = 1, PIBUTTON_JUDD = 2, PIBUTTON_LOCK1=3, PIBUTTON_LOCK2=4 };
 enum PIButtonRotateDirection { DOWN = -1, UP = +1, PRESS = 99 };
 
+//Forward Deklaration
 class Button;
 class TastButton;
 
+typedef void (*WiringPiISRFunc)(void);
 typedef void (Button::*WiringPiButtonEvent)(PIButtonTyp t, int delta);
 typedef void (TastButton::*WiringTastButtonPiEvent)(PIButtonTyp t, int delta);
 
-void InitWiringPi(WiringPiButtonEvent LockButton1Event, WiringPiButtonEvent LockButton2Event, WiringTastButtonPiEvent BrightnessEvent, WiringTastButtonPiEvent CCTEvent, WiringTastButtonPiEvent JuddEvent);
-
-
-/*class PIButton
-{
-private:
-	PIButtonTyp _type;
-	int _portA;
-	int _portB;
-	int _portPress;
-
-	volatile bool _change;
-	int _cnt;
-	int _delta;
-
-	void _isr_A(void);
-	void _isr_B(void);
-	void _isr_press(void);
-
-	WiringPiEvent _cb;
-
-public:
-	//static void InitWiringPi();
-	PIButton(int portA, int portB, int portPress, int delta, (Button::*WiringPiEvent)* btn);
-	
-};
-*/
+void InitPIButtons(WiringPiButtonEvent ButtonEvent, Button *btnLock1, Button *btnLock2, Button *potiBrightness, Button *potiCCT, Button *potiJudd);

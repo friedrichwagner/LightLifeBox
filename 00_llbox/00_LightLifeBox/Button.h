@@ -20,34 +20,35 @@ protected:
 	unsigned int ID;
 	LightLifeButtonType btntype;
 	//unsigned int PortNr;
-	int PortVal;
+	//int PortVal;
 	string	Name;
 	string	Section;
 	Settings* ini;
 	Logger* log;
 	bool isPressed;
-	clock_t tstart, tstop;
-	float elapsedTime;
+
+	//clock_t tstart, tstop;
+	//float elapsedTime;
 	//int threadSleepTime;
 
 	//Functions
-	int getPortVal();
+	/*int getPortVal();
 	void ButtonDown(void);
 	void ButtonUp(void);
 	void ButtonPressed(void);
 	virtual unsigned long startListen(void);
-
-	//Observer Pattern
-	vector<IButtonObserver*> notifyClients;
-
-	//Testing
-	TestClient* tc;
-
+	
 	std::thread thisThread;
 	virtual void spawn()
 	{
 		thisThread = std::thread(&Button::startListen, this);
-	};
+	};*/
+
+	//Testing
+	TestClient* tc;
+
+	//Observer Pattern
+	vector<IButtonObserver*> notifyClients;
 
 public:
 	Button(std::string pName);

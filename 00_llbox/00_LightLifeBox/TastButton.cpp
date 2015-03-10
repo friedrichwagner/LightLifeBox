@@ -14,9 +14,10 @@ TastButton::TastButton(string pName)
 
 TastButton::~TastButton() 
 { 
-	if (!done) stop();
+	//if (!done) stop();
 }
 
+/*
 int TastButton::getPortVal2()
 {
 #ifdef _DEBUG
@@ -28,7 +29,7 @@ int TastButton::getPortVal2()
 
 	return -100;
 }
-
+*/
 
 unsigned long TastButton::getValue()
 {
@@ -40,7 +41,7 @@ void TastButton::setValue(unsigned long val)
 	actualValue = val;
 }
 
-
+/*
 unsigned long TastButton::startListen()
 {
   
@@ -89,5 +90,6 @@ void TastButton::OnChange(long delta)
 		log->cout(ex.what());
 	}
 }
+*/
 
 

@@ -109,7 +109,11 @@ struct UDPRecvSocket
 #ifdef WIN32
 		if (isValid) closesocket(_socket);
 #else
-		if (isValid) close(_socket);
+		if (isValid) 
+		{
+			//shutdown(_socket,2);
+			close(_socket);
+		}
 #endif
 	}
 

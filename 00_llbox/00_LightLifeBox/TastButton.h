@@ -13,14 +13,14 @@ protected:
 	
 
 	//Functions
-	void OnChange(long delta);
+	/*void OnChange(long delta);
 	virtual unsigned long startListen(void);
 
 	int getPortVal2();
 	void spawn()
 	{
 		thisThread = std::thread(&TastButton::startListen, this);
-	};
+	};*/
 
 public:
 	TastButton(std::string pName);

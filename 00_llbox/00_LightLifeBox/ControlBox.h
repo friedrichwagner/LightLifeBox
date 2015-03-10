@@ -9,6 +9,8 @@
 
 using namespace std;
 
+class RemoteCommands;
+
 class ControlBox : IButtonObserver
 {
 protected:

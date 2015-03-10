@@ -53,8 +53,8 @@ void RemoteCommands::stop()
 	done = true;
 	go();	
 
-	delete _sendSock;
 	delete _recvSock;
+	delete _sendSock;	
 
 	if (threadPull.joinable())  threadPull.join();
 	if (threadPush.joinable())  threadPush.join();
@@ -68,6 +68,8 @@ void RemoteCommands::start()
 
 int RemoteCommands::send(RemoteCommand cmd)
 {
+	int ret = -1;
+
 	if (_sendSock->isValid)
 	{
 		//log->cout("send:" + cmd.cmdParams);
@@ -77,12 +79,13 @@ int RemoteCommands::send(RemoteCommand cmd)
 
 		if (ret != len)
 		{
-			int errnr = errno;		
+			int errnr = errno;	
+			log->cout("RemoteCommand: send erronr:" + lumitech::itos(errnr));
 			return ret;
 		}
 	}
 
-	return -1;
+	return ret;
 }
 
 
@@ -95,7 +98,12 @@ unsigned long RemoteCommands::Push(void)
 		{
 			//blocking
 			memset(&recvBuf[0], 0, recvBufSize);
-			int ret = _recvSock->receive(&recvBuf[0], recvBufSize);
+			int ret=_recvSock->receive(&recvBuf[0], recvBufSize);
+			if (ret <= 0)
+			{
+
+				done = true;
+			}
 
 			RemoteCommand cmd1;
 			cmd1.cmdId = recvBuf[0] - char('0'); //Command kommt als ASCII "1" = 49 dezimal --> 49-48=1
@@ -333,5 +341,5 @@ void RemoteCommands::SendLock(enumRemoteSendCommand id, string params)
 	RemoteCommand cmd;
 	cmd.cmdId = id; // do not expect any additional parameters here
 	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";" + box->Lights[0]->getFullState();
-	int ret = send(cmd);
+	send(cmd);
 }

@@ -6,6 +6,7 @@
 #include <time.h>
 #include "IPClient.h"
 #include <thread>
+#include "PIButton.h"
 
 using namespace std;
 
@@ -51,6 +52,7 @@ protected:
 public:
 	Button(std::string pName);
 	~Button();	
+	void ButtonEvent(PIButtonTyp t, int delta);
 
 	bool Active;
 	bool getIsPressed();

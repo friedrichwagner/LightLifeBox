@@ -153,6 +153,7 @@ create table LLMsgType
 	added datetime default getdate()
 );
 
+drop table LLData;
 create table LLData
 (
 	DataID int identity NOT NULL primary key,
@@ -162,6 +163,7 @@ create table LLData
 	VLID int not null,
 	SceneID int not null,
 	SequenceID int not null,
+	StepID int not null,
 	Brightness int not null,
 	CCT	int,
 	x float , 

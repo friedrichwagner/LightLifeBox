@@ -19,6 +19,9 @@
     <Filter Include="05 Test">
       <UniqueIdentifier>{9c0bd473-d9cb-4cd8-a5c1-061c66d6d5e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06_WiringPi">
+      <UniqueIdentifier>{b7b63023-702b-49b6-87ca-699210762a09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="01_ComClients\baseClient.cpp">
@@ -81,6 +84,9 @@
     </ClCompile>
     <ClCompile Include="01_ComClients\NeoLinkClient.cpp">
       <Filter>01 ComClients</Filter>
+    </ClCompile>
+    <ClCompile Include="06_WiringPi\PIButton.cpp">
+      <Filter>06_WiringPi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +152,15 @@
     </ClInclude>
     <ClInclude Include="00_LightLifeBox\LightLifeData.h">
       <Filter>00 LightLifeBox</Filter>
+    </ClInclude>
+    <ClInclude Include="06_WiringPi\softTone.h">
+      <Filter>06_WiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="06_WiringPi\wiringPi.h">
+      <Filter>06_WiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="06_WiringPi\PIButton.h">
+      <Filter>06_WiringPi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

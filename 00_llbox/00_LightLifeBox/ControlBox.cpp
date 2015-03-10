@@ -1,5 +1,6 @@
 #include "ControlBox.h"
 #include "helpers.h"
+//#include "PIButton.h"
 
 ControlBox* ControlBox::_instance = NULL;
 
@@ -91,6 +92,11 @@ bool ControlBox::Init()
 
 	rmCmd = new RemoteCommands(this);
 	rmCmd->start();
+
+	if (Buttons.size() >= 2 && Potis.size() >= 3)
+		InitWiringPi(Buttons[0]->ButtonEvent, Buttons[1]->ButtonEvent, Potis[0]->ButtonEvent, Potis[1]->ButtonEvent, Potis[2]->ButtonEvent);
+	else
+		log->cout("Cannot Init Wiring Pi ");
 
 	return true;
 }

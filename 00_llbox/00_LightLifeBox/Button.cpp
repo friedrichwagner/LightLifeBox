@@ -45,7 +45,7 @@ Button::~Button()
 
 int Button::getPortVal()
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(WIN32)
 	if (tc->connected())
 	{
 		int len = -1;
@@ -55,6 +55,7 @@ int Button::getPortVal()
 	}
 	else
 		done = true;
+#else
 
 #endif
 
@@ -76,9 +77,8 @@ unsigned long Button::startListen()
 
 		if (Active)
 		{
-			if (!isPressed && PortVal == -1) ButtonDown();
-			//else if (isPressed && PortVal < 10) ButtonPressed();
-			else if (isPressed && PortVal == 1001) ButtonUp();
+			/*if (!isPressed && PortVal == -1) ButtonDown();
+			else if (isPressed && PortVal == 1001) ButtonUp();*/
 		}
 		else
 			log->cout("Button(" + this->Name + ") InActive! Val=" + lumitech::itos(PortVal));
@@ -100,6 +100,15 @@ void Button::stop()
 	if (thisThread.joinable()) thisThread.join();
 }
 
+
+void Button::ButtonEvent(PIButtonTyp t, int delta)
+{
+	if (notifyClients[0] != NULL)
+	if (delta==0)
+		notifyClients[0]->notify(this, BUTTON_PRESSED, 0);
+	else
+		notifyClients[0]->notify(this, BUTTON_PRESSED, delta);
+}
 
 void Button::ButtonDown(void)
 {

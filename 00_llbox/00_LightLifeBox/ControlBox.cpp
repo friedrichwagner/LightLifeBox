@@ -54,28 +54,29 @@ bool ControlBox::Init()
 
 	this->ID = ini->Read<int>(this->Name, "BoxNr", 0);
 
-	//1. get the Buttons
-	ini->ReadStringVector("ControlBox_General", "Buttons", "", &flds);
+	//1. Get the Potis	
+	ini->ReadStringVector("ControlBox_General", "Potis", "", &flds);
 	for (unsigned int i = 0; i< flds.size(); i++)
 	{
 		if (ini->ReadAttrib<int>(flds[i], "id", 0) > 0)
 		{
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[i]->addClient(this);
-			Buttons[i]->start();
+			//Buttons[i]->start();
 		}
 	}
 
-	//2. Get the Potis
-	ini->ReadStringVector("ControlBox_General", "Potis","", &flds);
-	for (unsigned  int i=0; i< flds.size(); i++)
+	//2. get the Buttons
+	int idx = Buttons.size();
+	ini->ReadStringVector("ControlBox_General", "Buttons", "", &flds);
+	for (unsigned int i = 0; i < flds.size(); i++)
 	{
 		if (ini->ReadAttrib<int>(flds[i], "id", 0) > 0)
 		{
-			Potis.push_back(new TastButton(flds[i]));
-			Potis[i]->addClient(this);
-			Potis[i]->start();
-		}			
+			Buttons.push_back(new Button(flds[i]));
+			Buttons[idx+i]->addClient(this);
+			//Buttons[i]->start();
+		}
 	}
 
 	//3. get the Lights
@@ -90,15 +91,6 @@ bool ControlBox::Init()
 
 	rmCmd = new RemoteCommands(this);
 	rmCmd->start();
-
-	if (Buttons.size() >= 1 && Potis.size() >= 3)
-	{
-		//WiringPiButtonEvent ev = Buttons[0]->*ButtonEvent;
-
-		InitPIButtons(&Button::ButtonEvent, Buttons[0], Buttons[1], Potis[0], Potis[1], Potis[2]);
-	}
-	else
-		log->cout("Cannot init PIButtons!");
 
 	return true;
 }
@@ -129,22 +121,6 @@ bool ControlBox::EventLoop()
 void ControlBox::stopEventLoop() 
 { 
 	isDone = true;
-	unsigned int i = 0;
-	unsigned int cnt = Potis.size();
-
-	for (i = 0; i< cnt; i++)
-	{
-		if (Potis[i] != NULL)
-			Potis[i]->stop();
-	}
-		
-	cnt = Buttons.size();
-	for (i = 0; i< cnt; i++)
-	{
-		if (Buttons[i] != NULL)
-			Buttons[i]->stop();
-	}
-	
 }
 
 void ControlBox::Beep(int freq, int time) 
@@ -157,7 +133,7 @@ string ControlBox::getName()
 	return this->Name;
 }
 
-void ControlBox::notify(void* sender, enumButtonEvents event, long val)
+void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 {
 	LightLifeButtonType btntype = ((Button*)sender)->getBtnType();
 
@@ -165,33 +141,22 @@ void ControlBox::notify(void* sender, enumButtonEvents event, long val)
 
 	switch (event)
 	{
-	case BUTTON_DOWN:
-		break;
-
-	case BUTTON_UP:
-		if (btntype == LOCK) 
+	case BUTTON_PRESSED:
+		if (btntype == LOCK)
 		{
 			Lights[0]->lockCurrState();
-			
 			rmCmd->SendRemoteCommand(REMOTE_SENDCMD_LOCK, "");
-
-			Lights[0]->resetDefault();
-
-		}
-		else {
-			Lights[0]->resetDefault();
 		}
 
-		break;
+		Lights[0]->resetDefault();
 
-	case BUTTON_PRESSED:
 		break;
 
 	case BUTTON_CHANGE:
 		//ss1 << btnName << "(change): val=" << val; log->cout1(ss1.str());
-		if (btntype == BRIGHTNESS)	Lights[0]->setBrightness(val);
-		if (btntype == CCT)			Lights[0]->setCCT(val);
-		if (btntype == JUDD)		Lights[0]->setXY(new float[2] {0.333f, 0.333f});
+		if (btntype == BRIGHTNESS)	Lights[0]->setBrightnessUpDown(delta);
+		if (btntype == CCT)			Lights[0]->setCCTUpDown(delta);
+		if (btntype == JUDD)		Lights[0]->setXYUpDown(new int[2] {delta, delta});
 		break;
 
 	default:

@@ -38,14 +38,14 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
-            this.trackBar3 = new System.Windows.Forms.TrackBar();
+            this.tb2 = new System.Windows.Forms.TrackBar();
+            this.tb3 = new System.Windows.Forms.TrackBar();
+            this.tb4 = new System.Windows.Forms.TrackBar();
             this.button6 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tb1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb4)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -58,7 +58,6 @@
             this.button1.Text = "Lock 1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button2_Click);
-            this.button1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
             this.button1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button1_MouseUp);
             // 
             // textBox1
@@ -94,14 +93,16 @@
             // 
             // tb1
             // 
-            this.tb1.LargeChange = 10;
+            this.tb1.LargeChange = 1;
             this.tb1.Location = new System.Drawing.Point(137, 115);
             this.tb1.Maximum = 255;
+            this.tb1.Minimum = 1;
             this.tb1.Name = "tb1";
             this.tb1.Size = new System.Drawing.Size(276, 45);
             this.tb1.TabIndex = 5;
             this.tb1.Tag = "MockPoti1";
             this.tb1.TickFrequency = 10;
+            this.tb1.Value = 127;
             this.tb1.Scroll += new System.EventHandler(this.tb1_Scroll);
             // 
             // button2
@@ -114,7 +115,6 @@
             this.button2.Text = "Brightness";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
-            this.button2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
             this.button2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button1_MouseUp);
             // 
             // button3
@@ -127,7 +127,6 @@
             this.button3.Text = "CCT";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button2_Click);
-            this.button3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
             this.button3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button1_MouseUp);
             // 
             // button4
@@ -140,7 +139,6 @@
             this.button4.Text = "Judd";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button2_Click);
-            this.button4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
             this.button4.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button1_MouseUp);
             // 
             // button5
@@ -153,44 +151,49 @@
             this.button5.Text = "button5";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button2_Click);
-            this.button5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
             this.button5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button1_MouseUp);
             // 
-            // trackBar1
+            // tb2
             // 
-            this.trackBar1.LargeChange = 10;
-            this.trackBar1.Location = new System.Drawing.Point(139, 176);
-            this.trackBar1.Maximum = 255;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(276, 45);
-            this.trackBar1.TabIndex = 13;
-            this.trackBar1.Tag = "MockPoti2";
-            this.trackBar1.TickFrequency = 10;
-            this.trackBar1.Scroll += new System.EventHandler(this.tb1_Scroll);
+            this.tb2.LargeChange = 1;
+            this.tb2.Location = new System.Drawing.Point(139, 176);
+            this.tb2.Maximum = 255;
+            this.tb2.Minimum = 1;
+            this.tb2.Name = "tb2";
+            this.tb2.Size = new System.Drawing.Size(276, 45);
+            this.tb2.TabIndex = 13;
+            this.tb2.Tag = "MockPoti2";
+            this.tb2.TickFrequency = 10;
+            this.tb2.Value = 127;
+            this.tb2.Scroll += new System.EventHandler(this.tb1_Scroll);
             // 
-            // trackBar2
+            // tb3
             // 
-            this.trackBar2.LargeChange = 10;
-            this.trackBar2.Location = new System.Drawing.Point(137, 238);
-            this.trackBar2.Maximum = 255;
-            this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(276, 45);
-            this.trackBar2.TabIndex = 14;
-            this.trackBar2.Tag = "MockPoti3";
-            this.trackBar2.TickFrequency = 10;
-            this.trackBar2.Scroll += new System.EventHandler(this.tb1_Scroll);
+            this.tb3.LargeChange = 1;
+            this.tb3.Location = new System.Drawing.Point(137, 238);
+            this.tb3.Maximum = 255;
+            this.tb3.Minimum = 1;
+            this.tb3.Name = "tb3";
+            this.tb3.Size = new System.Drawing.Size(276, 45);
+            this.tb3.TabIndex = 14;
+            this.tb3.Tag = "MockPoti3";
+            this.tb3.TickFrequency = 10;
+            this.tb3.Value = 127;
+            this.tb3.Scroll += new System.EventHandler(this.tb1_Scroll);
             // 
-            // trackBar3
+            // tb4
             // 
-            this.trackBar3.LargeChange = 10;
-            this.trackBar3.Location = new System.Drawing.Point(137, 311);
-            this.trackBar3.Maximum = 255;
-            this.trackBar3.Name = "trackBar3";
-            this.trackBar3.Size = new System.Drawing.Size(276, 45);
-            this.trackBar3.TabIndex = 15;
-            this.trackBar3.Tag = "MockPoti4";
-            this.trackBar3.TickFrequency = 10;
-            this.trackBar3.Scroll += new System.EventHandler(this.tb1_Scroll);
+            this.tb4.LargeChange = 10;
+            this.tb4.Location = new System.Drawing.Point(137, 311);
+            this.tb4.Maximum = 255;
+            this.tb4.Minimum = 1;
+            this.tb4.Name = "tb4";
+            this.tb4.Size = new System.Drawing.Size(276, 45);
+            this.tb4.TabIndex = 15;
+            this.tb4.Tag = "MockPoti4";
+            this.tb4.TickFrequency = 10;
+            this.tb4.Value = 127;
+            this.tb4.Scroll += new System.EventHandler(this.tb1_Scroll);
             // 
             // button6
             // 
@@ -201,7 +204,6 @@
             this.button6.Tag = "MockButton2";
             this.button6.Text = "Lock 2";
             this.button6.UseVisualStyleBackColor = true;
-            this.button6.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
             this.button6.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button1_MouseUp);
             // 
             // Form1
@@ -210,9 +212,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 403);
             this.Controls.Add(this.button6);
-            this.Controls.Add(this.trackBar3);
-            this.Controls.Add(this.trackBar2);
-            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.tb4);
+            this.Controls.Add(this.tb3);
+            this.Controls.Add(this.tb2);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -227,9 +229,9 @@
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.tb1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tb4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -247,9 +249,9 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
-        public System.Windows.Forms.TrackBar trackBar1;
-        public System.Windows.Forms.TrackBar trackBar2;
-        public System.Windows.Forms.TrackBar trackBar3;
+        public System.Windows.Forms.TrackBar tb2;
+        public System.Windows.Forms.TrackBar tb3;
+        public System.Windows.Forms.TrackBar tb4;
         private System.Windows.Forms.Button button6;
     }
 }

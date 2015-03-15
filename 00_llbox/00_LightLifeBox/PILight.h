@@ -33,6 +33,9 @@ protected:
 
 	unsigned int defaultBrightness;
 	unsigned int defaultCct;
+	int MinVal;
+	int MaxVal;
+	float defaultXy[2];
 
 	Settings* ini;
 	Logger* log;
@@ -52,7 +55,7 @@ public:
 	void setBrightnessUpDown(int);	
 	void setCCTUpDown(int);	
 	void setRGBUpDown(int[]);	
-	void setXYUpDown(float[]);	
+	void setXYUpDown(int[]);	
 	void setGroup(unsigned char);
 	unsigned char getGroup();
 

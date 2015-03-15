@@ -57,9 +57,6 @@
     <ClCompile Include="00_LightLifeBox\Button.cpp">
       <Filter>00 LightLifeBox</Filter>
     </ClCompile>
-    <ClCompile Include="00_LightLifeBox\TastButton.cpp">
-      <Filter>00 LightLifeBox</Filter>
-    </ClCompile>
     <ClCompile Include="00_LightLifeBox\ControlBox.cpp">
       <Filter>00 LightLifeBox</Filter>
     </ClCompile>
@@ -121,9 +118,6 @@
       <Filter>04 Platform</Filter>
     </ClInclude>
     <ClInclude Include="00_LightLifeBox\Button.h">
-      <Filter>00 LightLifeBox</Filter>
-    </ClInclude>
-    <ClInclude Include="00_LightLifeBox\TastButton.h">
       <Filter>00 LightLifeBox</Filter>
     </ClInclude>
     <ClInclude Include="00_LightLifeBox\ControlBox.h">

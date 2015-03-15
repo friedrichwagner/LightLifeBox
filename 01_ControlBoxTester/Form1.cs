@@ -65,6 +65,12 @@ namespace ControlBoxTester
                 string s = ((sender as Button).Tag).ToString();
                 srv.SetButton(s, 5);
             }*/
+
+            //Reset Default
+            tb1.Value = 125;
+            tb2.Value = 125;
+            tb3.Value = 125;
+            tb4.Value = 125;
         }
 
         private void tb1_Scroll(object sender, EventArgs e)
@@ -78,21 +84,12 @@ namespace ControlBoxTester
 
         }
 
-        private void button1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (sender is Button)
-            {
-                string s = ((sender as Button).Tag).ToString();
-                srv.SetButton(s, -1);
-            }
-        }
-
         private void button1_MouseUp(object sender, MouseEventArgs e)
         {
             if (sender is Button)
             {
                 string s = ((sender as Button).Tag).ToString();
-                srv.SetButton(s, 1001);
+                srv.SetButton(s, 0);
             }
         }
     }

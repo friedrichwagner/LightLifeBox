@@ -16,7 +16,6 @@
     <ClCompile Include="00_LightLifeBox\helpers.cpp" />
     <ClCompile Include="00_LightLifeBox\PILight.cpp" />
     <ClCompile Include="00_LightLifeBox\RemoteCommands.cpp" />
-    <ClCompile Include="00_LightLifeBox\TastButton.cpp" />
     <ClCompile Include="01_ComClients\baseClient.cpp" />
     <ClCompile Include="01_ComClients\LightLifeLogger.cpp" />
     <ClCompile Include="01_ComClients\NeoLinkClient.cpp" />
@@ -41,7 +40,6 @@
     <ClInclude Include="00_LightLifeBox\LightLifeData.h" />
     <ClInclude Include="00_LightLifeBox\PILight.h" />
     <ClInclude Include="00_LightLifeBox\RemoteCommands.h" />
-    <ClInclude Include="00_LightLifeBox\TastButton.h" />
     <ClInclude Include="01_ComClients\baseClient.h" />
     <ClInclude Include="01_ComClients\LightLifeLogger.h" />
     <ClInclude Include="01_ComClients\NeoLinkClient.h" />

@@ -11,131 +11,97 @@ Button::Button(std::string pSection)
 	isPressed = false;
 	Section=pSection;
 	Active = false; //Box muss von Admin Console aktiviert werden
+	//Active = true; //TEST
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);
 	this->btntype = (LightLifeButtonType)ini->Read<int>(pSection, "LightLifeButtonType", (int)(NONE));
-	//this->PortNr = ini->Read<int>(pSection,"PortNr",0);
-	//threadSleepTime = ini->Read<int>(pSection, "Sleep", 100);
 
-#ifdef _DEBUG
-	string mockObjectName = ini->Read<string>(pSection, "Testing", "");
-	tc = new TestClient(mockObjectName);
-
-	if (tc->connected())
-	{
-		tc->send(mockObjectName);
-	}
-#endif
+	InitPIButton();
 }
 
 Button::~Button() 
 { 
-	if (!done) stop();
-
-#ifdef _DEBUG
 	delete tc;
-#endif
 }
 
-void Button::start()
+void Button::InitPIButton()
 {
-	//spawn();
-}
+	int lock1 = 0;
+	this->pibtn.cnt = 0;
+	this->pibtn.change = false;
+	this->pibtn.portUp = ini->Read<unsigned int>(Section, "PortUp", A2);
+	this->pibtn.portDown = ini->Read<unsigned int>(Section, "PortDown", B2);
+	this->pibtn.portPressed = ini->Read<unsigned int>(Section, "PortPressed", TAST2);
+	this->pibtn.portLED = ini->Read<unsigned int>(Section, "PortLED", LED2);	
+	this->pibtn.deltaCnt = ini->Read<unsigned int>(Section, "DeltaCnt", 1);
+	this->pibtn.factor = ini->Read<unsigned int>(Section, "Factor", 1);
 
-void Button::stop()
-{
-	done = true;
-	//if (thisThread.joinable()) thisThread.join();
-}
+	this->pibtn.ButtonEvent = &Button::ButtonEvent;
+	this->pibtn.btn = this;
 
-
-bool Button::getIsPressed()
-{
-	return isPressed;
-}
-
-/*
-unsigned long Button::startListen()
-{  
-	log->cout(this->Name+": Button start listening ...");
-	while (!done)
+	switch (btntype)
 	{
-		//log->cout(this->Name + ": waiting...");
-		PortVal = getPortVal();
+	case BRIGHTNESS:
+		this->pibtn.pibtnType = PIBUTTON_BRIGHTNESS;
+		this->pibtn.isr_Up = isr_BrightnessUp;this->pibtn.isr_Down = isr_BrightnessDown;this->pibtn.isr_Pressed = isr_BrightnessPressed;
+		break;
+	case CCT:
+		this->pibtn.pibtnType = PIBUTTON_CCT;
+		this->pibtn.isr_Up = isr_CCTUp; this->pibtn.isr_Down = isr_CCTDown; this->pibtn.isr_Pressed = isr_CCTPressed;
+		break;
 
-		if (Active)
+	case JUDD:
+		this->pibtn.pibtnType = PIBUTTON_JUDD;
+		this->pibtn.isr_Up = isr_JuddUp; this->pibtn.isr_Down = isr_JuddDown; this->pibtn.isr_Pressed = isr_JuddPressed;
+		break;
+
+	case LOCK:
+		if (lock1 == 0)
 		{
-			if (!isPressed && PortVal == -1) ButtonDown();
-			else if (isPressed && PortVal == 1001) ButtonUp();
+			this->pibtn.pibtnType = PIBUTTON_LOCK1;
+			lock1 = 1;
 		}
 		else
-			log->cout("Button(" + this->Name + ") InActive! Val=" + lumitech::itos(PortVal));
+			this->pibtn.pibtnType = PIBUTTON_LOCK1;
+
+		this->pibtn.isr_Up = NULL; this->pibtn.isr_Down = NULL; this->pibtn.isr_Pressed = isr_Lock;
+		
+		break;
+
 	}
 
-	log->cout(this->Name + ": stop listening...");
-	
-	return 0;
-}
-
-int Button::getPortVal()
-{
-#if defined(_DEBUG) && defined(WIN32)
-	if (tc->connected())
-	{
-		int len = -1;
-		int val = tc->getPortVal(&len); //this is blocking when the TestServer is running
-		if (len < 0) done = true;
-		return val;
-	}
-	else
-		done = true;
-#else
-
+#if defined (RASPI)
+	if (pibtn.portUp>0) wiringPiISR(pibtn.portUp, INT_EDGE_FALLING, pibtn.portUp.isr_Up);
+	if (pibtn.portDown>0) wiringPiISR(pibtn.portDown, INT_EDGE_FALLING, pibtn.portDown.isr_Down);
+	if (pibtn.portPressed>0) wiringPiISR(pibtn.portPressed, INT_EDGE_FALLING, pibtn.portPressed.isr_Pressed);
 #endif
 
-	return -100;
+	pibtn.index = pibuttons.size();
+	pibuttons.push_back(&pibtn);
+
+#if defined(_DEBUG) && !defined(RASPI)
+	string mockObjectName = ini->Read<string>(Section, "Testing", "");
+	tc = new TestClient(mockObjectName, pibtn.index);
+#endif
 }
-
-void Button::ButtonDown(void)
-{
-	isPressed = true;
-	tstart=clock();
-
-	//Gibt eh nur ControlBox
-	if (notifyClients[0] != NULL)
-		notifyClients[0]->notify(this, BUTTON_DOWN, PortVal);
-}
-
-void Button::ButtonPressed(void)
-{
-	//log->cout(this->Name + ": ButtonPressed");
-
-	tstop=clock();
-	elapsedTime = (((float)tstop)-((float)tstart)); 
-	isPressed = true;
-
-	if (notifyClients[0] != NULL)
-		notifyClients[0]->notify(this, BUTTON_PRESSED, PortVal);
-}
-
-void Button::ButtonUp(void)
-{
-	//log->cout(this->Name + ": ButtonUp");
-	isPressed = false;
-	if (notifyClients[0] != NULL)
-		notifyClients[0]->notify(this, BUTTON_UP, PortVal);
-
-}
-*/
 
 void Button::ButtonEvent(PIButtonTyp t, int delta)
 {
 	if (notifyClients[0] != NULL)
-	if (delta == 0)
-		notifyClients[0]->notify(this, BUTTON_PRESSED, 0);
-	else
-		notifyClients[0]->notify(this, BUTTON_PRESSED, delta);
+	{
+		if (Active)
+		{
+			if (delta == 0)
+				notifyClients[0]->notify(this, BUTTON_PRESSED, 0);
+			else
+			{
+				notifyClients[0]->notify(this, BUTTON_CHANGE, delta);
+			}
+		}
+		else
+			log->cout("Button: " + this->Name + "=inActive \t delta=" + lumitech::itos(delta));
+	}
 }
 
 void Button::addClient(IButtonObserver* obs)

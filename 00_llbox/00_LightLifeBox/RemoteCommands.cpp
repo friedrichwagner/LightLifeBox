@@ -255,6 +255,7 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 
 	if (flds.size() < 2) return;
 
+	//Need to change admin Console 
  	for (unsigned int i = 0; i < box->Buttons.size(); i++)
 	{
 		if (flds["buttons"].at(i) == '1')
@@ -263,13 +264,13 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 			box->Buttons[i]->Active = false;
 	}
 
-	for (unsigned int i = 0; i < box->Potis.size(); i++)
+	/*for (unsigned int i = 0; i < box->Potis.size(); i++)
 	{
 		if (flds["potis"].at(i) == '1')
 			box->Potis[i]->Active = true;
 		else
 			box->Potis[i]->Active = false;
-	}
+	}*/
 
 	if (lllogger != NULL)
 	{

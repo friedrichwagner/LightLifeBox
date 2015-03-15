@@ -40,25 +40,52 @@
 	<Button1 id="1" name="btnLock1">
 		<LightLifeButtonType value="1" />
 		<Testing value="MockButton1"/>
+		<PortUp value="0"/>
+		<PortDown value="0"/>
+		<PortPressed vale="1"/>
+		<PortLED value="0"/>				
 	</Button1>
 	<Button2 id="2" name="btnLock2">
 		<LightLifeButtonType value="1" />
 		<Testing value="MockButton2"/>		
+		<PortUp value="0"/>
+		<PortDown value="0"/>
+		<PortPressed value="4"/>
+		<PortLED value="0"/>			
 	 </Button2>  
 	<Poti1 id="3" name="btnBrightness">
 		<LightLifeButtonType value="2" />
 		<Testing value="MockPoti1"/>
+		<PortUp value="21"/>
+		<PortDown value="25"/>
+		<PortPressed value="22"/>
+		<PortLED value="23"/>
+		<DeltaCnt value="1"/>
+		<Factor value="2"/>
 	</Poti1>
 	<Poti2 id="4" name="btnCCT">
-		<LightLifeButtonType value="3" />
+		<LightLifeButtonType value="3" />		
 		<Testing value="MockPoti2"/>
+		<PortUp value="12"/>
+		<PortDown value="14"/>
+		<PortPressed value="13"/>
+		<PortLED value="24"/>
+		<DeltaCnt value="1"/>		
+		<Factor value="40"/>
 	</Poti2>
 	<Poti3 id="5" name="btnJudd">
 		<LightLifeButtonType value="4" />
 		<Testing value="MockPoti3"/>
+		<PortUp value="27"/>
+		<PortDown value="29"/>
+		<PortPressed value="28"/>
+		<PortLED value="6"/>	
+		<DeltaCnt value="1"/>	
+		<Factor value="1"/>		
 	</Poti3>
 	<Light1 id="1" name="liBazille">
-		<Default value="2700,100"/>	
+		<Default value="4000,100"/>	
+		<CCTMinMax value="2500,7000"/>
 	</Light1>  
   
   <MockButton1>

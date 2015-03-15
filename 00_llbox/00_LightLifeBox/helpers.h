@@ -13,7 +13,7 @@
 	#include "PlatformCygwin.h"
 #endif
 
-enum enumButtonEvents {BUTTON_DOWN, BUTTON_UP, BUTTON_PRESSED, BUTTON_CHANGE};
+enum enumButtonEvents {BUTTON_PRESSED, BUTTON_CHANGE};
 
 
 using namespace std;
@@ -28,7 +28,7 @@ public:
 class IButtonObserver
 {
 public:
-	virtual void notify(void* sender, enumButtonEvents event, long val) = 0;
+	virtual void notify(void* sender, enumButtonEvents event, int delta) = 0;
 	virtual ~IButtonObserver() {};
 };
 

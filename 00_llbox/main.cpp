@@ -8,6 +8,7 @@
 #include "ControlBox.h"
 #include "DebugServer.h"
 #include "helpers.h"
+#include "PIButton.h"
 
 //FW 5.2.2015 - Only LightLifeLogger 
 /*#include "DMXClient.h"
@@ -53,9 +54,7 @@ int main(int argc, char * argv[])
 		}
 		else //if ((argc==3) && (cmdOptionExists(argv, argv+argc, "-box") || cmdOptionExists(argv, argv+argc, "-b")) )
 		{
-			//Must be declared after WSAStartup
-			//dbgSrv= DebugServer::getInstance();
-			//log->addClient((IObserver*)dbgSrv);
+			InitWiringPi();
 			
 			string boxName="";		
 

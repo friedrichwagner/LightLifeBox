@@ -4,7 +4,7 @@
 #include "PILight.h"
 #include "Settings.h"
 #include "Logger.h"
-#include "TastButton.h"
+#include "Button.h"
 #include "RemoteCommands.h"
 
 using namespace std;
@@ -22,7 +22,6 @@ protected:
 	unsigned int ID;	
 	string Name;
 	string IP;
-	vector<TastButton*> Potis;
 	vector<Button*> Buttons;
 	int threadSleepTime;
 	//stringstream sslog;
@@ -49,5 +48,5 @@ public:
 	vector<PILight*> Lights;
 	bool isDone;
 
-	void notify(void* sender, enumButtonEvents event, long val);
+	void notify(void* sender, enumButtonEvents event, int delta);
 };

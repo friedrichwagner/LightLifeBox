@@ -202,6 +202,9 @@ insert into LlPILedMode(PiledID, PILEDMode, Remark)
 values (4, 'SET_RGB', null);
 
 insert into LlPILedMode(PiledID, PILEDMode, Remark)
+values (5, 'SET_DUV', null);
+
+insert into LlPILedMode(PiledID, PILEDMode, Remark)
 values (99, 'LL_SET_LOCKED', 'Lock current lightstate, used in LightLife Control Boxes');
 
 ----------

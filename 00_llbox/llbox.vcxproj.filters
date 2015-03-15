@@ -22,6 +22,9 @@
     <Filter Include="06_WiringPi">
       <UniqueIdentifier>{b7b63023-702b-49b6-87ca-699210762a09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07_Photometric">
+      <UniqueIdentifier>{95224dc9-59c1-43d4-b1c0-897dda6772ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="01_ComClients\baseClient.cpp">
@@ -84,6 +87,9 @@
     </ClCompile>
     <ClCompile Include="06_WiringPi\PIButton.cpp">
       <Filter>06_WiringPi</Filter>
+    </ClCompile>
+    <ClCompile Include="07_Photometric\Photometric.cpp">
+      <Filter>07_Photometric</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="06_WiringPi\PIButton.h">
       <Filter>06_WiringPi</Filter>
+    </ClInclude>
+    <ClInclude Include="07_Photometric\Photometric.h">
+      <Filter>07_Photometric</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

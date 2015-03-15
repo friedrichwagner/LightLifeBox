@@ -9,6 +9,7 @@
 #include "DebugServer.h"
 #include "helpers.h"
 #include "PIButton.h"
+#include "Photometric.h"
 
 //FW 5.2.2015 - Only LightLifeLogger 
 /*#include "DMXClient.h"
@@ -41,6 +42,9 @@ string test();
 int main(int argc, char * argv[])
 {
 	if (lumitech::PlatformInit(argv[0]) < 0 ) return -1;
+
+	//float xy[2];
+	//CCTDuv2xy(4000, 0.005, xy);
 
 	Logger* log=Logger::getInstance();
 	DebugServer *dbgSrv = DebugServer::getInstance();

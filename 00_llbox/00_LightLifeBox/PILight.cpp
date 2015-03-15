@@ -1,6 +1,7 @@
 #include "PILight.h"
 #include "helpers.h"
 #include "LightLifeLogger.h"
+#include "Photometric.h"
 #include <vector>
 
 PILight::PILight(std::string pSection)
@@ -16,8 +17,7 @@ PILight::PILight(std::string pSection)
 
 	defaultBrightness = 100;
 	defaultCct = 4000;
-	defaultXy[0] = 0.3827f; defaultXy[1] = 0.3759f; //4000K CIE1964= {0,382705038;0,375944566}
-
+	duv = 0.0f;
 
 	string tmp = ini->Read<string>(pSection, "Default", "4000,100");
 	splitstring s(tmp);
@@ -27,6 +27,9 @@ PILight::PILight(std::string pSection)
 		defaultCct = atoi(flds[0].c_str());
 		defaultBrightness = atoi(flds[1].c_str());		
 	}
+
+	MinVal = 2500;
+	MaxVal = 7000;
 
 	s = ini->ReadString(pSection, "CCTMinMax", "2500,7000");
 	flds = s.split(',');
@@ -45,7 +48,8 @@ PILight::PILight(std::string pSection)
 
 	brightness = defaultBrightness;
 	cct = defaultCct;
-	xy[0] = 0; xy[1] = 0;
+	CCT2xy(defaultCct, defaultXy);
+	duv = 0.0f;
 	rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
 	fadetime = 0;
 }
@@ -175,6 +179,28 @@ void PILight::setXY(float pxy[])
 	}
 }
 
+void PILight::setCCTDuv(unsigned int cct, float duv)
+{
+	if (cct > (unsigned int)MaxVal) cct = MaxVal;
+	if (cct < (unsigned int)MinVal) cct = MinVal;
+
+	if (duv > 0.02f) duv = 0.02f;
+	if (duv < -0.02f) duv = -0.02f;
+
+	if (CCTDuv2xy(cct, duv, xy) == 0)
+	{
+		//setXY(xy);
+	}
+	
+	setLog();
+
+	for (unsigned int i = 0; i < ComClients.size(); i++)
+	{
+		if (ComClients[i] != NULL)
+			ComClients[i]->setCCTDuv(cct, duv);
+	}
+}
+
 void PILight::setFadeTime(unsigned int val)
 {
 	fadetime = val;
@@ -209,20 +235,24 @@ void PILight::setRGBUpDown(int deltargb[])
 
 void PILight::setXYUpDown(int delta[])
 {
-	xy[0] = xy[0] + delta[0] / 255;
-	xy[1] = xy[1] + delta[1] / 255;
+	xy[0] = xy[0] + delta[0] / 1000; // 1/1000 = +/-0.001
+	xy[1] = xy[1] + delta[1] / 1000;
 	setXY(xy);
 }
 
+void PILight::setDuvUpDown(int delta)
+{
+	duv = duv + delta/2000; // 1/2000 = +/-0.0005
+	setCCTDuv(cct, duv);
+}
 
 void PILight::resetDefault()
 {
-	sslog.str(""); sslog.clear();
-	sslog << "resetDefault()";
-	log->cout(sslog.str());
+	log->cout("resetDefault()");
 
 	setCCT(defaultCct); 
 	setBrightness(defaultBrightness);
+	duv = 0.0f;
 }
 
 void PILight::lockCurrState()
@@ -237,10 +267,7 @@ void PILight::lockCurrState()
 				if (p)
 				{
 					p->setLocked();
-
-					sslog.str(""); sslog.clear();
-					sslog << "lockCurrState()";
-					log->cout(sslog.str());
+					log->cout("lockCurrState()");
 				}
 			}				
 		}			
@@ -250,7 +277,7 @@ void PILight::lockCurrState()
 void PILight::setGroup(unsigned char val)
 {
 	groupid = val;
-
+	log->cout("Set group=" + lumitech:: itos(groupid));
 	for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
 		if (ComClients[i] != NULL)
@@ -267,14 +294,14 @@ unsigned char PILight::getGroup()
 void PILight::setLog()
 {
 	sslog.str(""); sslog.clear();
-	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << " x:" << xy[0] << " y:" << xy[1];// << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
+	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << " x:" << xy[0] << " y:" << xy[1] << " duv:" << duv;// << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
 	log->cout(sslog.str());
 }
 
 string PILight::getFullState()
 {
 	ostringstream ss;
-	ss << "mode=" << piledMode << ";brightness=" << brightness << ";cct=" << cct << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2]
+	ss << "mode=" << piledMode << ";brightness=" << brightness << ";cct=" << cct << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2] << ";duv=" << duv
 		<< ";groupid=" << groupid << ";fadetime=" << fadetime << ";defaultcct=" << defaultCct << ";defaultbrightness=" << defaultBrightness;
 	return ss.str();
 }

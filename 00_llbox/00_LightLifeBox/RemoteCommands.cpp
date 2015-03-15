@@ -264,14 +264,6 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 			box->Buttons[i]->Active = false;
 	}
 
-	/*for (unsigned int i = 0; i < box->Potis.size(); i++)
-	{
-		if (flds["potis"].at(i) == '1')
-			box->Potis[i]->Active = true;
-		else
-			box->Potis[i]->Active = false;
-	}*/
-
 	if (lllogger != NULL)
 	{
 		lllogger->lldata->msgtype = LL_SET_BUTTONS;

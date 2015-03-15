@@ -1,5 +1,6 @@
 #include "NeoLinkClient.h"
 #include "helpers.h"
+#include "Photometric.h"
 #include <cstring> //for memset under gcc
 
 #pragma region Contructor/Destructor
@@ -95,6 +96,16 @@ void NeoLinkClient::setXY(float val[2])
 	nlframe->data[3] = v[1];
 
    send();
+}
+
+void NeoLinkClient::setCCTDuv(unsigned int cct, float duv)
+{
+	float xy[2];
+
+	if (CCTDuv2xy(cct, duv, xy) == 0)
+	{
+		setXY(xy);
+	}
 }
 
 void NeoLinkClient::setFadeTime(unsigned int millisec)

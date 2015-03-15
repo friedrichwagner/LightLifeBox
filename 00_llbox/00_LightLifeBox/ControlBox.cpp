@@ -156,7 +156,7 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 		//ss1 << btnName << "(change): val=" << val; log->cout1(ss1.str());
 		if (btntype == BRIGHTNESS)	Lights[0]->setBrightnessUpDown(delta);
 		if (btntype == CCT)			Lights[0]->setCCTUpDown(delta);
-		if (btntype == JUDD)		Lights[0]->setXYUpDown(new int[2] {delta, delta});
+		if (btntype == JUDD)		Lights[0]->setDuvUpDown(delta);
 		break;
 
 	default:

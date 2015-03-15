@@ -42,9 +42,20 @@ void LightLifeLogger::setCCT(unsigned int cct)
 {
 	lldata->mode = PILED_SET_CCT;
 	lldata->cct = cct;
+	lldata->duv = 0.0f;
 	lldata->msgtype = LL_SET_LIGHTS;
 	send();
 }
+
+void LightLifeLogger::setCCTDuv(unsigned int cct, float duv)
+{
+	lldata->mode = PILED_SET_DUV;
+	lldata->cct = cct;
+	lldata->duv = duv;
+	lldata->msgtype = LL_SET_LIGHTS;
+	send();
+}
+
 
 void LightLifeLogger::setRGB(unsigned int rgb[3])
 {
@@ -92,6 +103,7 @@ void LightLifeLogger::logLLEvent()
 	//PILED Daten "leer" setzen
 	lldata->brightness = 0;
 	lldata->cct = 0;
+	lldata->duv = 0.0f;
 	lldata->xy[0] = 0;	lldata->xy[1] = 0;
 	lldata->rgb[0] = 0; lldata->rgb[1] = 0; lldata->rgb[2] = 0;
 	lldata->mode = PILED_MODE_NONE;

@@ -11,6 +11,7 @@ enum PILEDMode : char
 	PILED_SET_CCT = 2,
 	PILED_SET_XY = 3,
 	PILED_SET_RGB = 4,
+	PILED_SET_DUV = 5,
 };
 
 enum LLMsgType
@@ -48,6 +49,8 @@ struct LightLifeData
 	string receiver;
 	LLMsgType msgtype;
 
+	float duv;
+
 	LightLifeData(string pSender)
 	{
 		roomid = 0;
@@ -60,6 +63,7 @@ struct LightLifeData
 		groupid = 0;
 		cct = 2700;
 		brightness = 255;
+		duv = 0.0f;
 		rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
 		xy[0] = 0.0f; xy[1] = 0.0f;
 		mode = PILED_SET_BRIGHTNESS;
@@ -75,7 +79,7 @@ struct LightLifeData
 		//LightLifeData
 		s << "roomid=" << roomid << ";userid=" << userid << ";vlid=" << vlid << ";sceneid=" << sceneid << ";sequenceid=" << sequenceid << ";stepid=" << stepid;
 		//PILEDData
-		s << "groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";x=" << xy[0] << ";y" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2];
+		s << "groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";duv=" << duv << "; x = " << xy[0] << "; y" << xy[1] << "; r = " << rgb[0] << "; g = " << rgb[1] << "; b = " << rgb[2];
 		//Others
 		s << ";sender=" << sender << ";receiver=" << receiver << ";msgtype=" << msgtype;
 		return s.str();

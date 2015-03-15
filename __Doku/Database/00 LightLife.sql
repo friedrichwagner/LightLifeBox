@@ -166,6 +166,7 @@ create table LLData
 	StepID int not null,
 	Brightness int not null,
 	CCT	int,
+	duv	float,
 	x float , 
 	y float,
 	pimode varchar(15) not null,	

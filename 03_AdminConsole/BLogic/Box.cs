@@ -335,8 +335,12 @@ namespace LightLifeAdminConsole
                     setPotisActive(TestSequenceOder[0]);
             }
 
-            string Params = ";potis=" + PotisActive[(byte)BoxPotis.BRIGHTNESS] + PotisActive[(byte)BoxPotis.CCT] + PotisActive[(byte)BoxPotis.JUDD] +
-                            ";buttons=" + ButtonsActive[0] + ButtonsActive[1];
+            //string Params = ";potis=" + PotisActive[(byte)BoxPotis.BRIGHTNESS] + PotisActive[(byte)BoxPotis.CCT] + PotisActive[(byte)BoxPotis.JUDD] +
+            //                ";buttons=" + ButtonsActive[0] + ButtonsActive[1];
+
+            string Params = ";buttons=" + PotisActive[(byte)BoxPotis.BRIGHTNESS] + PotisActive[(byte)BoxPotis.CCT] + PotisActive[(byte)BoxPotis.JUDD] +
+                                        + ButtonsActive[0] + ButtonsActive[1];
+
            rCmd.EnableButtons(Params);           
         }
 

@@ -168,5 +168,7 @@ public:
 	virtual void setXY(float[]) = 0;
 	virtual void setFadeTime(unsigned int val) = 0;
 	virtual void setGroup(unsigned char val) = 0;
+
+	virtual void setCCTDuv(unsigned int, float duv) = 0;
 };
 

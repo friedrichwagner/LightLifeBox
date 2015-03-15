@@ -12,8 +12,8 @@ namespace Lumitech.Interfaces
         private string name;
         private LTSQLCommand cmd;
         private IDisposable cancellation;
-        private const string sqlInsert = "insert into LLData(roomID, userID, VLID, SceneID, SequenceID, Brightness, CCT, x, y, pimode, sender, receiver, MsgTypeID, Remark, IP, groupiD)" +
-                                          " values (:1, :2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16)";
+        private const string sqlInsert = "insert into LLData(roomID, userID, VLID, SceneID, SequenceID, Brightness, CCT, duv, x, y, pimode, sender, receiver, MsgTypeID, Remark, IP, groupiD)" +
+                                          " values (:1, :2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16, :17)";
 
         private Logger log;
         private ConcurrentQueue<LightLifeData> dataQueue;
@@ -87,6 +87,7 @@ namespace Lumitech.Interfaces
                         cmd.Params[i++] = info.sequenceid;
                         cmd.Params[i++] = info.piled.brightness;
                         cmd.Params[i++] = info.piled.cct;
+                        cmd.Params[i++] = info.piled.duv;
                         cmd.Params[i++] = info.piled.xy[0];
                         cmd.Params[i++] = info.piled.xy[1];
                         cmd.Params[i++] = info.piled.mode.ToString();

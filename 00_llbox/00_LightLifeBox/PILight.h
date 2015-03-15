@@ -26,6 +26,7 @@ protected:
 	unsigned int rgb[3];
 	unsigned int fadetime;
 	unsigned int groupid;
+	float duv;
 
 	std::vector<IBaseClient*> ComClients;
 	enumPILEDMode piledMode;
@@ -46,16 +47,21 @@ public:
 	PILight(std::string pName); //private contructor
 	~PILight();	
 
+	//Absolute
 	void setBrightness(unsigned int);	
 	void setCCT(unsigned int);	
 	void setRGB(unsigned int[]);
 	void setXY(float[]);	
+	void setCCTDuv(unsigned int, float);
+
 	void setFadeTime(unsigned int val);
 
+	//UpDown
 	void setBrightnessUpDown(int);	
 	void setCCTUpDown(int);	
 	void setRGBUpDown(int[]);	
 	void setXYUpDown(int[]);	
+	void setDuvUpDown(int delta);
 	void setGroup(unsigned char);
 	unsigned char getGroup();
 

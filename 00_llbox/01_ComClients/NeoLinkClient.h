@@ -151,6 +151,8 @@ private:
 	void setGroup(unsigned char);
 	void send();
 
+	void setCCTDuv(unsigned int, float duv);
+
 public:
 	NeoLinkClient();
 	~NeoLinkClient();

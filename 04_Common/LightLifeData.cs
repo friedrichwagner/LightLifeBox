@@ -73,6 +73,13 @@ namespace LightLife.Data
                 }
         }
 
+        private float _duv;
+        public float duv
+        {
+            get { return _duv; }
+            set { checkDuv(ref _duv, value); }
+        }
+
         private byte _brightness;    
         public byte brightness
         {
@@ -149,11 +156,11 @@ namespace LightLife.Data
             Reset();           
         }
 
-        public PILEDData(PILEDMode m, byte br, int cct, float x, float y, byte r, byte g, byte b, string psender, string preceiver)
+        public PILEDData(PILEDMode m, byte br, int cct, float duv, float x, float y, byte r, byte g, byte b, string psender, string preceiver)
         {
             mode = m;
             _groupid = 0; //Broadcast
-            _cct = cct;
+            _cct = cct; _duv = duv;
             _brightness = br;
             _xy[0] = x; _xy[1] = y;
             _rgb[0] = r; _rgb[1] = g; _rgb[2] = b;
@@ -170,7 +177,7 @@ namespace LightLife.Data
         {
             mode = PILEDMode.SET_BRIGHTNESS;
             _groupid = 0; //Broadcast
-            _cct = 3000;
+            _cct = 3000; duv = 0;
             _brightness = 255;
             _xy[0] = 0.0f; _xy[1] = 0.0f;
             _rgb[0] = 0; _rgb[1] = 0; _rgb[2] = 0;
@@ -184,7 +191,7 @@ namespace LightLife.Data
 
         public override string ToString()
         {
-            return String.Format("g:{0} --> m:{1} b:{2} cct:{3} xy:{4:0.000}/{5:0.000} rgb:{6} / {7} / {8} s->r:{9}->{10} mt:{11}", groupid, mode, _brightness, _cct, _xy[0], _xy[1], _rgb[0], _rgb[1], _rgb[2], sender, receiver, msgtype);
+            return String.Format("g:{0} --> m:{1} b:{2} cct:{3} duv:{4} xy:{5:0.000}/{6:0.000} rgb:{7} / {8} / {9} s->r:{10}->{11} mt:{12}", groupid, mode, _brightness, _cct, _duv, _xy[0], _xy[1], _rgb[0], _rgb[1], _rgb[2], sender, receiver, msgtype);
         }
 
         private void checkXY(ref Single s, float value)
@@ -201,6 +208,14 @@ namespace LightLife.Data
                 b = value;
             else
                 throw new ArgumentOutOfRangeException("rgb only between 0 and 255!");
+        }
+
+        private void checkDuv(ref float duv, float value)
+        {
+            if (duv >= -0.02 && duv <= 0.02)
+                duv = value;
+            else
+                throw new ArgumentOutOfRangeException("Duv only between -0.02 and +0.02!");
         }
     }
 

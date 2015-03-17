@@ -48,7 +48,7 @@ PILight::PILight(std::string pSection)
 
 	brightness = defaultBrightness;
 	cct = defaultCct;
-	CCT2xy(defaultCct, defaultXy);
+	CCT2xy(defaultCct, xy);
 	duv = 0.0f;
 	rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
 	fadetime = 0;
@@ -136,6 +136,8 @@ void PILight::setCCT(unsigned int val)
 	cct = val;
 	if (cct > (unsigned int)MaxVal) cct = MaxVal;
 	if (cct < (unsigned int)MinVal) cct = MinVal;
+
+	CCT2xy(cct, xy);
 
 	setLog();	
 

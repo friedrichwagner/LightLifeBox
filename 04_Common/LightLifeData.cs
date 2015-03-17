@@ -5,6 +5,7 @@ using Lumitech.Helpers;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Linq;
 
 namespace LightLife.Data
 {
@@ -14,9 +15,10 @@ namespace LightLife.Data
         SET_BRIGHTNESS = 1,
         SET_CCT = 2,
         SET_XY = 3,
-        SET_RGB = 4, 
-        SET_SEQUENCE = 5,
-        SET_SCENE = 6,
+        SET_RGB = 4,
+        SET_DUV = 5,
+        SET_SEQUENCE = 6,
+        SET_SCENE = 7,
 
         IDENTIFY=50,
     };
@@ -173,6 +175,27 @@ namespace LightLife.Data
             _sceneid = 0;
         }
 
+        public PILEDData(MyDictionary d)
+        {
+            d.TryGetIntValue("groupid", out _groupid);
+            d.TryGetIntValue("cct", out _cct);
+            d.TryGetDoubleValue("duv", out _duv);
+            d.TryGetIntValue("brightness", out _brightness);
+            d.TryGetDoubleValue("x", out _xy[0]);
+            d.TryGetDoubleValue("y", out _xy[1]);
+
+            d.TryGetIntValue("r", out _rgb[0]);
+            d.TryGetIntValue("g", out _rgb[1]);
+            d.TryGetIntValue("b", out _rgb[2]);
+
+            int m;
+            d.TryGetIntValue("mode", out m);  mode = (PILEDMode)m;
+            d.TryGetIntValue("msgtype", out m); msgtype = (LLMsgType)m;
+
+            d.TryGetValue("sender", out sender);
+            d.TryGetValue("receiver", out receiver);
+        }
+
         public void Reset()
         {
             mode = PILEDMode.SET_BRIGHTNESS;
@@ -229,13 +252,32 @@ namespace LightLife.Data
         public int stepid;
         public string remark;
         public string ip;
-        public byte[] buttons = new byte[4];
+        public byte[] buttons = new byte[5];
 
         public PILEDData piled;
 
         public LightLifeData()  
         {
             Reset();
+        }
+
+        public LightLifeData(string data)
+        {
+            string[] sarr = data.Split(';');
+            Dictionary<string, string> dtmp = sarr.Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
+            MyDictionary d = new MyDictionary(dtmp);
+
+            //d.TryGetValue("remark", out remark);
+            remark = string.Empty;
+
+            d.TryGetIntValue("roomid", out roomid);
+            d.TryGetIntValue("userid", out userid);
+            d.TryGetIntValue("vlid", out vlid);
+            d.TryGetIntValue("sceneid", out sceneid);
+            d.TryGetIntValue("sequenceid", out sequenceid);
+            d.TryGetIntValue("stepid", out stepid);
+
+            piled = new PILEDData(d);
         }
 
         public void Reset()

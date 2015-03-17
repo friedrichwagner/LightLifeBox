@@ -2,9 +2,85 @@
 using System.Text;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using System.Collections.Generic; 
 
 namespace Lumitech.Helpers
 {
+    public class MyDictionary : Dictionary<string, string>
+    {
+        public MyDictionary(Dictionary<string, string> d)
+        {
+            foreach (KeyValuePair<string, string> pair in d)
+            {
+                Add(pair.Key, pair.Value);
+            }
+        }
+
+        public int TryGetIntValue(string key, out int newI)
+        {
+            newI = 0;
+            try
+            {
+                string s;
+                if (TryGetValue(key, out s))
+                {
+                    newI=Int32.Parse(s);
+                }
+            }
+            catch{}
+
+            return newI;
+        }
+
+        public byte TryGetIntValue(string key, out byte newI)
+        {
+            newI = 0;
+            try
+            {
+                string s;
+                if (TryGetValue(key, out s))
+                {
+                    newI = byte.Parse(s);
+                }
+            }
+            catch { }
+
+            return newI;
+        }
+
+        public double TryGetDoubleValue(string key, out double newD)
+        {
+            newD = 0.0;
+            try
+            {
+                string s;
+                if (TryGetValue(key, out s))
+                {
+                    newD = Double.Parse(s);
+                }
+            }
+            catch { }
+
+            return newD;
+        }
+
+        public float TryGetDoubleValue(string key, out float newD)
+        {
+            newD = 0.0f;
+            try
+            {
+                string s;
+                if (TryGetValue(key, out s))
+                {
+                    newD = float.Parse(s);
+                }
+            }
+            catch { }
+
+            return newD;
+        }
+    }
+
     public static class Extensions
     {
         public static string ToJson<T>(this T obj)

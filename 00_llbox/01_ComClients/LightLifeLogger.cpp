@@ -49,11 +49,13 @@ void LightLifeLogger::setCCT(unsigned int cct, float xy[])
 	send();
 }
 
-void LightLifeLogger::setCCTDuv(unsigned int cct, float duv)
+void LightLifeLogger::setCCTDuv(unsigned int cct, float duv, float xy[2])
 {
 	lldata->mode = PILED_SET_DUV;
 	lldata->cct = cct;
 	lldata->duv = duv;
+	lldata->xy[0] = xy[0];
+	lldata->xy[1] = xy[1];
 	lldata->msgtype = LL_SET_LIGHTS;
 	send();
 }
@@ -91,6 +93,12 @@ void LightLifeLogger::setGroup(unsigned char group)
 void LightLifeLogger::setLocked()
 {
 	lldata->msgtype = LL_SET_LOCKED;
+	send();
+}
+
+void LightLifeLogger::resetDefault()
+{
+	lldata->msgtype = LL_SET_DEFAULT;
 	send();
 }
 

@@ -460,6 +460,7 @@ namespace Lumitech.Interfaces
                     {
                         Send(frame);
                         Thread.Sleep(_sendDelay);
+                        Debug.Print(DateTime.Now.ToString("hh.mm.ss.ffffff"));
                     }
                 }
             }

@@ -161,26 +161,42 @@ values ('AREA V4','Vorraum', 'CCT=2700&Brightness=50',2, 3);
 
 ---------
 
+delete from LLMsgType;
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (10, 'SET_LIGHTS', null);
+values (0, 'LL_NONE', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (20, 'CALL_SCENE', null);
+values (10, 'LL_SET_LIGHTS', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (30, 'START_TESTSEQUENCE', null);
+values (20, 'LL_CALL_SCENE', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (31, 'STOP_TESTSEQUENCE', null);
+values (30, 'LL_START_TESTSEQUENCE', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (32, 'PAUSE_TESTSEQUENCE', null);
+values (31, 'LL_STOP_TESTSEQUENCE', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (33, 'NEXT_TESTSEQUENCE_STEP', null);
+values (32, 'LL_PAUSE_TESTSEQUENCE', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (34, 'PREV_TESTSEQUENCE_STEP', null);
+values (33, 'LL_NEXT_TESTSEQUENCE_STEP', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (34, 'LL_PREV_TESTSEQUENCE_STEP', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (35, 'LL_SET_BUTTONS', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (36, 'LL_RELOAD_TESTSEQUENCE', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (95, 'LL_SET_DEFAULT', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (99, 'LL_SET_LOCKED', null);
 
 ---------
 

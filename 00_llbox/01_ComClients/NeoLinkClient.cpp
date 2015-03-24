@@ -98,16 +98,18 @@ void NeoLinkClient::setXY(float val[2])
    send();
 }
 
-void NeoLinkClient::setCCTDuv(unsigned int cct, float duv)
+void NeoLinkClient::setCCTDuv(unsigned int cct, float duv, float xy[2])
 {
 	fCieCoords_t cie;
-	float xy[2];
+	/*float xy[2];
 
 	if (CCTDuv2xy(cct, duv, &cie) == 0)
 	{
 		xy[0] = cie.x; xy[1] = cie.y;
 		setXY(xy);
-	}
+	}*/
+
+	setXY(xy);
 }
 
 void NeoLinkClient::setFadeTime(unsigned int millisec)

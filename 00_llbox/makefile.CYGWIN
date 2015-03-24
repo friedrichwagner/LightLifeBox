@@ -15,6 +15,8 @@ SDIR2=./02_DebugServer
 SDIR3=./03_LogIni
 SDIR4=./04_Platform
 SDIR5=./05_Test
+SDIR6=./06_WiringPi
+SDIR7=./07_Photometric
 
 ODIR=./_bin
 
@@ -24,13 +26,15 @@ ODIR2=$(ODIR)
 ODIR3=$(ODIR)
 ODIR4=$(ODIR)
 ODIR5=$(ODIR)
+ODIR6=$(ODIR)
+ODIR7=$(ODIR)
 
 #main.cpp
 _SOURCESMAIN=main.cpp
 OBJECTSMAIN=$(addprefix  $(ODIR0)/, $(_SOURCESMAIN:.cpp=.o))
 
 #The LightLifeBox files
-_SOURCES0=Button.cpp ControlBox.cpp helpers.cpp main.cpp PILight.cpp TastButton.cpp RemoteCommands.cpp
+_SOURCES0=Button.cpp ControlBox.cpp helpers.cpp main.cpp PILight.cpp RemoteCommands.cpp
 OBJECTS0=$(addprefix  $(ODIR0)/, $(_SOURCES0:.cpp=.o))
 
 #The ComClient files
@@ -59,8 +63,19 @@ _SOURCES5=IPClient.cpp
 SOURCES5=$(addprefix  $(SDIR5)/,$(_SOURCES5))
 OBJECTS5=$(addprefix  $(ODIR5)/, $(_SOURCES5:.cpp=.o))
 
+#WiringPi
+_SOURCES6=PIButton.cpp
+SOURCES6=$(addprefix  $(SDIR6)/,$(_SOURCES6))
+OBJECTS6=$(addprefix  $(ODIR6)/, $(_SOURCES6:.cpp=.o))
+
+#Photometric
+_SOURCES7=Photometric.cpp
+SOURCES7=$(addprefix  $(SDIR6)/,$(_SOURCES7))
+OBJECTS7=$(addprefix  $(ODIR6)/, $(_SOURCES7:.cpp=.o))
+
+
 # the dir where the include files are stored
-IDIR = -I $(SDIR0) -I $(SDIR1) -I $(SDIR2) -I $(SDIR3) -I $(SDIR4) -I $(SDIR5)
+IDIR = -I $(SDIR0) -I $(SDIR1) -I $(SDIR2) -I $(SDIR3) -I $(SDIR4) -I $(SDIR5) -I $(SDIR6) -I $(SDIR7)
 
 # This is the compiler g++ is for C++ code
 CC=g++
@@ -91,8 +106,8 @@ all: $(EXECUTABLE)
 
 # target is the exe. This is dependant on all the *.o files	
 # the command is g++
-$(EXECUTABLE): $(OBJECTSMAIN) $(OBJECTS0) $(OBJECTS1) $(OBJECTS2) $(OBJECTS3) $(OBJECTS4) $(OBJECTS5)
-	$(CC) $(LDFLAGS) $(OBJECTS0) $(OBJECTS1) $(OBJECTS2) $(OBJECTS3) $(OBJECTS4) $(OBJECTS5) -o $@
+$(EXECUTABLE): $(OBJECTSMAIN) $(OBJECTS0) $(OBJECTS1) $(OBJECTS2) $(OBJECTS3) $(OBJECTS4) $(OBJECTS5) $(OBJECTS6) $(OBJECTS7)
+	$(CC) $(LDFLAGS) $(OBJECTS0) $(OBJECTS1) $(OBJECTS2) $(OBJECTS3) $(OBJECTS4) $(OBJECTS5) $(OBJECTS6) $(OBJECTS7) -o $@
 
 # this is the actual compile command
 # it puts all the *.o files into the ../obj dir
@@ -116,9 +131,16 @@ $(ODIR4)/%.o: $(SDIR4)/%.cpp
 	$(CC) $(CFLAGS) $< -o $@		
 	
 $(ODIR5)/%.o: $(SDIR5)/%.cpp 
-	$(CC) $(CFLAGS) $< -o $@		
-	
+	$(CC) $(CFLAGS) $< -o $@
+
+$(ODIR6)/%.o: $(SDIR6)/%.cpp
+		$(CC) $(CFLAGS) $< -o $@
+
+$(ODIR7)/%.o: $(SDIR7)/%.cpp
+		$(CC) $(CFLAGS) $< -o $@
+		
 # "make clean"  deletes ../obj/*.o files and what is the stuff here
 clean:
-	rm -f  $(ODIR0)/*.o $(ODIR1)/*.o $(ODIR2)/*.o $(ODIR3)/*.o  $(ODIR4)/*.o  $(ODIR5)/*.o *~ core $(INCDIR)/*~ 
+	rm -f  $(ODIR0)/*.o $(ODIR1)/*.o $(ODIR2)/*.o $(ODIR3)/*.o  $(ODIR4)/*.o  $(ODIR5)/*.o $(ODIR6)/*.o $(ODIR7)/*.o *~ core $(INCDIR)/*~ 
+	
 	

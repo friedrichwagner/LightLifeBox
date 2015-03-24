@@ -82,7 +82,7 @@ fCieCoords_t CCT2xy(int cct)
 	//cct in K
 	if (cct >= 2000 && cct <= 10000)
 	{
-		unsigned short mired = unsigned short(1e6 / cct);
+		unsigned short mired = (unsigned short)(1e6 / cct);
 		ret = Mired2xy(mired);
 	}
 	return ret;
@@ -90,13 +90,13 @@ fCieCoords_t CCT2xy(int cct)
 
 fCieCoords_t Mired2xy(unsigned short mired)
 {
-	int tmp = 0;
+	//int tmp = 0;
 
 	fCieCoords_t ret = { 0.0, 0.0 };
 	if (mired >= 100 && mired <= 500)
 	{
-		tmp = LutMiredToX[mired - 100];
-		tmp = LutMiredToY[mired - 100];
+		//tmp = LutMiredToX[mired - 100];
+		//tmp = LutMiredToY[mired - 100];
 		ret.x = (float)(LutMiredToX[mired - 100]) / 65536.0f;
 		ret.y = (float)(LutMiredToY[mired - 100]) / 65536.0f;
 	}
@@ -108,7 +108,7 @@ int xy2uv1960(fCieCoords_t xy, fCieCoords_t* uv)
 {
 	float nen = (-2.0f * xy.x + 12.0f * xy.y + 3.0f);
 
-	if (abs(nen) > ACCURACY)
+	if (fabs(nen) > ACCURACY)
 	{
 		uv->x = 4.0f * xy.x / nen;
 		uv->y = 6.0f * xy.y / nen;
@@ -123,7 +123,7 @@ int uv19602xy(fCieCoords_t uv, fCieCoords_t* xy)
 {
 	float nen = (2.0f*uv.x - 8.0f*uv.y + 4.0f);
 
-	if (abs(nen) > ACCURACY)
+	if (fabs(nen) > ACCURACY)
 	{
 		xy->x = 3.0f * uv.x / nen;
 		xy->y = 2.0f * uv.y / nen;
@@ -165,7 +165,7 @@ int CCTDuv2xy(int cct, float Duv, fCieCoords_t* xy)
 	duv.y = u0v0.y - u1v1.y;
 
 	float nen = sqrtf(duv.x * duv.x + duv.y * duv.y);
-	if (abs(nen) > ACCURACY)
+	if (fabs(nen) > ACCURACY)
 	{
 		uv.x = u0v0.x - Duv * duv.y / nen;
 		uv.y = u0v0.y + Duv * duv.x / nen;

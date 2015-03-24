@@ -43,7 +43,8 @@ namespace Lumitech.Interfaces
         public virtual void Unsubscribe()
         {
             done=true;
-            _waitHandle.Close();
+            _waitHandle.Set();
+           // _waitHandle.Close();
             if (logThread.IsAlive) logThread.Join();
             cancellation.Dispose();
         }
@@ -52,7 +53,8 @@ namespace Lumitech.Interfaces
         public virtual void OnCompleted()
         {
             done = true;
-            _waitHandle.Close();
+            _waitHandle.Set();
+            //_waitHandle.Close();
             if (logThread.IsAlive) logThread.Join();
         }
 

@@ -28,7 +28,7 @@
                 <TextBlock Text="Group:" Style="{StaticResource Heading2}" Grid.Row="1" Grid.Column="0" Margin="10"/>
                 <ComboBox  x:Name="cbGroup" Width="100" Grid.Row="1" Grid.Column="1" Margin="10" ItemsSource="{Binding groups}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedGroup, Mode=TwoWay}" />
 
-                <TextBlock Text="Light:" Style="{StaticResource Heading2}" Grid.Row="2" Grid.Column="0" Margin="10" MouseMove="TextBlock_MouseMove"/>
+                <TextBlock Text="Light:" Style="{StaticResource Heading2}" Grid.Row="2" Grid.Column="0" Margin="10" MouseDown="TextBlock_MouseDown"/>
                 <ComboBox  x:Name="cbLight" Width="100" Grid.Row="2" Grid.Column="1" Margin="10" ItemsSource="{Binding lights}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedLight, Mode=TwoWay}" />
 
                 <!--<TextBlock Text="Brightness:" Style="{StaticResource Heading2}" Grid.Row="1" Grid.Column="0" Margin="10"/>-->

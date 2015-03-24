@@ -3,6 +3,7 @@ using System.Text;
 using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Lumitech.Helpers
 {
@@ -56,7 +57,7 @@ namespace Lumitech.Helpers
                 string s;
                 if (TryGetValue(key, out s))
                 {
-                    newD = Double.Parse(s);
+                    newD = Double.Parse(s, CultureInfo.InvariantCulture);
                 }
             }
             catch { }
@@ -72,7 +73,7 @@ namespace Lumitech.Helpers
                 string s;
                 if (TryGetValue(key, out s))
                 {
-                    newD = float.Parse(s);
+                    newD = float.Parse(s, CultureInfo.InvariantCulture);
                 }
             }
             catch { }

@@ -132,12 +132,14 @@ create table LLFixture
 	added datetime default getdate()
 );
 
+drop table LlScene;
 create table LLScene
 (
 	SceneID int not null primary key,
 	SceneName varchar(50),
 	Brightness int not null,
 	CCT	int,
+	duv	float,
 	x float , 
 	y float,
 	pimode int not null,	
@@ -148,7 +150,7 @@ create table LLScene
 create table LLMsgType
 (
 	MsgID int not null primary key,
-	MsgName varchar(20),
+	MsgName varchar(30),
 	Remark varchar(max),
 	added datetime default getdate()
 );

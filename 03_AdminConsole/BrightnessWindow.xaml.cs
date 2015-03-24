@@ -53,9 +53,9 @@ namespace LightLifeAdminConsole
             }
         }
 
-        private void TextBlock_MouseMove(object sender, MouseEventArgs e)
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (dc.SelectedLight>-1)
+            if (dc.SelectedLight > -1)
             {
                 dc.Identify();
             }

@@ -19,13 +19,14 @@ private:
 	void setGroup(unsigned char);
 	void send();
 
-	void setCCTDuv(unsigned int, float duv);
+	void setCCTDuv(unsigned int, float duv, float xy[2]);
 
 public:
 	LightLifeLogger(string);
 	~LightLifeLogger();
 
 	void setLocked();
+	void resetDefault();
 	void logLLEvent();
 };
 

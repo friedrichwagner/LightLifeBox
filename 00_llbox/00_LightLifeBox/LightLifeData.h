@@ -26,6 +26,8 @@ enum LLMsgType
 	LL_PREV_TESTSEQUENCE_STEP = 34,
 	LL_SET_BUTTONS = 35,
 	LL_RELOAD_TESTSEQUENCE = 36,
+
+	LL_SET_DEFAULT = 95,
 	LL_SET_LOCKED = 99,
 };
 
@@ -79,7 +81,7 @@ struct LightLifeData
 		//LightLifeData
 		s << "roomid=" << roomid << ";userid=" << userid << ";vlid=" << vlid << ";sceneid=" << sceneid << ";sequenceid=" << sequenceid << ";stepid=" << stepid;
 		//PILEDData
-		s << "groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";duv=" << duv << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2];
+		s << ";groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";duv=" << duv << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2];
 		//Others
 		s << ";sender=" << sender << ";receiver=" << receiver << ";msgtype=" << msgtype;
 		return s.str();

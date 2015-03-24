@@ -35,9 +35,9 @@ namespace LightLifeAdminConsole
                     asciisum += b;
                 }*/
 
-                PathGeometry geom = new PathGeometry();
+                /*PathGeometry geom = new PathGeometry();
                 Geometry g = new RectangleGeometry(new Rect(0, 0, 28, 28));
-                geom.AddGeometry(g);
+                geom.AddGeometry(g);*/
 
                 LLSQL.InitSQLs();
 

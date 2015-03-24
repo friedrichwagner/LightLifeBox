@@ -1,0 +1,11 @@
+1. llbox: settings.xml
+	MockButtons: IP Adresse of ControlBoxTester
+	LightLifeServer: UDPAdress
+
+2. PILEDServer: settings.xml
+	NeoLink: UDP Address
+	
+3. AdminConsole
+	NeoLink: UDP Address
+
+

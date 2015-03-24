@@ -5,10 +5,10 @@
 		<PagesVisible value="Administration;PI-LED Control;Boxen;Settings" />
 		<Interfaces value="LightLifeLogger,NeoLink" />
 	</Pages>
-	<Login>
+	<!--<Login>
 		<Username value="nn" />
 		<Password value="test" />
-	</Login>
+	</Login>-->
   <Database>
     <!--<DataSource value="LT-WSSQLTEST\SQLEXPRESS" />-->
 	<DataSource value="LTJENB14\SQLEXPRESS" />

@@ -2,6 +2,7 @@
 #include "helpers.h"
 #include "LightLifeLogger.h"
 #include "Photometric.h"
+#include <iomanip>
 #include <vector>
 
 PILight::PILight(std::string pSection)
@@ -207,7 +208,7 @@ void PILight::setCCTDuv(unsigned int cct, float duv)
 	for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
 		if (ComClients[i] != NULL)
-			ComClients[i]->setCCTDuv(cct, duv);
+			ComClients[i]->setCCTDuv(cct, duv, xy);
 	}
 }
 
@@ -252,17 +253,33 @@ void PILight::setXYUpDown(int delta[])
 
 void PILight::setDuvUpDown(int delta)
 {
-	duv = duv + delta/2000; // 1/2000 = +/-0.0005
+	duv = duv + (float)delta/2000.0f; // 1/2000 = +/-0.0005
 	setCCTDuv(cct, duv);
 }
 
 void PILight::resetDefault()
 {
-	log->cout("resetDefault()");
+	log->cout("resetDefault()-- Start");
 
 	setCCT(defaultCct); 
 	setBrightness(defaultBrightness);
 	duv = 0.0f;
+
+	for (unsigned int i = 0; i < ComClients.size(); i++)
+	{
+		if (ComClients[i] != NULL)
+		{
+			if (ComClients[i]->getType() == CLIENT_LIGHTLIFE)
+			{
+				LightLifeLogger* p = static_cast<LightLifeLogger*>(ComClients[i]);
+				if (p)
+				{
+					p->resetDefault();
+					log->cout("resetDefault() - End");
+				}
+			}
+		}
+	}
 }
 
 void PILight::lockCurrState()
@@ -304,7 +321,7 @@ unsigned char PILight::getGroup()
 void PILight::setLog()
 {
 	sslog.str(""); sslog.clear();
-	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << " x:" << xy[0] << " y:" << xy[1] << " duv:" << duv;// << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
+	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << std::fixed << setprecision(4) << " x:" << xy[0] << " y:" << xy[1] << " duv:" << duv;// << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
 	log->cout(sslog.str());
 }
 

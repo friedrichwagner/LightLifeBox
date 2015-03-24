@@ -107,7 +107,6 @@ namespace PILEDServer
             }
 
             bisStarted = ServerThread.IsAlive;*/
-    
             //Alternativ
             done = true;
             listener.Close();   

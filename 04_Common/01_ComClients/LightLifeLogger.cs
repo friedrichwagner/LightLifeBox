@@ -12,13 +12,14 @@ namespace Lumitech.Interfaces
         private string name;
         private LTSQLCommand cmd;
         private IDisposable cancellation;
-        private const string sqlInsert = "insert into LLData(roomID, userID, VLID, SceneID, SequenceID, Brightness, CCT, duv, x, y, pimode, sender, receiver, MsgTypeID, Remark, IP, groupiD)" +
-                                          " values (:1, :2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16, :17)";
-
+        private const string sqlInsert = "insert into LLData(roomID, userID, VLID, SceneID, SequenceID, StepID, Brightness, CCT, duv, x, y, pimode, sender, receiver, MsgTypeID, Remark, IP, groupiD)" +
+                                         " values (:1, :2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16,:17,:18)";
+ 
         private Logger log;
         private ConcurrentQueue<LightLifeData> dataQueue;
         private Thread logThread; 
         private bool done ;
+        public EventWaitHandle _waitHandle = new AutoResetEvent(false);
 
         public LightLifeLogger()
         {
@@ -42,6 +43,7 @@ namespace Lumitech.Interfaces
         public virtual void Unsubscribe()
         {
             done=true;
+            _waitHandle.Close();
             if (logThread.IsAlive) logThread.Join();
             cancellation.Dispose();
         }
@@ -50,6 +52,7 @@ namespace Lumitech.Interfaces
         public virtual void OnCompleted()
         {
             done = true;
+            _waitHandle.Close();
             if (logThread.IsAlive) logThread.Join();
         }
 
@@ -63,6 +66,7 @@ namespace Lumitech.Interfaces
         {
             //push to queue
             dataQueue.Enqueue(info);
+            _waitHandle.Set();
         }         
 
         private void StartLogger()
@@ -75,6 +79,8 @@ namespace Lumitech.Interfaces
 
                 while (!done)
                 {
+                    _waitHandle.WaitOne();
+
                     while (dataQueue.TryDequeue(out info))
                     {
                         string stmt = sqlInsert;
@@ -85,6 +91,7 @@ namespace Lumitech.Interfaces
                         cmd.Params[i++] = info.vlid;
                         cmd.Params[i++] = info.sceneid;
                         cmd.Params[i++] = info.sequenceid;
+                        cmd.Params[i++] = info.stepid;
                         cmd.Params[i++] = info.piled.brightness;
                         cmd.Params[i++] = info.piled.cct;
                         cmd.Params[i++] = info.piled.duv;
@@ -99,7 +106,7 @@ namespace Lumitech.Interfaces
                         cmd.Params[i++] = info.piled.groupid;
 
                         //FW 16.2.2015: auskommentiert, damit nicht soviel in die DB geschreiben wird beim Testen
-                        //cmd.Exec();
+                        cmd.Exec();
                         
                     }
                 }
@@ -111,6 +118,7 @@ namespace Lumitech.Interfaces
             }
             finally
             {
+                _waitHandle.Close();
                 if (cmd.Connection.State == System.Data.ConnectionState.Open) 
                         cmd.Connection.Close();
             }

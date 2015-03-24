@@ -36,7 +36,7 @@ protected:
 	unsigned int defaultCct;
 	int MinVal;
 	int MaxVal;
-	float defaultXy[2];
+	//float defaultXy[2];
 
 	Settings* ini;
 	Logger* log;

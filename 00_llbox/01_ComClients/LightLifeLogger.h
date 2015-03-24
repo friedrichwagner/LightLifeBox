@@ -12,7 +12,7 @@ private:
 	LightLifeData* lldata;
 
 	void setBrightness(unsigned int);
-	void setCCT(unsigned int);
+	void setCCT(unsigned int, float[]);
 	void setRGB(unsigned int[3]);
 	void setXY(float[2]);
 	void setFadeTime(unsigned int);

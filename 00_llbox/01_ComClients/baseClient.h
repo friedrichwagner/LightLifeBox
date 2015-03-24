@@ -163,7 +163,7 @@ public:
 	int getCntClients();
 
 	virtual void setBrightness(unsigned int) = 0;
-	virtual void setCCT(unsigned int) = 0;
+	virtual void setCCT(unsigned int, float[]) = 0;
 	virtual void setRGB(unsigned int[]) = 0;
 	virtual void setXY(float[]) = 0;
 	virtual void setFadeTime(unsigned int val) = 0;

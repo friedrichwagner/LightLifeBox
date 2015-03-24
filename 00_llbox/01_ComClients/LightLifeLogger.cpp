@@ -38,11 +38,13 @@ void LightLifeLogger::setBrightness(unsigned int val)
 	send();
 }
 
-void LightLifeLogger::setCCT(unsigned int cct)
+void LightLifeLogger::setCCT(unsigned int cct, float xy[])
 {
 	lldata->mode = PILED_SET_CCT;
 	lldata->cct = cct;
 	lldata->duv = 0.0f;
+	lldata->xy[0] = xy[0]; //bereits umgerechnete CCT to xy-Koordinaten
+	lldata->xy[1] = xy[1];
 	lldata->msgtype = LL_SET_LIGHTS;
 	send();
 }

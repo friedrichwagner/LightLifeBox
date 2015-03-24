@@ -8,7 +8,8 @@
 	<ListenPort value="1747" />
   </UDPServer>
   <Database>
-    <DataSource value="LT-WSSQLTEST\SQLEXPRESS" />
+    <!--<DataSource value="LT-WSSQLTEST\SQLEXPRESS" />-->
+	<DataSource value="LTJENB14\SQLEXPRESS" />
     <InitialCatalog value="LightLife" />
     <UserID value="ltcs" />
     <Password value="Lumitech03" />

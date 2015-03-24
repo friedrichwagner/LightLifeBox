@@ -254,7 +254,7 @@ namespace Lumitech.Helpers
 	        double c1, c2, ret;
 	        c1 = 2*pi*planck_h* Math.Pow(licht_c,2);
 	        c2 = planck_h*licht_c/(boltzmann_k);
-            ret = c1 / Math.Pow(lambda, 5) * Math.Pow(Math.Exp(c2 / (lambda * T)) - 1, -1);
+            ret = c1 / Math.Pow(lambda, 5)/pi * Math.Pow(Math.Exp(c2 / (lambda * T)) - 1, -1);
 	        ret=ret*1e-9;
 
 	        return ret;

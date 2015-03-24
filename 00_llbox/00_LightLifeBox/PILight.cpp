@@ -48,7 +48,9 @@ PILight::PILight(std::string pSection)
 
 	brightness = defaultBrightness;
 	cct = defaultCct;
-	CCT2xy(defaultCct, defaultXy);
+	fCieCoords_t cie = CCT2xy(defaultCct);
+	xy[0] = cie.x; xy[1] = cie.y;
+
 	duv = 0.0f;
 	rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
 	fadetime = 0;
@@ -137,12 +139,16 @@ void PILight::setCCT(unsigned int val)
 	if (cct > (unsigned int)MaxVal) cct = MaxVal;
 	if (cct < (unsigned int)MinVal) cct = MinVal;
 
+	//Umrechunung CCT (CIE1964) to x,y Koordinaten
+	fCieCoords_t cie=CCT2xy(cct);
+	xy[0] = cie.x; xy[1] = cie.y;
+
 	setLog();	
 
 	for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
 		if (ComClients[i] != NULL)
-			ComClients[i]->setCCT(cct);
+			ComClients[i]->setCCT(cct, xy);
 	}
 }
 
@@ -186,9 +192,13 @@ void PILight::setCCTDuv(unsigned int cct, float duv)
 
 	if (duv > 0.02f) duv = 0.02f;
 	if (duv < -0.02f) duv = -0.02f;
+	
+	fCieCoords_t cie;
 
-	if (CCTDuv2xy(cct, duv, xy) == 0)
+	if (CCTDuv2xy(cct, duv, &cie) == 0)
 	{
+		xy[0] = cie.x;
+		xy[1] = cie.y;
 		//setXY(xy);
 	}
 	

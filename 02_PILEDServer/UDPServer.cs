@@ -135,23 +135,13 @@ namespace PILEDServer
                                 {
                                     log.Info(receivedResults.RemoteEndPoint.Address + ":" + s);
 
-                                    LightLifeData info = new LightLifeData();
+                                    LightLifeData info = new LightLifeData(s);
 
-                                    if (s.Contains("roomid"))
+                                    if (fmGroups != null)
                                     {
-                                        //Receive Messages from Admin Console
-                                        info = s.FromJson<LightLifeData>();
+                                        fmGroups.UpdateDataTable(info.piled);
                                     }
-                                    else
-                                    {
-                                        //Receive Messages from ControlBox
-                                        info.piled = s.FromJson<PILEDData>();
-
-                                        if (fmGroups != null)
-                                        {
-                                            fmGroups.UpdateDataTable(info.piled);
-                                        }
-                                    }
+  
 
                                     info.ip = receivedResults.RemoteEndPoint.Address.ToString(); //always save address as well
 

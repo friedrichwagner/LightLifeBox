@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LightLifeAdminConsole</RootNamespace>
     <AssemblyName>LightLifeAdminConsole</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -45,6 +45,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -70,6 +71,9 @@
     </Compile>
     <Compile Include="..\04_Common\01_ComClients\NeoLink.cs">
       <Link>01_ComClients\NeoLink.cs</Link>
+    </Compile>
+    <Compile Include="..\04_Common\JSONSerialize.cs">
+      <Link>04_Common\JSONSerialize.cs</Link>
     </Compile>
     <Compile Include="..\04_Common\LightLifeData.cs">
       <Link>04_Common\LightLifeData.cs</Link>

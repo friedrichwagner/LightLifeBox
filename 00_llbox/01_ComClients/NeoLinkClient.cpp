@@ -47,7 +47,7 @@ void NeoLinkClient::setBrightness(unsigned int val)
 	send();
 }
 
-void NeoLinkClient::setCCT(unsigned int cct)
+void NeoLinkClient::setCCT(unsigned int cct, float xy[])
 {
 	std::vector<unsigned char> v;
 	nlframe->byMode = NL_CCT;
@@ -100,10 +100,12 @@ void NeoLinkClient::setXY(float val[2])
 
 void NeoLinkClient::setCCTDuv(unsigned int cct, float duv)
 {
+	fCieCoords_t cie;
 	float xy[2];
 
-	if (CCTDuv2xy(cct, duv, xy) == 0)
+	if (CCTDuv2xy(cct, duv, &cie) == 0)
 	{
+		xy[0] = cie.x; xy[1] = cie.y;
 		setXY(xy);
 	}
 }

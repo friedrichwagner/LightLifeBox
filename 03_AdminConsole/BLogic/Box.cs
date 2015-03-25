@@ -51,10 +51,29 @@ namespace LightLifeAdminConsole
 
         public Box(int boxnr)
         {
+            head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
+            pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+            boxdata = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
+
+            DataTable dt = boxdata.select("where boxID=" + boxnr.ToString());
+
+            if (dt.Rows.Count > 0)
+            {
+                IsActive = (dt.Rows[0].Field<int>("active") == 1) ? true : false;
+                BoxIP = IPAddress.Parse(dt.Rows[0].Field<string>("BoxIP"));
+                GroupID = dt.Rows[0].Field<int>("GroupID");
+                int recvport = dt.Rows[0].Field<int>("recvPort");
+                int sendport = dt.Rows[0].Field<int>("sendPort");
+
+                rCmd = new LLRemoteCommand(BoxIP, sendport, recvport);
+                rCmd.bAsync = false;
+                rCmd.ReceiveData += ReceiveDatafromControlBox;
+            }
+
             InitBox(boxnr);
 
-            DataTable dt = head.execQuery(LLSQL.tables["LLTestSequenceHead"].sqlCmd1, new string[] { BoxNr.ToString() }, "");
-            InitSequence(dt);
+            DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].sqlCmd1, new string[] { BoxNr.ToString() }, "");
+            InitSequence(dt1);
         }
 
         public Box(DataTable dt)
@@ -77,26 +96,8 @@ namespace LightLifeAdminConsole
             TestSequenceOder = new List<TestSequence>(4);
             lastmsgtype = LLMsgType.LL_NONE;
             lastBrightness = 0;
-
-            head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
-            pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
-            boxdata = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
-            DataTable dt = boxdata.select("where boxID=" + BoxNr.ToString());
-
-
-            if (dt.Rows.Count > 0)
-            {
-                IsActive = (dt.Rows[0].Field<int>("active") == 1) ? true : false;
-                BoxIP = IPAddress.Parse(dt.Rows[0].Field<string>("BoxIP"));
-                GroupID = dt.Rows[0].Field<int>("GroupID");
-                int recvport =  dt.Rows[0].Field<int>("recvPort");
-                int sendport = dt.Rows[0].Field<int>("sendPort");
-
-                rCmd = new LLRemoteCommand(BoxIP, sendport, recvport);
-                rCmd.bAsync = false;
-                IsActive = rCmd.Ping(GroupID);
-                rCmd.ReceiveData += ReceiveDatafromControlBox;
-            }
+               
+            IsActive = rCmd.Ping(GroupID);
 
             setPotisActive(TestSequence.NONE);
         }
@@ -122,7 +123,7 @@ namespace LightLifeAdminConsole
             }
         }
 
-        public static Box ReloadSequence(int pSeqid, ref IDictionary<int, Box> boxes)
+        public static int ReloadSequence(int pSeqid, ref IDictionary<int, Box> boxes)
         {
             AdminBase head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
             DataTable dt = head.select(" where SequenceID=" + pSeqid.ToString());
@@ -130,14 +131,12 @@ namespace LightLifeAdminConsole
             if (dt.Rows.Count < 1) throw new ArgumentException("Sequence ID does not exist!");
 
             int bnr = dt.Rows[0].Field<int>("BoxID");
-            boxes[bnr].Close(); //Close down sending and receiving sockets
+            //boxes[bnr].Close(); //Close down sending and receiving sockets
+            //Box newBox = new Box(dt);
+            boxes[bnr].InitBox(bnr);
+            boxes[bnr].InitSequence(dt);
 
-            //BoxStatus State = GetStatefromString(dt.Rows[0].Field<string>("Status"));
-            //if (State == BoxStatus.FINISHED) throw new ArgumentException("TestSequence already finished!");
-
-            Box newBox = new Box(dt);
-
-            return newBox;
+            return bnr;
         }
 
         public bool Ping()

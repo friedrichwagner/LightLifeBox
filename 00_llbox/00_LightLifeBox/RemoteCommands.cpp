@@ -253,8 +253,6 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 	map<string, string> flds = s.split2map(';','=');
 
 
-	if (flds.size() < 2) return;
-
 	//Need to change admin Console 
  	for (unsigned int i = 0; i < box->Buttons.size(); i++)
 	{
@@ -276,6 +274,9 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 
 
 	StandardAnswer(cmd);
+
+	//Reset to Default when new Buttons were sent
+	//box->Lights[0]->resetDefault();
 }
 
 void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)

@@ -181,22 +181,22 @@ create table LLData
 	added datetime default getdate()
 );
 
+drop view V_LLDATA
 create view V_LLDATA  
 		(	DataID, RoomID, RoomName, UserID, Proband, VLID, Versuchsleiter,
-			SceneID, SceneName, SequenceID, SequenceName,
-			Brightness, CCT, x, y, pimode, Remark, sender, receiver, MsgTypeID, MsgName, added
+			SceneID, SceneName, SequenceID, StepID,
+			Brightness, CCT, duv, x, y, pimode, Remark, sender, receiver, MsgTypeID, MsgName, added
 		)
 as
-select d.DataID, d.RoomID, r.Name, d.UserID, (u.LastName + ' ' + u.FirstName), d.VLID, (u.LastName + ' '+ u.FirstName),
-		d.SceneID, s.SceneName, q.SequenceDefID, q.SequenceName,
-		d.Brightness, d.CCT, d.x, d.y, d.pimode, d.Remark, d.sender, d.receiver, d.MsgTypeID, m.MsgName, d.added
-from LLData d, LLRoom r, LLUser u, LLScene s, LLTestSequenceDefinition q, llMsgType m
+select d.DataID, d.RoomID, r.Name, d.UserID, (u.LastName + ' ' + u.FirstName), d.VLID, (v.LastName + ' '+ v.FirstName),
+		d.SceneID, s.SceneName, d.SequenceID, d.StepID,
+		d.Brightness, d.CCT, d.duv, d.x, d.y, d.pimode, d.Remark, d.sender, d.receiver, d.MsgTypeID, m.MsgName, d.added
+from LLData d left outer join LLScene s on  d.SceneID = s.SceneID, LLRoom r, LLUser u, llMsgType m, LLUser v
 where d.Roomid = r.Roomid
 and d.UserId = u.USerId
-and d.VLID=u.UserId
-and d.SceneID = s.SceneID
-and d.SequenceID=q.SequenceDefID
+and d.VLID =v.UserID
 and d.MsgTypeId = m.MsgID
+
 
 drop table LLTestSequenceDefinition;
 drop table LLTestSequence;

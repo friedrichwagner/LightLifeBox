@@ -219,13 +219,17 @@ namespace LightLifeAdminConsole.MVVM
         {
             try
             {
-                if (cmd.ToUpper() == "START") boxes[SelectedBox].StartSequence();
-                if (cmd.ToUpper() == "PAUSE") boxes[SelectedBox].PauseSequence();
-                if (cmd.ToUpper() == "STOP") boxes[SelectedBox].StopSequence();
-                if (cmd.ToUpper() == "PREV") boxes[SelectedBox].PrevStep();
-                if (cmd.ToUpper() == "NEXT") boxes[SelectedBox].NextStep();
-                if (cmd.ToUpper() == "UPDATE") boxes[SelectedBox].UpdateRemark(SelectedRemark);
-                if (cmd.ToUpper() == "REFRESH") boxes[SelectedBox].Refresh();
+                switch (cmd.ToUpper())
+                {
+                    case "START"    : boxes[SelectedBox].StartSequence(); break;
+                    case "PAUSE"    : boxes[SelectedBox].PauseSequence(); break;
+                    case "STOP"     : boxes[SelectedBox].StopSequence(); break;
+                    case "PREV"     : boxes[SelectedBox].PrevStep(); break;
+                    case "NEXT"     : boxes[SelectedBox].NextStep(); break;
+                    case "UPDATE"   : boxes[SelectedBox].UpdateRemark(SelectedRemark); break;
+                    case "REFRESH"  : boxes[SelectedBox].Refresh(); break;
+                }
+
                 
                 RaiseAllProperties();
             }
@@ -278,15 +282,17 @@ namespace LightLifeAdminConsole.MVVM
         {
             try                
             {              
-                Box newBox = Box.ReloadSequence(seqID, ref boxes);
+               int bnr =  Box.ReloadSequence(seqID, ref boxes);
 
-                boxes[newBox.BoxNr] = newBox;
-                
-                _selectedBox = newBox.BoxNr;
-                _selectedProband = newBox.ProbandID;
-                _selectedRemark = newBox.Remark;
+                //boxes[newBox.BoxNr] = newBox;
 
-                if (boxes[newBox.BoxNr].State == BoxStatus.FINISHED)
+               //_selectedBox = boxes[bnr].BoxNr;
+                //_selectedProband = boxes[bnr].ProbandID;
+                //_selectedRemark = boxes[bnr].Remark;
+
+               SelectedBox = boxes[bnr].BoxNr;
+
+                if (boxes[bnr].State == BoxStatus.FINISHED)
                     ErrorText = "TestSequence already finished!";
 
                 RaiseAllProperties();
@@ -302,15 +308,16 @@ namespace LightLifeAdminConsole.MVVM
         {
             RaisePropertyChanged("SelectedProband");
             RaisePropertyChanged("SelectedRemark");
-            RaisePropertyChanged("TestSequencePos");
+
             RaisePropertyChanged("BtnStartEnabled");
             RaisePropertyChanged("BtnStopEnabled");
             RaisePropertyChanged("BtnPrevEnabled");
             RaisePropertyChanged("BtnNextEnabled");
             RaisePropertyChanged("BtnPauseEnabled");
             RaisePropertyChanged("BtnUpdateEnabled");
-            RaisePropertyChanged("TestSequencePos");
+           
             RaisePropertyChanged("SequenceID");
+            RaisePropertyChanged("TestSequencePos");
             RaisePropertyChanged("StepID");
         }
     }

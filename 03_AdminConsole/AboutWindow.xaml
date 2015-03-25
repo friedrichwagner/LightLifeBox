@@ -10,12 +10,8 @@
             <TextBlock x:Name="txtVersion" Style="{StaticResource Heading2}" TextWrapping="Wrap" Text="Light Life Admin Console"/>
             <TextBlock x:Name="txtBuild" TextWrapping="Wrap" Text="123123" VerticalAlignment="Top"/>
             <mui:BBCodeBlock Text="&#13;&#10;" />
-            
-            <TextBlock Text="Project Partners:" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
-            <mui:BBCodeBlock BBCode="[size=20] » [url=http://www.lumitech.com]Lumitech Produktion und Entwicklung[/url] [/size]" />
-            <Image Height="30"  VerticalAlignment="Top"  Source="/Images/Lumitech.jpg"/>
-            <mui:BBCodeBlock Text="&#13;&#10;" />
 
+            <TextBlock Text="Project Partners:" Style="{StaticResource Heading2}" Margin="0,0,0,8" />
             <mui:BBCodeBlock BBCode="[color=#707791] [size=20] » [url=http://www.joanneum.at/en/materials.html]Joanneum Research -  Materials[/url] [/size] [/color]" />
             <mui:BBCodeBlock BBCode="[color=#bfad6f] [size=20] » [url=http://www.joanneum.at/en/policies.html]Joanneum Research -  Policies[/url] [/size] [/color]" />
             <Image Height="70"  VerticalAlignment="Top" Source="/Images/joanneum-research.png" />
@@ -23,6 +19,11 @@
 
             <mui:BBCodeBlock BBCode="[size=20] » [url=http://www.tugraz.at/fakultaeten/architektur/]TU Graz - Architektur[/url] [/size]" />
             <Image Height="90"  VerticalAlignment="Top" Source="/Images/TU-Graz.gif" />
+            <mui:BBCodeBlock Text="&#13;&#10;" />            
+            
+            <mui:BBCodeBlock BBCode="[size=20] » [url=http://www.lumitech.com]Lumitech Produktion und Entwicklung[/url] [/size]" />
+            <Image Height="30"  VerticalAlignment="Top"  Source="/Images/Lumitech.jpg"/>
+            <mui:BBCodeBlock Text="&#13;&#10;" />
         </StackPanel>
     </ScrollViewer>
 </mui:ModernWindow>

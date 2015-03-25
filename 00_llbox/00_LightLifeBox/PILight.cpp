@@ -144,6 +144,8 @@ void PILight::setCCT(unsigned int val)
 	fCieCoords_t cie=CCT2xy(cct);
 	xy[0] = cie.x; xy[1] = cie.y;
 
+	duv = 0.0f;
+
 	setLog();	
 
 	for (unsigned int i = 0; i < ComClients.size(); i++)

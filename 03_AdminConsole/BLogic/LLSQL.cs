@@ -15,6 +15,8 @@ namespace LightLifeAdminConsole.Data
         public string insertSQL;
         public string updateSQL;
         public string deleteSQL;
+        public string sqlCmd1;
+        public string sqlCmd2;
 
         public SQLSet(string tname)
         {
@@ -23,6 +25,8 @@ namespace LightLifeAdminConsole.Data
             insertSQL = String.Empty;
             updateSQL = String.Empty;
             deleteSQL = String.Empty;
+            sqlCmd1 = String.Empty;
+            sqlCmd2 = String.Empty;
         }
     };
 
@@ -100,6 +104,7 @@ namespace LightLifeAdminConsole.Data
             tables["LLTestSequenceHead"].selectSQL = "select * from LLTestSequenceHead";
             tables["LLTestSequenceHead"].insertSQL = "insert into LLTestSequenceHead(SequenceID, BoxID, UserID, VLId, remark) values(:1,:2,:3,:4, :5)";
             tables["LLTestSequenceHead"].updateSQL = "update LLTestSequenceHead set Remark=:1 where sequenceID=:2";
+            tables["LLTestSequenceHead"].sqlCmd1 = "select * from LLTestSequenceHead where boxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1)";
 
             tables["LLTestSequencePos"].selectSQL = "select * from LLTestSequencePos";
             tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, StepID, pimode, Brightness, CCT, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8)";
@@ -235,3 +240,4 @@ namespace LightLifeAdminConsole.Data
                 });
         }*/
 }
+

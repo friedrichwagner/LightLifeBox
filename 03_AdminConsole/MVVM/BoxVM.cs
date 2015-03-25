@@ -24,7 +24,8 @@ namespace LightLifeAdminConsole.MVVM
         public int SequenceID
         {
             get {
-                if (SelectedBox > 0) return boxes[SelectedBox].SequenceID;
+                                            //Dictionary Boxes beginnt mit 1
+                if (_selectedBox > 0) return boxes[_selectedBox].SequenceID;
                 else return -1;
             }
             /*set {
@@ -45,7 +46,7 @@ namespace LightLifeAdminConsole.MVVM
         public int StepID
         {
             get {
-                if (SelectedBox > 0) return boxes[SelectedBox].StepID;
+                if (_selectedBox > 0) return boxes[_selectedBox].StepID;
                 else return -1;
             }
         }
@@ -54,8 +55,8 @@ namespace LightLifeAdminConsole.MVVM
         public DataView TestSequencePos 
         {
             get {
-                if (SelectedBox > 0)
-                    return _testSequencePos.select(" where SequenceID=" + boxes[SelectedBox].SequenceID.ToString()).DefaultView;
+                if (_selectedBox > 0)
+                    return _testSequencePos.select(" where SequenceID=" + boxes[_selectedBox].SequenceID.ToString()).DefaultView;
                 else return null;
             }
         }
@@ -95,10 +96,12 @@ namespace LightLifeAdminConsole.MVVM
                     _selectedBox = value;
                     try
                     {
-                        boxes[SelectedBox].Ping();
+                        boxes[_selectedBox].Ping();
                         IsBusy = false;
-                        if (boxes[SelectedBox].IsActive == false)
-                            InfoText = "Box #" + _selectedBox.ToString() + " is inactive!";
+                        if (boxes[_selectedBox].IsActive == false)
+                            InfoText = "Box #" + _selectedBox.ToString() + " is inactive!";                           
+                        RaiseAllProperties();
+                        
                     }
                     catch(Exception ex)
                     {
@@ -114,8 +117,9 @@ namespace LightLifeAdminConsole.MVVM
         public int SelectedProband
         {
             get {
-                if (_selectedProband > -1)
-                    return boxes[SelectedBox].ProbandID;
+                //if (_selectedProband > -1)
+                if (_selectedBox > 0)
+                    return boxes[_selectedBox].ProbandID;
                 else
                     return _selectedProband;
             }
@@ -123,7 +127,7 @@ namespace LightLifeAdminConsole.MVVM
             {
                 if (value > -1)
                 {
-                    boxes[SelectedBox].ProbandID = value;                    
+                    boxes[_selectedBox].ProbandID = value;                    
                 }
 
                 _selectedProband = value;
@@ -137,15 +141,16 @@ namespace LightLifeAdminConsole.MVVM
         {
             get
             {
-                if (_selectedProband > -1)
-                    return boxes[SelectedBox].Remark;
+                //if (_selectedProband > -1)
+                if (_selectedBox > 0)
+                    return boxes[_selectedBox].Remark;
                 else
                     return _selectedRemark;
             }
             set
             {
-                if (_selectedProband > -1)
-                    boxes[SelectedBox].Remark = value;
+                if (_selectedBox > 0)
+                    boxes[_selectedBox].Remark = value;
                 _selectedRemark = value;
                 RaisePropertyChanged("SelectedRemark");
             }
@@ -271,8 +276,8 @@ namespace LightLifeAdminConsole.MVVM
 
         public void ReloadSequence(int seqID)
         {
-            try
-            {
+            try                
+            {              
                 Box newBox = Box.ReloadSequence(seqID, ref boxes);
 
                 boxes[newBox.BoxNr] = newBox;

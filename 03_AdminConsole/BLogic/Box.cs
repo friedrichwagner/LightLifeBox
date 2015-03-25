@@ -52,26 +52,15 @@ namespace LightLifeAdminConsole
         public Box(int boxnr)
         {
             InitBox(boxnr);
+
+            DataTable dt = head.execQuery(LLSQL.tables["LLTestSequenceHead"].sqlCmd1, new string[] { BoxNr.ToString() }, "");
+            InitSequence(dt);
         }
 
         public Box(DataTable dt)
         {
             InitBox(dt.Rows[0].Field<int>("BoxID"));
-
-            SequenceID = dt.Rows[0].Field<int>("SequenceID");           
-            ProbandID = dt.Rows[0].Field<int>("UserID");
-            State = GetStatefromString(dt.Rows[0].Field<string>("Status"));
-            StepID = dt.Rows[0].Field<int>("ActualStep");
-            Remark = dt.Rows[0].Field<string>("Remark");
- 
-            GetTestSequenceOrder();
-
-            if (IsActive)
-            {
-                int brightness=0;
-                if (State == BoxStatus.STARTED) brightness = 100;
-                UpdateVarious(LLMsgType.LL_RELOAD_TESTSEQUENCE, brightness);
-            }
+            InitSequence(dt);
         }
 
         private void InitBox(int boxnr)
@@ -110,6 +99,27 @@ namespace LightLifeAdminConsole
             }
 
             setPotisActive(TestSequence.NONE);
+        }
+
+        public void InitSequence(DataTable dt)
+        {
+            if (dt.Rows.Count >= 1)
+            {
+                SequenceID = dt.Rows[0].Field<int>("SequenceID");
+                ProbandID = dt.Rows[0].Field<int>("UserID");
+                State = GetStatefromString(dt.Rows[0].Field<string>("Status"));
+                StepID = dt.Rows[0].Field<int>("ActualStep");
+                Remark = dt.Rows[0].Field<string>("Remark");
+
+                GetTestSequenceOrder();
+
+                if (IsActive)
+                {
+                    int brightness = 0;
+                    if (State == BoxStatus.STARTED) brightness = 100;
+                    UpdateVarious(LLMsgType.LL_RELOAD_TESTSEQUENCE, brightness);
+                }
+            }
         }
 
         public static Box ReloadSequence(int pSeqid, ref IDictionary<int, Box> boxes)

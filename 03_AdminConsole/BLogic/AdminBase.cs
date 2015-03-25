@@ -41,6 +41,8 @@ namespace LightLifeAdminConsole
                 table.Load(_sql.dr);                
             }
 
+            _sql.dr.Close();
+
             return table;
         }
 
@@ -81,6 +83,24 @@ namespace LightLifeAdminConsole
             }
 
             return 0;
+        }
+
+        public virtual DataTable execQuery(string sqlCmd, string[] p, string filter)
+        {
+            DataTable table = new DataTable();
+            if (sqlCmd != string.Empty)
+            {
+                _sql.prep(sqlCmd + " " + filter);
+                for (int i = 0; i < p.Length; i++)
+                    _sql.Params[i] = p[i];
+
+                _sql.Exec();
+                table.Load(_sql.dr);  
+            }
+
+            _sql.dr.Close();
+
+            return table;
         }
     }
 }

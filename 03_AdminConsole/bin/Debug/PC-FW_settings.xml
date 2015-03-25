@@ -2,7 +2,7 @@
 <Settings>
 	<Pages>
 		<StartPage value="/Pages/Login.xaml" />
-		<PagesVisible value="Administration;PI-LED Control;Boxen;Settings" />
+		<PagesVisible value="Boxen;PI-LED Control;Administration;;Settings" />
 		<Interfaces value="LightLifeLogger,NeoLink" />
 	</Pages>
 	<Login>
@@ -25,7 +25,7 @@
 	<Enable value="True" />
   </NeoLink>      
   <ControlBox>
-	<NrOfBoxes value="4" />
+	<NrOfBoxes value="2" />
 	<Command-Port value="9998" />
   </ControlBox>
 </Settings>

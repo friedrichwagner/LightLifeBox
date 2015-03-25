@@ -76,7 +76,7 @@ void isr_General(int index, int dir)
 
 			pibuttons[index]->cnt = pibuttons[index]->cnt + dir; //dir = -1 oder +1			
 
-			if (abs(pibuttons[index]->cnt) >= pibuttons[index]->deltaCnt)
+			if ((unsigned int)abs(pibuttons[index]->cnt) >= pibuttons[index]->deltaCnt)
 			{
 				if (pibuttons[index]->ButtonEvent != 0)
 				{				

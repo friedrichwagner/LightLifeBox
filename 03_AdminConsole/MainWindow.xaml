@@ -11,11 +11,11 @@
                 <mui:Link DisplayName="" Source="/Pages/Login.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="Administration">
+        <mui:LinkGroup DisplayName="Boxen">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Administration" Source="/Pages/Administration.xaml" />
+                <mui:Link DisplayName="Control-Boxes" Source="/Pages/ControlBox.xaml" />
             </mui:LinkGroup.Links>
-        </mui:LinkGroup>  
+        </mui:LinkGroup>        
         <mui:LinkGroup DisplayName="PI-LED Control">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="CCT/XY" Source="/Content/PILED/XY.xaml" />
@@ -23,15 +23,15 @@
                 <mui:Link DisplayName="CCT" Source="/Content/PILED/CCT.xaml" />
                 <mui:Link DisplayName="Szenen / Sequenzen" Source="/Content/PILED/Sequence.xaml" />
             </mui:LinkGroup.Links>
-        </mui:LinkGroup>        
+        </mui:LinkGroup>
+        <mui:LinkGroup DisplayName="Administration">
+            <mui:LinkGroup.Links>
+                <mui:Link DisplayName="Administration" Source="/Pages/Administration.xaml" />
+            </mui:LinkGroup.Links>
+        </mui:LinkGroup>
         <mui:LinkGroup DisplayName="Logging">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="Logging" Source="/Pages/Logging.xaml" />
-            </mui:LinkGroup.Links>
-        </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="Boxen">
-            <mui:LinkGroup.Links>
-                <mui:Link DisplayName="Control-Boxes" Source="/Pages/ControlBox.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
     </mui:ModernWindow.MenuLinkGroups>

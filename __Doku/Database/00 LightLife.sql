@@ -147,6 +147,7 @@ create table LLScene
 	added datetime default getdate()
 );
 
+drop table LLMsgType;
 create table LLMsgType
 (
 	MsgID int not null primary key,

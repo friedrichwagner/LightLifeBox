@@ -100,7 +100,7 @@ void NeoLinkClient::setXY(float val[2])
 
 void NeoLinkClient::setCCTDuv(unsigned int cct, float duv, float xy[2])
 {
-	fCieCoords_t cie;
+	//fCieCoords_t cie;
 	/*float xy[2];
 
 	if (CCTDuv2xy(cct, duv, &cie) == 0)

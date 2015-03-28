@@ -2,7 +2,7 @@
 <Settings>	
   <Definitions>
     <Database value="true" />
-    <Interfaces value="LightLifeLogger,NeoLink" />
+    <Interfaces value="LightLifeLogger" />
   </Definitions>
   <UDPServer>
 	<ListenPort value="1747" />

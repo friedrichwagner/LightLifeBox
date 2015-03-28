@@ -49,7 +49,7 @@ int main(int argc, char * argv[])
 	*/
 
 	Logger* log=Logger::getInstance();
-	DebugServer *dbgSrv = DebugServer::getInstance();
+	DebugServer *dbgSrv = NULL; // DebugServer::getInstance();
 	log->addClient((IObserver*)dbgSrv);
 
 	try
@@ -73,6 +73,8 @@ int main(int argc, char * argv[])
 			if (cmdOptionExists(argv, argv+argc, "-b")) boxName = getCmdOption(argv, argv+argc,"-b");
 			//if (cmdOptionExists(argv, argv+argc, "-light")) lightName = getCmdOption(argv, argv+argc,"-light");
 			//if (cmdOptionExists(argv, argv+argc, "-l")) lightName = getCmdOption(argv, argv+argc,"-l");
+
+			dbgSrv = DebugServer::getInstance();
 				
 
 			//Run in a Thread			
@@ -126,7 +128,7 @@ void printHelp()
 	cout << VERSION << endl << endl;
 	cout << " -help \t\t this help screen" << endl;
 	cout << " -box/-b \t Name of box from settings.ini file" << endl;
-	cout << " -light/-l \t Name of PILight from settings.ini file" << endl;
+	//cout << " -light/-l \t Name of PILight from settings.ini file" << endl;
 	cout << endl;
 }
 

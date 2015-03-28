@@ -57,7 +57,6 @@
     <ClInclude Include="05_Test\IPClient.h" />
     <ClInclude Include="06_WiringPi\PIButton.h" />
     <ClInclude Include="06_WiringPi\softTone.h" />
-    <ClInclude Include="06_WiringPi\wiringPi.h" />
     <ClInclude Include="07_Photometric\Photometric.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -156,9 +156,6 @@
     <ClInclude Include="06_WiringPi\softTone.h">
       <Filter>06_WiringPi</Filter>
     </ClInclude>
-    <ClInclude Include="06_WiringPi\wiringPi.h">
-      <Filter>06_WiringPi</Filter>
-    </ClInclude>
     <ClInclude Include="06_WiringPi\PIButton.h">
       <Filter>06_WiringPi</Filter>
     </ClInclude>

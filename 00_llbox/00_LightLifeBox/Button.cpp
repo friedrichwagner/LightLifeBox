@@ -1,5 +1,6 @@
 #include "Button.h"
 #include "helpers.h"
+//#include "wiringPi.h"
 
 
 Button::Button(std::string pSection)
@@ -44,7 +45,7 @@ void Button::InitPIButton()
 	{
 	case BRIGHTNESS:
 		this->pibtn.pibtnType = PIBUTTON_BRIGHTNESS;
-		this->pibtn.isr_Up = isr_BrightnessUp;this->pibtn.isr_Down = isr_BrightnessDown;this->pibtn.isr_Pressed = isr_BrightnessPressed;
+		this->pibtn.isr_Up = isr_BrightnessUp;this->pibtn.isr_Down = isr_BrightnessDown;this->pibtn.isr_Pressed = isr_BrightnessPressed;		
 		break;
 	case CCT:
 		this->pibtn.pibtnType = PIBUTTON_CCT;
@@ -65,16 +66,16 @@ void Button::InitPIButton()
 		else
 			this->pibtn.pibtnType = PIBUTTON_LOCK1;
 
-		this->pibtn.isr_Up = NULL; this->pibtn.isr_Down = NULL; this->pibtn.isr_Pressed = isr_Lock;
+		this->pibtn.isr_Up = NULL; this->pibtn.isr_Down = NULL; this->pibtn.isr_Pressed = &isr_Lock;
 		
 		break;
 
 	}
 
 #if defined (RASPI)
-	if (pibtn.portUp>0) wiringPiISR(pibtn.portUp, INT_EDGE_FALLING, pibtn.portUp.isr_Up);
-	if (pibtn.portDown>0) wiringPiISR(pibtn.portDown, INT_EDGE_FALLING, pibtn.portDown.isr_Down);
-	if (pibtn.portPressed>0) wiringPiISR(pibtn.portPressed, INT_EDGE_FALLING, pibtn.portPressed.isr_Pressed);
+	if (pibtn.portUp>0) wiringPiISR(pibtn.portUp, INT_EDGE_FALLING, pibtn.isr_Up);
+	if (pibtn.portDown>0) wiringPiISR(pibtn.portDown, INT_EDGE_FALLING, pibtn.isr_Down);
+	if (pibtn.portPressed>0) wiringPiISR(pibtn.portPressed, INT_EDGE_FALLING, pibtn.isr_Pressed);
 #endif
 
 	pibtn.index = pibuttons.size();

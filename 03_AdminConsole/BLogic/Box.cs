@@ -55,6 +55,8 @@ namespace LightLifeAdminConsole
             pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
             boxdata = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
 
+            InitBox(boxnr);
+
             DataTable dt = boxdata.select("where boxID=" + boxnr.ToString());
 
             if (dt.Rows.Count > 0)
@@ -70,7 +72,8 @@ namespace LightLifeAdminConsole
                 rCmd.ReceiveData += ReceiveDatafromControlBox;
             }
 
-            InitBox(boxnr);
+            IsActive = rCmd.Ping(GroupID);
+           
 
             DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].sqlCmd1, new string[] { BoxNr.ToString() }, "");
             InitSequence(dt1);
@@ -97,8 +100,6 @@ namespace LightLifeAdminConsole
             lastmsgtype = LLMsgType.LL_NONE;
             lastBrightness = 0;
                
-            IsActive = rCmd.Ping(GroupID);
-
             setPotisActive(TestSequence.NONE);
         }
 

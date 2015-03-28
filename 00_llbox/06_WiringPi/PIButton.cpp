@@ -4,11 +4,8 @@
 
 #include "PIButton.h"
 
-#if !defined (RASPI)
-	//#define INT_EDGE_FALLING 1	
-	//int  wiringPiISR(int pin, int mode, void(*function)(void));
-#else
-	#include "wiringPI.h"
+#if defined (RASPI)
+	#include <wiringPi.h>
 #endif
 
 using namespace std;

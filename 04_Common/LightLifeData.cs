@@ -25,17 +25,28 @@ namespace LightLife.Data
 
     public enum LLMsgType
     {
+        //Box --> PILEDServer
         LL_NONE = 0,
         LL_SET_LIGHTS = 10,
         LL_CALL_SCENE = 20,
+
         LL_START_TESTSEQUENCE = 30,
         LL_STOP_TESTSEQUENCE = 31,
         LL_PAUSE_TESTSEQUENCE = 32,
         LL_NEXT_TESTSEQUENCE_STEP = 33,
         LL_PREV_TESTSEQUENCE_STEP = 34,
-        LL_SET_BUTTONS = 35,
-        LL_RELOAD_TESTSEQUENCE = 36,
-        LL_SET_LOCKED = 99,
+        LL_RELOAD_TESTSEQUENCE = 35,
+
+        //AdminConsole -->Box
+        LL_DISCOVER = 50,
+        LL_ENABLE_BUTTONS = 51,
+        LL_SET_PILED = 52,
+        LL_GET_PILED = 53,
+        LL_SET_SEQUENCEDATA = 54,
+
+        //Box ->AdminConsole
+        LL_SET_LOCKED = 100,
+        LL_SET_DEFAULT = 101,	
     };
 
     public class PILEDData
@@ -347,5 +358,6 @@ namespace LightLife.Data
             if (_observers.Contains(_observer))
                 _observers.Remove(_observer);
         }
+
     }
 }

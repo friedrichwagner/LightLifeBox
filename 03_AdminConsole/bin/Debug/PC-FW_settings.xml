@@ -24,8 +24,4 @@
 	<SendDelayTimeMS value="200" />
 	<Enable value="True" />
   </NeoLink>      
-  <ControlBox>
-	<NrOfBoxes value="2" />
-	<Command-Port value="9998" />
-  </ControlBox>
 </Settings>

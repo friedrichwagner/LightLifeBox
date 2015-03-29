@@ -42,11 +42,6 @@ namespace PILEDServer
             observersLightLife = new List<IObserver<LightLifeData>>();
 
             AddObservers();
-
-            //ServerThread = new Thread(new ThreadStart(StartListener));
-
-            //PILEDData p = new PILEDData();
-            //string s=p.ToJson();
         }
 
         public void Dispose()

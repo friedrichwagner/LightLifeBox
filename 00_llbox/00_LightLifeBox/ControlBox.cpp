@@ -54,6 +54,8 @@ bool ControlBox::Init()
 
 	this->ID = ini->Read<int>(this->Name, "BoxNr", 0);
 
+	bool defaultActiveControls = ini->Read<bool>(this->Name, "ControlsDefaultActive", false);
+
 	//1. Get the Potis	
 	ini->ReadStringVector("ControlBox_General", "Potis", "", &flds);
 	for (unsigned int i = 0; i< flds.size(); i++)
@@ -62,7 +64,7 @@ bool ControlBox::Init()
 		{
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[i]->addClient(this);
-			//Buttons[i]->start();
+			Buttons[i]->Active = defaultActiveControls;
 		}
 	}
 
@@ -75,7 +77,7 @@ bool ControlBox::Init()
 		{
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[idx+i]->addClient(this);
-			//Buttons[i]->start();
+			Buttons[idx+i]->Active = defaultActiveControls;;
 		}
 	}
 
@@ -145,7 +147,7 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 		if (btntype == LOCK)
 		{
 			Lights[0]->lockCurrState();
-			rmCmd->SendRemoteCommand(REMOTE_SENDCMD_LOCK, "");
+			rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
 		}
 
 		Lights[0]->resetDefault();

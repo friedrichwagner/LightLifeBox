@@ -6,31 +6,32 @@
 #include "ControlBox.h"
 #include <queue>
 #include "Logger.h"
-//#include "BaseClient.h"
+#include "LightLifeData.h"
 
 #define recvBufSize	255
 
 //Forward Declaration
 class ControlBox;
 
-enum enumRemoteReceiveCommand { REMOTE_RECVCMD_DISCOVER = 1, REMOTE_RECVCMD_ENABLE_BUTTONS = 2, REMOTE_RECVCMD_SET_PILED = 3, REMOTE_RECVCMD_GET_PILED = 4, REMOTE_RECVCMD_SET_SEQUENCE=5};
-enum enumRemoteSendCommand { REMOTE_SENDCMD_LOCK = 10 };
+//enum enumRemoteReceiveCommand { REMOTE_RECVCMD_DISCOVER = 1, REMOTE_RECVCMD_ENABLE_BUTTONS = 2, REMOTE_RECVCMD_SET_PILED = 3, REMOTE_RECVCMD_GET_PILED = 4, REMOTE_RECVCMD_SET_SEQUENCE=5};
+//enum enumRemoteSendCommand { REMOTE_SENDCMD_LOCK = 100 };
 
 using namespace std;
 
 struct RemoteCommand
 {
 	short	cmdId;
-	string	cmdParams;
+	splitstring	cmdParams;
+	map<string, string> flds;
 
 	int ToString(unsigned char* buf)
 	{
-		buf[0] = (unsigned char) cmdId;
-		memcpy(&buf[1], cmdParams.c_str(), cmdParams.length());
+		ostringstream o;
+		o << "CmdId=" << lumitech::itos(cmdId) << cmdParams;
+		memcpy(&buf[0], o.str().c_str(), o.str().length());
 
-		return (cmdParams.length() + 1);
+		return (o.str().length() + 1);
 	}
-
 };
 
 class LightLifeLogger; //Forward Deklaration
@@ -78,7 +79,7 @@ class RemoteCommands
 		void StandardAnswer(RemoteCommand cmd);		
 		
 
-		void SendLock(enumRemoteSendCommand id, string params);
+		void SendLock(string params);
 
 		//Lock Handling
 		void go();
@@ -90,6 +91,6 @@ class RemoteCommands
 		void start();
 
 		void NowAddLLLogger();
-		void SendRemoteCommand(enumRemoteSendCommand, string); // to AdminConsole
+		void SendRemoteCommand(LLMsgType, string); // to AdminConsole
 		
 };

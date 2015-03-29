@@ -54,7 +54,7 @@ int main(int argc, char * argv[])
 
 	try
 	{
-		if ((cmdOptionExists(argv, argv+argc, "-help") || cmdOptionExists(argv, argv+argc, "-h")) )
+		if (cmdOptionExists(argv, argv + argc, "-help") || cmdOptionExists(argv, argv + argc, "-h") || !cmdOptionExists(argv, argv + argc, "-b"))
 		{
 			printHelp();
 		}
@@ -71,8 +71,6 @@ int main(int argc, char * argv[])
 
 			if (cmdOptionExists(argv, argv+argc, "-box")) boxName = getCmdOption(argv, argv+argc,"-box");
 			if (cmdOptionExists(argv, argv+argc, "-b")) boxName = getCmdOption(argv, argv+argc,"-b");
-			//if (cmdOptionExists(argv, argv+argc, "-light")) lightName = getCmdOption(argv, argv+argc,"-light");
-			//if (cmdOptionExists(argv, argv+argc, "-l")) lightName = getCmdOption(argv, argv+argc,"-l");
 
 			dbgSrv = DebugServer::getInstance();
 				
@@ -138,7 +136,7 @@ void runLightLifeBox(string boxName)
 
 	if (box->isDone) 
 	{
-		delete box;
+		//delete box;
 		return;
 	}		
 	lumitech::setSequencePointer((void*) box);

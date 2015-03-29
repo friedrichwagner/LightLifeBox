@@ -38,6 +38,7 @@ class splitstring : public string
     vector<string> flds;
 	map<string, string> mapdata;
 public:
+	splitstring() : string() { };
     splitstring(char *s) : string(s) { };
 	splitstring(string s) : string(s) { };
     vector<string>& split(char delim, int rep=0);

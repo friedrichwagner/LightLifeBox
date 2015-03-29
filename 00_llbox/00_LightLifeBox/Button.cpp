@@ -11,8 +11,7 @@ Button::Button(std::string pSection)
 	done = false;
 	isPressed = false;
 	Section=pSection;
-	Active = false; //Box muss von Admin Console aktiviert werden
-	//Active = true; //TEST
+	Active = false; // ini->Read<bool>(pSection, "ButtonsDefaultActive", false);
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);

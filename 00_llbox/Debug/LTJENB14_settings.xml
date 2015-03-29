@@ -16,13 +16,15 @@
 	<ControlBox1 name="ControlBox1">
 		<BoxNr value="1" />
 		<Send-Command-Port value="1749"/>
-		<Receive-Command-Port value="1748"/>	
+		<Receive-Command-Port value="1748"/>
+		<ControlsDefaultActive value="true"/>		
 	</ControlBox1>
 
 	<ControlBox2 name="ControlBox2">
 		<BoxNr value="2" />
 		<Send-Command-Port value="1759"/>
 		<Receive-Command-Port value="1758"/>	
+		<ControlsDefaultActive value="true"/>		
 	</ControlBox2>
 
 	<ControlBox3 name="ControlBox3">
@@ -35,6 +37,7 @@
 		<BoxNr value="4" />
 		<Send-Command-Port value="1779"/>
 		<Receive-Command-Port value="1778"/>	
+		<ControlsDefaultActive value="true"/>		
 	</ControlBox4>
 	
 	<Button1 id="1" name="btnLock1">

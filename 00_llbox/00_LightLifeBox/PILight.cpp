@@ -121,6 +121,8 @@ void PILight::updateClients()
 void PILight::setBrightness(unsigned int val)
 {
 	brightness = val;
+	piledMode = PILED_SET_BRIGHTNESS;
+
 	if (brightness > 255) brightness = 255;
 	if (brightness < 0) brightness = 0;
 
@@ -137,6 +139,7 @@ void PILight::setCCT(unsigned int val)
 {
 	//cct = (unsigned int)((MaxVal - MinVal) * delta + MinVal);
 	cct = val;
+	piledMode = PILED_SET_CCT;
 	if (cct > (unsigned int)MaxVal) cct = MaxVal;
 	if (cct < (unsigned int)MinVal) cct = MinVal;
 
@@ -158,6 +161,7 @@ void PILight::setCCT(unsigned int val)
 void PILight::setRGB(unsigned int prgb[])
 {
 	rgb[0] = prgb[0]; rgb[1] = prgb[1]; rgb[2] = prgb[2];
+	piledMode = PILED_SET_RGB;
 	for (int i = 0; i<3; i++)
 	{
 		if (rgb[i]>255) rgb[i] = 255;
@@ -176,6 +180,7 @@ void PILight::setRGB(unsigned int prgb[])
 void PILight::setXY(float pxy[])
 {
 	xy[0] = pxy[0]; xy[1] = pxy[1];
+	piledMode = PILED_SET_XY;
 	if (xy[0]>1.0f) xy[0] = 1.0f; if (xy[0]<0.0f) xy[0] = 0.0f;
 	if (xy[1]>1.0f) xy[1] = 1.0f; if (xy[1]<0.0f) xy[1] = 0.0f;
 
@@ -192,6 +197,7 @@ void PILight::setCCTDuv(unsigned int cct, float duv)
 {
 	if (cct > (unsigned int)MaxVal) cct = MaxVal;
 	if (cct < (unsigned int)MinVal) cct = MinVal;
+	piledMode = PILED_SET_DUV;
 
 	if (duv > 0.02f) duv = 0.02f;
 	if (duv < -0.02f) duv = -0.02f;

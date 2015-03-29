@@ -120,7 +120,7 @@ struct UDPRecvSocket
 	int receive(unsigned char* cdata, int cnt)
 	{
 		int ret = -1;
-		int addrLength;
+		//int addrLength;
 
 		//ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
 		ret = recv(_socket, (char*)cdata, cnt, 0);

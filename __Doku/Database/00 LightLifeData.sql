@@ -187,16 +187,29 @@ insert into LLMsgType(MsgID, MsgName, Remark)
 values (34, 'LL_PREV_TESTSEQUENCE_STEP', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (35, 'LL_SET_BUTTONS', null);
+values (35, 'LL_RELOAD_TESTSEQUENCE', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (36, 'LL_RELOAD_TESTSEQUENCE', null);
+values (50, 'LL_DISCOVER', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (95, 'LL_SET_DEFAULT', null);
+values (51, 'LL_ENABLE_BUTTONS', null);
 
 insert into LLMsgType(MsgID, MsgName, Remark)
-values (99, 'LL_SET_LOCKED', null);
+values (52, 'LL_SET_PILED', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (53, 'LL_GET_PILED', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (54, 'LL_SET_SEQUENCEDATA', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (100, 'LL_SET_LOCKED', null);
+
+insert into LLMsgType(MsgID, MsgName, Remark)
+values (101, 'LL_SET_DEFAULT', null);
+
 
 ---------
 

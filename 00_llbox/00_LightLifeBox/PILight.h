@@ -5,9 +5,10 @@
 #include "Logger.h"
 #include "baseClient.h"
 #include <sstream>
+#include "LightLifeData.h"
 
 
-enum enumPILEDMode { CCT_MODE=1, XY_MODE=2, RGB_MODE=3};
+//enum enumPILEDMode { CCT_MODE=1, XY_MODE=2, RGB_MODE=3};
 
 using namespace std;
 
@@ -29,7 +30,7 @@ protected:
 	float duv;
 
 	std::vector<IBaseClient*> ComClients;
-	enumPILEDMode piledMode;
+	PILEDMode piledMode;
 	ostringstream sslog;
 
 	unsigned int defaultBrightness;

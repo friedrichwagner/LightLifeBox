@@ -9,6 +9,7 @@ using System.Text;
 using System.Diagnostics;
 using LightLifeGlobalDefines;
 using LightLife.Data;
+using Lumitech.Helpers;
 
 namespace LightLifeAdminConsole
 {
@@ -16,7 +17,7 @@ namespace LightLifeAdminConsole
     public enum TestSequence { NONE, BRIGHTNESS, CCT, JUDD, ALL };
     public enum BoxPotis : byte { BRIGHTNESS, CCT, JUDD };
 
-    class Box
+    class Box //: IObserver<RemoteCommandData>
     {
         public static int VLID = 0;   //Damit man es zur Box schicken kann
         private const byte NUM_POTIS = 3;
@@ -47,10 +48,24 @@ namespace LightLifeAdminConsole
 
         private LLMsgType lastmsgtype;
         private int lastBrightness;
+        private static Logger log;
 
+
+        public static void getBoxes(ref IDictionary<int, Box> b)
+        {
+            AdminBase boxes = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
+            DataTable dt = boxes.select("where active=1");
+            
+            for (int i=0; i < dt.Rows.Count; i++)
+            {
+                b.Add(dt.Rows[i].Field<int>("BoxID"), new Box(dt.Rows[i].Field<int>("BoxID")));
+            }
+        }
 
         public Box(int boxnr)
         {
+            log = Logger.GetInstance();
+
             head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
             pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
             boxdata = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
@@ -61,19 +76,18 @@ namespace LightLifeAdminConsole
 
             if (dt.Rows.Count > 0)
             {
-                IsActive = (dt.Rows[0].Field<int>("active") == 1) ? true : false;
+                //IsActive = (dt.Rows[0].Field<int>("active") == 1) ? true : false;
                 BoxIP = IPAddress.Parse(dt.Rows[0].Field<string>("BoxIP"));
                 GroupID = dt.Rows[0].Field<int>("GroupID");
-                int recvport = dt.Rows[0].Field<int>("recvPort");
                 int sendport = dt.Rows[0].Field<int>("sendPort");
+                int recvport = dt.Rows[0].Field<int>("recvPort");
 
-                rCmd = new LLRemoteCommand(BoxIP, sendport, recvport);
-                rCmd.bAsync = false;
+                rCmd = new LLRemoteCommand(BoxIP, sendport, recvport, true);
                 rCmd.ReceiveData += ReceiveDatafromControlBox;
             }
 
             IsActive = rCmd.Ping(GroupID);
-           
+            //rCmd.Ping(GroupID);
 
             DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].sqlCmd1, new string[] { BoxNr.ToString() }, "");
             InitSequence(dt1);
@@ -81,6 +95,7 @@ namespace LightLifeAdminConsole
 
         public Box(DataTable dt)
         {
+            log = Logger.GetInstance();
             InitBox(dt.Rows[0].Field<int>("BoxID"));
             InitSequence(dt);
         }
@@ -345,41 +360,43 @@ namespace LightLifeAdminConsole
                     setPotisActive(TestSequenceOder[0]);
             }
 
-            //string Params = ";potis=" + PotisActive[(byte)BoxPotis.BRIGHTNESS] + PotisActive[(byte)BoxPotis.CCT] + PotisActive[(byte)BoxPotis.JUDD] +
-            //                ";buttons=" + ButtonsActive[0] + ButtonsActive[1];
-
             string Params = ";buttons=" + PotisActive[(byte)BoxPotis.BRIGHTNESS] + PotisActive[(byte)BoxPotis.CCT] + PotisActive[(byte)BoxPotis.JUDD] +
                                         + ButtonsActive[0] + ButtonsActive[1];
 
            rCmd.EnableButtons(Params);           
         }
 
-        private void ReceiveDatafromControlBox(IDictionary<string, string> d)
+        private void ReceiveDatafromControlBox(RemoteCommandData rCmd)
         {
-            Debug.Print(d.ToString());
-            int cmdId = Int32.Parse(d["CmdId"]);
-
-            switch(cmdId)
+            try
             {
-                case (int)enumRemoteGetCommand.SET_LOCKED:
+                switch (rCmd.cmdId)
+                {
+                    case (int)LLMsgType.LL_DISCOVER:
+                        IsActive = true;
+                        break;
+                    case (int)LLMsgType.LL_SET_LOCKED:
                         NextStep();
-                    break;
+                        break;
 
-                case (int)enumRemoteGetCommand.SET_DEFAULT:
+                    case (int)LLMsgType.LL_SET_DEFAULT:                        
+                        break;
 
-                    break;
-
-                default:
-                    Debug.Print("unknown Command:" + d["CmdId"]);
-                    break;
+                    default:
+                        
+                        break;
+                }
             }
-
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
         }
 
         private void SetBoxToDefault(int brightnessLevel)
         {
             //SetCCT + brightness
-            rCmd.SetPILED(1, brightnessLevel, DEFAULT_CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f });
+            rCmd.SetPILED(PILEDMode.SET_CCT, brightnessLevel, DEFAULT_CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f });
         }
 
         private void SetBoxTestSequnceState(LLMsgType msgtype)
@@ -401,6 +418,47 @@ namespace LightLifeAdminConsole
                 UpdateHeadState(); // Update Database Table TestSequenceHeader
             }
         }
+
+        #region IObservable
+        
+        /*private IDisposable cancellation;
+
+        public virtual void Subscribe(IObservable<RemoteCommandData> provider)
+        {
+            cancellation = provider.Subscribe(this);
+        }
+
+        public virtual void Unsubscribe()
+        {
+            cancellation.Dispose();
+        }
+
+        //Called from UDP Server when closing application
+        public virtual void OnCompleted()
+        {
+
+        }
+
+        public virtual void OnError(Exception e)
+        {
+            Debug.Print(e.Message);
+            log.Error(e.Message);
+        }
+
+        //Called from UDP Server when new data arrive
+        public virtual void OnNext(RemoteCommandData info)
+        {
+            if (BoxNr == info.BoxNr)
+            {
+                switch (info.cmdID)
+                {
+                    case (int)LLMsgType.LL_SET_LOCKED:
+                        break;
+                }
+            }
+
+        }       */  
+        #endregion
     }
 }
 

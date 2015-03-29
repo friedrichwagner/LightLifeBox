@@ -105,16 +105,25 @@ unsigned long RemoteCommands::Push(void)
 				done = true;
 			}
 
-			RemoteCommand cmd1;
-			cmd1.cmdId = recvBuf[0] - char('0'); //Command kommt als ASCII "1" = 49 dezimal --> 49-48=1
-			cmd1.cmdParams = string((const char*)&recvBuf[1]);
+			try
+			{
+				RemoteCommand cmd1;
+				//cmd1.cmdId = recvBuf[0] - char('0'); //Command kommt als ASCII "1" = 49 dezimal --> 49-48=1
+				cmd1.cmdParams = string((const char*)&recvBuf[0]);
+				cmd1.flds = cmd1.cmdParams.split2map(';', '=');
+				cmd1.cmdId = lumitech::stoi(cmd1.flds["CmdId"]);
 
-			log->cout("RCmd:" + lumitech::itos(cmd1.cmdId) + " Params:" + cmd1.cmdParams);
+				log->cout("RCmd:" + lumitech::itos(cmd1.cmdId) + " Params:" + cmd1.cmdParams);
 
-			if (cmd1.cmdId > 0)
-				cmdQ->push(cmd1);
+				if (cmd1.cmdId > 0)
+					cmdQ->push(cmd1);
 
-			go();
+				go();
+			}
+			catch (exception ex)
+			{
+				log->cout(ex.what());
+			}
 		}
 		else
 			done = true;
@@ -164,19 +173,19 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 
 	switch (cmd.cmdId)
 	{
-	case REMOTE_RECVCMD_DISCOVER:
+	case LL_DISCOVER:
 		DiscoverCommand(cmd);
 		break;
-	case REMOTE_RECVCMD_ENABLE_BUTTONS:
+	case LL_ENABLE_BUTTONS:
 		EnableButtonsCommand(cmd);
 		break;
-	case REMOTE_RECVCMD_SET_PILED:
+	case LL_SET_PILED:
 		SetPILEDCommand(cmd);
 		break;
-	case REMOTE_RECVCMD_GET_PILED:
+	case LL_GET_PILED:
 		GetPILEDCommand(cmd);
 		break;
-	case REMOTE_RECVCMD_SET_SEQUENCE:
+	case LL_SET_SEQUENCEDATA:
 		SequenceHandlingCommand(cmd);
 		break;
 
@@ -188,7 +197,7 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 	}
 }
 
-void RemoteCommands::SendRemoteCommand(enumRemoteSendCommand cmdId, string params)
+void RemoteCommands::SendRemoteCommand(LLMsgType cmdId, string params)
 {
 	//Hier in Queue schreiben oder gleich schicken ??
 	//cmdQ->push(cmd);
@@ -198,8 +207,8 @@ void RemoteCommands::SendRemoteCommand(enumRemoteSendCommand cmdId, string param
 
 	switch (cmdId)
 	{
-	case REMOTE_SENDCMD_LOCK:
-		SendLock(cmdId, params);
+	case LL_SET_LOCKED:
+		SendLock(params);
 		break;
 
 	default:
@@ -264,7 +273,7 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 
 	if (lllogger != NULL)
 	{
-		lllogger->lldata->msgtype = LL_SET_BUTTONS;
+		lllogger->lldata->msgtype = LL_ENABLE_BUTTONS;
 		lllogger->logLLEvent();
 	}
 	else
@@ -295,18 +304,18 @@ void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 
 	switch (pimode)
 	{
-		case CCT_MODE:
+	case PILED_SET_CCT:
 			box->Lights[0]->setCCT(cct);
 			box->Lights[0]->setBrightness(br);
 			break;
 
-		case XY_MODE:
+	case PILED_SET_XY:
 			box->Lights[0]->setXY(xy);
 			box->Lights[0]->setBrightness(br);
 
 			break;
 
-		case RGB_MODE:
+	case PILED_SET_RGB:
 			box->Lights[0]->setRGB(rgb);
 			break;
 	}
@@ -316,24 +325,27 @@ void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 
 void RemoteCommands::GetPILEDCommand(RemoteCommand cmd)
 {
-	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";" + box->Lights[0]->getFullState();
+	cmd.cmdParams =";" + box->Lights[0]->getFullState();
 	send(cmd);
 }
 
 void RemoteCommands::StandardAnswer(RemoteCommand cmd)
 {
 	//cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID);
-	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
+	cmd.cmdParams = ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
 	send(cmd);
 }
 
 //----------------------------------
 //    Send Remote Commands
 //----------------------------------
-void RemoteCommands::SendLock(enumRemoteSendCommand id, string params)
-{
+void RemoteCommands::SendLock(string params)
+{														// do not expect any additional parameters here
 	RemoteCommand cmd;
-	cmd.cmdId = id; // do not expect any additional parameters here
-	cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";" + box->Lights[0]->getFullState();
+	cmd.cmdId = LL_SET_LOCKED;
+	ostringstream ss;
+	ss << ";BoxNr=" << box->ID << ";" << box->Lights[0]->getFullState();
+
+	cmd.cmdParams = ss.str();
 	send(cmd);
 }

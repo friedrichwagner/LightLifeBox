@@ -208,11 +208,8 @@ namespace LightLifeAdminConsole.MVVM
             MainVM m = MainVM.GetInstance();
             Box.VLID= m.login.UserId;
 
-            int n=ini.Read<int>("ControlBox", "NrOfBoxes", 4);
-            for (int i=1; i <= n; i++)
-            {
-                b.Add(i, new Box(i));
-            }
+            Box.getBoxes(ref b);
+
         }
 
         private void doSequence(string cmd)

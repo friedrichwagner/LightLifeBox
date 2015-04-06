@@ -57,6 +57,9 @@ namespace LightLifeAdminConsole.Data
         public static DataTable llroomgroup;
         public static DataTable llusers;
         public static IDictionary<int, string> probanden;
+        public static IDictionary<int, string> llactivationstate;
+        public static DataTable llstep;
+        public static DataTable V_BoxState;
         
         public static void InitSQLs()
         {
@@ -85,6 +88,11 @@ namespace LightLifeAdminConsole.Data
             tables.Add("LLTestSequencePos", new SQLSet("LLTestSequencePos"));
             tables.Add("LLBox", new SQLSet("LLBox"));
 
+            tables.Add("LLActivationState", new SQLSet("LLActivationState"));
+            tables.Add("LLStep", new SQLSet("LLStep"));
+            tables.Add("LLBoxState", new SQLSet("V_BOXSTATE"));
+            tables.Add("VLLTestSequence", new SQLSet("V_TestSequence"));
+
             tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
             tables["LLRoom"].selectSQL = "select * from LLRoom order by RoomID";
             tables["LLGroup"].selectSQL = "select * from LLGroup order by GroupID";
@@ -102,16 +110,21 @@ namespace LightLifeAdminConsole.Data
             tables["LLUserInfo"].updateSQL = "update LLUserInfo set where ";
 
             tables["LLTestSequenceHead"].selectSQL = "select * from LLTestSequenceHead";
-            tables["LLTestSequenceHead"].insertSQL = "insert into LLTestSequenceHead(SequenceID, BoxID, UserID, VLId, remark) values(:1,:2,:3,:4, :5)";
-            tables["LLTestSequenceHead"].updateSQL = "update LLTestSequenceHead set Remark=:1 where sequenceID=:2";
-            tables["LLTestSequenceHead"].sqlCmd1 = "select * from LLTestSequenceHead where boxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1)";
+            tables["LLTestSequenceHead"].insertSQL = "insert into LLTestSequenceHead(SequenceID, BoxID, UserID, VLId, TestStateID, ActualPosID, remark) values(:1,:2,:3,:4,:5,:6,:7)";
+            tables["LLTestSequenceHead"].updateSQL = "update LLTestSequenceHead set TestStateID=:1 where SequenceID=:2";
+            tables["LLTestSequenceHead"].sqlCmd1 = "update LLTestSequenceHead set Remark=:1 where sequenceID=:2";
 
             tables["LLTestSequencePos"].selectSQL = "select * from LLTestSequencePos";
-            tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, StepID, pimode, Brightness, CCT, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8)";
-            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:1, CCT=:2, x=:3, y=:4, remark=:5 where sequenceID=:6 and stepid=:7";
+            tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, ActivationID, StepID, pimode, Brightness, CCT, duv, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8, :9, :10)";
+            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:1, CCT=:2, duv=:3 x=:4, y=:5, remark=:6 where PosID=:7";
 
             tables["LLBox"].selectSQL = "select * from LLBox";
             tables["LLBox"].updateSQL = "update LLBox set active=:1 where boxid=:2";
+
+            tables["LLActivationState"].selectSQL = "select * from LLActivationState";
+            tables["LLStep"].selectSQL = "select * from LLStep";
+            tables["LLBoxState"].selectSQL = "select * from V_BOXSTATE";
+            tables["VLLTestSequence"].selectSQL = "select * from V_TestSequence";
 
             if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
 
@@ -138,6 +151,15 @@ namespace LightLifeAdminConsole.Data
 
             probanden = new Dictionary<int, string>();
             getDict(ref probanden, tables["LLUser"], "UserID,  (FirstName+ ' '+ Lastname)", " where RoleId=100");
+
+            llactivationstate = new Dictionary<int, string>();
+            getDict(ref llactivationstate, tables["LLActivationState"], "ActivationID, Name", "order by 1");
+
+            llstep = new DataTable(tables["LLStep"].tablename);
+            getDataTable(ref llstep, tables["LLStep"]);
+
+            V_BoxState = new DataTable("V_BoxState");
+            getDataTable(ref V_BoxState, tables["LLBoxState"]);
         }
 
         public static void Done()

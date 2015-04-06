@@ -12,26 +12,35 @@ values (100, 'Proband/In','0000000001', 'Versuchsperson');
 
 ------------------------------------------------------------
 
+DECLARE @cnt INT = 1;
+
+WHILE @cnt < 80
+BEGIN
+	
+	insert into LLUser(UserID, FirstName, LastName,  RoleID)
+	values (@cnt, 'Proband', 'In' + Cast(@cnt as varchar(3)),  100);
+
+   SET @cnt = @cnt + 1;
+END;
+
+Go
+
+
+
 insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
 values (0, 'No', 'Name', '1.1.2014', 'androgyn', 0, 'nn', 'test');
 
 insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
-values (1, 'Fritz', 'Wagner', Cast('1970-06-18' as date), 'male', 1, 'fw', 'test')
+values (1000, 'Fritz', 'Wagner', Cast('1970-06-18' as date), 'male', 1, 'fw', 'test')
 
 insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
-values (2, 'Hans', 'Hoschopf', '1.1.2014', 'male', 1, 'hh', 'test');
+values (1001, 'Hans', 'Hoschopf', '1.1.2014', 'male', 1, 'hh', 'test');
 
 insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
-values (3, 'Versuchs', 'Leiterin1', '1.1.2014', 'female', 10, 'vl1', 'test');
+values (1002, 'Versuchs', 'Leiterin1', '1.1.2014', 'female', 10, 'vl1', 'test');
 
 insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
-values (4, 'Versuchs', 'Leiter2', '1.1.2014', 'male', 10, 'vl2', 'test');
-
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
-values (5, 'Proband', 'In1', '1.1.2014', 'female', 100, 'pb1', 'test');
-
-insert into LLUser(UserID, FirstName, LastName, Birthday, Gender, RoleID, [Username], [Password])
-values (6, 'Proband', '2', '1.1.2014', 'male', 100, 'pb2', 'test');
+values (1003, 'Versuchs', 'Leiter2', '1.1.2014', 'male', 10, 'vl2', 'test');
 
 ------------------------------------------------------------
 
@@ -307,6 +316,26 @@ insert into LLBox(BoxID, Name, BOXIP, GroupID, sendPort, recvPort) values (2,'Bo
 insert into LLBox(BoxID, Name, BOXIP, GroupID, sendPort, recvPort) values (3,'Box 1 Vorraum', '127.0.0.1', 205, 1768, 1769);
 insert into LLBox(BoxID, Name, BOXIP, GroupID, sendPort, recvPort) values (4,'Box 2 Vorraum - Reserve', '127.0.0.1', 206, 1778, 1779);
 
+----------
 
+insert into LLActivationState(ActivationID, Name) values(0, 'activating');
+insert into LLActivationState(ActivationID, Name) values(1, 'relaxing');
 
+----------
+insert into LLStep(StepID, Name, EnabledButtons) values (0, 'STEP_STOPPED', '000000000');
+insert into LLStep(StepID, Name, EnabledButtons) values (1, 'STEP_BRIGHTNESS', '1000000000');
+insert into LLStep(StepID, Name, EnabledButtons) values (2, 'STEP_CCT', '0100000000');
+insert into LLStep(StepID, Name, EnabledButtons) values (3, 'STEP_JUDD', '0010000000');
+insert into LLStep(StepID, Name, EnabledButtons) values (4, 'STEP_ALL', '1110000000');
+insert into LLStep(StepID, Name, EnabledButtons) values (5, 'STEP_ALL_BIG', '1110000000');
+
+----------
+delete from LLTestSequenceState;
+insert into LLTestSequenceState (StateID, Name) values (0, 'NONE');
+insert into LLTestSequenceState (StateID, Name) values (10, 'IN_PROGRESS');
+insert into LLTestSequenceState (StateID, Name) values (20, 'TESTING');
+insert into LLTestSequenceState (StateID, Name) values (30, 'FADING_OUT');
+insert into LLTestSequenceState (StateID, Name) values (80, 'PAUSED');
+insert into LLTestSequenceState (StateID, Name) values (90, 'STOPPED');
+insert into LLTestSequenceState (StateID, Name) values (99, 'FINISHED');
 

@@ -13,7 +13,7 @@ using System.Data;
 
 namespace LightLifeAdminConsole.MVVM
 {
-    enum BoxUIButtons { START, STOP, PREV, NEXT, PAUSE, UPDATE};
+    //enum BoxUIButtons { START, STOP, PREV, NEXT, PAUSE, UPDATE};
 
     class BoxVM: ObservableObject
     {

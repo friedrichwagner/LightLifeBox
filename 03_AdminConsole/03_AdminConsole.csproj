@@ -100,10 +100,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BLogic\Box.cs" />
+    <Compile Include="BLogic\Box2.cs" />
     <Compile Include="BLogic\CIEChart.cs" />
     <Compile Include="BLogic\LLSQL.cs" />
     <Compile Include="BLogic\AdminBase.cs" />
+    <Compile Include="BLogic\LLTestSequence.cs" />
     <Compile Include="BLogic\Login.cs" />
     <Compile Include="BLogic\LLRemoteCommands.cs" />
     <Compile Include="BrightnessWindow.xaml.cs">
@@ -112,8 +113,8 @@
     <Compile Include="Content\Admin\Roles.xaml.cs">
       <DependentUpon>Roles.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Content\Boxes\Box.xaml.cs">
-      <DependentUpon>Box.xaml</DependentUpon>
+    <Compile Include="BoxWindow.xaml.cs">
+      <DependentUpon>BoxWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Content\PILED\Sequence.xaml.cs">
       <DependentUpon>Sequence.xaml</DependentUpon>
@@ -131,9 +132,9 @@
     <Compile Include="MVVM\Base\ObservableObject.cs" />
     <Compile Include="MVVM\Base\PropertyObserver.cs" />
     <Compile Include="MVVM\Base\RelayCommand.cs" />
-    <Compile Include="MVVM\BoxVM.cs" />
+    <Compile Include="MVVM\BoxVM2.cs" />
     <Compile Include="MVVM\Converters.cs" />
-    <Compile Include="MVVM\Admin.cs" />
+    <Compile Include="MVVM\AdminVM.cs" />
     <Compile Include="MVVM\MainVM.cs" />
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
@@ -147,9 +148,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Content\Boxes\Box.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="BoxWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Content\PILED\Sequence.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -243,6 +244,9 @@
     <Resource Include="Images\TU-Graz.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Boxes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

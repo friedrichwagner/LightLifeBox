@@ -7,13 +7,14 @@ create table LLRole
 	added datetime default getdate()
 );
 
+drop table LLUser;
 create Table LLUser
 (
 	UserID int NOT NULL primary key,
 	FirstName varchar(50) not null,
 	LastName varchar(50) not null,
-	Birthday datetime not null,
-	Gender	varchar(15)  not null,
+	Birthday datetime ,
+	Gender	varchar(15) ,
 	Remark varchar(max),
 	Username varchar(20),
 	Password varchar(20),
@@ -166,6 +167,7 @@ create table LLData
 	VLID int not null,
 	SceneID int not null,
 	SequenceID int not null,
+	ActivationID int not null,
 	StepID int not null,
 	Brightness int not null,
 	CCT	int,
@@ -208,7 +210,7 @@ create table LLTestSequenceHead
 	BoxID int not null,
 	UserID int not null,
 	VLID int not null,
-	Status varchar(10) not null default 'NONE',
+	TestStateID int not null,
 	ActualStep int not null default 0,
 	Remark varchar(max),
 	added datetime default getdate(),
@@ -218,17 +220,32 @@ create table LLTestSequenceHead
 drop table  LLTestSequencePos;
 create table LLTestSequencePos
 (
+	PosID int identity not null,
 	SequenceID int NOT NULL,
+	ActivationID int NOT NULL,
 	StepID int not null,
 	pimode varchar(20) not null,
 	Brightness int not null,
 	CCT	int,
+	duv float,
 	x float , 
 	y float,
 	Remark varchar(max),
 	added datetime default getdate(),
-	primary key(SequenceID, StepID)
+	updated datetime,
+	primary key(SequenceID, ActivationID, StepID)
 );
+
+CREATE TRIGGER trUpdateLLTestSequencePos on LLTestSequencePos
+   AFTER UPDATE
+AS 
+BEGIN
+	Update LLTestSequencePos set updated = getdate()
+	from inserted i, LLTestSequencePos a
+	where i.PosID  = a.PosID
+END
+GO
+
 
 Create TRIGGER [LLTestSequenceHead_Delete] ON LLTestSequenceHead
 after delete
@@ -266,28 +283,50 @@ create Table LLBox
 	added datetime default getdate()
 );
 
+create table LLActivationState
+(
+	ActivationID int not null primary key,
+	Name varchar(30)
+)
 
+create table LLStep
+(
+	StepID int not null primary key,
+	Name varchar(30),
+	EnabledButtons varchar(10)
+)
 
+create table LLTestSequenceState
+(
+	StateID int not null primary key,
+	Name varchar(30),
+)
 
+drop view V_TestSequence 
+create view V_TestSequence 
+(
+BoxID, SequenceID, UserID, TestStateID, StateName, PosID, ActivationID, ActivationName, StepID, StepName, 
+pimode, brightness, CCT, duv, added, updated
+)
+as
+select h.SequenceID, h.BoxID, h.UserID, h.TestStateID, st.Name,
+		p.PosID, p.ActivationID, a.Name, p.StepiD, s.Name, 
+		p.pimode, p.Brightness, p.CCT, p.duv, p.added, p.updated
+		from LLTestSequenceHead h, LLTestSequencePos p, LLActivationState a, LLStep s, LlTestSequenceState st
+where h.SequenceID = p.SequenceID
+and p.ActivationID = a.ActivationID
+and p.StepID = s.StepID
+and h.TestStateID = st.StateID
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+create View V_BoxState
+as
+select b.BoxID, b.Name, b.active,   
+v.SequenceID, v.UserID, v.TestStateID, v.StateName, v.PosID, v.ActivationID, v.ActivationName, v.StepID, v.StepName, 
+v.pimode, v.brightness, v.CCT, v.duv, v.added, v.updated
+from LLBox b 
+left outer join V_TestSequence v 
+on (b.BoxID = v.BoxID
+and v.SequenceID = (select max(SequenceID) from LLTestSequencehead where BoxID=b.BoxID)  
+and v.PosID = (select max(PosID) from LLTestSequencePos where SequenceID= v.SequenceId) )
 
 

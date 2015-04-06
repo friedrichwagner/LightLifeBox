@@ -6,13 +6,6 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              mc:Ignorable="d">
     <Grid Style="{StaticResource ContentRoot}">
-        <mui:ModernTab Layout="Tab" SelectedSource="/Content/Boxes/Box.xaml#1">
-            <mui:ModernTab.Links>
-                <mui:Link DisplayName="Box #1" Source="/Content/Boxes/Box.xaml#1"/>
-                <mui:Link DisplayName="Box #2" Source="/Content/Boxes/Box.xaml#2"/>
-                <!--<mui:Link DisplayName="Box #3" Source="/Content/Boxes/Box.xaml#3"/>
-                <mui:Link DisplayName="Box #4" Source="/Content/Boxes/Box.xaml#4"/>-->
-            </mui:ModernTab.Links>
-        </mui:ModernTab>
+            <DataGrid x:Name="dgBoxOverview" IsReadOnly="True" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" MouseDoubleClick="dgBoxOverview_MouseDoubleClick"/>
     </Grid>
 </UserControl>

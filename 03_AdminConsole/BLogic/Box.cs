@@ -13,9 +13,9 @@ using Lumitech.Helpers;
 
 namespace LightLifeAdminConsole
 {
-    public enum BoxStatus { NONE, STARTED, STOPPED, PAUSED, FINISHED};
+    /*public enum BoxStatus { NONE, STARTED, STOPPED, PAUSED, FINISHED};
     public enum TestSequence { NONE, BRIGHTNESS, CCT, JUDD, ALL };
-    public enum BoxPotis : byte { BRIGHTNESS, CCT, JUDD };
+    public enum BoxPotis : byte { BRIGHTNESS, CCT, JUDD };*/
 
     class Box //: IObserver<RemoteCommandData>
     {

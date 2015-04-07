@@ -111,7 +111,7 @@ struct UDPRecvSocket
 #else
 		if (isValid) 
 		{
-			//shutdown(_socket,2);
+			shutdown(_socket,2);
 			close(_socket);
 		}
 #endif

@@ -93,7 +93,7 @@ CFLAGS=-c $(IDIR) -g -Wall -D CYGWIN -D RASPI -Wno-unknown-pragmas -Wno-switch -
 #LDFLAGS=-L./lib
 #LDFLAGS=-L./lib -Wl,-Bstatic -lftd2xx -Wl,-Bdynamic  -ldl -lrt -lpthread -Wl,--as-needed
 #LDFLAGS=-L./lib -lftd2xx -ldl -lrt -lpthread -Wl,--as-needed
-LDFLAGS=-L./lib -ldl -lrt -lpthread -Wl,--as-needed
+LDFLAGS=-L./lib -ldl -lrt -lwiringPi -lpthread -Wl,--as-needed
 
 # the name of the exe file
 EXECUTABLE=llbox.exe

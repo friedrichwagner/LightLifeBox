@@ -98,11 +98,14 @@ unsigned long RemoteCommands::Push(void)
 		{
 			//blocking
 			memset(&recvBuf[0], 0, recvBufSize);
+			log->cout("1");
 			int ret=_recvSock->receive(&recvBuf[0], recvBufSize);
+			log->cout("2");
 			if (ret <= 0)
 			{
 
 				done = true;
+				log->cout("3");
 			}
 
 			try

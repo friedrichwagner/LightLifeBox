@@ -1,6 +1,9 @@
 #include "Button.h"
 #include "helpers.h"
-//#include "wiringPi.h"
+
+#if defined (RASPI)
+	#include "wiringPi.h"
+#endif
 
 
 Button::Button(std::string pSection)

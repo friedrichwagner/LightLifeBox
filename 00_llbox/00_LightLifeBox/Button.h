@@ -7,6 +7,7 @@
 #include "IPClient.h"
 #include "PIButton.h"
 
+
 using namespace std;
 
 enum LightLifeButtonType : int { NONE=0, LOCK=1, BRIGHTNESS=2, CCT=3, JUDD=4};

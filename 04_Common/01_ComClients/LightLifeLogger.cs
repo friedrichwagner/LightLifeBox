@@ -113,7 +113,7 @@ namespace Lumitech.Interfaces
                             cmd.Params[i++] = info.piled.groupid;
 
                             //FW 16.2.2015: auskommentiert, damit nicht soviel in die DB geschreiben wird beim Testen
-                            //cmd.Exec();
+                            cmd.Exec();
                         }
                         
                     }

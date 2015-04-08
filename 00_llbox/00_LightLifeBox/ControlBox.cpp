@@ -156,7 +156,7 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 			rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
 		}
 
-		if (((Button*)sender)->enablePressedEvent)
+		//if (((Button*)sender)->enablePressedEvent)
 			Lights[0]->resetDefault();
 
 		break;

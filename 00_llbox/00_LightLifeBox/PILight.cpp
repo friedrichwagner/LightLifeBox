@@ -147,7 +147,7 @@ void PILight::setCCT(unsigned int val)
 	fCieCoords_t cie=CCT2xy(cct);
 	xy[0] = cie.x; xy[1] = cie.y;
 
-	duv = 0.0f;
+	duv = 0.0f; //Das ist Absicht. Wenn man CCT verändert, will man kein duv haben.
 
 	setLog();	
 
@@ -193,10 +193,12 @@ void PILight::setXY(float pxy[])
 	}
 }
 
-void PILight::setCCTDuv(unsigned int cct, float duv)
+void PILight::setCCTDuv(unsigned int valCCT, float valDuv)
 {
+	cct = valCCT; duv = valDuv;
 	if (cct > (unsigned int)MaxVal) cct = MaxVal;
 	if (cct < (unsigned int)MinVal) cct = MinVal;
+
 	piledMode = PILED_SET_DUV;
 
 	if (duv > 0.02f) duv = 0.02f;
@@ -233,7 +235,13 @@ void PILight::setFadeTime(unsigned int val)
 
 void PILight::setBrightnessUpDown(int delta)
 {
-	brightness = brightness + delta;
+	int b = (signed)brightness + delta;
+	//cout << "b=" << b << "\r\n";
+	if (b < 0)
+		brightness = 0;
+	else
+		brightness = brightness + delta;
+
 	setBrightness(brightness);
 
 }

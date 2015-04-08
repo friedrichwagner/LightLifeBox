@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+//#include <vector>
 
 #define A1 27       // Define wiringPIPin27/Physical36  as A1
 #define B1 29       // Define wiringPIPin29/Physical40  as B1
@@ -41,25 +41,36 @@ struct PIButton
 	unsigned int portDown;
 	unsigned int portPressed;
 	PIButtonTyp pibtnType;
-	volatile bool change;
-	int cnt;
+	volatile long value;
+	volatile long lastEncoded;
+	volatile long lastvalue;
+
 	unsigned int deltaCnt;
 	unsigned int factor;
-	WiringPiISRFunc isr_Up;
-	WiringPiISRFunc isr_Down;
+	WiringPiISRFunc isr_UpDown;
 	WiringPiISRFunc isr_Pressed;
+
+	bool enablePressedEvent;
 
 	Button* btn;
 	WiringPiButtonEvent ButtonEvent;
 };
 
-extern std::vector<PIButton*> pibuttons;
+extern std::map<int, PIButton*> pibuttons;
 
 void InitWiringPi();
+void InitPIButton(PIButton* p, string iniName, int btnType);
+
+/*
 void isr_BrightnessUp(); void isr_BrightnessDown(); void isr_BrightnessPressed();
 void isr_CCTUp(); void isr_CCTDown(); void isr_CCTPressed();
 void isr_JuddUp(void); void isr_JuddDown(void); void isr_JuddPressed(void);
 void isr_Lock(void);
-void isr_General(int index, int dir); void isr_PressedGeneral(int index);
+
+*/
+
+//das braucht es eigentlich "nur" for den TestClient "IPClient.cpp"
+void isr_General2(int btntype);
+void isr_PressedGeneral(int index);
 
 

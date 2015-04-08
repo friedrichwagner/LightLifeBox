@@ -46,7 +46,7 @@
 		<Testing value="MockButton1"/>
 		<PortUp value="0"/>
 		<PortDown value="0"/>
-		<PortPressed vale="1"/>
+		<PortPressed value="1"/>
 		<PortLED value="0"/>				
 	</Button1>
 	<Button2 id="2" name="btnLock2">

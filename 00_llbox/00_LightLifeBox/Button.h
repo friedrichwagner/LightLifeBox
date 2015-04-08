@@ -34,13 +34,13 @@ protected:
 
 	//Hardware Button
 	PIButton pibtn;
-	void InitPIButton();
+	void PIButtonInit();
 public:
 	Button(std::string pName);
 	~Button();	
 	void ButtonEvent(PIButtonTyp t, int delta);
 
-	bool enablePressedEvent;
+	//bool enablePressedEvent;
 	string getName();
 	LightLifeButtonType getBtnType();
 	int getID();

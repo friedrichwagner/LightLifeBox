@@ -558,6 +558,7 @@ namespace Lumitech.Interfaces
                     this.setCCT(info.cct, info.brightness);
                     break;
                 case PILEDMode.SET_XY:
+                case PILEDMode.SET_DUV:
                     this.setXy(info.xy, info.brightness);
                     break;
                 case PILEDMode.SET_RGB:

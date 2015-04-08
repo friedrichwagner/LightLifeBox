@@ -98,14 +98,12 @@ unsigned long RemoteCommands::Push(void)
 		{
 			//blocking
 			memset(&recvBuf[0], 0, recvBufSize);
-			log->cout("1");
 			int ret=_recvSock->receive(&recvBuf[0], recvBufSize);
-			log->cout("2");
 			if (ret <= 0)
 			{
 
 				done = true;
-				log->cout("3");
+				break;
 			}
 
 			try
@@ -269,9 +267,9 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
  	for (unsigned int i = 0; i < box->Buttons.size(); i++)
 	{
 		if (flds["buttons"].at(i) == '1')
-			box->Buttons[i]->Active = true;
+			box->Buttons[i]->setActive(true);
 		else
-			box->Buttons[i]->Active = false;
+			box->Buttons[i]->setActive(false);
 	}
 
 	if (lllogger != NULL)

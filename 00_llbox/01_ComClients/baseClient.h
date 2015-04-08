@@ -124,7 +124,7 @@ struct UDPRecvSocket
 
 		//ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
 		ret = recv(_socket, (char*)cdata, cnt, 0);
-		if (ret<0)
+		if (ret>0)
 			cdata[ret] = '\0';
 
 		return ret;

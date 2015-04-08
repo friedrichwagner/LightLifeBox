@@ -24,7 +24,7 @@
 #define LED3 24 // Define wiringPiPin24/Physical35 as LED1
 
 enum PIButtonTyp { PIBUTTON_BRIGHTNESS = 0, PIBUTTON_CCT = 1, PIBUTTON_JUDD = 2, PIBUTTON_LOCK1=3, PIBUTTON_LOCK2=4 };
-enum PIButtonRotateDirection { DOWN = -1, UP = +1, PRESS = 99 };
+//enum PIButtonRotateDirection { DOWN = -1, UP = +1, PRESS = 99 };
 
 //Forward Deklaration
 class Button;

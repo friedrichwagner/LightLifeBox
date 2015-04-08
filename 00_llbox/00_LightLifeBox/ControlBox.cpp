@@ -41,6 +41,12 @@ ControlBox* ControlBox::getInstance()
 ControlBox::~ControlBox() 
 { 
 	if (!isDone) stopEventLoop();
+
+	unsigned int idx = Buttons.size();
+	
+	//log->cout("Size=" + lumitech::itos(idx));
+	for (unsigned int i = 0; i < idx; i++)		
+			Buttons[i]->setActive(false);
 	delete rmCmd;
 }
 
@@ -64,7 +70,7 @@ bool ControlBox::Init()
 		{
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[i]->addClient(this);
-			Buttons[i]->Active = defaultActiveControls;
+			Buttons[i]->setActive(defaultActiveControls);
 		}
 	}
 
@@ -77,7 +83,7 @@ bool ControlBox::Init()
 		{
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[idx+i]->addClient(this);
-			Buttons[idx+i]->Active = defaultActiveControls;;
+			Buttons[idx+i]->setActive(defaultActiveControls);
 		}
 	}
 
@@ -150,7 +156,8 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 			rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
 		}
 
-		Lights[0]->resetDefault();
+		if (((Button*)sender)->enablePressedEvent)
+			Lights[0]->resetDefault();
 
 		break;
 

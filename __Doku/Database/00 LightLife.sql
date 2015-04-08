@@ -211,7 +211,7 @@ create table LLTestSequenceHead
 	UserID int not null,
 	VLID int not null,
 	TestStateID int not null,
-	ActualStep int not null default 0,
+	ActualPosID int not null default 0,
 	Remark varchar(max),
 	added datetime default getdate(),
 	primary key (SequenceID)

@@ -218,7 +218,7 @@ namespace Lumitech.Interfaces
         {
             log = Logger.GetInstance();
             Settings ini = Settings.GetInstance();
-            fadetime = ini.Read<int>("NeoLink", "Fadetime", 0);
+            fadetime = ini.Read<int>("NeoLink", "Fadetime", 200);
             _sendDelay = ini.Read<int>("NeoLink", "SendDelayTimeMS", 200);
 
             _UDPAddress = ini.Read<string>("NeoLink", "UDP-Address", "");

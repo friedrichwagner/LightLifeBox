@@ -25,12 +25,13 @@ Button::Button(std::string pSection)
 
 Button::~Button() 
 { 
+	setActive(false);
 	delete tc;
 }
 
 void Button::InitPIButton()
 {
-	int lock1 = 0;
+	static int lock1 = 0;
 	this->pibtn.cnt = 0;
 	this->pibtn.change = false;
 	this->pibtn.portUp = ini->Read<unsigned int>(Section, "PortUp", A2);
@@ -40,6 +41,8 @@ void Button::InitPIButton()
 	this->pibtn.deltaCnt = ini->Read<unsigned int>(Section, "DeltaCnt", 1);
 	this->pibtn.factor = ini->Read<unsigned int>(Section, "Factor", 1);
 
+	enablePressedEvent = ini->Read<bool>(Section, "EnablePortPressed", 1);
+
 	this->pibtn.ButtonEvent = &Button::ButtonEvent;
 	this->pibtn.btn = this;
 
@@ -47,16 +50,29 @@ void Button::InitPIButton()
 	{
 	case BRIGHTNESS:
 		this->pibtn.pibtnType = PIBUTTON_BRIGHTNESS;
-		this->pibtn.isr_Up = isr_BrightnessUp;this->pibtn.isr_Down = isr_BrightnessDown;this->pibtn.isr_Pressed = isr_BrightnessPressed;		
+		this->pibtn.isr_Up = isr_BrightnessUp;this->pibtn.isr_Down = isr_BrightnessDown;
+		if (enablePressedEvent)
+			this->pibtn.isr_Pressed = isr_BrightnessPressed;
+		else
+			this->pibtn.isr_Pressed = NULL;
 		break;
 	case CCT:
 		this->pibtn.pibtnType = PIBUTTON_CCT;
-		this->pibtn.isr_Up = isr_CCTUp; this->pibtn.isr_Down = isr_CCTDown; this->pibtn.isr_Pressed = isr_CCTPressed;
+		this->pibtn.isr_Up = isr_CCTUp; this->pibtn.isr_Down = isr_CCTDown; 
+		
+		if (enablePressedEvent)
+			this->pibtn.isr_Pressed = isr_CCTPressed;
+		else
+			this->pibtn.isr_Pressed = NULL;
 		break;
 
 	case JUDD:
 		this->pibtn.pibtnType = PIBUTTON_JUDD;
-		this->pibtn.isr_Up = isr_JuddUp; this->pibtn.isr_Down = isr_JuddDown; this->pibtn.isr_Pressed = isr_JuddPressed;
+		this->pibtn.isr_Up = isr_JuddUp; this->pibtn.isr_Down = isr_JuddDown; 
+		if (enablePressedEvent)
+			this->pibtn.isr_Pressed = isr_JuddPressed;
+		else
+			this->pibtn.isr_Pressed = NULL;
 		break;
 
 	case LOCK:
@@ -66,7 +82,7 @@ void Button::InitPIButton()
 			lock1 = 1;
 		}
 		else
-			this->pibtn.pibtnType = PIBUTTON_LOCK1;
+			this->pibtn.pibtnType = PIBUTTON_LOCK2;
 
 		this->pibtn.isr_Up = NULL; this->pibtn.isr_Down = NULL; this->pibtn.isr_Pressed = &isr_Lock;
 		
@@ -75,9 +91,9 @@ void Button::InitPIButton()
 	}
 
 #if defined (RASPI)
-	if (pibtn.portUp>0) wiringPiISR(pibtn.portUp, INT_EDGE_FALLING, pibtn.isr_Up);
-	if (pibtn.portDown>0) wiringPiISR(pibtn.portDown, INT_EDGE_FALLING, pibtn.isr_Down);
-	if (pibtn.portPressed>0) wiringPiISR(pibtn.portPressed, INT_EDGE_FALLING, pibtn.isr_Pressed);
+	if ((pibtn.portUp>0) && pibtn.isr_Up != NULL) wiringPiISR(pibtn.portUp, INT_EDGE_FALLING, pibtn.isr_Up);
+	if ((pibtn.portDown>0) && pibtn.isr_Down != NULL) wiringPiISR(pibtn.portDown, INT_EDGE_FALLING, pibtn.isr_Down);
+	if ((pibtn.portPressed>0)  &&  pibtn.isr_Pressed!= NULL) wiringPiISR(pibtn.portPressed, INT_EDGE_FALLING, pibtn.isr_Pressed);
 #endif
 
 	pibtn.index = pibuttons.size();
@@ -125,5 +141,33 @@ int Button::getID()
 LightLifeButtonType Button::getBtnType()
 {
 	return btntype;
+}
+
+bool Button::setActive(bool b)
+{
+	Active = b;
+#if defined (RASPI)
+	//Set LED 
+	if (Active)
+	{
+		if (this->pibtn.portLED>0)
+			digitalWrite(this->pibtn.portLED, HIGH);
+		log->cout(this->Name + "= ACTIVE" );
+	}
+	else
+	{
+		if (this->pibtn.portLED>0)
+			digitalWrite(this->pibtn.portLED, LOW);
+		log->cout(this->Name + "= IN-ACTIVE");
+	}
+#else
+	//Set LED 
+	if (Active)
+		log->cout(this->Name + "= ACTIVE");
+	else
+		log->cout(this->Name + "= IN-ACTIVE");
+#endif
+
+	return Active;
 }
 

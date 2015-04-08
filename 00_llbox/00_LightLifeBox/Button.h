@@ -24,6 +24,7 @@ protected:
 	Settings* ini;
 	Logger* log;
 	bool isPressed;
+	bool Active;
 
 	//Testing
 	TestClient* tc;
@@ -39,10 +40,11 @@ public:
 	~Button();	
 	void ButtonEvent(PIButtonTyp t, int delta);
 
-	bool Active;
+	bool enablePressedEvent;
 	string getName();
 	LightLifeButtonType getBtnType();
 	int getID();
 
+	bool setActive(bool);
 	void addClient(IButtonObserver* obs);
 };

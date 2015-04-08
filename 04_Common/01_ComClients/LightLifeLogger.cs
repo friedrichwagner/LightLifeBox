@@ -4,6 +4,8 @@ using System.Threading;
 using System.Collections.Concurrent;
 using LightLife.Data;
 using System.Diagnostics;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace Lumitech.Interfaces
 {
@@ -19,7 +21,8 @@ namespace Lumitech.Interfaces
         private ConcurrentQueue<LightLifeData> dataQueue;
         private Thread logThread; 
         private bool done ;
-        public EventWaitHandle _waitHandle = new AutoResetEvent(false);
+        public static EventWaitHandle _waitHandle = new AutoResetEvent(false);
+        //public EventWaitHandle _waitHandle = new ManualResetEvent(false);
 
         public LightLifeLogger()
         {
@@ -53,7 +56,7 @@ namespace Lumitech.Interfaces
         public virtual void OnCompleted()
         {
             done = true;
-            _waitHandle.Set();
+            if (_waitHandle != null) _waitHandle.Set();
             //_waitHandle.Close();
             if (logThread.IsAlive) logThread.Join();
         }
@@ -78,37 +81,40 @@ namespace Lumitech.Interfaces
                 LightLifeData info;
                 cmd = new LTSQLCommand();   //connect to <Database> implizit
                 cmd.Connection.Open();
-
+                
                 while (!done)
                 {
                     _waitHandle.WaitOne();
 
-                    while (dataQueue.TryDequeue(out info))
+                   //using (SqlConnection con = new SqlConnection(cmd.ConnectionString))
                     {
-                        string stmt = sqlInsert;
-                        cmd.prep(stmt);
-                        int i = 0;
-                        cmd.Params[i++] = info.roomid;
-                        cmd.Params[i++] = info.userid;
-                        cmd.Params[i++] = info.vlid;
-                        cmd.Params[i++] = info.sceneid;
-                        cmd.Params[i++] = info.sequenceid;
-                        cmd.Params[i++] = info.stepid;
-                        cmd.Params[i++] = info.piled.brightness;
-                        cmd.Params[i++] = info.piled.cct;
-                        cmd.Params[i++] = info.piled.duv;
-                        cmd.Params[i++] = info.piled.xy[0];
-                        cmd.Params[i++] = info.piled.xy[1];
-                        cmd.Params[i++] = info.piled.mode.ToString();
-                        cmd.Params[i++] = info.piled.sender;
-                        cmd.Params[i++] = info.piled.receiver;
-                        cmd.Params[i++] = (int)info.piled.msgtype;                        
-                        cmd.Params[i++] = info.remark;
-                        cmd.Params[i++] = info.ip;
-                        cmd.Params[i++] = info.piled.groupid;
+                        while (dataQueue.TryDequeue(out info))
+                        {
+                            string stmt = sqlInsert;
+                            cmd.prep(stmt);
+                            int i = 0;
+                            cmd.Params[i++] = info.roomid;
+                            cmd.Params[i++] = info.userid;
+                            cmd.Params[i++] = info.vlid;
+                            cmd.Params[i++] = info.sceneid;
+                            cmd.Params[i++] = info.sequenceid;
+                            cmd.Params[i++] = info.stepid;
+                            cmd.Params[i++] = info.piled.brightness;
+                            cmd.Params[i++] = info.piled.cct;
+                            cmd.Params[i++] = info.piled.duv;
+                            cmd.Params[i++] = info.piled.xy[0];
+                            cmd.Params[i++] = info.piled.xy[1];
+                            cmd.Params[i++] = info.piled.mode.ToString();
+                            cmd.Params[i++] = info.piled.sender;
+                            cmd.Params[i++] = info.piled.receiver;
+                            cmd.Params[i++] = (int)info.piled.msgtype;                        
+                            cmd.Params[i++] = info.remark;
+                            cmd.Params[i++] = info.ip;
+                            cmd.Params[i++] = info.piled.groupid;
 
-                        //FW 16.2.2015: auskommentiert, damit nicht soviel in die DB geschreiben wird beim Testen
-                        cmd.Exec();
+                            //FW 16.2.2015: auskommentiert, damit nicht soviel in die DB geschreiben wird beim Testen
+                            //cmd.Exec();
+                        }
                         
                     }
                 }

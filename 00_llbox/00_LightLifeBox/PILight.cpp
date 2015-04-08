@@ -283,7 +283,7 @@ void PILight::resetDefault()
 				if (p)
 				{
 					p->resetDefault();
-					log->cout("resetDefault() - End");
+					//log->cout("resetDefault() - End");
 				}
 			}
 		}

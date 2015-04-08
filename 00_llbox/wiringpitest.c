@@ -28,15 +28,17 @@
 #define LED2 23 // Define wiringPiPin23/Physical33 as LED1
 #define LED3 24 // Define wiringPiPin24/Physical35 as LED1
 
+#define DEFAULT_VALUE 100
+
 //VARIABLE
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-volatile int plankdistance = 127;
+volatile int plankdistance = DEFAULT_VALUE ;
 volatile bool plankchange = 0;
 
-volatile int brightness = 127;
+volatile int brightness = DEFAULT_VALUE ;
 volatile bool brightnesschange = 0;
 
-volatile int color = 127;
+volatile int color = DEFAULT_VALUE ;
 volatile bool colorchange = 0;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -104,7 +106,7 @@ void isr_B1(void)
 
 void isr_TAST1(void)
 {
-	plankdistance = 127;
+	plankdistance = DEFAULT_VALUE ;
 }
 
 // ISRs BRIGHTNESS
@@ -139,7 +141,7 @@ void isr_B2(void)
 
 void isr_TAST2(void)
 {
-	plankdistance = 127;
+	plankdistance = DEFAULT_VALUE ;
 }
 // ISRs COLOR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +175,7 @@ void isr_B3(void)
 
 void isr_TAST3(void)
 {
-	color = 127;
+	color = DEFAULT_VALUE ;
 }
 // ISRs EINGABETASTE
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,11 +183,13 @@ void isr_TAST3(void)
 void isr_EINGABETAST(void)
 {
  // LOGGING TO SERVER from "HAUPTTEIL"
+ color = DEFAULT_VALUE ; brightness=DEFAULT_VALUE ; plankdistance=DEFAULT_VALUE ;
 }
 
 void isr_EINGABETAST2(void)
 {
 	// LOGGING TO SERVER from "NEBENTEIL
+	color = DEFAULT_VALUE ; brightness=DEFAULT_VALUE ; plankdistance=DEFAULT_VALUE ;
 }
 
 
@@ -220,8 +224,8 @@ int main(void)
 
 	while (1)
 	{
-		printf("Judd: %3d \t CCT: %3d \t Brightness: %3d \r", plankdistance, brightness, color) ;
-		delay(100);
+		printf(" Brightness: %3d \t CCT: %3d \t Judd: %3d \r\n", brightness, color, plankdistance) ;
+		delay(10);
 	}
 
 	return 0;

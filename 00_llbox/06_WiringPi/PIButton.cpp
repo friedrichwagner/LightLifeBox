@@ -1,6 +1,7 @@
 #include <vector>
 //#include <math.h>
 #include <stdlib.h> 
+#include <iostream>
 
 #include "PIButton.h"
 
@@ -72,6 +73,7 @@ void isr_General(int index, int dir)
 			else if ((dir < 0) && pibuttons[index]->cnt > 0) pibuttons[index]->cnt = 0;
 
 			pibuttons[index]->cnt = pibuttons[index]->cnt + dir; //dir = -1 oder +1			
+			//cout << pibuttons[index]->cnt;
 
 			if ((unsigned int)abs(pibuttons[index]->cnt) >= pibuttons[index]->deltaCnt)
 			{
@@ -80,7 +82,7 @@ void isr_General(int index, int dir)
 					//Das ist echt grauslich: Pointer to member function aus vector
 					Button* instance = pibuttons[index]->btn;
 					int val = dir * pibuttons[index]->factor;
-					(instance->*(pibuttons[index]->ButtonEvent))(PIBUTTON_BRIGHTNESS, val);
+					(instance->*(pibuttons[index]->ButtonEvent))((PIButtonTyp)index, val);
 				}
 				pibuttons[index]->cnt = 0;
 				pibuttons[index]->change = true;
@@ -96,7 +98,7 @@ void isr_PressedGeneral(int index)
 	if (pibuttons[index]->ButtonEvent != NULL)
 	{
 		Button* instance = pibuttons[index]->btn;
-		(instance->*(pibuttons[index]->ButtonEvent))(PIBUTTON_BRIGHTNESS, 0);
+		(instance->*(pibuttons[index]->ButtonEvent))((PIButtonTyp)index, 0);
 	}
 }
 
@@ -106,16 +108,25 @@ void isr_PressedGeneral(int index)
 void isr_BrightnessUp(void)
 {
 	isr_General(PIBUTTON_BRIGHTNESS, +1);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 void isr_BrightnessDown(void)
 {
 	isr_General(PIBUTTON_BRIGHTNESS, -1);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 void isr_BrightnessPressed(void)
 {
 	isr_PressedGeneral(PIBUTTON_BRIGHTNESS);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 //----------------------------
@@ -124,16 +135,25 @@ void isr_BrightnessPressed(void)
 void isr_CCTUp(void)
 {
 	isr_General(PIBUTTON_CCT, +1);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 void isr_CCTDown(void)
 {
-	isr_General(PIBUTTON_CCT, +1);
+	isr_General(PIBUTTON_CCT, -1);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 void isr_CCTPressed(void)
 {
 	isr_PressedGeneral(PIBUTTON_CCT);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 //----------------------------
@@ -142,16 +162,25 @@ void isr_CCTPressed(void)
 void isr_JuddUp(void)
 {
 	isr_General(PIBUTTON_JUDD, +1);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 void isr_JuddDown(void)
 {
-	isr_General(PIBUTTON_JUDD, +1);
+	isr_General(PIBUTTON_JUDD, -1);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 void isr_JuddPressed(void)
 {
 	isr_PressedGeneral(PIBUTTON_JUDD);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 
 //----------------------------
@@ -160,5 +189,8 @@ void isr_JuddPressed(void)
 void isr_Lock(void)
 {
 	isr_PressedGeneral(PIBUTTON_LOCK1);
+#if defined(RASPI)
+	delay(200);
+#endif
 }
 

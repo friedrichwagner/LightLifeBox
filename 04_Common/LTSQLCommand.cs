@@ -35,6 +35,8 @@ namespace Lumitech.Helpers
             set { cmd.Transaction = value; }
         }
 
+        public string ConnectionString {get; private set;}
+
         public LTSQLCommand()
         {
             //Database
@@ -46,6 +48,8 @@ namespace Lumitech.Helpers
             sqlsb.UserID = ini.ReadString("Database", "UserID", "");
             sqlsb.Password = ini.ReadString("Database", "Password", "");
             cmd.Connection = new SqlConnection(sqlsb.ConnectionString);
+            sqlsb.MinPoolSize = 5;
+            ConnectionString = sqlsb.ConnectionString;
 
             //log = Logger.GetInstance();
         }

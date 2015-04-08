@@ -17,27 +17,28 @@
 		<BoxNr value="1" />
 		<Send-Command-Port value="1749"/>
 		<Receive-Command-Port value="1748"/>
-		<ControlsDefaultActive value="true"/>		
+		<ControlsDefaultActive value="1"/>		
 	</ControlBox1>
 
 	<ControlBox2 name="ControlBox2">
 		<BoxNr value="2" />
 		<Send-Command-Port value="1759"/>
 		<Receive-Command-Port value="1758"/>	
-		<ControlsDefaultActive value="true"/>		
+		<ControlsDefaultActive value="1"/>		
 	</ControlBox2>
 
 	<ControlBox3 name="ControlBox3">
 		<BoxNr value="3" />
 		<Send-Command-Port value="1769"/>
 		<Receive-Command-Port value="1768"/>	
+		<ControlsDefaultActive value="1"/>		
 	</ControlBox3>
 	
 	<ControlBox4 name="ControlBox4">
 		<BoxNr value="4" />
 		<Send-Command-Port value="1779"/>
 		<Receive-Command-Port value="1778"/>	
-		<ControlsDefaultActive value="true"/>		
+		<ControlsDefaultActive value="1"/>		
 	</ControlBox4>
 	
 	<Button1 id="1" name="btnLock1">
@@ -65,6 +66,7 @@
 		<PortLED value="23"/>
 		<DeltaCnt value="1"/>
 		<Factor value="2"/>
+		<EnablePortPressed value="0"/>
 	</Poti1>
 	<Poti2 id="4" name="btnCCT">
 		<LightLifeButtonType value="3" />		
@@ -75,6 +77,7 @@
 		<PortLED value="24"/>
 		<DeltaCnt value="1"/>		
 		<Factor value="40"/>
+		<EnablePortPressed value="0"/>
 	</Poti2>
 	<Poti3 id="5" name="btnJudd">
 		<LightLifeButtonType value="4" />
@@ -85,6 +88,7 @@
 		<PortLED value="6"/>	
 		<DeltaCnt value="1"/>	
 		<Factor value="1"/>		
+		<EnablePortPressed value="0"/>
 	</Poti3>
 	<Light1 id="1" name="liBazille">
 		<Default value="4000,100"/>	

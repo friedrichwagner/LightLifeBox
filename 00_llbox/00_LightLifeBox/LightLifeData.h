@@ -3,6 +3,13 @@
 #include "baseClient.h"
 #include "helpers.h"
 
+enum ActivationState
+{
+	none = 0,
+	activating = 1,
+	relaxing = 2
+};
+
 //must correspond to PILEDServer "enum PILEDMode" in file UDPServer.cs and lines in table LLPILedMode
 enum PILEDMode : char
 {
@@ -61,6 +68,7 @@ struct LightLifeData
 	LLMsgType msgtype;
 
 	float duv;
+	ActivationState activationState;
 
 	LightLifeData(string pSender)
 	{
@@ -70,6 +78,8 @@ struct LightLifeData
 		sceneid = 0;
 		sequenceid = 0;
 		stepid = 0;
+
+		activationState = none;
 
 		groupid = 0;
 		cct = 2700;
@@ -92,7 +102,7 @@ struct LightLifeData
 		//PILEDData
 		s << ";groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";duv=" << duv << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2];
 		//Others
-		s << ";sender=" << sender << ";receiver=" << receiver << ";msgtype=" << msgtype;
+		s << ";sender=" << sender << ";receiver=" << receiver << ";msgtype=" << msgtype << ";activationstate=" << activationState;
 		return s.str();
 	}
 

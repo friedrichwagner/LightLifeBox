@@ -14,7 +14,7 @@ values (100, 'Proband/In','0000000001', 'Versuchsperson');
 
 DECLARE @cnt INT = 1;
 
-WHILE @cnt < 80
+WHILE @cnt <= 80
 BEGIN
 	
 	insert into LLUser(UserID, FirstName, LastName,  RoleID)
@@ -318,8 +318,10 @@ insert into LLBox(BoxID, Name, BOXIP, GroupID, sendPort, recvPort) values (4,'Bo
 
 ----------
 
-insert into LLActivationState(ActivationID, Name) values(0, 'activating');
-insert into LLActivationState(ActivationID, Name) values(1, 'relaxing');
+delete from  LLActivationState;
+insert into LLActivationState(ActivationID, Name) values(0, 'none');
+insert into LLActivationState(ActivationID, Name) values(1, 'activating');
+insert into LLActivationState(ActivationID, Name) values(2, 'relaxing');
 
 ----------
 insert into LLStep(StepID, Name, EnabledButtons) values (0, 'STEP_STOPPED', '000000000');

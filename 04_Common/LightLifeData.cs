@@ -9,6 +9,13 @@ using System.Linq;
 
 namespace LightLife.Data
 {
+    public enum ActivationState
+    {
+        none=0,
+        activating = 1,
+        relaxing = 2
+    }
+
     public enum PILEDMode
     {
         SET_NONE = 0,
@@ -264,6 +271,7 @@ namespace LightLife.Data
         public string remark;
         public string ip;
         public byte[] buttons = new byte[4];
+        public ActivationState activationstate;
 
         public PILEDData piled;
 
@@ -288,6 +296,9 @@ namespace LightLife.Data
             d.TryGetIntValue("sequenceid", out sequenceid);
             d.TryGetIntValue("stepid", out stepid);
 
+            int m;
+            d.TryGetIntValue("activationstate", out m); activationstate = (ActivationState)m;
+
             piled = new PILEDData(d);
         }
 
@@ -305,6 +316,7 @@ namespace LightLife.Data
             sequenceid = 0;
             stepid = 0;
             remark = String.Empty;
+            activationstate = ActivationState.none;
 
             bool found = false;
             List<IPAddress> ipList = new List<IPAddress>();

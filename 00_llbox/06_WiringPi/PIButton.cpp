@@ -205,10 +205,13 @@ void isr_General2(int btntype)
 	//if (sum == 0b0111 || sum == 0b1000) pibuttons[btntype]->value = -1;
 
 	pibuttons[btntype]->lastEncoded = encoded;	
+#else
+	if ((pibuttons[btntype]->value - pibuttons[btntype]->lastvalue) < 0)
+		dir = -1;
 #endif
 	
 	//cout << pibuttons[btntype]->lastvalue << ";" << pibuttons[btntype]->value << "\r\n";
-	unsigned int delta = (unsigned int)abs(pibuttons[btntype]->lastvalue - pibuttons[btntype]->value);
+	unsigned int delta = (unsigned int)abs(pibuttons[btntype]->lastvalue  - pibuttons[btntype]->value);
 	//if ((pibuttons[btntype]->value >= (int)pibuttons[btntype]->deltaCnt) || (pibuttons[btntype]->value <= (int)pibuttons[btntype]->deltaCnt))
 	if (delta >= pibuttons[btntype]->deltaCnt)
 	{

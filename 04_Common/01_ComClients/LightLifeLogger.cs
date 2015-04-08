@@ -14,8 +14,8 @@ namespace Lumitech.Interfaces
         private string name;
         private LTSQLCommand cmd;
         private IDisposable cancellation;
-        private const string sqlInsert = "insert into LLData(roomID, userID, VLID, SceneID, SequenceID, StepID, Brightness, CCT, duv, x, y, pimode, sender, receiver, MsgTypeID, Remark, IP, groupiD)" +
-                                         " values (:1, :2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16,:17,:18)";
+        private const string sqlInsert = "insert into LLData(roomID, groupID, userID, VLID, SceneID, SequenceID, ActivationID, StepID, Brightness, CCT, duv, x, y, pimode, sender, receiver, MsgTypeID, Remark, IP)" +
+                                         " values (:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16,:17,:18,:19)";
  
         private Logger log;
         private ConcurrentQueue<LightLifeData> dataQueue;
@@ -94,10 +94,12 @@ namespace Lumitech.Interfaces
                             cmd.prep(stmt);
                             int i = 0;
                             cmd.Params[i++] = info.roomid;
+                            cmd.Params[i++] = info.piled.groupid;
                             cmd.Params[i++] = info.userid;
                             cmd.Params[i++] = info.vlid;
                             cmd.Params[i++] = info.sceneid;
                             cmd.Params[i++] = info.sequenceid;
+                            cmd.Params[i++] = (int)info.activationstate;
                             cmd.Params[i++] = info.stepid;
                             cmd.Params[i++] = info.piled.brightness;
                             cmd.Params[i++] = info.piled.cct;
@@ -110,7 +112,7 @@ namespace Lumitech.Interfaces
                             cmd.Params[i++] = (int)info.piled.msgtype;                        
                             cmd.Params[i++] = info.remark;
                             cmd.Params[i++] = info.ip;
-                            cmd.Params[i++] = info.piled.groupid;
+                            
 
                             //FW 16.2.2015: auskommentiert, damit nicht soviel in die DB geschreiben wird beim Testen
                             cmd.Exec();

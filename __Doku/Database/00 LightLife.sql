@@ -185,13 +185,13 @@ create table LLData
 
 drop view V_LLDATA
 create view V_LLDATA  
-		(	DataID, RoomID, RoomName, UserID, Proband, VLID, Versuchsleiter,
-			SceneID, SceneName, SequenceID, StepID,
+		(	DataID, RoomID, RoomName, GroupID, UserID, Proband, VLID, Versuchsleiter,
+			SceneID, SceneName, SequenceID, ActivationID, StepID,
 			Brightness, CCT, duv, x, y, pimode, Remark, sender, receiver, MsgTypeID, MsgName, added
 		)
 as
-select d.DataID, d.RoomID, r.Name, d.UserID, (u.LastName + ' ' + u.FirstName), d.VLID, (v.LastName + ' '+ v.FirstName),
-		d.SceneID, s.SceneName, d.SequenceID, d.StepID,
+select d.DataID, d.RoomID, r.Name, d.UserID, (u.LastName + ' ' + u.FirstName), d.GroupID, d.VLID, (v.LastName + ' '+ v.FirstName),
+		d.SceneID, s.SceneName, d.SequenceID, d.ActivationID, d.StepID,
 		d.Brightness, d.CCT, d.duv, d.x, d.y, d.pimode, d.Remark, d.sender, d.receiver, d.MsgTypeID, m.MsgName, d.added
 from LLData d left outer join LLScene s on  d.SceneID = s.SceneID, LLRoom r, LLUser u, llMsgType m, LLUser v
 where d.Roomid = r.Roomid

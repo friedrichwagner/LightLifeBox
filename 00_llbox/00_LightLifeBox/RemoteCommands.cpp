@@ -244,6 +244,7 @@ void RemoteCommands::SequenceHandlingCommand(RemoteCommand cmd)
 		lllogger->lldata->vlid = lumitech::stoi(flds["vlid"]);
 		lllogger->lldata->sequenceid = lumitech::stoi(flds["sequenceid"]);
 		lllogger->lldata->stepid = lumitech::stoi(flds["stepid"]);
+		lllogger->lldata->activationState = (ActivationState)lumitech::stoi(flds["activationstate"]);
 		lllogger->lldata->msgtype = (LLMsgType)lumitech::stoi(flds["msgtype"]);
 
 		lllogger->logLLEvent();

@@ -119,9 +119,11 @@ unsigned long TestClient::startListen()
 		else
 		{
 			dir = +1;
-			if (actualValue - lastValue < 0) dir = -1;
+			//if (actualValue - lastValue < 0) dir = -1;
+			//pibuttons[PIButtonIndex]->value = dir;
 
-			pibuttons[PIButtonIndex]->value = dir;
+			pibuttons[PIButtonIndex]->value = actualValue;
+
 			isr_General2(PIButtonIndex);
 			
 			lastValue = actualValue;

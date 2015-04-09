@@ -104,10 +104,10 @@ void DebugServer::updateClient(string s2send)
 		int ret = DebugClients[i]->send(s2send.c_str(), s2send.size());	
 
 		//Client down
-		//cout << "Client ret=" << ret << endl;
+		cout << "Client ret=" << ret << endl;
 		if (ret < 0)
 		{
-			log->cout("DebugServer: client removed");
+			cout << "DebugServer: client removed\r\n ";
 			listofDowns.push_back(i);			
 		}
 	}

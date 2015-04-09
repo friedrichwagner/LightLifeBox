@@ -50,7 +50,6 @@ int main(int argc, char * argv[])
 
 	Logger* log=Logger::getInstance();
 	DebugServer *dbgSrv = NULL; // DebugServer::getInstance();
-	log->addClient((IObserver*)dbgSrv);
 
 	try
 	{
@@ -73,8 +72,8 @@ int main(int argc, char * argv[])
 			if (cmdOptionExists(argv, argv+argc, "-b")) boxName = getCmdOption(argv, argv+argc,"-b");
 
 			dbgSrv = DebugServer::getInstance();
+			log->addClient((IObserver*)dbgSrv);
 				
-
 			//Run in a Thread			
 			lumitech::startSequenceThread(&startLLBox, (char*)boxName.c_str());
 

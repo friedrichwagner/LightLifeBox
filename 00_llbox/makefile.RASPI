@@ -96,7 +96,7 @@ CFLAGS=-c $(IDIR) -g -Wall -D CYGWIN -D RASPI -Wno-unknown-pragmas -Wno-switch -
 LDFLAGS=-L./lib -ldl -lrt -lwiringPi -lpthread -Wl,--as-needed
 
 # the name of the exe file
-EXECUTABLE=llbox.exe
+EXECUTABLE=llbox
 
 # target: dependencies
 # [tab] system command

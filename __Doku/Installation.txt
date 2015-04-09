@@ -14,3 +14,21 @@
 	Tabelle: LLBOX
 	
 
+raspi2LightLife (Entwicklungs-RASPI)
+cd /light*/Light*/00*
+
+
+raspi5LightLife (OHNE Entwicklungsumgebung):
+
+cd ~
+mkdir LL
+cd LL
+--> copy /90_Exe files da hinein
+		--testbox
+		--llbox
+		--settings.xml
+		--llbox.sh
+		
+chmod +x llbox.sh
+
+

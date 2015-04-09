@@ -50,6 +50,13 @@ struct UDPSendSocket
 #endif
 	}
 
+	void setServerAddress(sockaddr_in addr)
+	{
+		serverAddress.sin_family = addr.sin_family;
+		serverAddress.sin_addr = addr.sin_addr;
+		serverAddress.sin_port = addr.sin_port;
+	}
+
 	int send(unsigned char* cdata, int cnt)
 	{
 		int ret=0;
@@ -120,10 +127,13 @@ struct UDPRecvSocket
 	int receive(unsigned char* cdata, int cnt)
 	{
 		int ret = -1;
-		//int addrLength;
+		int addrLength;
 
-		//ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
-		ret = recv(_socket, (char*)cdata, cnt, 0);
+
+		//FW 9.4.2015 - Wollen sende Adresse wissen --> ausprobieren ob funtkioniert
+		ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
+		//ret = recv(_socket, (char*)cdata, cnt, 0);
+		
 		if (ret>0)
 			cdata[ret] = '\0';
 

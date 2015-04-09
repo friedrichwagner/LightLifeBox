@@ -40,7 +40,8 @@ int TCPStream::send(const char* buffer, size_t len)
 	return sendto(m_sd,buffer, len, 0, reinterpret_cast<sockaddr*>(&m_address),sizeof(m_address));
 #else
 	//return sendto(m_sd,buffer, len, 0, reinterpret_cast<sockaddr*>(&m_address),sizeof(m_address));
-    return write(m_sd, buffer, len);
+    //return write(m_sd, buffer, len);
+	return ::send(m_sd, buffer, len, MSG_NOSIGNAL);
 #endif
 }
 

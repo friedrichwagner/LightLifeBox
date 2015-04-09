@@ -93,6 +93,7 @@
 	<Light1 id="1" name="liBazille">
 		<Default value="4000,100"/>	
 		<CCTMinMax value="2500,7000"/>
+		<DefaultGroup value="200"/>	
 	</Light1>  
   
   <MockButton1>

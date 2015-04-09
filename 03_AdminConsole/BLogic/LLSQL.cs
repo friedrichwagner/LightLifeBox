@@ -206,7 +206,7 @@ namespace LightLifeAdminConsole.Data
                 while (cmd.dr.Read())
                 {
                     dict.Add(cmd.dr.GetInt32(0), new PILEDScene(cmd.dr.GetInt32(0), cmd.dr.GetString(1),
-                        new PILEDData((PILEDMode)(cmd.dr.GetInt32(2)), (byte)cmd.dr.GetInt32(3), cmd.dr.GetInt32(4), (float)cmd.dr.GetDouble(5), (float)cmd.dr.GetDouble(6), (float)cmd.dr.GetDouble(7), (byte)0, (byte)0, (byte)0, "AdminConsole", "Lights")));
+                        new PILEDData((PILEDMode)(cmd.dr.GetInt32(2)), (byte)cmd.dr.GetInt32(3), cmd.dr.GetInt32(4), (float)cmd.dr.GetDouble(5), (float)cmd.dr.GetDouble(6), (float)cmd.dr.GetDouble(7), (byte)0, (byte)0, (byte)0, 100, "AdminConsole", "Lights")));
                 }
 
                 cmd.dr.Close();

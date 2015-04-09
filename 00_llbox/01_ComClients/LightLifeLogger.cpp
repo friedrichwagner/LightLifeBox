@@ -83,6 +83,7 @@ void LightLifeLogger::setXY(float xy[2])
 void LightLifeLogger::setFadeTime(unsigned int millisec)
 {
 	//Nothing to do
+	lldata->fadetime = millisec;
 }
 
 void LightLifeLogger::setGroup(unsigned char group)
@@ -108,17 +109,26 @@ void LightLifeLogger::send()
 	SendUDP((unsigned char*) s.c_str(), s.length());
 }
 
+void LightLifeLogger::send(LightLifeData* d)
+{
+	string s = d->ToSplitString();
+	SendUDP((unsigned char*)s.c_str(), s.length());
+}
+
+
 void LightLifeLogger::logLLEvent()
 {
-	//PILED Daten "leer" setzen
-	lldata->brightness = 0;
-	lldata->cct = 0;
-	lldata->duv = 0.0f;
-	lldata->xy[0] = 0;	lldata->xy[1] = 0;
-	lldata->rgb[0] = 0; lldata->rgb[1] = 0; lldata->rgb[2] = 0;
-	lldata->mode = PILED_MODE_NONE;
+	//Copy constructor
+	LightLifeData* d = new LightLifeData(lldata);
 
-	send();
+	//PILED Daten "leer" setzen
+	d->brightness = 0;
+	d->cct = 0;	d->duv = 0.0f;
+	d->xy[0] = 0;	d->xy[1] = 0;
+	d->receiver = "CONSOLE";
+
+	send(d);
+
 }
 
 #pragma endregion

@@ -1,0 +1,36 @@
+**** General
+sudo apt-get install git-core
+sudo apt-get update
+sudo apt-get update
+
+**** Benutzer anlegen
+adduser lightlife
+
+**** Benutzer "lightlife" der Gruppe sudo zuordnen
+sudo usermod -a -G sudo lightlife
+
+*** gcc
+sudo apt-get install g++-4.8.2
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.6 
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.7 
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
+sudo update-alternatives --config gcc
+gcc --version
+
+
+*** Wiring Pi Library --> http://wiringpi.com/download-and-install/
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+git pull origin
+cd wiringPi
+./build
+
+sudo usermod -a -G gpio lightlife
+
+***** Samba --> http://www.forum-raspberrypi.de/Thread-tutorial-samba-windows-freigabe-server-installation-raspbian-debian
+sudo apt-get update
+sudo apt-get install samba samba-common samba-common-bin winbind
+
+
+*** Setup RDP
+sudo apt-get install xrdp

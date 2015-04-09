@@ -18,6 +18,7 @@ private:
 	void setFadeTime(unsigned int);
 	void setGroup(unsigned char);
 	void send();
+	void send(LightLifeData* d);
 
 	void setCCTDuv(unsigned int, float duv, float xy[2]);
 

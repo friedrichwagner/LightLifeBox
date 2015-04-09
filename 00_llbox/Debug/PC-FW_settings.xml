@@ -17,28 +17,28 @@
 		<BoxNr value="1" />
 		<Send-Command-Port value="1749"/>
 		<Receive-Command-Port value="1748"/>
-		<ControlsDefaultActive value="true"/>
+		<ControlsDefaultActive value="1"/>
 	</ControlBox1>
 
 	<ControlBox2 name="ControlBox2">
 		<BoxNr value="2" />
 		<Send-Command-Port value="1759"/>
 		<Receive-Command-Port value="1758"/>
-		<ControlsDefaultActive value="true"/>
+		<ControlsDefaultActive value="1"/>
 	</ControlBox2>
 
 	<ControlBox3 name="ControlBox3">
 		<BoxNr value="3" />
 		<Send-Command-Port value="1769"/>
 		<Receive-Command-Port value="1768"/>	
-		<ControlsDefaultActive value="true"/>		
+		<ControlsDefaultActive value="1"/>		
 	</ControlBox3>
 	
 	<ControlBox4 name="ControlBox4">
 		<BoxNr value="4" />
 		<Send-Command-Port value="1779"/>
 		<Receive-Command-Port value="1778"/>
-		<ControlsDefaultActive value="true"/>		
+		<ControlsDefaultActive value="1"/>		
 	</ControlBox4>
   
 	<Button1 id="1" name="btnLock1">
@@ -90,6 +90,7 @@
 	<Light1 id="1" name="liBazille">
 		<Default value="4000,100"/>	
 		<CCTMinMax value="2500,7000"/>
+		<DefaultGroup value="200"/>	
 	</Light1>  
   
   <MockButton1>

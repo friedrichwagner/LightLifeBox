@@ -167,6 +167,8 @@ namespace LightLife.Data
             set { _sequenceid = value; }
         }
 
+        public int fadetime;
+
         public string sender;
         public string receiver;
         public LLMsgType msgtype;
@@ -176,12 +178,12 @@ namespace LightLife.Data
             Reset();           
         }
 
-        public PILEDData(PILEDMode m, byte br, int cct, float duv, float x, float y, byte r, byte g, byte b, string psender, string preceiver)
+        public PILEDData(PILEDMode m, byte br, int cct, float duv, float x, float y, byte r, byte g, byte b, int pfadetime, string psender, string preceiver)
         {
             mode = m;
             _groupid = 0; //Broadcast
             _cct = cct; _duv = duv;
-            _brightness = br;
+            _brightness = br; fadetime = pfadetime;
             _xy[0] = x; _xy[1] = y;
             _rgb[0] = r; _rgb[1] = g; _rgb[2] = b;
 
@@ -199,6 +201,7 @@ namespace LightLife.Data
             d.TryGetIntValue("cct", out _cct);
             d.TryGetDoubleValue("duv", out _duv);
             d.TryGetIntValue("brightness", out _brightness);
+            d.TryGetIntValue("fadetime", out fadetime);
             d.TryGetDoubleValue("x", out _xy[0]);
             d.TryGetDoubleValue("y", out _xy[1]);
 
@@ -219,9 +222,10 @@ namespace LightLife.Data
             mode = PILEDMode.SET_BRIGHTNESS;
             _groupid = 0; //Broadcast
             _cct = 3000; duv = 0;
-            _brightness = 255;
+            _brightness = 255; fadetime = 0;
             _xy[0] = 0.0f; _xy[1] = 0.0f;
             _rgb[0] = 0; _rgb[1] = 0; _rgb[2] = 0;
+
             sender = String.Empty;
             receiver = String.Empty;
             msgtype = LLMsgType.LL_SET_LIGHTS;
@@ -232,7 +236,7 @@ namespace LightLife.Data
 
         public override string ToString()
         {
-            return String.Format("g:{0} --> m:{1} b:{2} cct:{3} duv:{4} xy:{5:0.000}/{6:0.000} rgb:{7} / {8} / {9} s->r:{10}->{11} mt:{12}", groupid, mode, _brightness, _cct, _duv, _xy[0], _xy[1], _rgb[0], _rgb[1], _rgb[2], sender, receiver, msgtype);
+            return String.Format("g:{0} --> m:{1} b:{2} cct:{3} duv:{4} xy:{5:0.000}/{6:0.000} ft:{7} rgb:{8} / {9} / {10} s->r:{11}->{12} mt:{13}", groupid, mode, _brightness, _cct, _duv, _xy[0], _xy[1], fadetime, _rgb[0], _rgb[1], _rgb[2], sender, receiver, msgtype);
         }
 
         private void checkXY(ref Single s, float value)

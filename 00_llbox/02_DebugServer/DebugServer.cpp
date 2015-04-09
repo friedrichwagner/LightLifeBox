@@ -98,22 +98,24 @@ unsigned long DebugServer::startListen()
 
 void DebugServer::updateClient(string s2send) 
 {
-	for (unsigned int i=0;i<DebugClients.size(); i++)
+	unsigned int cnt = DebugClients.size();
+	for (unsigned int i = 0; i<cnt; i++)
 	{
-		//cout << "Client send" << endl;
 		int ret = DebugClients[i]->send(s2send.c_str(), s2send.size());	
 
 		//Client down
-		cout << "Client ret=" << ret << endl;
+		//cout << "Client ret=" << ret << endl;
 		if (ret < 0)
-		{
-			cout << "DebugServer: client removed\r\n ";
+		{			
 			listofDowns.push_back(i);			
 		}
 	}
 
-	for (unsigned int i=0; i< listofDowns.size(); i++)
+	for (unsigned int i = 0; i < listofDowns.size(); i++)
+	{
+		cout << "DebugServer: client removed\r\n ";
 		DebugClients.erase(DebugClients.begin() + listofDowns[i]);
+	}
 
 	listofDowns.clear();
 }

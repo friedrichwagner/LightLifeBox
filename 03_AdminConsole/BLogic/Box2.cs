@@ -161,7 +161,7 @@ namespace LightLifeAdminConsole
         private void SetBoxToDefault(int brightnessLevel)
         {
             //SetCCT + brightness
-            rCmd.SetPILED(PILEDMode.SET_CCT, brightnessLevel, DEFAULT_CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f });
+            rCmd.SetPILED(PILEDMode.SET_CCT, brightnessLevel, DEFAULT_CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f }, 100);
         }
 
         private void SetBoxTestSequenceState(LLMsgType msgtype)

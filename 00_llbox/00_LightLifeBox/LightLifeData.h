@@ -58,9 +58,10 @@ struct LightLifeData
 
 	int groupid;
 	int cct;
-	int brightness;
+	int brightness;	
 	int	rgb[3];
 	float xy[2];
+	int fadetime;		//FW 9.4.2015
 	PILEDMode mode;
 	bool locked;
 	string sender;
@@ -72,25 +73,30 @@ struct LightLifeData
 
 	LightLifeData(string pSender)
 	{
-		roomid = 0;
-		userid = 0;
-		vlid = 0;
-		sceneid = 0;
-		sequenceid = 0;
-		stepid = 0;
+		roomid = 0;		userid = 0;			vlid = 0;
+		sceneid = 0;	sequenceid = 0;		stepid = 0;		activationState = none;
 
-		activationState = none;
+		groupid = 0;	brightness = 255; 
+		cct = 2700;  	duv = 0.0f; 	fadetime = 0;		
+		xy[0] = 0.0f;	xy[1] = 0.0f;
+		rgb[0] = 0;		rgb[1] = 0;		rgb[2] = 0;
 
-		groupid = 0;
-		cct = 2700;
-		brightness = 255;
-		duv = 0.0f;
-		rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
-		xy[0] = 0.0f; xy[1] = 0.0f;
-		mode = PILED_SET_BRIGHTNESS;
-		msgtype = LL_SET_LIGHTS;	//Controlboxes always send to Lights
-		receiver = "LIGHTS";		//Controlboxes always send to Lights
-		sender = pSender;			//This is the name of the Box
+		mode = PILED_SET_BRIGHTNESS;	msgtype = LL_SET_LIGHTS;
+		sender = pSender;				receiver = "LIGHTS";		
+	}
+
+	LightLifeData(LightLifeData* old)
+	{
+		roomid = old->roomid;		userid = old->userid;			vlid = old->vlid;
+		sceneid = old->sceneid;		sequenceid = old->sequenceid;	stepid = old->stepid;		activationState = old->activationState;
+
+		groupid = old->groupid;	brightness = old->brightness;
+		cct = old->cct;  	duv = old->duv; 	fadetime = old->fadetime;
+		xy[0] = old->xy[0];	xy[1] = old->xy[1];
+		rgb[0] = old->rgb[0];		rgb[1] = old->rgb[1];		rgb[2] = old->rgb[2];
+
+		mode = old->mode;		msgtype = old->msgtype;
+		sender = old->sender;	receiver = old->receiver;
 	}
 
 	string ToSplitString()
@@ -100,39 +106,9 @@ struct LightLifeData
 		//LightLifeData
 		s << "roomid=" << roomid << ";userid=" << userid << ";vlid=" << vlid << ";sceneid=" << sceneid << ";sequenceid=" << sequenceid << ";stepid=" << stepid;
 		//PILEDData
-		s << ";groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";duv=" << duv << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2];
+		s << ";groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";duv=" << duv << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2] << ";fadetime=" << fadetime;
 		//Others
 		s << ";sender=" << sender << ";receiver=" << receiver << ";msgtype=" << msgtype << ";activationstate=" << activationState;
 		return s.str();
 	}
-
-	/*string ToURLString()
-	{
-		ostringstream s;
-
-		s << "groupid=" << groupid << "&mode=" << mode << "&brightness=" << brightness << "&cct=" << cct << "&xy=" << xy[0] << ";" << xy[1] << "&rgb=" << rgb[0] << ";" << rgb[1] << ";" << rgb[2];
-		s << "&sender=" << sender << "&receiver=" << receiver << "&msgtype=" << msgtype;
-		return s.str();
-	}
-
-	string ToJSonString()
-	{
-		//"{\"brigthness\":0,\"cct\":0,\"groupid\":0,\"locked\":false,\"mode\":0,\"rgb\":[0,0,0],\"xy\":[0,0]}"
-		//"{\"groupid\":0,\"mode\":3,\"brightness\":255,\"cct\":6500,\"xy\":[0,0]\"rgb\":[0,0,0]\"locked\":false}"
-
-		ostringstream s;
-		s << "{";
-		s << "\"groupid\":" << groupid << ",";
-		s << "\"mode\":" << mode << ",";
-		s << "\"brightness\":" << brightness << ",";
-		s << "\"cct\":" << cct << ",";
-		s << "\"xy\":" << "[" << xy[0] << "," << xy[1] << "],";
-		s << "\"rgb\":" << "[" << rgb[0] << "," << rgb[1] << "," << rgb[2] << "],";
-		s << "\"sender\":" << "\"" << sender << "\"" << ",";
-		s << "\"receiver\":" << "\"" << receiver << "\"" << ",";
-		s << "\"msgtype\":" << msgtype;
-		s << "}";
-
-		return s.str();
-	}*/
 };

@@ -12,6 +12,13 @@
 		<Sleep value="1000"/>
 		<Admin-Console-IP value="127.0.0.1"/>
 	</ControlBox_General>
+	
+	<LTJENB14 name="ControlBox1">
+		<BoxNr value="99" />
+		<Send-Command-Port value="1749"/>
+		<Receive-Command-Port value="1748"/>
+		<ControlsDefaultActive value="1"/>		
+	</LTJENB14>	
 
 	<ControlBox1 name="ControlBox1">
 		<BoxNr value="1" />

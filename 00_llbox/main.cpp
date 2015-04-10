@@ -52,27 +52,25 @@ int main(int argc, char * argv[])
 	DebugServer *dbgSrv = NULL; // DebugServer::getInstance();
 
 	try
-	{
-		if (cmdOptionExists(argv, argv + argc, "-help") || cmdOptionExists(argv, argv + argc, "-h") || !cmdOptionExists(argv, argv + argc, "-b"))
-		{
-			printHelp();
-		}
-		else //if ((argc==3) && (cmdOptionExists(argv, argv+argc, "-box") || cmdOptionExists(argv, argv+argc, "-b")) )
+	{	
+		if ((argc==3) && (cmdOptionExists(argv, argv+argc, "-box") || cmdOptionExists(argv, argv+argc, "-b")) )
 		{
 			InitWiringPi();
 			
-			string boxName="";		
+			string boxName = lumitech::getComputerNamePlatform();			
 
 	#ifdef USE_FTDI
 			ftdi::CreateDeviceInfoList();
 	#endif
 
-
-			if (cmdOptionExists(argv, argv+argc, "-box")) boxName = getCmdOption(argv, argv+argc,"-box");
-			if (cmdOptionExists(argv, argv+argc, "-b")) boxName = getCmdOption(argv, argv+argc,"-b");
+			//FW 10.4.2015 - Take ComputerName not parameter as BoxName
+			//if (cmdOptionExists(argv, argv+argc, "-box")) boxName = getCmdOption(argv, argv+argc,"-box");
+			//if (cmdOptionExists(argv, argv+argc, "-b")) boxName = getCmdOption(argv, argv+argc,"-b");
 
 			dbgSrv = DebugServer::getInstance();
 			log->addClient((IObserver*)dbgSrv);
+
+			log->cout("ComputerName=" + boxName);
 				
 			//Run in a Thread			
 			lumitech::startSequenceThread(&startLLBox, (char*)boxName.c_str());
@@ -80,6 +78,10 @@ int main(int argc, char * argv[])
 			//wait for Thread to be finished
 			lumitech::waitSequenceThread();	
 		}		
+		else //if (cmdOptionExists(argv, argv + argc, "-help") || cmdOptionExists(argv, argv + argc, "-h") || !cmdOptionExists(argv, argv + argc, "-b"))
+		{
+			printHelp();
+		}
 	}
 	catch(exception& ex)
 	{

@@ -19,7 +19,7 @@ case "$1" in
   start)
     echo "Starting llbox"
     # run application you want to start
-    /home/shares/public/run/llbox -b "ControlBox1" > /dev/null 2> /dev/null &
+    /lightlife/run/llbox -b "ControlBox1" > /dev/null 2> /dev/null &
     ;;
   stop)
     echo "Stopping llbox"

@@ -13,42 +13,57 @@
 		<Admin-Console-IP value="127.0.0.1"/>
 	</ControlBox_General>
 
-	<ControlBox1 name="ControlBox1">
+	<raspi1LightLife name="ControlBox1">
 		<BoxNr value="1" />
 		<Send-Command-Port value="1749"/>
 		<Receive-Command-Port value="1748"/>
 		<ControlsDefaultActive value="1"/>
-	</ControlBox1>
+	</raspi1LightLife>
 
-	<ControlBox2 name="ControlBox2">
+	<raspi2LightLife name="ControlBox2">
 		<BoxNr value="2" />
 		<Send-Command-Port value="1759"/>
 		<Receive-Command-Port value="1758"/>
 		<ControlsDefaultActive value="1"/>
-	</ControlBox2>
+	</raspi2LightLife>
 
-	<ControlBox3 name="ControlBox3">
+	<raspi3LightLife name="ControlBox3">
 		<BoxNr value="3" />
 		<Send-Command-Port value="1769"/>
 		<Receive-Command-Port value="1768"/>	
 		<ControlsDefaultActive value="1"/>		
-	</ControlBox3>
+	</raspi3LightLife>
 	
-	<ControlBox4 name="ControlBox4">
+	<raspi4LightLife name="ControlBox4">
 		<BoxNr value="4" />
 		<Send-Command-Port value="1779"/>
 		<Receive-Command-Port value="1778"/>
 		<ControlsDefaultActive value="1"/>		
-	</ControlBox4>
+	</raspi4LightLife>
+	
+	<raspi5LightLife name="ControlBox5">
+		<BoxNr value="5" />
+		<Send-Command-Port value="1789"/>
+		<Receive-Command-Port value="1788"/>
+		<ControlsDefaultActive value="1"/>		
+	</raspi5LightLife>	
+	
+	<LTJENB14 name="ControlBox1">
+		<BoxNr value="99" />
+		<Send-Command-Port value="1749"/>
+		<Receive-Command-Port value="1748"/>
+		<ControlsDefaultActive value="1"/>		
+	</LTJENB14>	
+
   
 	<Button1 id="1" name="btnLock1">
 		<LightLifeButtonType value="1" />
 		<Testing value="MockButton1"/>
 		<PortUp value="0"/>
 		<PortDown value="0"/>
-		<PortPressed value="1"/>
+		<PortPressed vale="1"/>
 		<PortLED value="0"/>		
-		<EnablePortPressed value="1"/>		
+		<EnablePortPressed value="0"/>
 	</Button1>
 	<Button2 id="2" name="btnLock2">
 		<LightLifeButtonType value="1" />
@@ -57,7 +72,7 @@
 		<PortDown value="0"/>
 		<PortPressed value="4"/>
 		<PortLED value="0"/>	
-		<EnablePortPressed value="1"/>		
+		<EnablePortPressed value="0"/>		
 	 </Button2>  
 	<Poti1 id="3" name="btnBrightness">
 		<LightLifeButtonType value="2" />
@@ -78,7 +93,7 @@
 		<PortPressed value="13"/>
 		<PortLED value="24"/>
 		<DeltaCnt value="1"/>		
-		<Factor value="25"/>
+		<Factor value="40"/>
 		<EnablePortPressed value="0"/>
 	</Poti2>
 	<Poti3 id="5" name="btnJudd">

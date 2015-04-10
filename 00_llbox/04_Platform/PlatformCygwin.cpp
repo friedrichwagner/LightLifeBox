@@ -27,6 +27,7 @@ int PlatformInit(char* argv0)
 
 	//Install Ctrl-C Handler
 	signal(SIGINT, sigproc);
+	signal(SIGTERM, sigproc2);
 	return 0;
 }
 void PlatformClose()
@@ -211,6 +212,19 @@ void sigproc(int pi)
 	}
 }
 
+void sigproc2(int pi)
+{ 		 
+	signal(SIGTERM, sigproc2); /*  */
+	/* NOTE some versions of UNIX will reset signal to default
+	after each call. So for portability reset signal each time */
+
+	cout << "SIGTERM Handler" << endl;
+
+	if (thisBox != 0)
+	{
+		thisBox->stopEventLoop();
+	}
+}
 
 }
 

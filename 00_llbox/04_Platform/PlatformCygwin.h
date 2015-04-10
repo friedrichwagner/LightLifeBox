@@ -44,6 +44,7 @@ namespace lumitech
 
 	//Ctrl-C Handler
 	void sigproc(int);
+	void sigproc2(int);
 }
 
 template <typename T>

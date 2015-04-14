@@ -88,6 +88,7 @@ struct NeoLinkData
 		byGroupUpdate = 0x00;
 		byCRC = 0x00;
 		byStop = 0x03;
+		memset(data, 0, sizeof(data));
 	}
 
 	unsigned char* ToByteArray()
@@ -99,7 +100,7 @@ struct NeoLinkData
 		byArrBuffer[i++] = byMode;
 		byArrBuffer[i++] = byAddress;
 
-		for (int k = 0; k < DATA_SIZE; k++) byArrBuffer[i++] = 0;
+		for (int k = 0; k < DATA_SIZE; k++) byArrBuffer[i++] = data[k];
 
 		byArrBuffer[i++] = byGroupUpdate;
 		byArrBuffer[i++] = calcCRC();

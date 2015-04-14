@@ -27,7 +27,7 @@ RemoteCommands::RemoteCommands(ControlBox* pBox)
 
 
 void RemoteCommands::NowAddLLLogger()
-{
+{	
 	lllogger = (LightLifeLogger*)box->Lights[0]->getComClient(0); // Assume LightLifeLogger is on pos=0
 
 	if (lllogger == NULL)

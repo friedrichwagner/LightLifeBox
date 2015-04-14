@@ -1,5 +1,7 @@
 #include "ControlBox.h"
 #include "helpers.h"
+#include "NeoLinkClient.h"
+#include "LightLifeLogger.h"
 
 ControlBox* ControlBox::_instance = NULL;
 
@@ -14,6 +16,12 @@ ControlBox::ControlBox(std::string pName)
 	log = Logger::getInstance();
 
 	isDone = !this->Init();
+
+	//Add ComClients
+	if (!isDone)
+	{
+		addComClients();
+	}
 
 	//setup TastButtons, Buttons from ini File
 }
@@ -47,6 +55,11 @@ ControlBox::~ControlBox()
 	//log->cout("Size=" + lumitech::itos(idx));
 	for (unsigned int i = 0; i < idx; i++)		
 			Buttons[i]->setActive(false);
+
+	int cnt = Lights.size();
+	for (int i = 0; i < cnt; i++)
+		Lights[i]->removeComClients();
+
 	delete rmCmd;
 }
 
@@ -101,6 +114,43 @@ bool ControlBox::Init()
 	rmCmd->start();
 
 	return true;
+}
+
+int ControlBox::addComClients()
+{
+	//ACHTUNG! Im Settings File muss "LightLifeServer" immer als erste Client angegeben werden
+	//damit in der Funktion rmCmd->NowAddLLLogger im dieser Client "gezogen" wird
+	//Hack, aber ist halt jetzt so
+
+	int defaultgroupid = ini->Read<int>(this->Name, "DefaultGroup", 0); // Default = broadcast, wird mit RemoteCommand "Discover" gesetzt  ini->Read<int>(pSection, "groupid", 0);
+
+	vector<string> flds;
+	ini->ReadStringVector("ControlBox_General", "Clients", "", &flds);
+	for (unsigned int i = 0; i< flds.size(); i++)
+	{
+		IBaseClient* clnt = NULL;
+		if (flds[i] == "NeoLink")
+		{
+			clnt = new NeoLinkClient();			
+		}
+
+		if (flds[i] == "LightLifeServer")
+		{
+			clnt = new LightLifeLogger(Name);
+		}
+
+		for (int k = 0; k < Lights.size(); k++)
+		{
+			if ((clnt != NULL) && (clnt->getCntClients() > 0))
+			{				
+				Lights[k]->setGroup(defaultgroupid);
+				Lights[k]->addComClient(clnt);
+			}
+				
+		}
+	}
+
+	return flds.size();
 }
 
 bool ControlBox::EventLoop() 

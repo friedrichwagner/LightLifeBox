@@ -15,8 +15,8 @@
 /*#include "DMXClient.h"
 #include "ZLLClient.h"
 #include "DaliClient.h"
-#include "NeoLinkClient.h"*/
-#include "LightLifeLogger.h"
+#include "NeoLinkClient.h"
+#include "LightLifeLogger.h"*/
 #include "RemoteCommands.h"
 
 using namespace std;
@@ -142,17 +142,15 @@ void runLightLifeBox(string boxName)
 	}		
 	lumitech::setSequencePointer((void*) box);
 
-	LightLifeLogger* ll = new LightLifeLogger(box->getName());
-	
-	if (ll->getCntClients() > 0) box->Lights[0]->addComClient(ll);
+	//LightLifeLogger* ll = new LightLifeLogger(box->getName());	
+	//if (ll->getCntClients() > 0) box->Lights[0]->addComClient(ll);
 
 	//Prgram loops here endlessly
 	box->EventLoop();
 
+	//box->Lights[0]->removeComClients();
 
-	box->Lights[0]->removeComClients();
-
-	delete ll;
+	//delete ll;
 	delete box;
 }
 

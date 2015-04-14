@@ -14,8 +14,7 @@ PILight::PILight(std::string pSection)
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);
-	this->groupid = ini->Read<int>(pSection, "DefaultGroup", 0); // Default = broadcast, wird mit RemoteCommand "Discover" gesetzt  ini->Read<int>(pSection, "groupid", 0);
-
+	
 	defaultBrightness = 100;
 	defaultCct = 4000;
 	duv = 0.0f;
@@ -67,7 +66,7 @@ void PILight::addComClient(IBaseClient* c)
 	if (c != NULL)
 	{
 		//zu steuernde Gruppe setzen
-		c->setGroup(groupid);	
+		c->setGroup(groupid);
 		ComClients.push_back(c);
 		log->cout("added Client:" + c->getName());
 
@@ -80,6 +79,10 @@ void PILight::addComClient(IBaseClient* c)
 void PILight::removeComClients()
 {
 	//löscht alle Clients
+	int cnt = ComClients.size();
+	for (int i = 0; i < cnt; i++)
+		delete ComClients[i];
+
 	ComClients.clear();
 }
 

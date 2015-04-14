@@ -21,6 +21,8 @@ NeoLinkClient::NeoLinkClient()
 	if (flds.size() >=1 ) 
 		IPClients.push_back(new UDPSendSocket(flds[0], IPPort));
 
+	setFadeTime(100);
+
 	nlframe = new NeoLinkData();
 	nlframe->byAddress = NL_GROUP_BROADCAST;
 }
@@ -58,6 +60,10 @@ void NeoLinkClient::setCCT(unsigned int cct, float xy[])
 	v = lumitech::intToBytes(mirek);
 	nlframe->data[0] = v[0];
 	nlframe->data[1] = v[1];
+
+	//log->cout("cct:" + lumitech::itos(cct));
+	//log->cout("mirek:" + lumitech::itos(mirek));
+	log->cout("Da ist noch ein Problem: spring nur hin und her statt Farbe zu ändern!");
 
 	//fadetime
 	nlframe->data[2] = byfadetime[0];
@@ -132,6 +138,8 @@ void NeoLinkClient::send()
 {
 	unsigned char *pBuf = nlframe->ToByteArray();
 	SendUDP(pBuf, NL_BUFFER_SIZE);
+	memset(nlframe->data, 0, sizeof(nlframe->data));
+	//lumitech::sleep(fadetime);
 }
 
 #pragma endregion

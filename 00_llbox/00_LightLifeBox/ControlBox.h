@@ -35,6 +35,7 @@ protected:
 	ControlBox(std::string pName); //private contructor		
 
 	RemoteCommands* rmCmd;
+	int addComClients();
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL
@@ -48,5 +49,5 @@ public:
 	vector<PILight*> Lights;
 	bool isDone;
 
-	void notify(void* sender, enumButtonEvents event, int delta);
+	void notify(void* sender, enumButtonEvents event, int delta);	
 };

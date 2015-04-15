@@ -139,7 +139,7 @@ int ControlBox::addComClients()
 			clnt = new LightLifeLogger(Name);
 		}
 
-		for (int k = 0; k < Lights.size(); k++)
+		for (unsigned int k = 0; k < Lights.size(); k++)
 		{
 			if ((clnt != NULL) && (clnt->getCntClients() > 0))
 			{				

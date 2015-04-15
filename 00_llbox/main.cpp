@@ -43,11 +43,6 @@ int main(int argc, char * argv[])
 {
 	if (lumitech::PlatformInit(argv[0]) < 0 ) return -1;
 
-	/*fCieCoords_t xy = { 0.0f, 0.0f };
-	int ret = CCTDuv2xy(2500, 0.02, &xy);	// Soll = 0,5232 / 0,4810, Ist=0.52318 / 0.48100 siehe Excel "00 Verifizierung Umrechnungen.xls" im LT.XLL git Source
-	ret = CCTDuv2xy(7000, 0.02, &xy);		// Soll= 0,3020 / 0,3536, ist= 0.30132 /  0.35299
-	*/
-
 	Logger* log=Logger::getInstance();
 	DebugServer *dbgSrv = NULL; // DebugServer::getInstance();
 

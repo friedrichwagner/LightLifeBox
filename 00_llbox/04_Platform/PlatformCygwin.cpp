@@ -176,9 +176,12 @@ std::vector<unsigned char> intToBytes(uint16_t paramInt)
 {
 	int size = sizeof(uint16_t);
 
+	//RASPI = PC = Little Endian
      std::vector<unsigned char> arrayOfByte(size);
-     for (int i = 0; i < size; i++)
-         arrayOfByte[size - i] = (paramInt >> (i * 8));
+	 for (int i = 0; i < size; i++)
+	 {
+		 arrayOfByte[i] = (paramInt >> (i * 8));
+	 }
      return arrayOfByte;
 }
 

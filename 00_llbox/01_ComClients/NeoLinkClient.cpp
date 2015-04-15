@@ -42,7 +42,7 @@ void NeoLinkClient::setBrightness(unsigned int val)
 	//brightness
 	nlframe->data[0] = (char)val;
 
-	//fadetime
+	//fadetime 
 	nlframe->data[1] = byfadetime[0];
 	nlframe->data[2] = byfadetime[1];
 
@@ -58,12 +58,9 @@ void NeoLinkClient::setCCT(unsigned int cct, float xy[])
 	unsigned int mirek = (unsigned int)(1e6 / cct);
 
 	v = lumitech::intToBytes(mirek);
+
 	nlframe->data[0] = v[0];
 	nlframe->data[1] = v[1];
-
-	//log->cout("cct:" + lumitech::itos(cct));
-	//log->cout("mirek:" + lumitech::itos(mirek));
-	log->cout("Da ist noch ein Problem: spring nur hin und her statt Farbe zu ändern!");
 
 	//fadetime
 	nlframe->data[2] = byfadetime[0];
@@ -93,6 +90,7 @@ void NeoLinkClient::setXY(float val[2])
 	std::vector<unsigned char> v;
 	nlframe->byMode = NL_XY;
 
+	//ACHTUNG! Endianesss bei RASPI vs. PC
 	v = lumitech::intToBytes((int)(65536 * val[0]));
 	nlframe->data[0] = v[0];
 	nlframe->data[1] = v[1];
@@ -106,6 +104,7 @@ void NeoLinkClient::setXY(float val[2])
 
 void NeoLinkClient::setCCTDuv(unsigned int cct, float duv, float xy[2])
 {
+	//Das wird schon in PILight berechnet, damit man es nicht in jedem ComClient extra machen muss
 	//fCieCoords_t cie;
 	/*float xy[2];
 
@@ -125,6 +124,7 @@ void NeoLinkClient::setFadeTime(unsigned int millisec)
 	fadetime = millisec;
 
 	v = lumitech::intToBytes(fadetime / 100);
+	
 	byfadetime[0] = v[0];
 	byfadetime[1] = v[1];
 }

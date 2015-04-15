@@ -26,7 +26,10 @@ Button::Button(std::string pSection)
 Button::~Button() 
 { 
 	setActive(false);
+
+#if defined(_DEBUG) && !defined(RASPI)
 	delete tc;
+#endif
 }
 
 void Button::PIButtonInit()

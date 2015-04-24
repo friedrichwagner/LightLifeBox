@@ -5,8 +5,14 @@
 #include <iomanip>
 #include <vector>
 
+using namespace std::chrono;
+
+static milliseconds lastsend;
+
 PILight::PILight(std::string pSection)
 {
+	lastsend = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
+
 	ini = Settings::getInstance();
 	log = Logger::getInstance();
 
@@ -53,7 +59,7 @@ PILight::PILight(std::string pSection)
 
 	duv = 0.0f;
 	rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
-	fadetime = 0;
+	fadetime = DEFAULT_NEOLINK_FADETIME;
 }
 
 PILight::~PILight() 
@@ -72,6 +78,7 @@ void PILight::addComClient(IBaseClient* c)
 
 		//Set default Values on Startup
 		setCCT(defaultCct);
+		lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
 		setBrightness(defaultBrightness);
 	}
 }
@@ -125,6 +132,52 @@ void PILight::updateClients()
     }
 }
 
+void PILight::Send2ComClients()
+{
+
+	milliseconds now = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
+	if ((now - lastsend).count() < (long)DEFAULT_NEOLINK_FADETIME)
+	{
+		log->cout("skip_______");
+		return;
+	}
+
+	setLog();
+
+	for (unsigned int i = 0; i < ComClients.size(); i++)
+	{
+		if (ComClients[i] != NULL)
+		{
+			switch (piledMode)
+			{
+			case PILED_MODE_NONE:
+				break;
+			case PILED_SET_BRIGHTNESS:
+				ComClients[i]->setBrightness(brightness);
+				break;
+			case PILED_SET_CCT:
+				ComClients[i]->setCCT(cct, xy);
+				break;
+			case PILED_SET_XY:
+				ComClients[i]->setXY(xy);
+				break;
+			case PILED_SET_RGB:
+				ComClients[i]->setRGB(rgb);
+				break;
+			case PILED_SET_DUV:
+				ComClients[i]->setCCTDuv(cct, duv, xy);
+				break;
+			default:
+				break;
+			}
+			
+		}			
+	}
+
+	lastsend = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
+}
+
+
 void PILight::setBrightness(unsigned int val)
 {
 	brightness = val;
@@ -135,11 +188,7 @@ void PILight::setBrightness(unsigned int val)
 
 	setLog();
 
-	for (unsigned int i = 0; i < ComClients.size(); i++)
-	{
-		if (ComClients[i] != NULL)
-			ComClients[i]->setBrightness(brightness);
-	}
+	Send2ComClients();
 }
 
 void PILight::setCCT(unsigned int val)
@@ -156,13 +205,7 @@ void PILight::setCCT(unsigned int val)
 
 	duv = 0.0f; //Das ist Absicht. Wenn man CCT verändert, will man kein duv haben.
 
-	setLog();	
-
-	for (unsigned int i = 0; i < ComClients.size(); i++)
-	{
-		if (ComClients[i] != NULL)
-			ComClients[i]->setCCT(cct, xy);
-	}
+	Send2ComClients();
 }
 
 void PILight::setRGB(unsigned int prgb[])
@@ -175,13 +218,7 @@ void PILight::setRGB(unsigned int prgb[])
 		if (rgb[i]<0) rgb[i] = 0;
 	}
 
-	setLog();
-
-	for (unsigned int i = 0; i < ComClients.size(); i++)
-	{
-		if (ComClients[i] != NULL)
-			ComClients[i]->setRGB(rgb);
-	}
+	Send2ComClients();
 }
 
 void PILight::setXY(float pxy[])
@@ -191,13 +228,7 @@ void PILight::setXY(float pxy[])
 	if (xy[0]>1.0f) xy[0] = 1.0f; if (xy[0]<0.0f) xy[0] = 0.0f;
 	if (xy[1]>1.0f) xy[1] = 1.0f; if (xy[1]<0.0f) xy[1] = 0.0f;
 
-	setLog();
-
-	for (unsigned int i = 0; i < ComClients.size(); i++)
-	{
-		if (ComClients[i] != NULL)
-			ComClients[i]->setXY(xy);
-	}
+	Send2ComClients();
 }
 
 void PILight::setCCTDuv(unsigned int valCCT, float valDuv)
@@ -220,13 +251,7 @@ void PILight::setCCTDuv(unsigned int valCCT, float valDuv)
 		//setXY(xy);
 	}
 	
-	setLog();
-
-	for (unsigned int i = 0; i < ComClients.size(); i++)
-	{
-		if (ComClients[i] != NULL)
-			ComClients[i]->setCCTDuv(cct, duv, xy);
-	}
+	Send2ComClients();
 }
 
 void PILight::setFadeTime(unsigned int val)
@@ -285,6 +310,7 @@ void PILight::resetDefault()
 	log->cout("resetDefault()-- Start");
 
 	setCCT(defaultCct); 
+	lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
 	setBrightness(defaultBrightness);
 	duv = 0.0f;
 
@@ -344,7 +370,7 @@ unsigned char PILight::getGroup()
 void PILight::setLog()
 {
 	sslog.str(""); sslog.clear();
-	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << std::fixed << setprecision(4) << " x:" << xy[0] << " y:" << xy[1] << " duv:" << duv;// << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
+	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << std::fixed << setprecision(4) << " x:" << xy[0] << " y:" << xy[1] << " duv:" << duv << " ft:" << fadetime;// << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
 	log->cout(sslog.str());
 }
 

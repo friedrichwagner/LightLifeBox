@@ -44,6 +44,8 @@ protected:
 
 	//Functions
 	void setLog();
+
+	void Send2ComClients();
 public:
 	PILight(std::string pName); //private contructor
 	~PILight();	

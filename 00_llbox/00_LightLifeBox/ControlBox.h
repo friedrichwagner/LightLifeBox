@@ -36,6 +36,7 @@ protected:
 
 	RemoteCommands* rmCmd;
 	int addComClients();
+	bool testWithoutConsole;	
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL
@@ -50,4 +51,7 @@ public:
 	bool isDone;
 
 	void notify(void* sender, enumButtonEvents event, int delta);	
+
+	int buttonActive;
+	void setButtons(bool[]);
 };

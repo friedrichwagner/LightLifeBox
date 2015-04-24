@@ -2,8 +2,14 @@
 #include "helpers.h"
 #include "NeoLinkClient.h"
 #include "LightLifeLogger.h"
+#include "Timer.h"
 
 ControlBox* ControlBox::_instance = NULL;
+
+void delay1(ControlBox* p);
+void delay2(ControlBox* p);
+
+int psychoTestDelayTimeinSecs = 30000;
 
 ControlBox::ControlBox(std::string pName)
 {
@@ -11,6 +17,7 @@ ControlBox::ControlBox(std::string pName)
 
 	this->ID = 0;
 	this->Name = pName;
+	this->buttonActive = -1;
 	
 	ini = Settings::getInstance();
 	log = Logger::getInstance();
@@ -22,8 +29,6 @@ ControlBox::ControlBox(std::string pName)
 	{
 		addComClients();
 	}
-
-	//setup TastButtons, Buttons from ini File
 }
 
 ControlBox* ControlBox::getInstance(string pName)
@@ -74,6 +79,8 @@ bool ControlBox::Init()
 	this->ID = ini->Read<int>(this->Name, "BoxNr", 0);
 
 	bool defaultActiveControls = ini->Read<bool>(this->Name, "ControlsDefaultActive", false);
+	testWithoutConsole = ini->Read<bool>("ControlBox_General", "TestWithoutConsole", false);
+	psychoTestDelayTimeinSecs = ini->Read<int>("ControlBox_General", "DelayTimeForPsychoTestSecs", 30) * 1000;
 
 	//1. Get the Potis	
 	ini->ReadStringVector("ControlBox_General", "Potis", "", &flds);
@@ -83,7 +90,15 @@ bool ControlBox::Init()
 		{
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[i]->addClient(this);
-			Buttons[i]->setActive(defaultActiveControls);
+			if (testWithoutConsole)
+			{
+				buttonActive = 0;
+				//Nur ersten Button auf Active setzen, weitere dann bei jedem "Lock"
+				if (i == 0) Buttons[i]->setActive(true);
+				else Buttons[i]->setActive(false);
+			}
+			else
+				Buttons[i]->setActive(defaultActiveControls);
 		}
 	}
 
@@ -96,7 +111,11 @@ bool ControlBox::Init()
 		{
 			Buttons.push_back(new Button(flds[i]));
 			Buttons[idx+i]->addClient(this);
-			Buttons[idx+i]->setActive(defaultActiveControls);
+
+			if (testWithoutConsole)
+				Buttons[idx + i]->setActive(true);
+			else
+				Buttons[idx+i]->setActive(defaultActiveControls);
 		}
 	}
 
@@ -191,6 +210,12 @@ string ControlBox::getName()
 	return this->Name;
 }
 
+void ControlBox::setButtons(bool b[])
+{
+	for (unsigned int i = 0; i < Buttons.size(); i++)
+		Buttons[i]->setActive(b[i]);
+}
+
 void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 {
 	LightLifeButtonType btntype = ((Button*)sender)->getBtnType();
@@ -204,10 +229,18 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 		{
 			Lights[0]->lockCurrState();
 			rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
-		}
 
-		//if (((Button*)sender)->enablePressedEvent)
-			Lights[0]->resetDefault();
+			if (testWithoutConsole)
+			{
+				//Disable all Buttons
+				bool b[5] = { false, false, false, false, false };
+				setButtons(b);
+
+				//Wait 30 secs
+				log->cout("Waiting 30 secs...");
+				Later Delay1(psychoTestDelayTimeinSecs, true, &delay1, this);
+			}
+		}
 
 		break;
 
@@ -220,5 +253,39 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 
 	default:
 		break;
+	}
+}
+
+void delay1(ControlBox* p)
+{
+	//30 seconds fade
+	if (p != NULL)
+	{
+		p->Lights[0]->setFadeTime(psychoTestDelayTimeinSecs);
+		p->Lights[0]->resetDefault();
+		cout << "Fading 30 secs..\r\n";
+		Later Delay2(psychoTestDelayTimeinSecs, true, &delay2, p);
+	}
+}
+
+void delay2(ControlBox* p)
+{
+	bool b[5] = { false, false, false, true, true };
+	if (p != NULL)
+	{
+		p->buttonActive++;
+		if (p->buttonActive > 3)  p->buttonActive = 0;
+
+		if (p->buttonActive == 3)
+		{
+			b[0] = true; b[1] = true; b[2] = true;
+			p->setButtons(b);
+		}
+		else
+		{
+			b[p->buttonActive] = true;
+			p->setButtons(b);
+		}
+		p->Lights[0]->setFadeTime(DEFAULT_NEOLINK_FADETIME);
 	}
 }

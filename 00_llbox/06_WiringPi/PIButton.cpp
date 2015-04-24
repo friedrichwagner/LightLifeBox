@@ -34,20 +34,6 @@ void InitWiringPi()
 #if defined (RASPI)
 	//Init Library
 	wiringPiSetup();
-
-	//Config Port as Input, Output
-	//Brightness
-	//pinMode(A2, INPUT); pinMode(B2, INPUT); pinMode(TAST2, INPUT);
-	//CCT
-	//pinMode(A3, INPUT); pinMode(B3, INPUT);	pinMode(TAST3, INPUT);
-	//Judd
-	//pinMode(A1, INPUT); pinMode(B1, INPUT); pinMode(TAST1, INPUT); 
-
-	//Lock1, Lock 2
-	//pinMode(EINGABETAST, INPUT); pinMode(EINGABETAST2, INPUT);
-
-	//LEDs
-	//pinMode(LED1, OUTPUT); pinMode(LED2, OUTPUT); pinMode(LED3, OUTPUT);
 #endif
 
 }
@@ -110,10 +96,13 @@ void InitPIButton(PIButton* p, string Section, int btntype)
 			if (lock1 == 0)
 			{
 				p->pibtnType = PIBUTTON_LOCK1;
+
 				lock1 = 1;
 			}
 			else
+			{
 				p->pibtnType = PIBUTTON_LOCK2;
+			}
 
 			p->isr_UpDown = NULL; p->isr_Pressed = &isr_Lock;
 
@@ -124,7 +113,11 @@ void InitPIButton(PIButton* p, string Section, int btntype)
 #if defined (RASPI)
 		if ((p->portUp>0) && p->isr_UpDown != NULL) wiringPiISR(p->portUp, INT_EDGE_BOTH, p->isr_UpDown);
 		if ((p->portDown>0) && p->isr_UpDown != NULL) wiringPiISR(p->portDown, INT_EDGE_BOTH, p->isr_UpDown);
-		if ((p->portPressed>0) && p->isr_Pressed != NULL) wiringPiISR(p->portPressed, INT_EDGE_FALLING, p->isr_Pressed);
+		if ((p->portPressed>0) && p->isr_Pressed != NULL) 
+		{
+			//cout << "Port pressed:" << p->portPressed << "\r\n";
+			wiringPiISR(p->portPressed, INT_EDGE_FALLING, p->isr_Pressed);
+		}
 #endif
 
 		//p->index = pibuttons.size();
@@ -143,39 +136,6 @@ int  wiringPiISR(int pin, int mode, void(*function)(void))
 }
 #endif
 
-//----------------------------
-//--------General --------- 
-//----------------------------
-/*void isr_General(int index, int dir)
-{
-	if (pibuttons[index] != NULL)
-	{
-		if (!pibuttons[index]->change)
-		{
-			if ((dir > 0) && pibuttons[index]->cnt < 0) pibuttons[index]->cnt = 0;
-			else if ((dir < 0) && pibuttons[index]->cnt > 0) pibuttons[index]->cnt = 0;
-
-			pibuttons[index]->cnt = pibuttons[index]->cnt + dir; //dir = -1 oder +1			
-			//cout << pibuttons[index]->cnt;
-
-			if ((unsigned int)abs(pibuttons[index]->cnt) >= pibuttons[index]->deltaCnt)
-			{
-				if (pibuttons[index]->ButtonEvent != 0)
-				{				
-					//Das ist echt grauslich: Pointer to member function aus vector
-					Button* instance = pibuttons[index]->btn;
-					int val = dir * pibuttons[index]->factor;
-					(instance->*(pibuttons[index]->ButtonEvent))((PIButtonTyp)index, val);
-				}
-				pibuttons[index]->cnt = 0;
-				pibuttons[index]->change = true;
-			}
-		}
-		else
-			pibuttons[index]->change = false;
-	}
-}
-*/
 
 //http://theatticlight.net/posts/Reading-a-Rotary-Encoder-from-a-Raspberry-Pi/
 void isr_General2(int btntype)
@@ -234,7 +194,6 @@ void isr_General2(int btntype)
 
 void isr_PressedGeneral(int btntype)
 {
-
 	if ((pibuttons[btntype]->ButtonEvent != NULL) && pibuttons[btntype]->enablePressedEvent)
 	{
 		Button* instance = pibuttons[btntype]->btn;

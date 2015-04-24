@@ -14,7 +14,7 @@ Button::Button(std::string pSection)
 	done = false;
 	isPressed = false;
 	Section=pSection;
-	Active = false; // ini->Read<bool>(pSection, "ButtonsDefaultActive", false);
+	Active = false;
 
 	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
 	this->ID = ini->ReadAttrib<int>(pSection,"id",0);

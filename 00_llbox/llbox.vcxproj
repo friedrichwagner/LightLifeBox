@@ -52,6 +52,7 @@
     <ClInclude Include="03_LogIni\IXMLParser.h" />
     <ClInclude Include="03_LogIni\Logger.h" />
     <ClInclude Include="03_LogIni\Settings.h" />
+    <ClInclude Include="03_LogIni\Timer.h" />
     <ClInclude Include="04_Platform\PlatformCygwin.h" />
     <ClInclude Include="04_Platform\PlatformWin32.h" />
     <ClInclude Include="05_Test\IPClient.h" />

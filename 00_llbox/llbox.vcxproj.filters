@@ -162,5 +162,8 @@
     <ClInclude Include="07_Photometric\Photometric.h">
       <Filter>07_Photometric</Filter>
     </ClInclude>
+    <ClInclude Include="03_LogIni\Timer.h">
+      <Filter>03 LogIni</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

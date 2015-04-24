@@ -7,6 +7,8 @@
 	
 	<ControlBox_General>
 		<Clients value="LightLifeServer,NeoLink" />
+		<TestWithoutConsole value="1" />
+		<DelayTimeForPsychoTestSecs value="10" />
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1,Button2" />
 		<PILights value="Light1" />
@@ -152,7 +154,6 @@
   <NeoLink name="NeoLinkClient1">
 	<UDP-Address value="192.168.4.168" />
 	<UDP-Port value="1025" />
-	<SendDelayTimeMS value="200" />
 	<Enable value="True" />
   </NeoLink>    
  </Settings>

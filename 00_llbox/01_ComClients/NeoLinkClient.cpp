@@ -2,6 +2,7 @@
 #include "helpers.h"
 #include "Photometric.h"
 #include <cstring> //for memset under gcc
+#include "LightLifeData.h"
 
 #pragma region Contructor/Destructor
 
@@ -21,7 +22,7 @@ NeoLinkClient::NeoLinkClient()
 	if (flds.size() >=1 ) 
 		IPClients.push_back(new UDPSendSocket(flds[0], IPPort));
 
-	setFadeTime(100);
+	setFadeTime(DEFAULT_NEOLINK_FADETIME);
 
 	nlframe = new NeoLinkData();
 	nlframe->byAddress = NL_GROUP_BROADCAST;
@@ -139,7 +140,6 @@ void NeoLinkClient::send()
 	unsigned char *pBuf = nlframe->ToByteArray();
 	SendUDP(pBuf, NL_BUFFER_SIZE);
 	memset(nlframe->data, 0, sizeof(nlframe->data));
-	//lumitech::sleep(fadetime);
 }
 
 #pragma endregion

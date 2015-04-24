@@ -157,7 +157,6 @@ private:
 public:
 	NeoLinkClient();
 	~NeoLinkClient();
-
 	
 	void setFadetime(unsigned int);
 };

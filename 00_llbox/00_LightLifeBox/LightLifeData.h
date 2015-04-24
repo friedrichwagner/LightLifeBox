@@ -3,6 +3,8 @@
 #include "baseClient.h"
 #include "helpers.h"
 
+#define DEFAULT_NEOLINK_FADETIME 300
+
 enum ActivationState
 {
 	none = 0,

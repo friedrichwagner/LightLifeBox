@@ -165,5 +165,8 @@
     <ClInclude Include="03_LogIni\Timer.h">
       <Filter>03 LogIni</Filter>
     </ClInclude>
+    <ClInclude Include="00_LightLifeBox\DeltaTest.h">
+      <Filter>00 LightLifeBox</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -195,6 +195,9 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 		SequenceHandlingCommand(cmd);
 		break;
 
+	case LL_START_DELTATEST:
+		DoStartDeltaTest(cmd);
+		break;
 
 	default:
 		s << "ExecuteCommand: unknown command:" << cmd.cmdId << " Data:" << cmd.cmdParams;
@@ -215,6 +218,9 @@ void RemoteCommands::SendRemoteCommand(LLMsgType cmdId, string params)
 	{
 	case LL_SET_LOCKED:
 		SendLock(params);
+		break;
+	case LL_SET_LOCKED_DELTATEST:
+		SendDeltaTestLock(params);
 		break;
 
 	default:
@@ -342,6 +348,19 @@ void RemoteCommands::StandardAnswer(RemoteCommand cmd)
 	cmd.cmdParams = ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
 	send(cmd);
 }
+void RemoteCommands::DoStartDeltaTest(RemoteCommand cmd)
+{
+	splitstring s = cmd.cmdParams;
+	map<string, string> flds = s.split2map(';', '=');
+
+	unsigned int br = lumitech::stoi(flds["brightness"]);
+	unsigned int cct = lumitech::stoi(flds["cct"]);
+	unsigned int userid = lumitech::stoi(flds["userid"]);
+	TestMode testmode = (TestMode)lumitech::stoi(flds["mode"]);
+	
+	box->StartDeltaTest(userid, br, cct, testmode);
+}
+
 
 //----------------------------------
 //    Send Remote Commands
@@ -356,3 +375,15 @@ void RemoteCommands::SendLock(string params)
 	cmd.cmdParams = ss.str();
 	send(cmd);
 }
+
+void RemoteCommands::SendDeltaTestLock(string params)
+{														// do not expect any additional parameters here
+	RemoteCommand cmd;
+	cmd.cmdId = LL_SET_LOCKED_DELTATEST;
+	ostringstream ss;
+	ss << ";BoxNr=" << box->ID << ";" << box->deltaTest->getState();
+
+	cmd.cmdParams = ss.str();
+	send(cmd);
+}
+

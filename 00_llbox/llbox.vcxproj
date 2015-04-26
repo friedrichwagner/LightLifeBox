@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="00_LightLifeBox\Button.cpp" />
     <ClCompile Include="00_LightLifeBox\ControlBox.cpp" />
+    <ClCompile Include="00_LightLifeBox\DeltaTest.cpp" />
     <ClCompile Include="00_LightLifeBox\helpers.cpp" />
     <ClCompile Include="00_LightLifeBox\PILight.cpp" />
     <ClCompile Include="00_LightLifeBox\RemoteCommands.cpp" />

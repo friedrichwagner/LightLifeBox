@@ -34,8 +34,8 @@ PILight::PILight(std::string pSection)
 		defaultBrightness = atoi(flds[1].c_str());		
 	}
 
-	MinVal = 2500;
-	MaxVal = 7000;
+	MinVal = MIN_CCT;
+	MaxVal = MAX_CCT;
 
 	s = ini->ReadString(pSection, "CCTMinMax", "2500,7000");
 	flds = s.split(',');
@@ -136,7 +136,8 @@ void PILight::Send2ComClients()
 {
 
 	milliseconds now = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
-	if ((now - lastsend).count() < (long)DEFAULT_NEOLINK_FADETIME)
+	//if ((now - lastsend).count() < (long)DEFAULT_NEOLINK_FADETIME)
+	if ((now - lastsend).count() < (long)MINIMUM_SEND_TIME)
 	{
 		log->cout("skip_______");
 		return;
@@ -184,9 +185,7 @@ void PILight::setBrightness(unsigned int val)
 	piledMode = PILED_SET_BRIGHTNESS;
 
 	if (brightness > 255) brightness = 255;
-	if (brightness < 0) brightness = 0;
-
-	setLog();
+	if (brightness < 25) brightness = 25;
 
 	Send2ComClients();
 }
@@ -239,8 +238,8 @@ void PILight::setCCTDuv(unsigned int valCCT, float valDuv)
 
 	piledMode = PILED_SET_DUV;
 
-	if (duv > 0.02f) duv = 0.02f;
-	if (duv < -0.02f) duv = -0.02f;
+	if (duv > MAX_DUV) duv = MAX_DUV;
+	if (duv < MIN_DUV) duv = MIN_DUV;
 	
 	fCieCoords_t cie;
 
@@ -380,4 +379,10 @@ string PILight::getFullState()
 	ss << "mode=" << piledMode << ";brightness=" << brightness << ";cct=" << cct << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2] << ";duv=" << duv
 		<< ";groupid=" << groupid << ";fadetime=" << fadetime << ";defaultcct=" << defaultCct << ";defaultbrightness=" << defaultBrightness;
 	return ss.str();
+}
+
+void PILight::getXY(float _xy[])
+{
+	_xy[0] = xy[0];
+	_xy[1] = xy[1];
 }

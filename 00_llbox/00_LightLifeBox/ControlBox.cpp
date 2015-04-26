@@ -3,6 +3,7 @@
 #include "NeoLinkClient.h"
 #include "LightLifeLogger.h"
 #include "Timer.h"
+#include "DeltaTest.h"
 
 ControlBox* ControlBox::_instance = NULL;
 
@@ -14,6 +15,7 @@ int psychoTestDelayTimeinSecs = 30000;
 ControlBox::ControlBox(std::string pName)
 {
 	isDone = false;
+	DeltaTestInProgress = false;
 
 	this->ID = 0;
 	this->Name = pName;
@@ -29,6 +31,9 @@ ControlBox::ControlBox(std::string pName)
 	{
 		addComClients();
 	}
+
+	//TEST TEST
+	StartDeltaTest(100, 123, 4000, DTEST_CCT_UP);
 }
 
 ControlBox* ControlBox::getInstance(string pName)
@@ -198,6 +203,10 @@ bool ControlBox::EventLoop()
 void ControlBox::stopEventLoop() 
 { 
 	isDone = true;
+	if (DeltaTestInProgress)
+	{
+		StopDeltaTest();
+	}
 }
 
 void ControlBox::Beep(int freq, int time) 
@@ -227,18 +236,27 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 	case BUTTON_PRESSED:
 		if (btntype == LOCK)
 		{
-			Lights[0]->lockCurrState();
-			rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
-
-			if (testWithoutConsole)
+			if (DeltaTestInProgress)
 			{
-				//Disable all Buttons
-				bool b[5] = { false, false, false, false, false };
-				setButtons(b);
+				deltaTest->stop();
+				rmCmd->SendRemoteCommand(LL_SET_LOCKED_DELTATEST, "");
+				StopDeltaTest();
+			}
+			else
+			{
+				Lights[0]->lockCurrState();
+				rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
 
-				//Wait 30 secs
-				log->cout("Waiting 30 secs...");
-				Later Delay1(psychoTestDelayTimeinSecs, true, &delay1, this);
+				if (testWithoutConsole)
+				{
+					//Disable all Buttons
+					bool b[5] = { false, false, false, false, false };
+					setButtons(b);
+
+					//Wait 30 secs
+					log->cout("Waiting 30 secs...");
+					Later Delay1(psychoTestDelayTimeinSecs, true, &delay1, this);
+				}
 			}
 		}
 
@@ -287,5 +305,47 @@ void delay2(ControlBox* p)
 			p->setButtons(b);
 		}
 		p->Lights[0]->setFadeTime(DEFAULT_NEOLINK_FADETIME);
+	}
+}
+
+void ControlBox::StartDeltaTest(int userid, int b0, int cct0, TestMode mode)
+{
+	deltaTest = new DeltaTest();
+
+	log->cout("Start Delta Test .........");
+
+	//1. Enable only LOCK Buttons
+	bool b[5] = { false, false, false, true, true };
+	setButtons(b);
+
+	//2. Run Test
+	DeltaTestInProgress = true;
+	deltaTest->start(Lights[0], userid, b0, cct0, mode);
+}
+
+void ControlBox::StopDeltaTest()
+{
+	if (deltaTest != NULL)
+	{
+		bool b[5] = { false, false, false, true, true };
+
+		DeltaTestInProgress = false;
+
+		delete deltaTest;
+		deltaTest = NULL;
+
+		if (testWithoutConsole)
+		{
+			b[0] = true; b[3] = true; b[4] = true;
+		}
+		else
+		{
+			bool defaultActiveControls = ini->Read<bool>(this->Name, "ControlsDefaultActive", false);
+			b[0] = defaultActiveControls; b[1] = defaultActiveControls; b[2] = defaultActiveControls;  b[3] = defaultActiveControls; b[4] = defaultActiveControls;
+		}
+
+		setButtons(b);
+
+		log->cout("Finished Delta Test.");
 	}
 }

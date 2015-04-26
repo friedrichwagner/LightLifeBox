@@ -77,9 +77,10 @@ class RemoteCommands
 		void GetPILEDCommand(RemoteCommand);
 		void SequenceHandlingCommand(RemoteCommand cmd);
 		void StandardAnswer(RemoteCommand cmd);		
+		void DoStartDeltaTest(RemoteCommand cmd);
 		
-
 		void SendLock(string params);
+		void SendDeltaTestLock(string params);
 
 		//Lock Handling
 		void go();

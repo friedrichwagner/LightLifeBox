@@ -91,6 +91,9 @@
     <ClCompile Include="07_Photometric\Photometric.cpp">
       <Filter>07_Photometric</Filter>
     </ClCompile>
+    <ClCompile Include="00_LightLifeBox\DeltaTest.cpp">
+      <Filter>00 LightLifeBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="01_ComClients\baseClient.h">

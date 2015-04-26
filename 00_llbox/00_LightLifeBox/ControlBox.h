@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include "Button.h"
 #include "RemoteCommands.h"
+#include "DeltaTest.h"
 
 using namespace std;
 
@@ -37,6 +38,9 @@ protected:
 	RemoteCommands* rmCmd;
 	int addComClients();
 	bool testWithoutConsole;	
+
+	bool DeltaTestInProgress;
+	DeltaTest* deltaTest;
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL
@@ -54,4 +58,7 @@ public:
 
 	int buttonActive;
 	void setButtons(bool[]);
+
+	void StartDeltaTest(int userid, int b0, int cct0, TestMode mode);
+	void StopDeltaTest();
 };

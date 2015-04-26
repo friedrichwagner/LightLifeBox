@@ -9,6 +9,11 @@
 
 
 //enum enumPILEDMode { CCT_MODE=1, XY_MODE=2, RGB_MODE=3};
+#define MIN_CCT 2500
+#define MAX_CCT 7000
+
+#define MIN_DUV -0.02f
+#define MAX_DUV 0.02f
 
 using namespace std;
 
@@ -78,4 +83,6 @@ public:
 	IBaseClient* getComClient(int index);
 
 	string getFullState();
+
+	void getXY(float[]);
 };

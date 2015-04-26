@@ -5,6 +5,14 @@
     <loglevel value="5" />
   </Logging>
   
+	<DeltaTest>
+		<dCCT value="25"/>
+		<dBrightness value="2"/>
+		<duv value="0.0005"/>
+		<repeatCnt value="2"/>
+		<frequency value="0.5"/>
+	</DeltaTest>  
+  
 	<ControlBox_General>
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1,Button2" />

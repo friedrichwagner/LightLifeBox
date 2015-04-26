@@ -331,3 +331,26 @@ and v.SequenceID = (select max(SequenceID) from LLTestSequencehead where BoxID=b
 and v.PosID = (select max(PosID) from LLTestSequencePos where SequenceID= v.SequenceId) )
 
 
+create table LLDeltaTest
+(
+	ID int idendity primary key,
+	UserID int not null,
+	BoxID int not null,
+	Brightness0 int not null,
+	CCT0	int not null,
+	x0 float not null, 
+	y0 float not null,
+	testmode int not null,
+	actStep int not null,
+	Brightness int,
+	cct int,
+	x float,
+	y float,
+	actduv float,
+	dBrightness int,
+	dCCT int,
+	duv float,
+	frequency float,
+	Remark varchar(max),
+	added datetime default getdate()
+)

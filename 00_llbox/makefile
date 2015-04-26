@@ -34,7 +34,7 @@ _SOURCESMAIN=main.cpp
 OBJECTSMAIN=$(addprefix  $(ODIR0)/, $(_SOURCESMAIN:.cpp=.o))
 
 #The LightLifeBox files
-_SOURCES0=Button.cpp ControlBox.cpp helpers.cpp main.cpp PILight.cpp RemoteCommands.cpp
+_SOURCES0=Button.cpp ControlBox.cpp helpers.cpp main.cpp PILight.cpp RemoteCommands.cpp DeltaTest.cpp
 OBJECTS0=$(addprefix  $(ODIR0)/, $(_SOURCES0:.cpp=.o))
 
 #The ComClient files

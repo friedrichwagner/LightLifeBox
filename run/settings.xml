@@ -14,7 +14,7 @@
 	</DeltaTest>  
   
 	<ControlBox_General>
-		<Clients value="LightLifeServer,NeoLink" />
+		<Clients value="LightLifeServer" />
 		<TestWithoutConsole value="1" />
 		<DelayTimeForPsychoTestSecs value="30" />	
 		<Potis value="Poti1,Poti2,Poti3" />

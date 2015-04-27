@@ -11,7 +11,8 @@ static milliseconds lastsend;
 
 PILight::PILight(std::string pSection)
 {
-	lastsend = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
+	//lastsend = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
+	lastsend = std::chrono::milliseconds(0);
 
 	ini = Settings::getInstance();
 	log = Logger::getInstance();
@@ -139,7 +140,7 @@ void PILight::Send2ComClients()
 	//if ((now - lastsend).count() < (long)DEFAULT_NEOLINK_FADETIME)
 	if ((now - lastsend).count() < (long)MINIMUM_SEND_TIME)
 	{
-		log->cout("skip_______");
+		setLog(true);
 		return;
 	}
 
@@ -175,7 +176,7 @@ void PILight::Send2ComClients()
 		}			
 	}
 
-	lastsend = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
+	lastsend = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());	
 }
 
 
@@ -366,10 +367,41 @@ unsigned char PILight::getGroup()
 }
 
 
-void PILight::setLog()
+void PILight::setLog(bool skip)
 {
+	string mode;
+
 	sslog.str(""); sslog.clear();
-	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << std::fixed << setprecision(4) << " x:" << xy[0] << " y:" << xy[1] << " duv:" << duv << " ft:" << fadetime;// << " r:" << rgb[0] << " g:" << rgb[1] << " b:" << rgb[2];
+	if (skip)
+		sslog << "skip::::";
+
+	sslog << "gr:" << groupid << " b:" << brightness << " cct:" << cct << std::fixed << setprecision(4) << " x:" << xy[0] << " y:" << xy[1] << " duv:" << duv << " ft:" << fadetime;
+	switch (piledMode)
+	{
+	case PILED_MODE_NONE:
+		mode = "NONE";
+		break;
+	case PILED_SET_BRIGHTNESS:
+		mode = "BRIGHTNESS";
+		break;
+	case PILED_SET_CCT:
+		mode = "CCT";
+		break;
+	case PILED_SET_XY:
+		mode = "XY";
+		break;
+	case PILED_SET_RGB:
+		mode = "RGB";
+		break;
+	case PILED_SET_DUV:
+		mode = "DUV";
+		break;
+	default:
+		mode = "NONE";
+		break;
+	}
+
+	sslog <<	" mode:" << mode;
 	log->cout(sslog.str());
 }
 

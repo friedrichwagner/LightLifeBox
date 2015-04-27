@@ -48,7 +48,7 @@ protected:
 	Logger* log;
 
 	//Functions
-	void setLog();
+	void setLog(bool skip = false);
 
 	void Send2ComClients();
 public:
@@ -85,4 +85,5 @@ public:
 	string getFullState();
 
 	void getXY(float[]);
+
 };

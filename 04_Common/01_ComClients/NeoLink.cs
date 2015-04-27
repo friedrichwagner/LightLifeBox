@@ -548,6 +548,7 @@ namespace Lumitech.Interfaces
         {
             groupid= info.groupid;
             Debug.Print("NeoLink.OnNext:"+info.ToString());
+            FadingTime = info.fadetime;
 
             switch (info.mode)
             {

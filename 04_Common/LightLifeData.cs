@@ -50,10 +50,12 @@ namespace LightLife.Data
         LL_SET_PILED = 52,
         LL_GET_PILED = 53,
         LL_SET_SEQUENCEDATA = 54,
+        LL_START_DELTATEST = 55,
 
         //Box ->AdminConsole
         LL_SET_LOCKED = 100,
         LL_SET_DEFAULT = 101,	
+        LL_SET_LOCKED_DELTATEST = 102,
     };
 
     public class PILEDData

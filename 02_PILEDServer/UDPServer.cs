@@ -131,10 +131,10 @@ namespace PILEDServer
 
                                     LightLifeData info = new LightLifeData(s);
 
-                                    if (fmGroups != null)
+                                    /*if (fmGroups != null)
                                     {
                                         fmGroups.UpdateDataTable(info.piled);
-                                    }
+                                    }*/
   
 
                                     info.ip = receivedResults.RemoteEndPoint.Address.ToString(); //always save address as well

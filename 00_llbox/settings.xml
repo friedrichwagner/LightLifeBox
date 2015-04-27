@@ -14,6 +14,9 @@
 	</DeltaTest>  
   
 	<ControlBox_General>
+		<Clients value="LightLifeServer,NeoLink" />
+		<TestWithoutConsole value="1" />
+		<DelayTimeForPsychoTestSecs value="10" />	
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1,Button2" />
 		<PILights value="Light1" />
@@ -69,9 +72,9 @@
 		<Testing value="MockButton1"/>
 		<PortUp value="0"/>
 		<PortDown value="0"/>
-		<PortPressed vale="1"/>
+		<PortPressed value="1"/>
 		<PortLED value="0"/>		
-		<EnablePortPressed value="0"/>
+		<EnablePortPressed value="1"/>
 	</Button1>
 	<Button2 id="2" name="btnLock2">
 		<LightLifeButtonType value="1" />
@@ -80,7 +83,7 @@
 		<PortDown value="0"/>
 		<PortPressed value="4"/>
 		<PortLED value="0"/>	
-		<EnablePortPressed value="0"/>		
+		<EnablePortPressed value="1"/>		
 	 </Button2>  
 	<Poti1 id="3" name="btnBrightness">
 		<LightLifeButtonType value="2" />

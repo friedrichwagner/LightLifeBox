@@ -5,10 +5,18 @@
     <loglevel value="5" />
   </Logging>
   
+	<DeltaTest>
+		<dCCT value="25"/>
+		<dBrightness value="2"/>
+		<duv value="0.0005"/>
+		<repeatCnt value="2"/>
+		<frequency value="0.5"/>
+	</DeltaTest>  
+  
 	<ControlBox_General>
 		<Clients value="LightLifeServer,NeoLink" />
 		<TestWithoutConsole value="1" />
-		<DelayTimeForPsychoTestSecs value="10" />
+		<DelayTimeForPsychoTestSecs value="30" />	
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1,Button2" />
 		<PILights value="Light1" />
@@ -21,7 +29,6 @@
 		<Send-Command-Port value="1749"/>
 		<Receive-Command-Port value="1748"/>
 		<ControlsDefaultActive value="1"/>
-		<DefaultGroup value="200"/>
 	</raspi1LightLife>
 
 	<raspi2LightLife name="ControlBox2">
@@ -29,15 +36,13 @@
 		<Send-Command-Port value="1759"/>
 		<Receive-Command-Port value="1758"/>
 		<ControlsDefaultActive value="1"/>
-		<DefaultGroup value="0"/>
 	</raspi2LightLife>
 
 	<raspi3LightLife name="ControlBox3">
 		<BoxNr value="3" />
 		<Send-Command-Port value="1769"/>
 		<Receive-Command-Port value="1768"/>	
-		<ControlsDefaultActive value="1"/>	
-		<DefaultGroup value="202"/>		
+		<ControlsDefaultActive value="1"/>		
 	</raspi3LightLife>
 	
 	<raspi4LightLife name="ControlBox4">
@@ -45,7 +50,6 @@
 		<Send-Command-Port value="1779"/>
 		<Receive-Command-Port value="1778"/>
 		<ControlsDefaultActive value="1"/>		
-		<DefaultGroup value="203"/>
 	</raspi4LightLife>
 	
 	<raspi5LightLife name="ControlBox5">
@@ -53,7 +57,6 @@
 		<Send-Command-Port value="1789"/>
 		<Receive-Command-Port value="1788"/>
 		<ControlsDefaultActive value="1"/>		
-		<DefaultGroup value="204"/>
 	</raspi5LightLife>	
 	
 	<LTJENB14 name="ControlBox1">

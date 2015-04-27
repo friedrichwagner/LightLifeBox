@@ -33,7 +33,7 @@ ControlBox::ControlBox(std::string pName)
 	}
 
 	//TEST TEST
-	StartDeltaTest(100, 123, 4000, DTEST_CCT_UP);
+	//StartDeltaTest(123, 100, 4000, DTEST_CCT_UP);
 }
 
 ControlBox* ControlBox::getInstance(string pName)
@@ -238,6 +238,7 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 		{
 			if (DeltaTestInProgress)
 			{
+				log->cout("Stopping Delta Test.....");
 				deltaTest->stop();
 				rmCmd->SendRemoteCommand(LL_SET_LOCKED_DELTATEST, "");
 				StopDeltaTest();
@@ -312,7 +313,7 @@ void ControlBox::StartDeltaTest(int userid, int b0, int cct0, TestMode mode)
 {
 	deltaTest = new DeltaTest();
 
-	log->cout("Start Delta Test .........");
+	log->cout("Start Delta Test _______________");
 
 	//1. Enable only LOCK Buttons
 	bool b[5] = { false, false, false, true, true };
@@ -346,6 +347,6 @@ void ControlBox::StopDeltaTest()
 
 		setButtons(b);
 
-		log->cout("Finished Delta Test.");
+		log->cout("Finished Delta Test!_______________");
 	}
 }

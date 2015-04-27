@@ -120,8 +120,6 @@ void InitPIButton(PIButton* p, string Section, int btntype)
 		}
 #endif
 
-		//p->index = pibuttons.size();
-		//pibuttons.push_back(p);
 		pibuttons[p->pibtnType] = p;
 
 	}

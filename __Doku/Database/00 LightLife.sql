@@ -333,7 +333,7 @@ and v.PosID = (select max(PosID) from LLTestSequencePos where SequenceID= v.Sequ
 
 create table LLDeltaTest
 (
-	ID int idendity primary key,
+	ID int identity primary key,
 	UserID int not null,
 	BoxID int not null,
 	Brightness0 int not null,
@@ -354,3 +354,6 @@ create table LLDeltaTest
 	Remark varchar(max),
 	added datetime default getdate()
 )
+
+
+

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ServiceProcess;
+using Lumitech.Helpers;
 using PILEDServer;
 
 namespace PILEDServerSvc
@@ -32,15 +33,21 @@ namespace PILEDServerSvc
     public class PILEDService : ServiceBase
     {
         private UDPServer UDPSrv;
+        private Logger log;
 
         public PILEDService()
         {
+            Settings ini = Settings.GetInstance();
+            int loglevel = ini.Read<int>("Logging", "loglevel", 6);
+            log = Logger.GetInstance(loglevel);
+
             this.ServiceName = "LightLifeService";
             UDPSrv = new UDPServer();
         }
 
         protected override void OnStart(string[] args)
         {
+            log.Info("Starting LightLifeServer.exe Service...");
             base.OnStart(args);
 
             doStart();
@@ -51,7 +58,7 @@ namespace PILEDServerSvc
             base.OnStop();
 
             doStop();
-
+            log.Info("Stopped LightLifeServer.exe Service...");
         }
 
         public void doStart()

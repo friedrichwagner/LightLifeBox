@@ -21,7 +21,7 @@
 		<Buttons value="Button1,Button2" />
 		<PILights value="Light1" />
 		<Sleep value="1000"/>
-		<Admin-Console-IP value="127.0.0.1"/>
+		<Admin-Console-IP value="192.168.5.100"/>
 	</ControlBox_General>
 
 	<raspi1LightLife name="ControlBox1">
@@ -149,12 +149,12 @@
   </MockPoti4>
    
   <LightLifeServer name="LightLifeServer1">
-    <UDP-Address value="192.168.4.32" />
+    <UDP-Address value="192.168.5.100" />
 	<UDP-Port value="1747" />
   </LightLifeServer> 
   
   <NeoLink name="NeoLinkClient1">
-	<UDP-Address value="192.168.4.168" />
+	<UDP-Address value="192.168.5.153" />
 	<UDP-Port value="1025" />
 	<SendDelayTimeMS value="200" />
 	<Enable value="True" />

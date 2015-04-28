@@ -71,13 +71,13 @@ namespace PILEDServer
         public void Start()
         {
             //Alternativ
-            log.Cout("Starting Listener...");
+            log.Info("Starting Listener...");
             StartListener2();
         }
 
         public void Stop()
         {
-            log.Cout("Stopping Listener...");
+            log.Info("Stopping Listener...");
 
             foreach (var observer in observersPILED)
                 observer.OnCompleted();
@@ -167,6 +167,7 @@ namespace PILEDServer
                     {
                         NeoLink nl = new NeoLink();
                         nl.Subscribe(this);
+                        log.Info("Added Observer 'NeoLink'");
                     }
 
 
@@ -174,6 +175,7 @@ namespace PILEDServer
                     {
                         LightLifeLogger ll = new LightLifeLogger();
                         ll.Subscribe(this);
+                        log.Info("Added Observer 'LightLifeLogger'");
                     }
                 }
 

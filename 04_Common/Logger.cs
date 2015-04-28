@@ -121,7 +121,7 @@ namespace Lumitech.Helpers
             //Console Output
             System.Diagnostics.Debug.Print(msg);
 #if AS_CONSOLE_APP
-            Console.WriteLine(msg);
+            Console.WriteLine(String.Format("{0:G}\t{1}\t{2}\t{3} ", System.DateTime.Now, "", "", msg));
 #endif
         }
 
@@ -137,6 +137,7 @@ namespace Lumitech.Helpers
                         sw.WriteLine(logLine);
 #if AS_CONSOLE_APP
                         Console.WriteLine(logLine);
+                        System.Diagnostics.Debug.Print(msg);
 #endif
                         sw.Flush();
                         sw.Close();

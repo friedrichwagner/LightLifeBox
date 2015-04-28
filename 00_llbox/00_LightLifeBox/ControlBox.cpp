@@ -275,15 +275,17 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 	}
 }
 
+
+//Nach 30 Sekunden statischer Lichtszene --> Fade auf Ausgangszustand (fadetime=30sek)
 void delay1(ControlBox* p)
-{
-	//30 seconds fade
+{	
 	if (p != NULL)
 	{
+		//30 seconds fade
 		p->Lights[0]->setFadeTime(psychoTestDelayTimeinSecs);
 		p->Lights[0]->resetDefault();
 		cout << "Fading 30 secs..\r\n";
-		Later Delay2(psychoTestDelayTimeinSecs, true, &delay2, p);
+		Later Delay2(psychoTestDelayTimeinSecs+2, true, &delay2, p);
 	}
 }
 
@@ -293,9 +295,10 @@ void delay2(ControlBox* p)
 	if (p != NULL)
 	{
 		p->buttonActive++;
-		if (p->buttonActive > 3)  p->buttonActive = 0;
+		//0=Brightess, 1=CCT, 2=JUDD, 3=ALLE Buttons klein Box, 4=ALLE Buttons grosser Raum
+		if (p->buttonActive > 4)  p->buttonActive = 0;
 
-		if (p->buttonActive == 3)
+		if (p->buttonActive >= 3)
 		{
 			b[0] = true; b[1] = true; b[2] = true;
 			p->setButtons(b);

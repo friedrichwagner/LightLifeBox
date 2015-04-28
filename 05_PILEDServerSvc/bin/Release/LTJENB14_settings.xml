@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Settings>	
+  <Definitions>
+    <Database value="true" />
+    <Interfaces value="LightLifeLogger,NeoLink" />
+  </Definitions>
+  <UDPServer>
+	<ListenPort value="1747" />
+  </UDPServer>
+  <Database>
+    <!--<DataSource value="LT-WSSQLTEST\SQLEXPRESS" />-->
+	<DataSource value="LTJENB14\SQLEXPRESS" />
+    <InitialCatalog value="LightLife" />
+    <UserID value="ltcs" />
+    <Password value="Lumitech03" />
+  </Database>
+  <NeoLink name="NeoLinkClient1">
+	<UDP-Address value="192.168.4.168" />
+	<UDP-Port value="1025" />
+	<SendDelayTimeMS value="200" />
+	<Enable value="True" />
+  </NeoLink>
+  <LightLifeLogger name="LLLClient1">
+    <Enable value="True" />
+  </LightLifeLogger>  
+  <Logging>
+    <loglevel value="10" />
+  </Logging>
+</Settings>

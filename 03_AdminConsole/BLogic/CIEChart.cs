@@ -6,6 +6,7 @@ using System.Windows.Media;
 using LightLife.Data;
 using Lumitech.Helpers;
 using Lumitech;
+using System.Drawing;
 
 namespace LightLifeAdminConsole
 {
@@ -15,7 +16,7 @@ namespace LightLifeAdminConsole
         public Single d;
 
         //Steigung = dy/dx, d=y-k*x
-        public kd(Point p1, Point p2)
+        public kd(PointF p1, PointF p2)
         {
             k = (Single) ((p2.Y - p1.Y) / (p2.X - p1.X));
             d = (Single)(p2.Y - k * p2.X);
@@ -23,7 +24,7 @@ namespace LightLifeAdminConsole
 
         //Umkehrtransformation xy --> Pixel, aus kd von Pixel --> xy
         //k=dx/dy, d=X-k*y, weil Punkt umgekehrt definiert ist
-        public kd(Point p1, Single k1)
+        public kd(PointF p1, Single k1)
         {
             k = 1 / k1;
             d = (Single)(p1.X - k * p1.Y);
@@ -57,19 +58,19 @@ namespace LightLifeAdminConsole
 
     public static class CIEChart
     {
-        private static Point Y1= new Point(452, 0.0);
-        private static Point Y2 = new Point(21, 0.9);
+        private static PointF Y1= new PointF(452.0f, 0.0f);
+        private static PointF Y2 = new PointF(21.0f, 0.9f);
         private static kd kdY = new kd(Y2, Y1);
         private static kd kdY2 = new kd(Y1, kdY.k);
 
-        private static Point X1 = new Point(44, 0.0);
-        private static Point X2 = new Point(423, 0.8);
+        private static PointF X1 = new PointF(44.0f, 0.0f);
+        private static PointF X2 = new PointF(423.0f, 0.8f);
         private static kd kdX = new kd(X2, X1);
         private static kd kdX2 = new kd(X1, kdX.k);
 
-        public static Point PixelToXY(ref Point pixel)
+        public static PointF PixelToXY(ref PointF pixel)
         {
-            Point ret = new Point();
+            PointF ret = new PointF();
 
             ClipPixelToRectangle(ref pixel);
 
@@ -79,9 +80,9 @@ namespace LightLifeAdminConsole
             return ret;
         }
 
-        public static Point XyToPixel(ref Point xy)
+        public static PointF XyToPixel(ref PointF xy)
         {
-            Point ret = new Point();
+            PointF ret = new PointF();
             ClipXy(ref xy);
 
             ret.X = kdX2.k * xy.X + kdX2.d;
@@ -90,7 +91,7 @@ namespace LightLifeAdminConsole
             return ret;
         }
 
-        private static void ClipPixelToRectangle(ref Point pixel)
+        private static void ClipPixelToRectangle(ref PointF pixel)
         {
             if (pixel.X < X1.X) pixel.X = X1.X;
             if (pixel.X > X2.X) pixel.X = X2.X;
@@ -99,16 +100,16 @@ namespace LightLifeAdminConsole
             if (pixel.Y > Y1.X) pixel.Y = Y1.X;
         }
 
-        private static void ClipXy(ref Point xy)
+        private static void ClipXy(ref PointF xy)
         {
-            if (xy.X < 0.0) xy.X = 0;
-            if (xy.X > 1.0) xy.X = 1.0;
+            if (xy.X < 0.0) xy.X = 0.0f;
+            if (xy.X > 1.0) xy.X = 1.0f;
 
-            if (xy.Y < 0.0) xy.Y = 0;
-            if (xy.Y > 1.0) xy.Y = 1.0;
+            if (xy.Y < 0.0) xy.Y = 0.0f;
+            if (xy.Y > 1.0) xy.Y = 1.0f;
         }
 
-        public static void DrawPoint(Canvas c, Point p, string tag)
+        public static void DrawPoint(Canvas c, PointF p, string tag)
         {
             // Create a red Ellipse.
             Ellipse myEllipse = new Ellipse();
@@ -119,10 +120,10 @@ namespace LightLifeAdminConsole
 
             // Describes the brush's color using RGB values.  
             // Each value has a range of 0-255.
-            mySolidColorBrush.Color = Color.FromArgb(255, 255, 255, 0);
+            mySolidColorBrush.Color = System.Windows.Media.Color.FromArgb(255, 255, 255, 0);
             myEllipse.Fill = mySolidColorBrush;
             myEllipse.StrokeThickness = 2;
-            myEllipse.Stroke = Brushes.Black;
+            myEllipse.Stroke = System.Windows.Media.Brushes.Black;
 
             // Set the width and height of the Ellipse.
             myEllipse.Width = 10;
@@ -138,7 +139,7 @@ namespace LightLifeAdminConsole
         public static void DrawPlanck(Canvas c)
         {
             int cct1, cct2;
-            Point p1 = new Point(); Point p2 = new Point();
+            PointF p1 = new PointF(); PointF p2 = new PointF();
 
             for (cct1=PILEDData.MIN_CCT, cct2=PILEDData.MIN_CCT+100; cct1< PILEDData.MAX_CCT; cct1+=100, cct2+=100)
             {
@@ -159,10 +160,10 @@ namespace LightLifeAdminConsole
             AddXYLine(c, PILEDData.wl560nm, PILEDData.wl460nm);
         }
 
-        private static void AddXYLine(Canvas c, Point xy1, Point xy2)
+        private static void AddXYLine(Canvas c, PointF xy1, PointF xy2)
         {
-            Point p1 = new Point(); Point p2 = new Point();
-            Point p3 = new Point(); Point p4 = new Point();
+            PointF p1 = new PointF(); PointF p2 = new PointF();
+            PointF p3 = new PointF(); PointF p4 = new PointF();
 
             p1.X = xy1.X; p1.Y = xy1.Y; p2 = XyToPixel(ref p1);
             p3.X = xy2.X; p3.Y = xy2.Y; p4 = XyToPixel(ref p3);

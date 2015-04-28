@@ -7,6 +7,7 @@ using LightLife;
 using Lumitech.Helpers;
 using FirstFloor.ModernUI.Windows;
 using LightLife.Data;
+using System.Drawing;
 
 namespace LightLifeAdminConsole.Content.PILED
 {
@@ -56,7 +57,7 @@ namespace LightLifeAdminConsole.Content.PILED
                     (sender as TextBox).Text = "0," + (sender as TextBox).Text;
                 }
 
-                Point p = new Point(Single.Parse(txtX.Text), Single.Parse(txtY.Text));
+                PointF p = new PointF(Single.Parse(txtX.Text), Single.Parse(txtY.Text));
 
                 CIEChart.RemoveAllPoints(cnvCIE);
                 CIEChart.DrawPoint(cnvCIE, CIEChart.XyToPixel(ref p), "lastpoint");
@@ -71,7 +72,7 @@ namespace LightLifeAdminConsole.Content.PILED
         {
             //in "LostFocus" hat das "Binding" die Daten im VieModel noch nicht aktualisiert --> also Workaround
             CIECoords cie = Photometric.CCT2xy(Double.Parse(txtCCT.Text), PILEDData.obs);
-            Point p = new Point(cie.x, cie.y);
+            PointF p = new PointF((float)cie.x, (float)cie.y);
             CIEChart.RemoveAllPoints(cnvCIE);
             CIEChart.DrawPoint(cnvCIE, CIEChart.XyToPixel(ref p), "lastpoint");
         }
@@ -79,10 +80,11 @@ namespace LightLifeAdminConsole.Content.PILED
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             char[] charsToTrim = { '(', ')'};
-            Point p = e.GetPosition((Canvas)sender);
+            System.Windows.Point p = e.GetPosition((Canvas)sender);
+            PointF pf = new PointF((float)p.X, (float)p.Y);
 
             CIEChart.RemoveAllPoints(cnvCIE);
-            CIEChart.DrawPoint(cnvCIE, p, "lastpoint");
+            CIEChart.DrawPoint(cnvCIE, pf, "lastpoint");
             dc.X = Single.Parse(lblX.Content.ToString().Trim(charsToTrim));
             dc.Y = Single.Parse(lblY.Content.ToString().Trim(charsToTrim));
         }
@@ -90,8 +92,9 @@ namespace LightLifeAdminConsole.Content.PILED
 
         private void cnvCIE_MouseMove(object sender, MouseEventArgs e)
         {
-            Point p = e.GetPosition((Canvas)sender);
-            Point xy = CIEChart.PixelToXY(ref p);
+            System.Windows.Point p = e.GetPosition((Canvas)sender);
+            PointF pf = new PointF((float)p.X, (float)p.Y);
+            PointF xy = CIEChart.PixelToXY(ref pf);
 
             lblX.Content = String.Format("({0:0.000})", xy.X);
             lblY.Content = String.Format("({0:0.000})", xy.Y);

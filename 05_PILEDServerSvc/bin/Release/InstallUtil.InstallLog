@@ -1,0 +1,38 @@
+﻿
+Eine transaktive Installation wird ausgeführt.
+
+Die Installationsphase wird gestartet.
+Die Protokolldatei enthält den Fortschritt der Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe.
+Die Datei befindet sich in D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog.
+
+Während der Installationsphase ist eine Ausnahme aufgetreten.
+System.Security.SecurityException: Die Quelle wurde nicht gefunden, aber einige oder alle Ereignisprotokolle konnten nicht durchsucht werden. Protokolle, auf die kein Zugriff möglich war: Security.
+
+Die Rollbackphase der Installation wird gestartet.
+Die Protokolldatei enthält den Fortschritt der Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe.
+Die Datei befindet sich in D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog.
+
+Die Rollbackphase wurde erfolgreich abgeschlossen.
+
+Die transaktive Installation ist abgeschlossen.
+
+Eine transaktive Installation wird ausgeführt.
+
+Die Installationsphase wird gestartet.
+Die Protokolldatei enthält den Fortschritt der Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe.
+Die Datei befindet sich in D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog.
+
+Die Installationsphase ist abgeschlossen, und die Commitphase beginnt.
+Die Protokolldatei enthält den Fortschritt der Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe.
+Die Datei befindet sich in D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog.
+
+Die Commitphase wurde erfolgreich abgeschlossen.
+
+Die transaktive Installation ist abgeschlossen.
+
+
+Die Deinstallation wurde gestartet.
+Die Protokolldatei enthält den Fortschritt der Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe.
+Die Datei befindet sich in D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog.
+
+Die Deinstallation ist abgeschlossen.

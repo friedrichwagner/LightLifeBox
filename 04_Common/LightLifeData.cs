@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Linq;
+using System.Drawing;
 
 namespace LightLife.Data
 {
@@ -61,9 +62,9 @@ namespace LightLife.Data
     public class PILEDData
     {
         //CIE1964
-        public static Point wl460nm = new Point(0.1389222, 0.0589201);
-        public static Point wl615nm = new Point(0.6730550, 0.3269450);
-        public static Point wl560nm = new Point(0.3905251, 0.5623339);
+        public static PointF wl460nm = new PointF(0.1389222f, 0.0589201f);
+        public static PointF wl615nm = new PointF(0.6730550f, 0.3269450f);
+        public static PointF wl560nm = new PointF(0.3905251f, 0.5623339f);
 
         public const int MIN_CCT = 2500;
         public const int MAX_CCT = 7000;

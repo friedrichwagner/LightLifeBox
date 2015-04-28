@@ -116,10 +116,14 @@ namespace Lumitech.Helpers
             Log(msg, "[FATAL]", stackTrace.GetFrame(1).GetMethod().Name, 0);
         }
 
-        /*public void Log(string msg, int level )
+        public void Cout(string msg)
         {
-            Log(msg, "", level);
-        }*/
+            //Console Output
+            System.Diagnostics.Debug.Print(msg);
+#if AS_CONSOLE_APP
+            Console.WriteLine(msg);
+#endif
+        }
 
         public void Log(string msg, string type, string where, int level)
         {
@@ -131,6 +135,9 @@ namespace Lumitech.Helpers
                     {
                         string logLine = System.String.Format("{0:G}\t{1}\t{2}\t{3} ", System.DateTime.Now, type, where, msg);
                         sw.WriteLine(logLine);
+#if AS_CONSOLE_APP
+                        Console.WriteLine(logLine);
+#endif
                         sw.Flush();
                         sw.Close();
                     }

@@ -1,0 +1,37 @@
+﻿Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe wird installiert.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog
+   assemblypath = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe
+Dienst LightLifeService wird installiert...
+Die EventLog-Quelle LightLifeService im Protokoll Application wird erstellt...
+Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe wird zurückgesetzt.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog
+   assemblypath = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe
+Der vorherige Zustand des Ereignisprotokolls für die Quelle LightLifeService wird wiederhergestellt.
+Während der Rollbackphase des Installers System.Diagnostics.EventLogInstaller ist eine Ausnahme aufgetreten.
+System.Security.SecurityException: Die Quelle wurde nicht gefunden, aber einige oder alle Ereignisprotokolle konnten nicht durchsucht werden. Protokolle, auf die kein Zugriff möglich war: Security.
+Während der Rollbackphase der Installation ist eine Ausnahme aufgetreten. Diese Ausnahme wird ignoriert, und der Rollback wird fortgesetzt. Der ursprüngliche Zustand des Computers wird jedoch möglicherweise nicht vollständig wiederhergestellt, nachdem der Rollback beendet ist.
+Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe wird installiert.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog
+   assemblypath = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe
+Dienst LightLifeService wird installiert...
+Dienst LightLifeService wurde installiert.
+Die EventLog-Quelle LightLifeService im Protokoll Application wird erstellt...
+Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe wird ausgeführt.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog
+   assemblypath = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe
+Assembly D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe wird deinstalliert.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.InstallLog
+   assemblypath = D:\Lumitech\_GIT\LightLife\05_PILEDServerSvc\bin\Release\LightLifeService.exe
+Die EventLog-Quelle LightLifeService wird entfernt.
+Der Dienst LightLifeService wird vom System entfernt...
+Dienst LightLifeService wurde vom System entfernt.

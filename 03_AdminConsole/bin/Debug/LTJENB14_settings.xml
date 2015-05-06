@@ -5,16 +5,17 @@
 		<PagesVisible value="Boxen;PI-LED Control;Administration;;Settings" />
 		<Interfaces value="LightLifeLogger" />
 	</Pages>
-	<!--<Login>
+	<Login>
 		<Username value="nn" />
 		<Password value="test" />
-	</Login>-->
+	</Login>
   <Database>
     <!--<DataSource value="LT-WSSQLTEST\SQLEXPRESS" />-->
-	<DataSource value="LTJENB14\SQLEXPRESS" />
+	<!--<DataSource value="LTJENB14\SQLEXPRESS" />-->
+	<DataSource value="192.168.5.100" />
     <InitialCatalog value="LightLife" />
-    <UserID value="ltcs" />
-    <Password value="Lumitech03" />
+    <UserID value="lightlife" />
+    <Password value="test" />
   </Database>
   <LightLifeLogger name="LLLClient1">
 	<Enable value="True" />

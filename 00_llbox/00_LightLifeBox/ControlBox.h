@@ -57,7 +57,7 @@ public:
 	void notify(void* sender, enumButtonEvents event, int delta);	
 
 	int buttonActive;
-	void setButtons(bool[]);
+	void setButtons(bool[], bool[]);
 
 	void StartDeltaTest(int userid, int b0, int cct0, TestMode mode);
 	void StopDeltaTest();

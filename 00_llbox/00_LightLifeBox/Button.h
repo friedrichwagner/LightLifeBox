@@ -35,6 +35,14 @@ protected:
 	//Hardware Button
 	PIButton pibtn;
 	void PIButtonInit();
+
+	bool doneBlink;
+	unsigned long blinkLED(void);
+	std::thread threadBlink;
+	void spawnBlinkThread()
+	{
+		threadBlink = std::thread(&Button::blinkLED, this);
+	};
 public:
 	Button(std::string pName);
 	~Button();	
@@ -47,4 +55,5 @@ public:
 
 	bool setActive(bool);
 	void addClient(IButtonObserver* obs);
+	void startBlink(bool);
 };

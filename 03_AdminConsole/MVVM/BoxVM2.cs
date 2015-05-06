@@ -110,7 +110,7 @@ namespace LightLifeAdminConsole.MVVM
             {
                 _box.testsequence.ActivationID = value;
                     _selectedActivationState = value;
-                    RaisePropertyChanged("ActivationState");
+                    RaisePropertyChanged("SelectedActivationState");
             }
         }
 
@@ -189,6 +189,9 @@ namespace LightLifeAdminConsole.MVVM
 
         private bool BtnEnabled(BoxUIButtons btn)
         {
+            //TEST TEST
+            return true;
+
             if (!_box.IsActive) return false;
 
             switch (btn)

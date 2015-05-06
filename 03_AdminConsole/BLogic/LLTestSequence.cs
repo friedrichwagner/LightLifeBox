@@ -102,9 +102,8 @@ namespace LightLifeAdminConsole
 
             InsertSequence();
             //UpdateVarious(LLMsgType.LL_START_TESTSEQUENCE, 0);
-            UpdateHeadState();
-
             State = TestSequenceState.NONE;
+            UpdateHeadState();
 
             return SequenceID;
         }
@@ -191,7 +190,7 @@ namespace LightLifeAdminConsole
 
         private void UpdateHeadState()
         {
-            string stmt = "update LLTestSequenceHead set TestStateID='" + State + "', ActualStep=" + StepID.ToString() + " where sequenceID=" + SequenceID.ToString();
+            string stmt = "update LLTestSequenceHead set TestStateID='" + State + "', ActualPosID=" + PosID.ToString() + " where sequenceID=" + SequenceID.ToString();
             LLSQL.cmd.prep(stmt);
             LLSQL.cmd.Exec();
         }
@@ -206,6 +205,8 @@ namespace LightLifeAdminConsole
             InsertStep();
 
             State = TestSequenceState.IN_PROGRESS;
+
+            UpdateHeadState();
         }
 
         private void InsertStep()

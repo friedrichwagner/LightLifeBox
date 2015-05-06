@@ -179,7 +179,7 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 		
 		//FW 9.4.2015 Von hier jetzt die remote Adresse und das Port nehmen
 		//to be tested
-		_sendSock->setServerAddress(_recvSock->remoteAddress);
+		//_sendSock->setServerAddress(_recvSock->remoteAddress);
 		break;
 
 	case LL_ENABLE_BUTTONS:

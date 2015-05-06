@@ -40,6 +40,7 @@ protected:
 
 	unsigned int defaultBrightness;
 	unsigned int defaultCct;
+	float defaultXy[2];
 	int MinVal;
 	int MaxVal;
 	//float defaultXy[2];
@@ -48,7 +49,7 @@ protected:
 	Logger* log;
 
 	//Functions
-	void setLog(bool skip = false);
+	void toString(bool skip = false);
 
 	void Send2ComClients();
 public:

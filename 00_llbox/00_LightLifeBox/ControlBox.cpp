@@ -219,10 +219,14 @@ string ControlBox::getName()
 	return this->Name;
 }
 
-void ControlBox::setButtons(bool b[])
+void ControlBox::setButtons(bool b[], bool blink[])
 {
 	for (unsigned int i = 0; i < Buttons.size(); i++)
+	{		
+		Buttons[i]->startBlink(blink[i]);
 		Buttons[i]->setActive(b[i]);
+	}
+		
 }
 
 void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
@@ -252,7 +256,7 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 				{
 					//Disable all Buttons
 					bool b[5] = { false, false, false, false, false };
-					setButtons(b);
+					setButtons(b, b);
 
 					//Wait 30 secs
 					log->cout("Waiting 30 secs...");
@@ -281,10 +285,28 @@ void delay1(ControlBox* p)
 {	
 	if (p != NULL)
 	{
+		bool b[5] = { false, false, false, false, false };
+		bool blink[5] = { false, false, false, false, false };
+		
+
 		//30 seconds fade
 		p->Lights[0]->setFadeTime(psychoTestDelayTimeinSecs);
 		p->Lights[0]->resetDefault();
-		cout << "Fading 30 secs..\r\n";
+		
+		//nächster Button soll blinken
+		p->buttonActive++;
+		if (p->buttonActive >= 3)
+		{
+			blink[0] = true; blink[1] = true; blink[2] = true;
+		}
+		else
+		{
+			blink[p->buttonActive] = true;
+		}
+
+		p->setButtons(b, blink);
+
+		cout << "Fading 30 secs..\r\n";	
 		Later Delay2(psychoTestDelayTimeinSecs+2, true, &delay2, p);
 	}
 }
@@ -292,21 +314,21 @@ void delay1(ControlBox* p)
 void delay2(ControlBox* p)
 {
 	bool b[5] = { false, false, false, true, true };
+	bool blink[5] = { false, false, false, false, false};
 	if (p != NULL)
-	{
-		p->buttonActive++;
+	{		
 		//0=Brightess, 1=CCT, 2=JUDD, 3=ALLE Buttons klein Box, 4=ALLE Buttons grosser Raum
 		if (p->buttonActive > 4)  p->buttonActive = 0;
 
 		if (p->buttonActive >= 3)
 		{
 			b[0] = true; b[1] = true; b[2] = true;
-			p->setButtons(b);
+			p->setButtons(b, blink);
 		}
 		else
 		{
 			b[p->buttonActive] = true;
-			p->setButtons(b);
+			p->setButtons(b, blink);
 		}
 		p->Lights[0]->setFadeTime(DEFAULT_NEOLINK_FADETIME);
 	}
@@ -320,7 +342,8 @@ void ControlBox::StartDeltaTest(int userid, int b0, int cct0, TestMode mode)
 
 	//1. Enable only LOCK Buttons
 	bool b[5] = { false, false, false, true, true };
-	setButtons(b);
+	bool blink[5] = { false, false, false, false, false };
+	setButtons(b, blink);
 
 	//2. Run Test
 	DeltaTestInProgress = true;
@@ -332,6 +355,7 @@ void ControlBox::StopDeltaTest()
 	if (deltaTest != NULL)
 	{
 		bool b[5] = { false, false, false, true, true };
+		bool blink[5] = { false, false, false, false, false };
 
 		DeltaTestInProgress = false;
 
@@ -348,7 +372,7 @@ void ControlBox::StopDeltaTest()
 			b[0] = defaultActiveControls; b[1] = defaultActiveControls; b[2] = defaultActiveControls;  b[3] = defaultActiveControls; b[4] = defaultActiveControls;
 		}
 
-		setButtons(b);
+		setButtons(b, blink);
 
 		log->cout("Finished Delta Test!_______________");
 	}

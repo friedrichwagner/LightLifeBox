@@ -5,6 +5,8 @@
 	#include "wiringPi.h"
 #endif
 
+#define BLINK_DELAY 400
+
 
 Button::Button(std::string pSection)
 {
@@ -21,6 +23,8 @@ Button::Button(std::string pSection)
 	this->btntype = (LightLifeButtonType)ini->Read<int>(pSection, "LightLifeButtonType", (int)(NONE));
 
 	PIButtonInit();
+
+	doneBlink = true;
 }
 
 Button::~Button() 
@@ -108,5 +112,47 @@ bool Button::setActive(bool b)
 #endif
 
 	return Active;
+}
+
+void Button::startBlink(bool start)
+{
+	if (doneBlink && start)
+	{
+		doneBlink = false;
+		spawnBlinkThread();
+	}
+
+	if (!start)
+	{
+		doneBlink = true;
+		if (threadBlink.joinable())  threadBlink.join();
+	}
+
+}
+
+unsigned long Button::blinkLED()
+{
+
+	while (!doneBlink)
+	{
+#if defined (RASPI)
+		if (this->pibtn.portLED>0)
+			digitalWrite(this->pibtn.portLED, HIGH);
+		lumitech::sleep(BLINK_DELAY);
+
+		if (this->pibtn.portLED>0)
+			digitalWrite(this->pibtn.portLED, LOW);
+		lumitech::sleep(BLINK_DELAY);
+#else
+		log->cout(this->Name + "= BLINK ACTIVE");
+		lumitech::sleep(BLINK_DELAY);
+
+		log->cout(this->Name + "= BLINK IN-ACTIVE");
+		lumitech::sleep(BLINK_DELAY);
+#endif
+	}
+
+
+	return 0;
 }
 

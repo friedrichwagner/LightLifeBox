@@ -82,7 +82,7 @@ namespace LightLifeAdminConsole
             sendClient.Connect(remoteEP);
 
             //TEST TEST
-            StartReceiveAsync();
+            //StartReceiveAsync();
         }
 
         public void Close()

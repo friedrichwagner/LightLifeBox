@@ -14,8 +14,8 @@
 	</DeltaTest>	
 	
 	<ControlBox_General>
-		<Clients value="LightLifeServer,NeoLink" />
-		<TestWithoutConsole value="1" />
+		<Clients value="LightLifeServer" />
+		<!--<TestWithoutConsole value="1" />-->
 		<DelayTimeForPsychoTestSecs value="10" />
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1,Button2" />
@@ -24,10 +24,10 @@
 		<Admin-Console-IP value="127.0.0.1"/>
 	</ControlBox_General>
 	
-	<LTJENB14 name="ControlBox1">
+	<LTJENB14 name="ControlBox6">
 		<BoxNr value="99" />
-		<Send-Command-Port value="1749"/>
-		<Receive-Command-Port value="1748"/>
+		<Send-Command-Port value="1798"/>
+		<Receive-Command-Port value="1799"/>
 		<ControlsDefaultActive value="1"/>	
 		<DefaultGroup value="0"/>			
 	</LTJENB14>	

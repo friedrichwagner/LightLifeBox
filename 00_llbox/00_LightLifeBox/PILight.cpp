@@ -17,11 +17,11 @@ PILight::PILight(std::string pSection)
 	ini = Settings::getInstance();
 	log = Logger::getInstance();
 
-	Section=pSection;
+	Section = pSection;
 
-	this->Name = ini->ReadAttrib<string>(pSection,"name","btn");
-	this->ID = ini->ReadAttrib<int>(pSection,"id",0);
-	
+	this->Name = ini->ReadAttrib<string>(pSection, "name", "btn");
+	this->ID = ini->ReadAttrib<int>(pSection, "id", 0);
+
 	defaultBrightness = 100;
 	defaultCct = 4000;
 	duv = 0.0f;
@@ -32,7 +32,7 @@ PILight::PILight(std::string pSection)
 	if (flds.size() >= 2)
 	{
 		defaultCct = atoi(flds[0].c_str());
-		defaultBrightness = atoi(flds[1].c_str());		
+		defaultBrightness = atoi(flds[1].c_str());
 	}
 
 	MinVal = MIN_CCT;
@@ -56,11 +56,11 @@ PILight::PILight(std::string pSection)
 	brightness = defaultBrightness;
 	cct = defaultCct;
 	fCieCoords_t cie = CCT2xy(defaultCct);
-	xy[0] = cie.x; xy[1] = cie.y;
+	defaultXy[0] = cie.x; defaultXy[1] = cie.y;
+	xy[0] = defaultXy[0]; xy[1] = defaultXy[1];
 
 	duv = 0.0f;
 	rgb[0] = 0; rgb[1] = 0; rgb[2] = 0;
-	fadetime = DEFAULT_NEOLINK_FADETIME;
 }
 
 PILight::~PILight() 
@@ -78,7 +78,10 @@ void PILight::addComClient(IBaseClient* c)
 		log->cout("added Client:" + c->getName());
 
 		//Set default Values on Startup
+		setFadeTime(DEFAULT_NEOLINK_FADETIME);
+
 		setCCT(defaultCct);
+		//setXY(defaultXy);
 		lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
 		setBrightness(defaultBrightness);
 	}
@@ -137,14 +140,15 @@ void PILight::Send2ComClients()
 {
 
 	milliseconds now = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
-	//if ((now - lastsend).count() < (long)DEFAULT_NEOLINK_FADETIME)
-	if ((now - lastsend).count() < (long)MINIMUM_SEND_TIME)
+	if ((now - lastsend).count() < (long)DEFAULT_NEOLINK_FADETIME)
+	//if ((now - lastsend).count() < (long)MINIMUM_SEND_TIME)
 	{
-		setLog(true);
+		//Silently ignore this messages
+		//toString(true);
 		return;
 	}
 
-	setLog();
+	toString();
 
 	for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
@@ -309,7 +313,8 @@ void PILight::resetDefault()
 {
 	log->cout("resetDefault()-- Start");
 
-	setCCT(defaultCct); 
+	//setCCT(defaultCct); 
+	setXY(defaultXy); //damit gefadet wird
 	lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
 	setBrightness(defaultBrightness);
 	duv = 0.0f;
@@ -367,7 +372,7 @@ unsigned char PILight::getGroup()
 }
 
 
-void PILight::setLog(bool skip)
+void PILight::toString(bool skip)
 {
 	string mode;
 

@@ -31,8 +31,10 @@ namespace PILEDServer
 
         public UDPServer()
         {
-            log = Logger.GetInstance();
             ini = Settings.GetInstance();
+
+            int loglevel = ini.Read<int>("Logging", "loglevel", 6);
+            log = Logger.GetInstance(loglevel);            
 
             done = false;
             listenPort = ini.Read<int>("UDPServer", "ListenPort", (int)LightLifePorts.PILED_SERVER_LISTEN_UDP);
@@ -112,7 +114,7 @@ namespace PILEDServer
                             {
                                 try
                                 {
-                                    log.Info(receivedResults.RemoteEndPoint.Address + ":" + s);
+                                    log.Cout(receivedResults.RemoteEndPoint.Address + ":" + s);
 
                                     LightLifeData info = new LightLifeData(s);
 

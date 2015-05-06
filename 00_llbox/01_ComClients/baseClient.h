@@ -127,12 +127,12 @@ struct UDPRecvSocket
 	int receive(unsigned char* cdata, int cnt)
 	{
 		int ret = -1;
-		int addrLength;
+		int addrLength = sizeof(remoteAddress);
 
 
 		//FW 9.4.2015 - Wollen sende Adresse wissen --> ausprobieren ob funtkioniert
-		ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
-		//ret = recv(_socket, (char*)cdata, cnt, 0);
+		//ret = recvfrom(_socket, (char*)cdata, cnt, 0, reinterpret_cast<sockaddr*>(&remoteAddress), (socklen_t*)&addrLength);
+		ret = recv(_socket, (char*)cdata, cnt, 0);
 		
 		if (ret>0)
 			cdata[ret] = '\0';

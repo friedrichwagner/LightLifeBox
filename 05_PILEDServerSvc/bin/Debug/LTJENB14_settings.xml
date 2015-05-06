@@ -24,6 +24,6 @@
     <Enable value="True" />
   </LightLifeLogger>  
   <Logging>
-    <loglevel value="10" />
+    <loglevel value="0" />
   </Logging>
 </Settings>

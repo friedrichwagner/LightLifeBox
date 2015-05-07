@@ -60,6 +60,7 @@ namespace LightLifeAdminConsole.Data
         public static IDictionary<int, string> llactivationstate;
         public static DataTable llstep;
         public static DataTable V_BoxState;
+        public static IDictionary<string, string> lltestsequencedef;
         
         public static void InitSQLs()
         {
@@ -92,6 +93,7 @@ namespace LightLifeAdminConsole.Data
             tables.Add("LLStep", new SQLSet("LLStep"));
             tables.Add("LLBoxState", new SQLSet("V_BOXSTATE"));
             tables.Add("VLLTestSequence", new SQLSet("V_TestSequence"));
+            tables.Add("[LLTestSequenceDefinition]", new SQLSet("[LLTestSequenceDefinition]"));
 
             tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
             tables["LLRoom"].selectSQL = "select * from LLRoom order by RoomID";
@@ -110,21 +112,23 @@ namespace LightLifeAdminConsole.Data
             tables["LLUserInfo"].updateSQL = "update LLUserInfo set where ";
 
             tables["LLTestSequenceHead"].selectSQL = "select * from LLTestSequenceHead";
-            tables["LLTestSequenceHead"].insertSQL = "insert into LLTestSequenceHead(SequenceID, BoxID, UserID, VLId, TestStateID, ActualPosID, remark) values(:1,:2,:3,:4,:5,:6,:7)";
-            tables["LLTestSequenceHead"].updateSQL = "update LLTestSequenceHead set TestStateID=:1 where SequenceID=:2";
+            tables["LLTestSequenceHead"].insertSQL = "insert into LLTestSequenceHead(SequenceID, SequenceDef, BoxID, UserID, VLId, TestStateID, ActualPosID, remark) values(:1,:2,:3,:4,:5,:6,:7,:8)";
+            tables["LLTestSequenceHead"].updateSQL = "update LLTestSequenceHead set TestStateID=:1, ActualPosID=:2 where SequenceID=:3";
             tables["LLTestSequenceHead"].sqlCmd1 = "update LLTestSequenceHead set Remark=:1 where sequenceID=:2";
 
             tables["LLTestSequencePos"].selectSQL = "select * from LLTestSequencePos";
-            tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, ActivationID, StepID, pimode, Brightness, CCT, duv, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8, :9, :10)";
+            tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, CycleID, ActivationID, StepID, PILEDID, Brightness, CCT, duv, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8, :9, :10, :11)";
             tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:1, CCT=:2, duv=:3 x=:4, y=:5, remark=:6 where PosID=:7";
 
             tables["LLBox"].selectSQL = "select * from LLBox";
-            tables["LLBox"].updateSQL = "update LLBox set active=:1 where boxid=:2";
+            tables["LLBox"].updateSQL = "update LLBox set active=:1, ActualSequence=:2 where boxid=:3";
 
             tables["LLActivationState"].selectSQL = "select * from LLActivationState";
             tables["LLStep"].selectSQL = "select * from LLStep";
             tables["LLBoxState"].selectSQL = "select * from V_BOXSTATE";
             tables["VLLTestSequence"].selectSQL = "select * from V_TestSequence";
+
+            tables["LLTestSequenceDefinition"].selectSQL = "select * from LLTestSequenceDefinition order by SequenceDef";
 
             if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
 
@@ -160,6 +164,9 @@ namespace LightLifeAdminConsole.Data
 
             V_BoxState = new DataTable("V_BoxState");
             getDataTable(ref V_BoxState, tables["LLBoxState"]);
+
+            lltestsequencedef = new Dictionary<string, string>();
+            getDict2(ref lltestsequencedef, tables["LLTestSequenceDefinition"], "SequenceDef, Name");
         }
 
         public static void Done()
@@ -183,6 +190,32 @@ namespace LightLifeAdminConsole.Data
                 while (cmd.dr.Read())
                 {
                     dict.Add(cmd.dr.GetInt32(0), cmd.dr.GetString(1));
+                }
+
+                cmd.dr.Close();
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private static void getDict2(ref IDictionary<string, string> dict, SQLSet s, string fields, string filter = "")
+        {
+            try
+            {
+                string stmt = "select " + fields + " from " + s.tablename;
+                if (filter.Length > 0) stmt += " " + filter;
+                cmd.prep(stmt);
+                cmd.Exec();
+
+                //Always add a "-1" entry
+                dict.Add("", "");
+
+                while (cmd.dr.Read())
+                {
+                    dict.Add(cmd.dr.GetString(0), cmd.dr.GetString(1));
                 }
 
                 cmd.dr.Close();

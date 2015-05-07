@@ -13,7 +13,7 @@ using System.Data;
 
 namespace LightLifeAdminConsole.MVVM
 {
-    enum BoxUIButtons { START, STOP, PREV, NEXT, PAUSE, UPDATE};
+    enum BoxUIButtons { START, STOP, PREV, NEXT, PAUSE, UPDATE, SAVENEW};
     //enum BoxUIButtons { START, STOP, PAUSE, UPDATE };
 
     class BoxVM2: ObservableObject
@@ -176,6 +176,7 @@ namespace LightLifeAdminConsole.MVVM
                     case "STOP": _box.testsequence.Stop(); break;
                     case "UPDATE": _box.testsequence.UpdateRemark(SelectedRemark); break;
                     case "REFRESH": _box.Refresh(); break;
+                    case "SAVENEW": _box.testsequence.SaveNewSequence(); break;
                 }
 
                 
@@ -195,7 +196,7 @@ namespace LightLifeAdminConsole.MVVM
             if (!_box.IsActive) return false;
 
             switch (btn)
-            {
+            {                
                 case BoxUIButtons.START:    return _box.testsequence.CanStart;
                 case BoxUIButtons.STOP:     return _box.testsequence.CanStop;
                 case BoxUIButtons.PAUSE:    return _box.testsequence.CanPause;
@@ -204,6 +205,7 @@ namespace LightLifeAdminConsole.MVVM
                          //else 
                         //kann immer upgedated werden
                          return true;
+                case BoxUIButtons.SAVENEW: return _box.testsequence.CanStart;
             }
 
             //RaiseAllProperties();

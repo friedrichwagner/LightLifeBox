@@ -309,6 +309,7 @@ void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 	int pimode = lumitech::stoi(flds["mode"]);
 	unsigned int br = lumitech::stoi(flds["brightness"]);
 	unsigned int cct = lumitech::stoi(flds["cct"]);
+	float duv = lumitech::stof(flds["duv"]);
 	unsigned int rgb[3];
 	rgb[0] = lumitech::stoi(flds["r"]); rgb[1] = lumitech::stoi(flds["g"]); rgb[2] = lumitech::stoi(flds["b"]);
 
@@ -319,11 +320,13 @@ void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 	{
 	case PILED_SET_CCT:
 			box->Lights[0]->setCCT(cct);
+			lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
 			box->Lights[0]->setBrightness(br);
 			break;
 
 	case PILED_SET_XY:
 			box->Lights[0]->setXY(xy);
+			lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
 			box->Lights[0]->setBrightness(br);
 
 			break;
@@ -331,6 +334,14 @@ void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 	case PILED_SET_RGB:
 			box->Lights[0]->setRGB(rgb);
 			break;
+
+	case PILED_SET_DUV:
+		box->Lights[0]->setCCTDuv(cct,duv);
+		lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
+		box->Lights[0]->setBrightness(br);
+		break;
+
+		break;
 	}
 
 	StandardAnswer(cmd);

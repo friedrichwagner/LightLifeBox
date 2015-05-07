@@ -292,7 +292,7 @@ namespace LightLifeAdminConsole
 
     class LLRemoteCommand : RemoteCommandBase
     {
-        const string PILED_SEND_TEMPLATE = ";mode={0};brightness={1};cct={2};r={3};g={4};b={5};x={6};y={7};fadetime={8}";
+        const string PILED_SEND_TEMPLATE = ";mode={0};brightness={1};cct={2};r={3};g={4};b={5};x={6};y={7};fadetime={8};duv={9}";
 
         public LLRemoteCommand(IPAddress ip, int sendp, int recvp, bool async)
             : base(ip, sendp, recvp, async)
@@ -310,9 +310,9 @@ namespace LightLifeAdminConsole
             return SendAndReceiveBool(LLMsgType.LL_ENABLE_BUTTONS, Params, false);
         }
 
-        public bool SetPILED(PILEDMode mode, int brightness, int cct, int[] rgb, float[] xy, int fadetime)
+        public bool SetPILED(PILEDMode mode, int brightness, int cct, int[] rgb, float[] xy, int fadetime, float duv)
         {
-            string Params = String.Format(PILED_SEND_TEMPLATE, (int)mode, brightness, cct, rgb[0], rgb[1], rgb[2], xy[0], xy[1], fadetime);
+            string Params = String.Format(PILED_SEND_TEMPLATE, (int)mode, brightness, cct, rgb[0], rgb[1], rgb[2], xy[0], xy[1], fadetime, duv);
             return SendAndReceiveBool(LLMsgType.LL_SET_PILED, Params, false);
         }
 

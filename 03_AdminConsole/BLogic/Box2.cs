@@ -17,6 +17,9 @@ namespace LightLifeAdminConsole
         public static IDictionary<int, Box2> boxes = new Dictionary<int, Box2>();
         public static IDictionary<int, BoxWindow> boxWindows = new Dictionary<int, BoxWindow>();
 
+        public static IDictionary<int, Box2> practiceboxes = new Dictionary<int, Box2>();
+        public static IDictionary<int, BoxWindow> practiceboxWindows = new Dictionary<int, BoxWindow>();
+
         private const byte NUM_POTIS = 3;
         private const byte NUM_BUTTONS = 2;
         private const int DEFAULT_CCT = 4000; //K
@@ -28,6 +31,8 @@ namespace LightLifeAdminConsole
         public bool IsActive { get; private set; }
         private AdminBase boxdata;
         private LLRemoteCommand rCmd;
+
+        public bool IsPracticeBox { get; private set; }
 
         //private byte[] PotisActive = new byte[NUM_POTIS];
         //private byte[] ButtonsActive = new byte[NUM_BUTTONS];
@@ -41,12 +46,22 @@ namespace LightLifeAdminConsole
         public static void getBoxes()
         {
             AdminBase boxes = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
-            DataTable dt = boxes.select("where active=1");
+            DataTable dt = boxes.select("where active=1 and isPracticeBox=0");
             
+            //"Echte" Testboxen in Testraum 1 und Testraum 2
             for (int i=0; i < dt.Rows.Count; i++)
             {
                 Box2.boxes.Add(dt.Rows[i].Field<int>("BoxID"), new Box2(dt.Rows[i].Field<int>("BoxID")));
                 Box2.boxWindows.Add(dt.Rows[i].Field<int>("BoxID"), new BoxWindow(dt.Rows[i].Field<int>("BoxID")));
+            }
+
+            //Boxen zum Üben im Vorraum
+            DataTable dt1 = boxes.select("where active=1 and isPracticeBox=1");
+
+            for (int i = 0; i < dt1.Rows.Count; i++)
+            {
+                Box2.practiceboxes.Add(dt1.Rows[i].Field<int>("BoxID"), new Box2(dt.Rows[i].Field<int>("BoxID")));
+                Box2.practiceboxWindows.Add(dt1.Rows[i].Field<int>("BoxID"), new BoxWindow(dt.Rows[i].Field<int>("BoxID")));
             }
         }
 
@@ -68,6 +83,8 @@ namespace LightLifeAdminConsole
                 int sendport = dt.Rows[0].Field<int>("sendPort");
                 int recvport = dt.Rows[0].Field<int>("recvPort");
 
+                IsPracticeBox = (dt.Rows[0].Field<int>("IsPracticeBox") ==1) ? true : false;
+
                 rCmd = new LLRemoteCommand(BoxIP, sendport, recvport, true);
                 rCmd.ReceiveData += ReceiveDatafromControlBox;
             }
@@ -77,7 +94,12 @@ namespace LightLifeAdminConsole
             testsequence = new LLTestSequence(boxnr, -1);
 
             if (IsActive)
-                EnableBoxButtons();
+            {
+                if (IsPracticeBox)
+                    EnableBoxButtons("11111"); //Alle Buttons aktivieren
+                else
+                    EnableBoxButtons(testsequence.EnabledButtons);
+            }
         }
 
         /*public Box2(DataTable dt)
@@ -92,6 +114,7 @@ namespace LightLifeAdminConsole
             BoxNr = boxnr;
             GroupID = 0;
             IsActive = false;
+            IsPracticeBox = false;
             BoxIP = IPAddress.Loopback;
             lastmsgtype = LLMsgType.LL_NONE;
             lastBrightness = 0;              
@@ -124,9 +147,9 @@ namespace LightLifeAdminConsole
         }
      
 
-        private void EnableBoxButtons()
+        private void EnableBoxButtons(string enabledButtons)
         {
-            string Params = ";buttons=" + testsequence.EnabledButtons;
+            string Params = ";buttons=" + enabledButtons;
 
            rCmd.EnableButtons(Params);           
         }
@@ -161,7 +184,7 @@ namespace LightLifeAdminConsole
         private void SetBoxToDefault(int brightnessLevel)
         {
             //SetCCT + brightness
-            rCmd.SetPILED(PILEDMode.SET_CCT, brightnessLevel, DEFAULT_CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f }, 100);
+            rCmd.SetPILED(PILEDMode.SET_CCT, brightnessLevel, DEFAULT_CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f }, 100, 0.0f);
         }
 
         private void SetBoxTestSequenceState(LLMsgType msgtype)
@@ -182,6 +205,12 @@ namespace LightLifeAdminConsole
                 EnableBoxButtons(); // Send Controlbox Buttons
                 //testsequence.UpdateHeadState(); // Update Database Table TestSequenceHeader
             }
+        }
+
+        public void StartDeltaTest(PILEDMode mode, int CCT, int brightnessLevel)
+        {
+            rCmd.SetPILED(mode, brightnessLevel, CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f }, 100, 0.0f);
+            rCmd.StartDeltaTest();
         }
     }
 }

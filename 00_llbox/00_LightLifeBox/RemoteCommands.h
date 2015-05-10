@@ -70,7 +70,7 @@ class RemoteCommands
 		queue<RemoteCommand>* cmdQ;
 		void ExecuteReceiveCommands(RemoteCommand);
 
-		//Individual Commands
+		//AdminConsole -> Box(rCmd)
 		void DiscoverCommand(RemoteCommand);
 		void EnableButtonsCommand(RemoteCommand);
 		void SetPILEDCommand(RemoteCommand);
@@ -78,9 +78,13 @@ class RemoteCommands
 		void SequenceHandlingCommand(RemoteCommand cmd);
 		void StandardAnswer(RemoteCommand cmd);		
 		void DoStartDeltaTest(RemoteCommand cmd);
+
 		
+		//Box -> AdminConsole (rCmd)
 		void SendLock(string params);
 		void SendDeltaTestLock(string params);
+		void AfterWait(string params);
+		void AfterFade(string params);
 
 		//Lock Handling
 		void go();

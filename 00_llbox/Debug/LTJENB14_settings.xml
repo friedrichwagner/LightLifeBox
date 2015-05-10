@@ -14,7 +14,7 @@
 	</DeltaTest>	
 	
 	<ControlBox_General>
-		<Clients value="LightLifeServer" />
+		<Clients value="LightLifeServer,NeoLink" />
 		<!--<TestWithoutConsole value="1" />-->
 		<DelayTimeForPsychoTestSecs value="10" />
 		<Potis value="Poti1,Poti2,Poti3" />
@@ -26,9 +26,9 @@
 	
 	<LTJENB14 name="ControlBox6">
 		<BoxNr value="99" />
+		<IsPracticeBox value="1" />
 		<Send-Command-Port value="1798"/>
 		<Receive-Command-Port value="1799"/>
-		<ControlsDefaultActive value="1"/>	
 		<DefaultGroup value="0"/>			
 	</LTJENB14>	
 
@@ -42,9 +42,9 @@
 
 	<raspi2LightLife name="ControlBox2">
 		<BoxNr value="2" />
+		<IsPracticeBox value="1" />
 		<Send-Command-Port value="1759"/>
 		<Receive-Command-Port value="1758"/>
-		<ControlsDefaultActive value="1"/>
 		<DefaultGroup value="201"/>
 	</raspi2LightLife>
 
@@ -52,7 +52,6 @@
 		<BoxNr value="3" />
 		<Send-Command-Port value="1769"/>
 		<Receive-Command-Port value="1768"/>	
-		<ControlsDefaultActive value="1"/>		
 		<DefaultGroup value="202"/>
 	</raspi3LightLife>
 	
@@ -60,7 +59,6 @@
 		<BoxNr value="4" />
 		<Send-Command-Port value="1779"/>
 		<Receive-Command-Port value="1778"/>
-		<ControlsDefaultActive value="1"/>		
 		<DefaultGroup value="203"/>
 	</raspi4LightLife>
 	
@@ -68,7 +66,6 @@
 		<BoxNr value="5" />
 		<Send-Command-Port value="1789"/>
 		<Receive-Command-Port value="1788"/>
-		<ControlsDefaultActive value="1"/>		
 		<DefaultGroup value="204"/>
 	</raspi5LightLife>	
 	
@@ -125,7 +122,7 @@
 		<EnablePortPressed value="0"/>
 	</Poti3>
 	<Light1 id="1" name="liBazille">
-		<Default value="4000,100"/>	
+		<Default value="4000,25"/>	
 		<CCTMinMax value="2500,7000"/>		
 	</Light1>  
   

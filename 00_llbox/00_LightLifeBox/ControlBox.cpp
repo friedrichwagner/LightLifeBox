@@ -16,6 +16,7 @@ ControlBox::ControlBox(std::string pName)
 {
 	isDone = false;
 	DeltaTestInProgress = false;
+	isPracticeBox = false;
 
 	this->ID = 0;
 	this->Name = pName;
@@ -83,9 +84,10 @@ bool ControlBox::Init()
 
 	this->ID = ini->Read<int>(this->Name, "BoxNr", 0);
 
-	bool defaultActiveControls = ini->Read<bool>(this->Name, "ControlsDefaultActive", false);
+	//bool defaultActiveControls = ini->Read<bool>(this->Name, "ControlsDefaultActive", false);
 	testWithoutConsole = ini->Read<bool>("ControlBox_General", "TestWithoutConsole", false);
 	psychoTestDelayTimeinSecs = ini->Read<int>("ControlBox_General", "DelayTimeForPsychoTestSecs", 30) * 1000;
+	isPracticeBox = ini->Read<int>(this->Name, "IsPracticeBox", 0);
 
 	//1. Get the Potis	
 	ini->ReadStringVector("ControlBox_General", "Potis", "", &flds);
@@ -103,7 +105,7 @@ bool ControlBox::Init()
 				else Buttons[i]->setActive(false);
 			}
 			else
-				Buttons[i]->setActive(defaultActiveControls);
+				Buttons[i]->setActive(isPracticeBox);
 		}
 	}
 
@@ -120,7 +122,7 @@ bool ControlBox::Init()
 			if (testWithoutConsole)
 				Buttons[idx + i]->setActive(true);
 			else
-				Buttons[idx+i]->setActive(defaultActiveControls);
+				Buttons[idx + i]->setActive(isPracticeBox);
 		}
 	}
 
@@ -158,7 +160,9 @@ int ControlBox::addComClients()
 			clnt = new NeoLinkClient();			
 		}
 
-		if (flds[i] == "LightLifeServer")
+		//Wenn "PracticeBox", dann kein LightLifLogger, damit PI-LED Server und DB nicht so belastet
+		//Deltatest geht über AdminConsole und wird von dort in DB geloggt
+		if ((flds[i] == "LightLifeServer") && !isPracticeBox)
 		{
 			clnt = new LightLifeLogger(Name);
 		}
@@ -243,24 +247,34 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 			if (DeltaTestInProgress)
 			{
 				log->cout("Stopping Delta Test.....");
-				deltaTest->stop();
+				deltaTest->stop();				
+				
 				rmCmd->SendRemoteCommand(LL_SET_LOCKED_DELTATEST, "");
+
 				StopDeltaTest();
+				
 			}
 			else
 			{
-				Lights[0]->lockCurrState();
-				rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
-
-				if (testWithoutConsole)
+				//Wenn NICHT PracticeBox, dann Kommando schicken
+				if (!isPracticeBox)
 				{
-					//Disable all Buttons
+					Lights[0]->lockCurrState();
+					rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
+
+					//Disable all Buttons, do not blink
 					bool b[5] = { false, false, false, false, false };
 					setButtons(b, b);
 
 					//Wait 30 secs
 					log->cout("Waiting 30 secs...");
 					Later Delay1(psychoTestDelayTimeinSecs, true, &delay1, this);
+				}
+
+				if (isPracticeBox)
+				{
+					Lights[0]->setFadeTime(DEFAULT_NEOLINK_FADETIME);
+					Lights[0]->resetDefault();
 				}
 			}
 		}
@@ -285,58 +299,26 @@ void delay1(ControlBox* p)
 {	
 	if (p != NULL)
 	{
-		bool b[5] = { false, false, false, false, false };
-		bool blink[5] = { false, false, false, false, false };
-		
-
-		//30 seconds fade
+		//30 seconds fade wird direkt in Box gemacht
 		p->Lights[0]->setFadeTime(psychoTestDelayTimeinSecs);
-		p->Lights[0]->resetDefault();
-		
-		//nächster Button soll blinken
-		p->buttonActive++;
-		if (p->buttonActive >= 3)
-		{
-			blink[0] = true; blink[1] = true; blink[2] = true;
-		}
-		else
-		{
-			blink[p->buttonActive] = true;
-		}
-
-		p->setButtons(b, blink);
+		p->Lights[0]->resetDefault();		
 
 		cout << "Fading 30 secs..\r\n";	
 		Later Delay2(psychoTestDelayTimeinSecs+2, true, &delay2, p);
+
+		p->rmCmd->SendRemoteCommand(LL_AFTER_WAIT_TIME, "");
+		//Blinken der LED des nächsten Buttons wird in RemoteCommand gemacht
 	}
 }
 
 void delay2(ControlBox* p)
 {
-	bool b[5] = { false, false, false, true, true };
-	bool blink[5] = { false, false, false, false, false};
-	if (p != NULL)
-	{		
-		//0=Brightess, 1=CCT, 2=JUDD, 3=ALLE Buttons klein Box, 4=ALLE Buttons grosser Raum
-		if (p->buttonActive > 4)  p->buttonActive = 0;
-
-		if (p->buttonActive >= 3)
-		{
-			b[0] = true; b[1] = true; b[2] = true;
-			p->setButtons(b, blink);
-		}
-		else
-		{
-			b[p->buttonActive] = true;
-			p->setButtons(b, blink);
-		}
-		p->Lights[0]->setFadeTime(DEFAULT_NEOLINK_FADETIME);
-	}
+	p->rmCmd->SendRemoteCommand(LL_AFTER_FADE_TIME, "");
 }
 
 void ControlBox::StartDeltaTest(int userid, int b0, int cct0, TestMode mode)
 {
-	deltaTest = new DeltaTest();
+	deltaTest = new DeltaTest(this->ID);
 
 	log->cout("Start Delta Test _______________");
 
@@ -354,26 +336,26 @@ void ControlBox::StopDeltaTest()
 {
 	if (deltaTest != NULL)
 	{
-		bool b[5] = { false, false, false, true, true };
-		bool blink[5] = { false, false, false, false, false };
-
 		DeltaTestInProgress = false;
 
 		delete deltaTest;
 		deltaTest = NULL;
 
-		if (testWithoutConsole)
+		//Wenn Box beendet wird und DeltaTest noch läuft
+		if (!isDone)
 		{
-			b[0] = true; b[3] = true; b[4] = true;
-		}
-		else
-		{
-			bool defaultActiveControls = ini->Read<bool>(this->Name, "ControlsDefaultActive", false);
-			b[0] = defaultActiveControls; b[1] = defaultActiveControls; b[2] = defaultActiveControls;  b[3] = defaultActiveControls; b[4] = defaultActiveControls;
-		}
 
-		setButtons(b, blink);
+			Lights[0]->setFadeTime(DEFAULT_NEOLINK_FADETIME);
+			Lights[0]->resetDefault();
+			//Buttons etc. werden von der AdminConsole gesetzt nach Kommando LL_SET_LOCKED_DELTATEST
 
-		log->cout("Finished Delta Test!_______________");
+			if (isPracticeBox)
+			{
+				bool b[5] = { true, true, true, true, true };
+				bool blink[5] = { false, false, false, false, false };
+				setButtons(b, blink);
+			}
+			log->cout("Finished Delta Test!_______________");
+		}		
 	}
 }

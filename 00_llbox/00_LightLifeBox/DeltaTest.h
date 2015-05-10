@@ -11,6 +11,7 @@ class DeltaTest
 protected:
 	PILight* light;
 	int UserID;
+	int boxid;
 
 	//Starting Values
 	int cct0;
@@ -47,7 +48,7 @@ protected:
 	};
 	
 public:
-	DeltaTest();
+	DeltaTest(int boxid);
 	~DeltaTest();
 
 	void start(PILight* _light, int Userid, int b0, int cct0, TestMode m);

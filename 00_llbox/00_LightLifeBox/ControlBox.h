@@ -34,13 +34,13 @@ protected:
 	bool Init();
 
 	ControlBox(std::string pName); //private contructor		
-
-	RemoteCommands* rmCmd;
+	
 	int addComClients();
 	bool testWithoutConsole;	
 
 	bool DeltaTestInProgress;
 	DeltaTest* deltaTest;
+	bool isPracticeBox;
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL
@@ -61,4 +61,5 @@ public:
 
 	void StartDeltaTest(int userid, int b0, int cct0, TestMode mode);
 	void StopDeltaTest();
+	RemoteCommands* rmCmd;
 };

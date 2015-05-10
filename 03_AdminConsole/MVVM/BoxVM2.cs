@@ -13,7 +13,7 @@ using System.Data;
 
 namespace LightLifeAdminConsole.MVVM
 {
-    enum BoxUIButtons { START, STOP, PREV, NEXT, PAUSE, UPDATE, SAVENEW};
+    enum BoxUIButtons { START, STOP, PREV, NEXT, PAUSE, UPDATE, SAVENEW, DELTATEST};
     //enum BoxUIButtons { START, STOP, PAUSE, UPDATE };
 
     class BoxVM2: ObservableObject
@@ -130,6 +130,10 @@ namespace LightLifeAdminConsole.MVVM
         public bool BtnStopEnabled  { get { return BtnEnabled(BoxUIButtons.STOP); } }
         public bool BtnPauseEnabled { get { return BtnEnabled(BoxUIButtons.PAUSE); } }
         public bool BtnUpdateEnabled { get { return BtnEnabled(BoxUIButtons.UPDATE); } }
+        public bool BtnPrevEnabled { get { return BtnEnabled(BoxUIButtons.PREV); } }
+        public bool BtnNextEnabled { get { return BtnEnabled(BoxUIButtons.NEXT); } }
+        public bool BtnSaveNewEnabled { get { return BtnEnabled(BoxUIButtons.SAVENEW); } }
+        public bool BtnDeltaTestEnabled { get { return BtnEnabled(BoxUIButtons.DELTATEST); } }
         
            
         private ICommand _doSequenceCommand;
@@ -171,12 +175,15 @@ namespace LightLifeAdminConsole.MVVM
             {
                 switch (cmd.ToUpper())
                 {
-                    case "START": _box.testsequence.StartNewSequence(); break;
+                    case "START": _box.testsequence.Start(); break;
                     case "PAUSE": _box.testsequence.Pause(); break;
                     case "STOP": _box.testsequence.Stop(); break;
                     case "UPDATE": _box.testsequence.UpdateRemark(SelectedRemark); break;
                     case "REFRESH": _box.Refresh(); break;
-                    case "SAVENEW": _box.testsequence.SaveNewSequence(); break;
+                    case "SAVENEW": _box.testsequence.SaveNew(); break;
+                    case "PREV": _box.testsequence.Prev(); break;
+                    case "NEXT": _box.testsequence.Next(); break;
+                    //case "DELTATEST": _box.StartDeltaTest(); break;
                 }
 
                 
@@ -191,24 +198,18 @@ namespace LightLifeAdminConsole.MVVM
         private bool BtnEnabled(BoxUIButtons btn)
         {
             //TEST TEST
-            return true;
+            //return true;
 
             if (!_box.IsActive) return false;
-
             switch (btn)
-            {                
-                case BoxUIButtons.START:    return _box.testsequence.CanStart;
-                case BoxUIButtons.STOP:     return _box.testsequence.CanStop;
-                case BoxUIButtons.PAUSE:    return _box.testsequence.CanPause;
-                case BoxUIButtons.UPDATE:
-                         //if (boxes[SelectedBox].State == BoxStatus.STARTED) return true; 
-                         //else 
-                        //kann immer upgedated werden
-                         return true;
-                case BoxUIButtons.SAVENEW: return _box.testsequence.CanStart;
-            }
+            {
+                case BoxUIButtons.DELTATEST:
+                    if (_box.IsPracticeBox) return true;
+                    break;
+                default:
+                    return _box.testsequence.btnEnabled(btn);
 
-            //RaiseAllProperties();
+            }
 
             return false;
         }

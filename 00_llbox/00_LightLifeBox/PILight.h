@@ -78,7 +78,7 @@ public:
 	void lockCurrState();
 
 	void addComClient(IBaseClient*);
-	void removeComClient(IBaseClient*);
+	void removeComClient(int);
 	void removeComClients();
 	void updateClients();
 	IBaseClient* getComClient(int index);

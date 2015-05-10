@@ -19,8 +19,10 @@ RemoteCommands::RemoteCommands(ControlBox* pBox)
 	cmdQ = new queue<RemoteCommand>();
 
 	_sendSock = new UDPSendSocket(ini->Read<string>("ControlBox_General", "Admin-Console-IP", "127.0.0.1"), ini->Read<int>(box->getName(), "Send-Command-Port", 1748));
+	log->cout(_sendSock->IPAddress + ":" + lumitech::itos(_sendSock->IPPort));
 	int p = ini->Read<int>(box->getName(), "Receive-Command-Port", 1749);
 	_recvSock = new UDPRecvSocket(p);
+	log->cout(_recvSock->IPAddress + ":" + lumitech::itos(_recvSock->IPPort));
 
 	lllogger = NULL;
 }
@@ -179,7 +181,7 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 		
 		//FW 9.4.2015 Von hier jetzt die remote Adresse und das Port nehmen
 		//to be tested
-		//_sendSock->setServerAddress(_recvSock->remoteAddress);
+		_sendSock->setServerAddress(_recvSock->remoteAddress);
 		break;
 
 	case LL_ENABLE_BUTTONS:
@@ -194,37 +196,12 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 	case LL_SET_SEQUENCEDATA:
 		SequenceHandlingCommand(cmd);
 		break;
-
 	case LL_START_DELTATEST:
 		DoStartDeltaTest(cmd);
 		break;
 
 	default:
 		s << "ExecuteCommand: unknown command:" << cmd.cmdId << " Data:" << cmd.cmdParams;
-		log->error(s.str());
-		break;
-	}
-}
-
-void RemoteCommands::SendRemoteCommand(LLMsgType cmdId, string params)
-{
-	//Hier in Queue schreiben oder gleich schicken ??
-	//cmdQ->push(cmd);
-	//go();
-
-	ostringstream s;
-
-	switch (cmdId)
-	{
-	case LL_SET_LOCKED:
-		SendLock(params);
-		break;
-	case LL_SET_LOCKED_DELTATEST:
-		SendDeltaTestLock(params);
-		break;
-
-	default:
-		s << "ExecuteCommand: unknown command:" << cmdId << " Data:" << params;
 		log->error(s.str());
 		break;
 	}
@@ -238,7 +215,7 @@ void RemoteCommands::DiscoverCommand(RemoteCommand cmd)
 	if (flds.size() < 1) return;
 
 	//Gruppe setzen die von dieser Box gesteuert wird
-	box->Lights[0]->setGroup((char)lumitech::stoi(flds["groupid"]));
+	box->Lights[0]->setGroup((char)lumitech::stoi(flds["groupid"]));	
 
 	//Send Back Name of Controlbox
 	StandardAnswer(cmd);
@@ -253,8 +230,10 @@ void RemoteCommands::SequenceHandlingCommand(RemoteCommand cmd)
 		lllogger->lldata->roomid = box->ID;
 		lllogger->lldata->userid = lumitech::stoi(flds["userid"]);
 		lllogger->lldata->vlid = lumitech::stoi(flds["vlid"]);
+		lllogger->lldata->cycleid = lumitech::stoi(flds["cycleid"]);
 		lllogger->lldata->sequenceid = lumitech::stoi(flds["sequenceid"]);
 		lllogger->lldata->stepid = lumitech::stoi(flds["stepid"]);
+		lllogger->lldata->posid = lumitech::stoi(flds["posid"]);
 		lllogger->lldata->activationState = (ActivationState)lumitech::stoi(flds["activationstate"]);
 		lllogger->lldata->msgtype = (LLMsgType)lumitech::stoi(flds["msgtype"]);
 
@@ -270,19 +249,26 @@ void RemoteCommands::SequenceHandlingCommand(RemoteCommand cmd)
 
 void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 {
-	//buttons=00;potis=1111;
+	bool b[5] = { false, false, false, false, false };
+	bool blink[5] = { false, false, false, false, false };
 	splitstring s = cmd.cmdParams;
 	map<string, string> flds = s.split2map(';','=');
 
-
 	//Need to change admin Console 
- 	for (unsigned int i = 0; i < box->Buttons.size(); i++)
+ 	for (unsigned int i = 0; i < 5; i++)
 	{
 		if (flds["buttons"].at(i) == '1')
-			box->Buttons[i]->setActive(true);
-		else
-			box->Buttons[i]->setActive(false);
+		{
+			b[i] = true;
+		}
+		if (flds["blinkleds"].at(i) == '1')
+		{
+			blink[i] = true;
+		}
+
 	}
+
+	box->setButtons(b, blink);
 
 	if (lllogger != NULL)
 	{
@@ -356,9 +342,10 @@ void RemoteCommands::GetPILEDCommand(RemoteCommand cmd)
 void RemoteCommands::StandardAnswer(RemoteCommand cmd)
 {
 	//cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID);
-	cmd.cmdParams = ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name;
+	cmd.cmdParams = ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name + ";isPracticeBox=" + lumitech::itos(box->isPracticeBox);
 	send(cmd);
 }
+
 void RemoteCommands::DoStartDeltaTest(RemoteCommand cmd)
 {
 	splitstring s = cmd.cmdParams;
@@ -372,10 +359,34 @@ void RemoteCommands::DoStartDeltaTest(RemoteCommand cmd)
 	box->StartDeltaTest(userid, br, cct, testmode);
 }
 
-
 //----------------------------------
 //    Send Remote Commands
 //----------------------------------
+
+void RemoteCommands::SendRemoteCommand(LLMsgType cmdId, string params)
+{
+	//Hier in Queue schreiben oder gleich schicken ??
+	//cmdQ->push(cmd);
+	//go();
+
+	ostringstream s;
+
+	switch (cmdId)
+	{
+	case LL_SET_LOCKED:
+		SendLock(params);
+		break;
+	case LL_SET_LOCKED_DELTATEST:
+		SendDeltaTestLock(params);
+		break;
+
+	default:
+		s << "ExecuteCommand: unknown command:" << cmdId << " Data:" << params;
+		log->error(s.str());
+		break;
+	}
+}
+
 void RemoteCommands::SendLock(string params)
 {														// do not expect any additional parameters here
 	RemoteCommand cmd;
@@ -393,6 +404,28 @@ void RemoteCommands::SendDeltaTestLock(string params)
 	cmd.cmdId = LL_SET_LOCKED_DELTATEST;
 	ostringstream ss;
 	ss << ";BoxNr=" << box->ID << ";" << box->deltaTest->getState();
+
+	cmd.cmdParams = ss.str();
+	send(cmd);
+}
+
+void RemoteCommands::AfterWait(string params)
+{														// do not expect any additional parameters here
+	RemoteCommand cmd;
+	cmd.cmdId = LL_AFTER_WAIT_TIME;
+	ostringstream ss;
+	ss << ";BoxNr=" << box->ID << ";" << box->Lights[0]->getFullState();
+
+	cmd.cmdParams = ss.str();
+	send(cmd);
+}
+
+void RemoteCommands::AfterFade(string params)
+{														// do not expect any additional parameters here
+	RemoteCommand cmd;
+	cmd.cmdId = LL_AFTER_FADE_TIME;
+	ostringstream ss;
+	ss << ";BoxNr=" << box->ID << ";" << box->Lights[0]->getFullState();
 
 	cmd.cmdParams = ss.str();
 	send(cmd);

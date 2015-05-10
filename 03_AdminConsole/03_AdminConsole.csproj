@@ -102,11 +102,16 @@
     </Compile>
     <Compile Include="BLogic\Box2.cs" />
     <Compile Include="BLogic\CIEChart.cs" />
+    <Compile Include="BLogic\DeltaTest.cs" />
     <Compile Include="BLogic\LLSQL.cs" />
     <Compile Include="BLogic\AdminBase.cs" />
     <Compile Include="BLogic\LLTestSequence.cs" />
     <Compile Include="BLogic\Login.cs" />
     <Compile Include="BLogic\LLRemoteCommands.cs" />
+    <Compile Include="MVVM\PracticeBoxVM.cs" />
+    <Compile Include="PracticeBoxWindow.xaml.cs">
+      <DependentUpon>PracticeBoxWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BrightnessWindow.xaml.cs">
       <DependentUpon>BrightnessWindow.xaml</DependentUpon>
     </Compile>
@@ -139,6 +144,10 @@
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PracticeBoxWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="BrightnessWindow.xaml">
       <SubType>Designer</SubType>

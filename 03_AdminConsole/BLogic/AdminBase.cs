@@ -2,6 +2,7 @@
 using System.Data;
 using Lumitech.Helpers;
 using LightLifeAdminConsole.Data;
+using System.Collections.Generic;
 
 namespace LightLifeAdminConsole
 {
@@ -53,6 +54,37 @@ namespace LightLifeAdminConsole
                 _sql.prep(_sqlset.insertSQL);
                 for (int i = 0; i < p.Length; i++)
                     _sql.Params[i] = p[i];
+
+                return _sql.Exec();
+            }
+
+            return 0;
+        }
+        public virtual int insert(MyDictionary d)
+        {
+            if (_sqlset.insertSQL != string.Empty)
+            {
+                string stmt = _sqlset.insertSQL;
+                foreach (KeyValuePair<string, string> pair in d)
+                {
+                    stmt = stmt.Replace(":" + pair.Key, pair.Value);
+                }
+                //to be tested
+                return _sql.Exec();
+            }
+
+            return 0;
+        }
+
+        public virtual int update(string filter, MyDictionary d)
+        {
+            if (_sqlset.updateSQL != string.Empty)
+            {
+                string stmt = _sqlset.updateSQL + " " + filter;
+                foreach (KeyValuePair<string, string> pair in d)
+                {
+                    stmt = stmt.Replace(":" + pair.Key, pair.Value);
+                }
 
                 return _sql.Exec();
             }

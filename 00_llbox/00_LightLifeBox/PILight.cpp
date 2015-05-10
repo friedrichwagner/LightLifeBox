@@ -22,11 +22,14 @@ PILight::PILight(std::string pSection)
 	this->Name = ini->ReadAttrib<string>(pSection, "name", "btn");
 	this->ID = ini->ReadAttrib<int>(pSection, "id", 0);
 
-	defaultBrightness = 100;
-	defaultCct = 4000;
+	defaultBrightness = DEFAULT_BRIGHTNESS;
+	defaultCct = DEFAULT_CCT;
 	duv = 0.0f;
 
-	string tmp = ini->Read<string>(pSection, "Default", "4000,100");
+	stringstream ss;
+	ss << defaultCct << "," << defaultBrightness;
+	
+	string tmp = ini->Read<string>(pSection, "Default", ss.str());
 	splitstring s(tmp);
 	vector<string> flds = s.split(',');
 	if (flds.size() >= 2)
@@ -37,21 +40,6 @@ PILight::PILight(std::string pSection)
 
 	MinVal = MIN_CCT;
 	MaxVal = MAX_CCT;
-
-	s = ini->ReadString(pSection, "CCTMinMax", "2500,7000");
-	flds = s.split(',');
-
-	if (flds.size() == 2)
-	{
-		MinVal = lumitech::stoi(flds[0]);
-		MaxVal = lumitech::stoi(flds[1]);
-		if (MinVal > MaxVal)
-		{
-			int tmp = MinVal;
-			MinVal = MaxVal;
-			MaxVal = tmp;
-		}
-	}
 
 	brightness = defaultBrightness;
 	cct = defaultCct;
@@ -97,25 +85,14 @@ void PILight::removeComClients()
 	ComClients.clear();
 }
 
-void PILight::removeComClient(IBaseClient* c)
+void PILight::removeComClient(int index)
 {
 
 	//only last element will be removed here
 	//logClients.pop_back();
-
-	for(vector<IBaseClient*>::const_iterator iter = ComClients.begin(); iter != ComClients.end(); ++iter)
-    {
-		if (*iter == c)
-		{
-			log->cout("remove Client:" + c->getName());
-#ifdef WIN32
-			//FW 21.11.2014 - funktionier nicht in g++4.7 ??
-			ComClients.erase(iter);
-#endif
-			return;
-		}
-	}
+	ComClients.erase(ComClients.begin()+ index);
 }
+
 IBaseClient* PILight::getComClient(int index)
 {
 	if (ComClients.size() > (unsigned int) index)
@@ -313,9 +290,14 @@ void PILight::resetDefault()
 {
 	log->cout("resetDefault()-- Start");
 
+	//setXY statt setCCT, damit bei Judd ein Fade gemacht wird
+	//aber cct auf defaultCCT Wert setzen
+	this->cct = defaultCct;
 	//setCCT(defaultCct); 
-	setXY(defaultXy); //damit gefadet wird
+	setXY(defaultXy); //damit gefadet wird	
+
 	lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
+
 	setBrightness(defaultBrightness);
 	duv = 0.0f;
 

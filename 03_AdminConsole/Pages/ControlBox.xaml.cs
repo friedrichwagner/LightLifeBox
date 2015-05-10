@@ -68,7 +68,13 @@ namespace LightLifeAdminConsole.Pages
                 {
                     DataRow row = rowview.Row;
                     int boxnr = (int)row[0];
-                    Box2.boxWindows[boxnr].Show();
+
+                    Box2.boxes[boxnr].Ping();
+
+                    if (Box2.boxes[boxnr].IsPracticeBox)
+                        Box2.practiceboxWindows[boxnr].Show();
+                    else
+                        Box2.boxWindows[boxnr].Show();
                 }
                 
             }

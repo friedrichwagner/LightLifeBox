@@ -61,6 +61,7 @@ namespace LightLifeAdminConsole.Data
         public static DataTable llstep;
         public static DataTable V_BoxState;
         public static IDictionary<string, string> lltestsequencedef;
+        public static IDictionary<int, string> lldeltatestmode;
         
         public static void InitSQLs()
         {
@@ -88,12 +89,14 @@ namespace LightLifeAdminConsole.Data
             tables.Add("LLTestSequenceHead", new SQLSet("LLTestSequenceHead"));
             tables.Add("LLTestSequencePos", new SQLSet("LLTestSequencePos"));
             tables.Add("LLBox", new SQLSet("LLBox"));
+            tables.Add("LLDeltaTest", new SQLSet("LLDeltaTest"));
+            tables.Add("LLDeltaTestMode", new SQLSet("LLDeltaTestMode"));
 
             tables.Add("LLActivationState", new SQLSet("LLActivationState"));
             tables.Add("LLStep", new SQLSet("LLStep"));
             tables.Add("LLBoxState", new SQLSet("V_BOXSTATE"));
             tables.Add("VLLTestSequence", new SQLSet("V_TestSequence"));
-            tables.Add("[LLTestSequenceDefinition]", new SQLSet("[LLTestSequenceDefinition]"));
+            tables.Add("LLTestSequenceDefinition", new SQLSet("LLTestSequenceDefinition"));
 
             tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
             tables["LLRoom"].selectSQL = "select * from LLRoom order by RoomID";
@@ -118,17 +121,23 @@ namespace LightLifeAdminConsole.Data
 
             tables["LLTestSequencePos"].selectSQL = "select * from LLTestSequencePos";
             tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, CycleID, ActivationID, StepID, PILEDID, Brightness, CCT, duv, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8, :9, :10, :11)";
-            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:1, CCT=:2, duv=:3 x=:4, y=:5, remark=:6 where PosID=:7";
+            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:brightness, CCT=:cct, duv=:duv x=:x, y=:y, piledID=:mode";
 
             tables["LLBox"].selectSQL = "select * from LLBox";
             tables["LLBox"].updateSQL = "update LLBox set active=:1, ActualSequence=:2 where boxid=:3";
 
             tables["LLActivationState"].selectSQL = "select * from LLActivationState";
             tables["LLStep"].selectSQL = "select * from LLStep";
-            tables["LLBoxState"].selectSQL = "select * from V_BOXSTATE";
+            tables["LLBoxState"].selectSQL = "select BoxID, Name, active, isPracticeBox from V_BOXSTATE";
             tables["VLLTestSequence"].selectSQL = "select * from V_TestSequence";
 
             tables["LLTestSequenceDefinition"].selectSQL = "select * from LLTestSequenceDefinition order by SequenceDef";
+
+            tables["LLDeltaTest"].selectSQL = "select * from LLDeltaTest";
+            tables["LLDeltaTest"].insertSQL = "insert into LLDeltaTest( ([UserID], [BoxID],[Brightness0],[CCT0],[x0],[y0],[testmode],[actStep],[Brightness],[cct],[x],[y],[actduv],[dBrightness],[dCCT],[duv],[frequency]) " +
+                                               " values(:userid,:boxid,:brightness0,:cct0,:x0,:y0,:mode,:actStep,:brightness,:cct,:x,:y,:actduv,:dbrightness,:dcct,:duv,:frequency)";
+
+            tables["LLDeltaTestMode"].selectSQL = "select * from LLDeltaTestMode";
 
             if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
 
@@ -167,6 +176,9 @@ namespace LightLifeAdminConsole.Data
 
             lltestsequencedef = new Dictionary<string, string>();
             getDict2(ref lltestsequencedef, tables["LLTestSequenceDefinition"], "SequenceDef, Name");
+
+            lldeltatestmode = new Dictionary<int, string>();
+            getDict(ref lldeltatestmode, tables["LLDeltaTestMode"], "TestModeID, Name");
         }
 
         public static void Done()

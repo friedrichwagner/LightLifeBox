@@ -6,31 +6,31 @@ using System.Data.SqlClient;
 using System.Net;
 using LightLife.Data;
 using Lumitech.Helpers;
+using System.Linq;
 
 namespace LightLifeAdminConsole
 {    
-    public enum BoxPotis : byte { BRIGHTNESS, CCT, JUDD };
+    //public enum BoxPotis : byte { BRIGHTNESS, CCT, JUDD };
 
     class Box2 //: IObserver<RemoteCommandData>
     {
         public static int VLID = 0;   //Damit man es zur Box schicken kann
         public static IDictionary<int, Box2> boxes = new Dictionary<int, Box2>();
         public static IDictionary<int, BoxWindow> boxWindows = new Dictionary<int, BoxWindow>();
-
-        public static IDictionary<int, Box2> practiceboxes = new Dictionary<int, Box2>();
-        public static IDictionary<int, BoxWindow> practiceboxWindows = new Dictionary<int, BoxWindow>();
+        public static IDictionary<int, PracticeBoxWindow> practiceboxWindows = new Dictionary<int, PracticeBoxWindow>();
 
         private const byte NUM_POTIS = 3;
         private const byte NUM_BUTTONS = 2;
         private const int DEFAULT_CCT = 4000; //K
-        private const int DEFAULT_BRIGHTNESS = 125; //255:2
+        private const int DEFAULT_BRIGHTNESS = 25; //100= ca. 2000lx --> 500lx= ca. 25
 
-        public int BoxNr { get; private set; }       
+        public int BoxNr { get; private set; }
+        public string Name { get; private set; }     
         public IPAddress BoxIP { get; private set; }
         public int GroupID { get; private set; }
         public bool IsActive { get; private set; }
         private AdminBase boxdata;
-        private LLRemoteCommand rCmd;
+        public LLRemoteCommand rCmd { get; private set; }
 
         public bool IsPracticeBox { get; private set; }
 
@@ -42,26 +42,22 @@ namespace LightLifeAdminConsole
         private static Logger log;
 
         public LLTestSequence testsequence;
+        public DeltaTest dTest;
 
         public static void getBoxes()
         {
             AdminBase boxes = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
-            DataTable dt = boxes.select("where active=1 and isPracticeBox=0");
+            DataTable dt = boxes.select("where active=1");
             
             //"Echte" Testboxen in Testraum 1 und Testraum 2
             for (int i=0; i < dt.Rows.Count; i++)
             {
                 Box2.boxes.Add(dt.Rows[i].Field<int>("BoxID"), new Box2(dt.Rows[i].Field<int>("BoxID")));
-                Box2.boxWindows.Add(dt.Rows[i].Field<int>("BoxID"), new BoxWindow(dt.Rows[i].Field<int>("BoxID")));
-            }
 
-            //Boxen zum Üben im Vorraum
-            DataTable dt1 = boxes.select("where active=1 and isPracticeBox=1");
-
-            for (int i = 0; i < dt1.Rows.Count; i++)
-            {
-                Box2.practiceboxes.Add(dt1.Rows[i].Field<int>("BoxID"), new Box2(dt.Rows[i].Field<int>("BoxID")));
-                Box2.practiceboxWindows.Add(dt1.Rows[i].Field<int>("BoxID"), new BoxWindow(dt.Rows[i].Field<int>("BoxID")));
+                if (dt.Rows[i].Field<int>("isPracticeBox")==0)
+                    Box2.boxWindows.Add(dt.Rows[i].Field<int>("BoxID"), new BoxWindow(dt.Rows[i].Field<int>("BoxID")));
+                else
+                    Box2.practiceboxWindows.Add(dt.Rows[i].Field<int>("BoxID"), new PracticeBoxWindow(dt.Rows[i].Field<int>("BoxID")));
             }
         }
 
@@ -82,6 +78,7 @@ namespace LightLifeAdminConsole
                 GroupID = dt.Rows[0].Field<int>("GroupID");
                 int sendport = dt.Rows[0].Field<int>("sendPort");
                 int recvport = dt.Rows[0].Field<int>("recvPort");
+                Name = dt.Rows[0].Field<string>("Name");
 
                 IsPracticeBox = (dt.Rows[0].Field<int>("IsPracticeBox") ==1) ? true : false;
 
@@ -89,16 +86,16 @@ namespace LightLifeAdminConsole
                 rCmd.ReceiveData += ReceiveDatafromControlBox;
             }
 
-            IsActive = rCmd.Ping(GroupID);
+            IsActive = rCmd.Ping(GroupID, IsPracticeBox);
 
             testsequence = new LLTestSequence(boxnr, -1);
 
             if (IsActive)
             {
                 if (IsPracticeBox)
-                    EnableBoxButtons("11111"); //Alle Buttons aktivieren
+                    EnableBoxButtons("11111", "00000"); //Alle Buttons aktivieren
                 else
-                    EnableBoxButtons(testsequence.EnabledButtons);
+                    EnableBoxButtons(testsequence.EnabledButtons, "00000");
             }
         }
 
@@ -117,7 +114,8 @@ namespace LightLifeAdminConsole
             IsPracticeBox = false;
             BoxIP = IPAddress.Loopback;
             lastmsgtype = LLMsgType.LL_NONE;
-            lastBrightness = 0;              
+            lastBrightness = 0;
+            dTest = null;
         }
 
         public void ReloadSequence(int pSeqid)
@@ -130,7 +128,7 @@ namespace LightLifeAdminConsole
 
         public bool Ping()
         {
-            IsActive = rCmd.Ping(GroupID);
+            IsActive = rCmd.Ping(GroupID, IsPracticeBox);
             return IsActive;
         }
 
@@ -147,9 +145,9 @@ namespace LightLifeAdminConsole
         }
      
 
-        private void EnableBoxButtons(string enabledButtons)
+        private void EnableBoxButtons(string enabledButtons, string blinkleds)
         {
-            string Params = ";buttons=" + enabledButtons;
+            string Params = ";buttons=" + enabledButtons + ";blinkleds=" + blinkleds;
 
            rCmd.EnableButtons(Params);           
         }
@@ -164,10 +162,23 @@ namespace LightLifeAdminConsole
                         IsActive = true;
                         break;
                     case (int)LLMsgType.LL_SET_LOCKED:
-                        //NextStep();
+                        testsequence.UpdatePos(rCmd.cmdParams);
                         break;
 
                     case (int)LLMsgType.LL_SET_DEFAULT:                        
+                        break;
+
+                    case (int)LLMsgType.LL_SET_LOCKED_DELTATEST:
+                        LockDeltaTest(rCmd.cmdParams);
+                        break;
+
+                    case (int)LLMsgType.LL_AFTER_WAIT_TIME:
+                        //SendNextStep(rCmd.cmdParams);
+                        break;
+
+
+                    case (int)LLMsgType.LL_AFTER_FADE_TIME:
+                        //SendNextStep(rCmd.cmdParams);
                         break;
 
                     default:
@@ -201,16 +212,27 @@ namespace LightLifeAdminConsole
                 lastBrightness = brightness;
 
                 SetBoxTestSequenceState(msgtype);
-                SetBoxToDefault(brightness); //Set Box to Default Settings
-                EnableBoxButtons(); // Send Controlbox Buttons
-                //testsequence.UpdateHeadState(); // Update Database Table TestSequenceHeader
+                SetBoxToDefault(brightness);    //Set Box to Default Settings
+                if (IsPracticeBox)
+                    EnableBoxButtons("11111", "00000"); //Alle Buttons aktivieren
+                else
+                    EnableBoxButtons(testsequence.EnabledButtons, "00000");           // Send Controlbox Buttons
             }
         }
 
-        public void StartDeltaTest(PILEDMode mode, int CCT, int brightnessLevel)
+        /*public void StartDeltaTest(PILEDMode mode, int CCT, int brightnessLevel, int UserID)
         {
-            rCmd.SetPILED(mode, brightnessLevel, CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f }, 100, 0.0f);
-            rCmd.StartDeltaTest();
+            string Params = ";mode=" + ((int)mode).ToString() + ";cct=" + CCT.ToString() + ";brightness=" + brightnessLevel.ToString() + ";userid=" + UserID.ToString();
+            rCmd.StartDeltaTest(Params);
+        }*/
+
+        private void LockDeltaTest(string Params)
+        {
+            if (dTest != null)
+            {
+                dTest.Save(Params);
+                dTest = null;
+            }
         }
     }
 }

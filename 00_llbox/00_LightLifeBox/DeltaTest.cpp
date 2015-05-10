@@ -2,12 +2,13 @@
 #include "helpers.h"
 #include "Photometric.h"
 
-DeltaTest::DeltaTest()
+DeltaTest::DeltaTest(int _boxid)
 {
 	ini = Settings::getInstance();
+	boxid = _boxid;
 
 	//Starting Values
-	cct0 = 4000; brightness0 = 100;
+	cct0 = DEFAULT_CCT; brightness0 = DEFAULT_BRIGHTNESS;
 	fCieCoords_t cie = CCT2xy(cct0);
 	xy0[0] = cie.x; xy0[1] = cie.y;
 
@@ -141,7 +142,7 @@ string DeltaTest::getState()
 	//damit sicher der actStep Status gesetzt ist, und nicht der Grundzustand
 	SetLightState(actStep);
 
-	ss << "userid=" << UserID << ";brightness0=" << brightness0 << ";cct0=" << cct0 << ";x0=" << xy0[0] << ";y0=" << xy0[1] << ";mode=" << mode
+	ss << "userid=" << UserID << ";boxid=" << boxid << ";brightness0=" << brightness0 << ";cct0=" << cct0 << ";x0=" << xy0[0] << ";y0=" << xy0[1] << ";mode=" << mode
 		<< ";actStep=" << actStep << ";brightness = " << brightness << ";cct = " << cct << ";x = " << xy[0] << ";y = " << xy[1] << ";actduv=" << actDuv
 		<< ";dbrightness=" << dbrightness << ";dcct=" << dcct << ";duv=" << duv << ";frequency=" << frequency;
 

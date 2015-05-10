@@ -105,3 +105,38 @@ and v.PosID = (select ActualPosID from LLTestSequenceHead where SequenceID= v.Se
 
 
 
+drop table LLData;
+create table LLData
+(
+	DataID int identity NOT NULL primary key,
+	RoomID int not null,
+	GroupID int not null,
+	UserID int not null,	
+	VLID int not null,	
+	SceneID int not null,
+	CycleID int not null,
+	SequenceID int not null,
+	PosID int not null,
+	ActivationID int not null,
+	StepID int not null,
+	Brightness int not null,
+	CCT	int not null,
+	duv	float not null,
+	x float not null, 
+	y float not null,
+	fadetime int not null,
+	pimode varchar(15) not null,	
+	sender varchar(15) not null,
+	receiver varchar(15) not null,
+	MsgTypeID int not null,	
+	Remark varchar(max),
+	IP varchar(25),
+	added datetime default getdate()
+);
+
+create table LLDeltaTestMode
+(
+	TestModeID int NOT NULL primary key,
+	Name varchar(50) not null,
+	added datetime default getdate()
+);

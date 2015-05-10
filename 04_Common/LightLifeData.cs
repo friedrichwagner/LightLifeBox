@@ -38,12 +38,12 @@ namespace LightLife.Data
         LL_SET_LIGHTS = 10,
         LL_CALL_SCENE = 20,
 
-        LL_START_TESTSEQUENCE = 30,
+        /*LL_START_TESTSEQUENCE = 30,
         LL_STOP_TESTSEQUENCE = 31,
         LL_PAUSE_TESTSEQUENCE = 32,
         LL_NEXT_TESTSEQUENCE_STEP = 33,
         LL_PREV_TESTSEQUENCE_STEP = 34,
-        LL_RELOAD_TESTSEQUENCE = 35,
+        LL_RELOAD_TESTSEQUENCE = 35,*/
 
         //AdminConsole -->Box
         LL_DISCOVER = 50,
@@ -55,8 +55,10 @@ namespace LightLife.Data
 
         //Box ->AdminConsole
         LL_SET_LOCKED = 100,
-        LL_SET_DEFAULT = 101,	
+        LL_SET_DEFAULT = 101,
         LL_SET_LOCKED_DELTATEST = 102,
+        LL_AFTER_WAIT_TIME = 103,
+        LL_AFTER_FADE_TIME = 104
     };
 
     public class PILEDData
@@ -269,6 +271,14 @@ namespace LightLife.Data
 
     public class LightLifeData
     {
+        public const int DEFAULT_NEOLINK_FADETIME = 300;
+        public const int MINIMUM_SEND_TIME = 100;
+        public const int DEFAULT_CCT = 4000;
+        public const int DEFAULT_BRIGHTNESS = 50;
+        public const int MIN_CCT = 2500;
+        public const int MAX_CCT = 7000;
+
+
         public int roomid;
         public int userid;
         public int vlid;
@@ -279,6 +289,9 @@ namespace LightLife.Data
         public string ip;
         public byte[] buttons = new byte[4];
         public ActivationState activationstate;
+
+        public int cycleid;
+        public int posid;
 
         public PILEDData piled;
 
@@ -301,6 +314,8 @@ namespace LightLife.Data
             d.TryGetIntValue("vlid", out vlid);
             d.TryGetIntValue("sceneid", out sceneid);
             d.TryGetIntValue("sequenceid", out sequenceid);
+            d.TryGetIntValue("cycleid", out cycleid);
+            d.TryGetIntValue("posid", out posid);
             d.TryGetIntValue("stepid", out stepid);
 
             int m;
@@ -320,7 +335,9 @@ namespace LightLife.Data
             userid = 0;
             vlid = 0;
             sceneid = 0;
+            cycleid = 0;
             sequenceid = 0;
+            posid = 0;
             stepid = 0;
             remark = String.Empty;
             activationstate = ActivationState.none;
@@ -380,3 +397,4 @@ namespace LightLife.Data
 
     }
 }
+

@@ -87,8 +87,8 @@ namespace LightLifeAdminConsole
 
         public void Close()
         {
-            sendClient.Close();
             recvClient.Close();
+            sendClient.Close();            
         }
 
         protected int send(LLMsgType cmd, string data)
@@ -214,25 +214,34 @@ namespace LightLifeAdminConsole
             {
                 Socket recvSock = (Socket)result.AsyncState;
                 EndPoint clientEP = receivedfromEP;
-                int msgLen = recvSock.EndReceiveFrom(result, ref clientEP);
 
-                string returnData = Encoding.ASCII.GetString(recvBuf);
-
-                if (ReceiveData != null)
+                if (recvClient.Client != null)
                 {
-                    RemoteCommandData rmCmd = new RemoteCommandData(returnData);
-                    ReceiveData(rmCmd);
+                    int msgLen = recvSock.EndReceiveFrom(result, ref clientEP);
+
+                    string returnData = Encoding.ASCII.GetString(recvBuf);
+
+                    if (ReceiveData != null)
+                    {
+                        RemoteCommandData rmCmd = new RemoteCommandData(returnData);
+                        ReceiveData(rmCmd);
+                    }
                 }
             }
             catch (SocketException se)
             {
                 sockEx = se;
             }
+            catch (ObjectDisposedException)
+            {
+                //Silently ignore!!
+            }
             finally
             {                      
                 //Restart Receiving
                 isReceiving = false;
-                StartReceiveAsync();
+                if (recvClient.Client != null)
+                    StartReceiveAsync();
             }
         }
 
@@ -300,9 +309,10 @@ namespace LightLifeAdminConsole
             //ReceiveData += ReceiveUDP;
         }
 
-        public bool Ping(int groupid)
+        public bool Ping(int groupid, bool isPracticeBox)
         {
-            return SendAndReceiveBool(LLMsgType.LL_DISCOVER, ";groupid=" + groupid.ToString(), true);
+            string Params = ";groupid=" + groupid.ToString() + ";ispracticebox=" + ((isPracticeBox) ? "1" : "0");
+            return SendAndReceiveBool(LLMsgType.LL_DISCOVER, Params, true);
         }
 
         public bool EnableButtons(string Params)
@@ -324,6 +334,11 @@ namespace LightLifeAdminConsole
         public bool SetSequence(string Params)
         {
             return SendAndReceiveBool(LLMsgType.LL_SET_SEQUENCEDATA, Params, false);
+        }
+
+        public bool StartDeltaTest(string Params)
+        {
+            return SendAndReceiveBool(LLMsgType.LL_START_DELTATEST, Params, false);
         }
     }
 }

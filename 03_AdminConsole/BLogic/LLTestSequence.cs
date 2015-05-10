@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using LightLifeAdminConsole.Data;
 using System.Data;
 using System.Data.SqlClient;
+using LightLifeAdminConsole.MVVM;
+using Lumitech.Helpers;
 
 
 namespace LightLifeAdminConsole
@@ -68,8 +70,7 @@ namespace LightLifeAdminConsole
             _boxnr = boxnr;
             head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
             pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
-            def = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceDefinition"]);
-            
+            def = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceDefinition"]);           
 
             string filter=String.Empty;
             if (seqid > 0)
@@ -89,7 +90,8 @@ namespace LightLifeAdminConsole
             {
                 SequenceID = dt.Rows[0].Field<int>("SequenceID");
                 ProbandID = dt.Rows[0].Field<int>("UserID");
-                StepID = (TestSequenceStep)dt.Rows[0].Field<int>("ActualPosID");
+                PosID = dt.Rows[0].Field<int>("ActualPosID");
+                //StepID = (TestSequenceStep)dt.Rows[0].Field<int>("ActualPosID");
                 Remark = dt.Rows[0].Field<string>("Remark");
                 State = (TestSequenceState)dt.Rows[0].Field<int>("TestStateID");
 
@@ -109,7 +111,7 @@ namespace LightLifeAdminConsole
 
         #region Sequence - Head
 
-        public int SaveNewSequence()
+        public int SaveNew()
         {
             CreateSequence();
             State = TestSequenceState.NONE;
@@ -117,62 +119,46 @@ namespace LightLifeAdminConsole
             return SequenceID;
         }
 
-        public int StartSequence()
+        public int Start()
         {
-            if (!CanStart)
-                throw new ArgumentException("Testsquenz nicht gestoppt!");
-
             State = TestSequenceState.IN_PROGRESS;
             UpdateHeadState();
 
             return SequenceID;
         }
 
-        public bool CanStart
-        {
-            get
-            {
-                if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.PAUSED) || (State == TestSequenceState.NONE) || (State == TestSequenceState.FINISHED)) return true;
-                return false;
-            }
-        }
-
         public void Stop()
         {
-            if (!CanStop)            
-                throw new ArgumentException("Testsquenz nicht gestartet!");
             State = TestSequenceState.STOPPED;
             //UpdateVarious(LLMsgType.LL_STOP_TESTSEQUENCE, 0);
             UpdateHeadState();
         }
 
-        public bool CanStop
-        {
-            get
-            {
-                if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT) || (State == TestSequenceState.PAUSED)) return true;
-                return false;
-            }
-        }
-
         public void Pause()
         {
-            if (!CanPause)
-                throw new ArgumentException("Testsquenz nicht gestartet!");
-
             State = TestSequenceState.PAUSED;
             //UpdateVarious(LLMsgType.LL_PAUSE_TESTSEQUENCE, 0);
             UpdateHeadState();
         }
 
-        public bool CanPause
+        public void Prev()
         {
-            get
-            {
-                if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT)) return true;
-                return false;
-            }
+            State = TestSequenceState.IN_PROGRESS;
+            PosID++;
+            getPos();
+            //UpdateVarious(LLMsgType.LL_PAUSE_TESTSEQUENCE, 0);
+            UpdateHeadState();
         }
+
+        public void Next()
+        {
+            State = TestSequenceState.IN_PROGRESS;
+            PosID++;
+            getPos();
+            //UpdateVarious(LLMsgType.LL_PAUSE_TESTSEQUENCE, 0);
+            UpdateHeadState();
+        }
+
 
         private void CreateSequence()
         {
@@ -243,16 +229,6 @@ namespace LightLifeAdminConsole
         }
 
 
-
-        private void InsertPos()
-        {
-            
-
-            DataTable dt = pos.select(" where SequenceID=:1 and ActivationID=:2 and StepID=:3 order by PosID desc");
-            if (dt.Rows.Count > 0) PosID = dt.Rows[0].Field<int>("PosID");
-            else throw new ArgumentException("No TestSequence Position found!");
-        }
-
         private int getNextHeadID()
         {
             string stmt = "select IsNull(Max(SequenceID)+1,1) from LLTestSequenceHead";
@@ -279,34 +255,69 @@ namespace LightLifeAdminConsole
             LLSQL.cmd.Exec();
         }
 
+        public bool btnEnabled(BoxUIButtons btn)
+        {
+            switch (btn)
+            {
+                case BoxUIButtons.START:
+                    if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.PAUSED) || (State == TestSequenceState.NONE) || (State == TestSequenceState.FINISHED)) return true;
+                    break;
+
+                case BoxUIButtons.STOP:
+                    if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT) || (State == TestSequenceState.PAUSED)) return true;
+                    break;
+
+                case BoxUIButtons.PREV:
+                    if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT) || (State == TestSequenceState.PAUSED) && (PosID > 1)) return true;
+                    break;
+
+                case BoxUIButtons.NEXT:
+                    if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT) || (State == TestSequenceState.PAUSED) && (PosID < 22)) return true;
+                    break;
+
+                case BoxUIButtons.PAUSE:
+                    if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT)) return true;
+                    break;
+
+                case BoxUIButtons.UPDATE:
+                    //if (boxes[SelectedBox].State == BoxStatus.STARTED) return true; 
+                    //else 
+                    //kann immer upgedated werden
+                    return true;
+
+                case BoxUIButtons.SAVENEW:
+                    if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.NONE) || (State == TestSequenceState.FINISHED)) return true;
+                    break;
+            }
+
+            return false;
+        }
+
         #endregion Sequence
 
         #region Sequence - Pos(Step)
 
-
-        public void StartStep()
+        private void getPos()
         {
-            InsertStep();
-
-            State = TestSequenceState.IN_PROGRESS;
-
-            UpdateHeadState();
+            DataTable dt = pos.select(" where PosID=" + PosID.ToString());
+            if (dt.Rows.Count > 0)
+            {
+                CycleID = dt.Rows[0].Field<int>("CycleID");
+                ActivationID = dt.Rows[0].Field<int>("ActivationID");
+                PosID = dt.Rows[0].Field<int>("PosID");
+                StepID = (TestSequenceStep)dt.Rows[0].Field<int>("StepID");
+            }
+            else throw new ArgumentException("No TestSequence Position found!");
         }
 
-
-        public void UpdateStep()
+        public void UpdatePos(string Params)
         {
+            string[] sarr = Params.Split(';');
+            Dictionary<string, string> dtmp = sarr.Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
+            MyDictionary d = new MyDictionary(dtmp);
 
+            pos.update("where PosID="+PosID.ToString(), d);
         }
-
-        public bool checkStepExists()
-        {
-            DataTable dt = pos.execQuery(" where SequenceID=:1 and ActivationID=:2 and StepID=:3", new string[] { SequenceID.ToString(), ActivationID.ToString(), StepID.ToString() }, "");
-
-            if (dt.Rows.Count > 0) return true;
-            return false;
-        }
-
         #endregion
 
     }

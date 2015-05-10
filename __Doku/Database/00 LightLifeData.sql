@@ -324,12 +324,14 @@ insert into LLActivationState(ActivationID, Name) values(1, 'activating');
 insert into LLActivationState(ActivationID, Name) values(2, 'relaxing');
 
 ----------
+delete from LLStep;
 insert into LLStep(StepID, Name, EnabledButtons) values (0, 'STEP_STOPPED', '000000000');
-insert into LLStep(StepID, Name, EnabledButtons) values (1, 'STEP_BRIGHTNESS', '1000000000');
-insert into LLStep(StepID, Name, EnabledButtons) values (2, 'STEP_CCT', '0100000000');
-insert into LLStep(StepID, Name, EnabledButtons) values (3, 'STEP_JUDD', '0010000000');
-insert into LLStep(StepID, Name, EnabledButtons) values (4, 'STEP_ALL', '1110000000');
-insert into LLStep(StepID, Name, EnabledButtons) values (5, 'STEP_ALL_BIG', '1110000000');
+insert into LLStep(StepID, Name, EnabledButtons) values (1, 'STEP_BRIGHTNESS', '1001100000');
+insert into LLStep(StepID, Name, EnabledButtons) values (2, 'STEP_CCT', '0101100000');
+insert into LLStep(StepID, Name, EnabledButtons) values (3, 'STEP_JUDD', '0011100000');
+insert into LLStep(StepID, Name, EnabledButtons) values (4, 'STEP_ALL', '1111100000');
+insert into LLStep(StepID, Name, EnabledButtons) values (5, 'STEP_ALL_BIG', '1111100000');
+insert into LLStep(StepID, Name, EnabledButtons) values (6, 'STEP_DELTATEST', '0001100000');
 
 ----------
 delete from LLTestSequenceState;

@@ -5,6 +5,8 @@
 
 #define DEFAULT_NEOLINK_FADETIME 300
 #define MINIMUM_SEND_TIME 100
+#define DEFAULT_CCT 4000
+#define DEFAULT_BRIGHTNESS 50
 
 enum ActivationState
 {
@@ -31,12 +33,12 @@ enum LLMsgType
 	LL_SET_LIGHTS = 10,
 	LL_CALL_SCENE = 20,
 
-	LL_START_TESTSEQUENCE = 30,
+	/*LL_START_TESTSEQUENCE = 30,
 	LL_STOP_TESTSEQUENCE = 31,
 	LL_PAUSE_TESTSEQUENCE = 32,
 	LL_NEXT_TESTSEQUENCE_STEP = 33,
 	LL_PREV_TESTSEQUENCE_STEP = 34,
-	LL_RELOAD_TESTSEQUENCE = 35,
+	LL_RELOAD_TESTSEQUENCE = 35,*/
 
 	//AdminConsole -->Box
 	LL_DISCOVER = 50,
@@ -50,6 +52,8 @@ enum LLMsgType
 	LL_SET_LOCKED = 100,
 	LL_SET_DEFAULT = 101,	
 	LL_SET_LOCKED_DELTATEST = 102,
+	LL_AFTER_WAIT_TIME = 103,
+	LL_AFTER_FADE_TIME = 104
 };
 
 struct LightLifeData
@@ -57,9 +61,11 @@ struct LightLifeData
 	int roomid;
 	int userid;
 	int vlid;
+	int cycleid;
 	int sceneid;
 	int sequenceid;
 	int stepid;
+	int posid;
 
 	int groupid;
 	int cct;
@@ -78,8 +84,8 @@ struct LightLifeData
 
 	LightLifeData(string pSender)
 	{
-		roomid = 0;		userid = 0;			vlid = 0;
-		sceneid = 0;	sequenceid = 0;		stepid = 0;		activationState = none;
+		roomid = 0;		userid = 0;			vlid = 0;		posid = 0;
+		cycleid = 0;	sceneid = 0;	sequenceid = 0;		stepid = 0;		activationState = none;
 
 		groupid = 0;	brightness = 255; 
 		cct = 2700;  	duv = 0.0f; 	fadetime = 0;		
@@ -92,8 +98,8 @@ struct LightLifeData
 
 	LightLifeData(LightLifeData* old)
 	{
-		roomid = old->roomid;		userid = old->userid;			vlid = old->vlid;
-		sceneid = old->sceneid;		sequenceid = old->sequenceid;	stepid = old->stepid;		activationState = old->activationState;
+		roomid = old->roomid;		userid = old->userid;			vlid = old->vlid;	posid = old->posid;
+		cycleid = old->cycleid;		 sceneid = old->sceneid;		sequenceid = old->sequenceid;	stepid = old->stepid;		activationState = old->activationState;
 
 		groupid = old->groupid;	brightness = old->brightness;
 		cct = old->cct;  	duv = old->duv; 	fadetime = old->fadetime;
@@ -109,7 +115,7 @@ struct LightLifeData
 		ostringstream s;
 
 		//LightLifeData
-		s << "roomid=" << roomid << ";userid=" << userid << ";vlid=" << vlid << ";sceneid=" << sceneid << ";sequenceid=" << sequenceid << ";stepid=" << stepid;
+		s << "roomid=" << roomid << ";userid=" << userid << ";vlid=" << vlid << ";sceneid=" << sceneid << ";sequenceid=" << sequenceid << ";stepid=" << stepid << ";posid=" << posid << ";cycleid=" << cycleid;
 		//PILEDData
 		s << ";groupid=" << groupid << ";mode=" << mode << ";brightness=" << brightness << ";cct=" << cct << ";duv=" << duv << ";x=" << xy[0] << ";y=" << xy[1] << ";r=" << rgb[0] << ";g=" << rgb[1] << ";b=" << rgb[2] << ";fadetime=" << fadetime;
 		//Others

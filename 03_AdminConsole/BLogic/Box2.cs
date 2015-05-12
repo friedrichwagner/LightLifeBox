@@ -120,10 +120,12 @@ namespace LightLifeAdminConsole
 
         public void ReloadSequence(int pSeqid)
         {
-            testsequence = new LLTestSequence(BoxNr, pSeqid);
+            LLTestSequence Newtestsequence = new LLTestSequence(BoxNr, pSeqid);
 
-            if (testsequence.SequenceID != pSeqid)
+                if (Newtestsequence.SequenceID != pSeqid)            
                 throw new ArgumentException("Sequence ID does not exist (on this Box)!");
+
+            testsequence = Newtestsequence;
         }
 
         public bool Ping()

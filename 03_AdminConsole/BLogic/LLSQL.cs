@@ -129,9 +129,10 @@ namespace LightLifeAdminConsole.Data
             tables["LLActivationState"].selectSQL = "select * from LLActivationState";
             tables["LLStep"].selectSQL = "select * from LLStep";
             tables["LLBoxState"].selectSQL = "select BoxID, Name, active, isPracticeBox from V_BOXSTATE";
+            //tables["VLLTestSequence"].selectSQL = "select PosID, CycleID, ActivationName, StepName, Brightness, CCT, duv updated from V_TestSequence";
             tables["VLLTestSequence"].selectSQL = "select * from V_TestSequence";
 
-            tables["LLTestSequenceDefinition"].selectSQL = "select * from LLTestSequenceDefinition order by SequenceDef";
+            tables["LLTestSequenceDefinition"].selectSQL = "select * from LLTestSequenceDefinition";
 
             tables["LLDeltaTest"].selectSQL = "select * from LLDeltaTest";
             tables["LLDeltaTest"].insertSQL = "insert into LLDeltaTest( ([UserID], [BoxID],[Brightness0],[CCT0],[x0],[y0],[testmode],[actStep],[Brightness],[cct],[x],[y],[actduv],[dBrightness],[dCCT],[duv],[frequency]) " +

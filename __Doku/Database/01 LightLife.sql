@@ -61,6 +61,8 @@ create table LLTestSequencePos
 	primary key(SequenceID, CycleID, ActivationID, StepID)
 );
 
+create unique index idxTestSequencePos_PosID on LLTestSequencePos(POSID);
+
 CREATE TRIGGER trUpdateLLTestSequencePos on LLTestSequencePos
    AFTER UPDATE
 AS 
@@ -75,13 +77,13 @@ GO
 drop view V_TestSequence 
 create view V_TestSequence 
 (
-BoxID, SequenceID, SequenceDef, UserID, TestStateID, StateName, PosID, ActivationID, ActivationName, StepID, StepName, 
-PILEDID, PILEDMode, brightness, CCT, duv, added, updated
+BoxID, SequenceID, SequenceDef, UserID, TestStateID, StateName, PosID, CycleID, ActivationID, ActivationName, StepID, StepName, 
+PILEDID, PILEDMode, brightness, CCT, duv, added, updated, remark
 )
 as
-select h.SequenceID, h.SequenceDef, h.BoxID, h.UserID, h.TestStateID, st.Name,
-		p.PosID, p.ActivationID, a.Name, p.StepID, s.Name, 
-		p.PILEDID, m.PILEDMode, p.Brightness, p.CCT, p.duv, p.added, p.updated
+select h.BoxID, h.SequenceID, h.SequenceDef, h.UserID, h.TestStateID, st.Name,
+		p.PosID, p.CycleID, p.ActivationID, a.Name, p.StepID, s.Name, 
+		p.PILEDID, m.PILEDMode, p.Brightness, p.CCT, p.duv, p.added, p.updated, p.remark
 		from LLTestSequenceHead h, LLTestSequencePos p, LLActivationState a, LLStep s, LlTestSequenceState st, LLPILedMode m
 where h.SequenceID = p.SequenceID
 and p.ActivationID = a.ActivationID

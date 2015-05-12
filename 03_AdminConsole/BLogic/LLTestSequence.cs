@@ -14,11 +14,12 @@ namespace LightLifeAdminConsole
 {
     public enum TestSequenceState { NONE=0, IN_PROGRESS=10, TESTING=20, FADING_OUT=30, PAUSED=40, STOPPED=90, FINISHED=99}; //identisch Tabelle LLTestSequenceState
     public enum TestSequenceStep { STOPPED, BRIGHTNESS, CCT, JUDD, ALL, ALL_BIG }; // identisch Tabelle LLStep
+    public enum TestSequenceActivation { NONE=0, ACTIVATING=1, RELAXING=2 }; // identisch Tabelle LLStep
 
     class LLTestSequence
     {
         private const int DEFAULT_CCT = 4000; //K
-        private const int DEFAULT_BRIGHTNESS = 125; //255:2
+        private const int DEFAULT_BRIGHTNESS = 50; //255:2
 
         public int SequenceID { get; private set; }
 
@@ -51,6 +52,8 @@ namespace LightLifeAdminConsole
                         _stepID = value;
                         EnabledButtons = dr[0].Field<string>("EnabledButtons");
                     }
+                    else
+                        EnabledButtons = "00000";
             } 
         }
 
@@ -75,12 +78,15 @@ namespace LightLifeAdminConsole
             string filter=String.Empty;
             if (seqid > 0)
                 filter = " where BoxID=:1 and SequenceID=" + seqid.ToString();
-            else
+            else if (seqid < 0) //letzte holen
                 filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1) ";
+            else //neue Sequeunce
+            {
+                filter = " where BoxID=:1 and 1=0";
+            }
 
             DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].selectSQL, new string[] { boxnr.ToString() }, filter);
             
-
             InitSequence(dt1);
         }
 
@@ -94,18 +100,16 @@ namespace LightLifeAdminConsole
                 //StepID = (TestSequenceStep)dt.Rows[0].Field<int>("ActualPosID");
                 Remark = dt.Rows[0].Field<string>("Remark");
                 State = (TestSequenceState)dt.Rows[0].Field<int>("TestStateID");
+                SequenceDef = dt.Rows[0].Field<string>("SequenceDef");
+                ActivationID = (int)TestSequenceActivation.NONE;
 
-                /*if (IsActive)
-                {
-                    int brightness = 0;
-                    if (State == TestSequenceState.STARTED) brightness = 100;
-                    UpdateVarious(LLMsgType.LL_RELOAD_TESTSEQUENCE, brightness);
-                }*/
+                getPos();
             }
             else
             {
                 StepID = TestSequenceStep.STOPPED;
                 Remark = String.Empty;
+                SequenceDef = String.Empty;
             }
         }
 
@@ -171,7 +175,9 @@ namespace LightLifeAdminConsole
                 head.Transaction = tran;
                 head.insert(new string[] { SequenceID.ToString(),_SequenceDef, _boxnr.ToString(), ProbandID.ToString(), "0", ((int)TestSequenceState.NONE).ToString(), "0", String.Empty });
 
-                CreateSequencePos(tran);
+                int firstpos = CreateSequencePos(tran);
+
+                head.update("", new string[] { ((int)TestSequenceState.NONE).ToString(), firstpos.ToString(), SequenceID.ToString() });
 
                 LLSQL.cmd.Transaction.Commit();
             }
@@ -182,16 +188,14 @@ namespace LightLifeAdminConsole
             }
         }
 
-        private void CreateSequencePos(SqlTransaction tran)
+        private int  CreateSequencePos(SqlTransaction tran)
         {
             def.Transaction = tran;
-            DataTable dt1 = def.select("where SequenceDef='" + _SequenceDef + "'");
+            DataTable dt1 = def.select(" where SequenceDef='" + _SequenceDef + "'");
             if (dt1.Rows.Count == 1)
             {
-                int ActivationID2 = 0;
-
-                if (ActivationID == 0) ActivationID2 = 1;
-                else ActivationID2 = 0;
+                int ActivationID2 = (int)TestSequenceActivation.ACTIVATING;
+                if (ActivationID == (int)TestSequenceActivation.ACTIVATING) ActivationID2 = (int)TestSequenceActivation.RELAXING;
 
                 pos.Transaction = tran;
                 //Zyklus 1 - Aktivierend oder Entspannend
@@ -214,7 +218,7 @@ namespace LightLifeAdminConsole
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //Hier im grossen Raum, nochmal ALLE
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 2 - Aktivierend oder Entspannend (gegenteil von oben)  
@@ -223,9 +227,11 @@ namespace LightLifeAdminConsole
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //Hier im grossen Raum, nochmal ALLE
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
             }
+
+            return getPos(true);
         }
 
 
@@ -286,7 +292,8 @@ namespace LightLifeAdminConsole
                     return true;
 
                 case BoxUIButtons.SAVENEW:
-                    if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.NONE) || (State == TestSequenceState.FINISHED)) return true;
+                    //if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.NONE) || (State == TestSequenceState.FINISHED)) return true;
+                    if ((SequenceID <= 0) && (ProbandID > 0) && (ActivationID > 0) && (SequenceDef.Length > 0)) return true;
                     break;
             }
 
@@ -297,17 +304,34 @@ namespace LightLifeAdminConsole
 
         #region Sequence - Pos(Step)
 
-        private void getPos()
+        private int getPos(bool firstpos=false)
         {
-            DataTable dt = pos.select(" where PosID=" + PosID.ToString());
-            if (dt.Rows.Count > 0)
+            int ret = 0;
+
+            if (firstpos)
             {
-                CycleID = dt.Rows[0].Field<int>("CycleID");
-                ActivationID = dt.Rows[0].Field<int>("ActivationID");
-                PosID = dt.Rows[0].Field<int>("PosID");
-                StepID = (TestSequenceStep)dt.Rows[0].Field<int>("StepID");
+                DataTable dt = pos.select(" where SequenceID=" + SequenceID.ToString()+" order by PosID");
+                if (dt.Rows.Count > 0)
+                {
+                    ret = PosID = dt.Rows[0].Field<int>("PosID");
+                }
             }
-            else throw new ArgumentException("No TestSequence Position found!");
+            else
+            {
+                DataTable dt = pos.select(" where PosID=" + PosID.ToString());
+                if (dt.Rows.Count > 0)
+                {
+                    CycleID = dt.Rows[0].Field<int>("CycleID");
+                    ActivationID = dt.Rows[0].Field<int>("ActivationID");
+                    PosID = dt.Rows[0].Field<int>("PosID");
+                    StepID = (TestSequenceStep)dt.Rows[0].Field<int>("StepID");
+
+                    ret = PosID;
+                }
+                else throw new ArgumentException("No TestSequence Position found!");
+            }
+
+            return ret;
         }
 
         public void UpdatePos(string Params)

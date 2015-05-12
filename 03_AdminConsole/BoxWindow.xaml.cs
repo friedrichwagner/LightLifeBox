@@ -33,7 +33,7 @@ namespace LightLifeAdminConsole
 
                 _boxnr = boxnr;
 
-                this.Title = "Box #" + _boxnr.ToString();
+                this.Title = "Box#" + _boxnr.ToString() + " - " + dc.box.Name;
             }
             finally
             {
@@ -121,14 +121,14 @@ namespace LightLifeAdminConsole
         private void txtSequenceID_LostFocus(object sender, RoutedEventArgs e)
         {
             try {
-                /*if (dc.box.SequenceID != Int32.Parse(txtSequenceID.Text))
+                if (dc.SequenceID != Int32.Parse(txtSequenceID.Text))
                 {
                     Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
                     dc.ReloadSequence(Int32.Parse(txtSequenceID.Text));
 
-                    if (dc.box.IsActive)
-                        NavigationCommands.GoToPage.Execute("/Content/Boxes/Box.xaml#" + dc.box.BoxNr.ToString(), this);
-                }*/
+                    //if (dc.box.IsActive)
+                      //  NavigationCommands.GoToPage.Execute("/Content/Boxes/Box.xaml#" + dc.box.BoxNr.ToString(), this);
+                }
             }
             catch (Exception ex)
             {
@@ -137,6 +137,24 @@ namespace LightLifeAdminConsole
             finally
             {
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            }
+        }
+
+        private void txtProband_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!char.IsDigit(e.Text, e.Text.Length - 1))
+            {
+                e.Handled = true;
+
+            }
+        }
+
+        private void txtSequenceID_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!char.IsDigit(e.Text, e.Text.Length - 1))
+            {
+                e.Handled = true;
+
             }
         }
     }

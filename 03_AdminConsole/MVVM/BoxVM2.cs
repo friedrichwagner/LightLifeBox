@@ -43,7 +43,7 @@ namespace LightLifeAdminConsole.MVVM
         private AdminBase _testSequencePos;
         public DataView TestSequencePos 
         {
-            get { return _testSequencePos.select(" where SequenceID=" + _box.testsequence.SequenceID.ToString()).DefaultView; }
+            get { return _testSequencePos.select(" where SequenceID=" + _box.testsequence.SequenceID.ToString()+" order by PosID").DefaultView; }
         }
 
         private string _errorText;
@@ -71,7 +71,8 @@ namespace LightLifeAdminConsole.MVVM
 
         public IDictionary<int, string> probanden { get { return LLSQL.probanden; } }
         public IDictionary<int, string> llactivationstate { get { return LLSQL.llactivationstate; } }
-        public DataTable llstep { get { return LLSQL.llstep; } }
+        public IDictionary<string, string> lltestsequencedef { get { return LLSQL.lltestsequencedef; } }
+        //public DataTable llstep { get { return LLSQL.llstep; } }
 
         private int _selectedProband;
         public int SelectedProband
@@ -86,6 +87,7 @@ namespace LightLifeAdminConsole.MVVM
 
                 _selectedProband = value;
                 RaisePropertyChanged("SelectedProband");
+                RaisePropertyChanged("BtnSaveNewEnabled");
             }
         }
 
@@ -109,8 +111,9 @@ namespace LightLifeAdminConsole.MVVM
             set
             {
                 _box.testsequence.ActivationID = value;
-                    _selectedActivationState = value;
-                    RaisePropertyChanged("SelectedActivationState");
+                _selectedActivationState = value;
+                RaisePropertyChanged("SelectedActivationState");
+                RaisePropertyChanged("BtnSaveNewEnabled");
             }
         }
 
@@ -125,6 +128,18 @@ namespace LightLifeAdminConsole.MVVM
                     RaisePropertyChanged("SelectedStep");
             }
         }
+        private string _selectedSequenceDef;
+        public string SelectedSequenceDef
+        {
+            get { return _box.testsequence.SequenceDef; }
+            set
+            {
+                _box.testsequence.SequenceDef = value;
+                _selectedSequenceDef = value;
+                RaisePropertyChanged("SelectedSequenceDef");
+                RaisePropertyChanged("BtnSaveNewEnabled");
+            }
+        }
 
         public bool BtnStartEnabled { get { return BtnEnabled(BoxUIButtons.START); } }
         public bool BtnStopEnabled  { get { return BtnEnabled(BoxUIButtons.STOP); } }
@@ -133,8 +148,9 @@ namespace LightLifeAdminConsole.MVVM
         public bool BtnPrevEnabled { get { return BtnEnabled(BoxUIButtons.PREV); } }
         public bool BtnNextEnabled { get { return BtnEnabled(BoxUIButtons.NEXT); } }
         public bool BtnSaveNewEnabled { get { return BtnEnabled(BoxUIButtons.SAVENEW); } }
-        public bool BtnDeltaTestEnabled { get { return BtnEnabled(BoxUIButtons.DELTATEST); } }
-        
+
+        public bool TextBoxesEnabled { get { return SequenceID == 0; } }
+               
            
         private ICommand _doSequenceCommand;
         public ICommand doSequenceCommand
@@ -199,43 +215,25 @@ namespace LightLifeAdminConsole.MVVM
         {
             //TEST TEST
             //return true;
-
-            if (!_box.IsActive) return false;
-            switch (btn)
-            {
-                case BoxUIButtons.DELTATEST:
-                    if (_box.IsPracticeBox) return true;
-                    break;
-                default:
-                    return _box.testsequence.btnEnabled(btn);
-
-            }
-
-            return false;
+            //if (!_box.IsActive) return false;
+            return _box.testsequence.btnEnabled(btn);
         }
 
         public void ReloadSequence(int seqID)
         {
             try                
-            {              
-            /*   int bnr =  Box2.ReloadSequence(seqID, ref boxes);
+            {       
+       
+              _box.ReloadSequence(seqID);
 
-                //boxes[newBox.BoxNr] = newBox;
-
-               //_selectedBox = boxes[bnr].BoxNr;
-                //_selectedProband = boxes[bnr].ProbandID;
-                //_selectedRemark = boxes[bnr].Remark;
-
-               SelectedBox = boxes[bnr].BoxNr;
-
-                if (boxes[bnr].State == BoxStatus.FINISHED)
-                    ErrorText = "TestSequence already finished!";
-
-                RaiseAllProperties();*/
+                RaiseAllProperties();
             }
             catch (Exception ex)
             {
                 ErrorText = ex.Message;
+
+                //DAmit wieder die richtige SequenceID im TextFeld steht
+                RaisePropertyChanged("SequenceID");
             }
 
         }
@@ -246,11 +244,16 @@ namespace LightLifeAdminConsole.MVVM
             RaisePropertyChanged("SelectedRemark");
             RaisePropertyChanged("SelectedActivationState");
             RaisePropertyChanged("SelectedStep");
+            RaisePropertyChanged("SelectedSequenceDef");
 
             RaisePropertyChanged("BtnStartEnabled");
             RaisePropertyChanged("BtnStopEnabled");
             RaisePropertyChanged("BtnPauseEnabled");
             RaisePropertyChanged("BtnUpdateEnabled");
+            RaisePropertyChanged("BtnSaveNewEnabled");
+            RaisePropertyChanged("BtnPrevEnabled");
+            RaisePropertyChanged("BtnNextEnabled");
+            RaisePropertyChanged("TextBoxesEnabled");
            
             RaisePropertyChanged("SequenceID");
             RaisePropertyChanged("TestSequencePos");

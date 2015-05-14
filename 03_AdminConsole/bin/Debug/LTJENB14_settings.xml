@@ -2,7 +2,7 @@
 <Settings>
 	<Pages>
 		<StartPage value="/Pages/Login.xaml" />
-		<PagesVisible value="Boxen;PI-LED Control;Administration;;Settings" />
+		<PagesVisible value="Boxen;PI-LED Control;Administration;Settings" />
 		<Interfaces value="LightLifeLogger" />
 	</Pages>
 	<Login>
@@ -10,20 +10,22 @@
 		<Password value="test" />
 	</Login>
   <Database>
+	<InitialCatalog value="LightLife" />
     <DataSource value="LT-WSSQLTEST\SQLEXPRESS" />
-	<!--<DataSource value="LTJENB14\SQLEXPRESS" />-->
-	<!--<DataSource value="192.168.5.100" />-->
-    <InitialCatalog value="LightLife" />
-    <UserID value="ltcs" />
-    <Password value="Lumitech03" />
+	<UserID value="ltcs" />
+	<Password value="Lumitech03" />	
+	<!--<DataSource value="LTGRLL01" />    
+    <UserID value="LightLife" />
+    <Password value="test" />-->
   </Database>
   <LightLifeLogger name="LLLClient1">
 	<Enable value="True" />
   </LightLifeLogger>    
   <NeoLink name="NeoLinkClient1">
-	<UDP-Address value="192.168.4.168" />
+	<!--<UDP-Address value="192.168.4.168" />-->
+	<UDP-Address value="192.168.5.153" />
 	<UDP-Port value="1025" />
-	<SendDelayTimeMS value="200" />
+	<SendDelayTimeMS value="300" />
 	<Enable value="True" />
   </NeoLink>  
   <ControlBox>

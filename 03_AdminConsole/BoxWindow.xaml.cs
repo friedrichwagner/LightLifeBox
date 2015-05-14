@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using LightLifeAdminConsole.MVVM;
 using FirstFloor.ModernUI.Windows.Controls;
+using System.Windows.Media;
 
 namespace LightLifeAdminConsole
 {
@@ -71,9 +72,16 @@ namespace LightLifeAdminConsole
 
         private void dgBox_LoadingRow(object sender, DataGridRowEventArgs e)
         {
-                /*var rowNum = e.Row.GetIndex()+1;
-                if (rowNum == dc.box.testsequence.StepID)
-                    e.Row.Background = Brushes.LightGray;*/
+            int rowNum = e.Row.GetIndex();
+
+            var row = GetDataGridRows((sender as DataGrid));
+
+            if (row != null)
+            {
+                var test = (sender as DataGrid).ItemsSource
+                e.Row.Background = Brushes.LightGray;
+            }
+           
         }
 
         private void dgBox_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)

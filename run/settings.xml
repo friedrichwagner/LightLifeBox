@@ -29,6 +29,7 @@
 		<Send-Command-Port value="1749"/>
 		<Receive-Command-Port value="1748"/>
 		<ControlsDefaultActive value="1"/>
+		<DefaultGroup value="201"/>	
 	</raspi1LightLife>
 
 	<raspi2LightLife name="ControlBox2">
@@ -36,6 +37,7 @@
 		<Send-Command-Port value="1759"/>
 		<Receive-Command-Port value="1758"/>
 		<ControlsDefaultActive value="1"/>
+		<DefaultGroup value="0"/>	
 	</raspi2LightLife>
 
 	<raspi3LightLife name="ControlBox3">
@@ -43,20 +45,25 @@
 		<Send-Command-Port value="1769"/>
 		<Receive-Command-Port value="1768"/>	
 		<ControlsDefaultActive value="1"/>		
+		<DefaultGroup value="202"/>	
 	</raspi3LightLife>
 	
 	<raspi4LightLife name="ControlBox4">
 		<BoxNr value="4" />
+		<IsPracticeBox value="1" />
 		<Send-Command-Port value="1779"/>
 		<Receive-Command-Port value="1778"/>
-		<ControlsDefaultActive value="1"/>		
+		<ControlsDefaultActive value="1"/>	
+		<DefaultGroup value="203"/>			
 	</raspi4LightLife>
 	
 	<raspi5LightLife name="ControlBox5">
 		<BoxNr value="5" />
+		<IsPracticeBox value="1" />
 		<Send-Command-Port value="1789"/>
 		<Receive-Command-Port value="1788"/>
 		<ControlsDefaultActive value="1"/>		
+		<DefaultGroup value="204"/>	
 	</raspi5LightLife>	
 	
 	<LTJENB14 name="ControlBox1">

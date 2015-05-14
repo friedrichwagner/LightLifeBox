@@ -41,6 +41,7 @@ protected:
 	bool DeltaTestInProgress;
 	DeltaTest* deltaTest;
 	bool isPracticeBox;
+	
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL
@@ -54,7 +55,7 @@ public:
 	vector<PILight*> Lights;
 	bool isDone;
 
-	void notify(void* sender, enumButtonEvents event, int delta);	
+	void notify(void* sender, enumButtonEvents event, int delta);
 
 	int buttonActive;
 	void setButtons(bool[], bool[]);
@@ -62,4 +63,6 @@ public:
 	void StartDeltaTest(int userid, int b0, int cct0, TestMode mode);
 	void StopDeltaTest();
 	RemoteCommands* rmCmd;
+
+	void doAfterWait(ControlBox* p);
 };

@@ -23,22 +23,8 @@ struct UDPSendSocket
 
 	UDPSendSocket(std::string paramIPAddress, int paramIPPort)
 	{
-		IPAddress= paramIPAddress;
-		IPPort = paramIPPort;
-		_socket = socket(AF_INET, SOCK_DGRAM, 0); //UDP
 		isValid = false;
-
-		//if (socketNr == INVALID_SOCKET)
-		if (_socket < 0)
-		{
-			isValid = false;
-		}
-
-		serverAddress.sin_family = AF_INET;
-		serverAddress.sin_addr.s_addr=inet_addr(IPAddress.c_str());
-		serverAddress.sin_port = htons(IPPort);
-
-		isValid = true;
+		setServerIPPort(paramIPAddress, paramIPPort);
 	}
 
 	~UDPSendSocket()
@@ -50,11 +36,38 @@ struct UDPSendSocket
 #endif
 	}
 
-	void setServerAddress(sockaddr_in addr)
+	/*void setServerAddress(sockaddr_in addr)
 	{
 		serverAddress.sin_family = addr.sin_family;
 		serverAddress.sin_addr = addr.sin_addr;
 		serverAddress.sin_port = addr.sin_port;
+	}*/
+
+	void setServerIPPort(std::string paramIPAddress, int paramIPPort)
+	{
+#ifdef WIN32
+		if (isValid) closesocket(_socket);
+#else
+		if (isValid) close(_socket);
+#endif
+
+		IPAddress = paramIPAddress;
+		IPPort = paramIPPort;
+		_socket = socket(AF_INET, SOCK_DGRAM, 0); //UDP
+		isValid = false;
+
+		//if (socketNr == INVALID_SOCKET)
+		if (_socket < 0)
+		{
+			isValid = false;
+			cout << "UDPSendSocket invalid!!";
+		}
+
+		serverAddress.sin_family = AF_INET;
+		serverAddress.sin_addr.s_addr = inet_addr(IPAddress.c_str());
+		serverAddress.sin_port = htons(IPPort);
+
+		isValid = true;
 	}
 
 	int send(unsigned char* cdata, int cnt)

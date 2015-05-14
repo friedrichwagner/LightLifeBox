@@ -121,7 +121,7 @@ namespace LightLifeAdminConsole.Data
 
             tables["LLTestSequencePos"].selectSQL = "select * from LLTestSequencePos";
             tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, CycleID, ActivationID, StepID, PILEDID, Brightness, CCT, duv, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8, :9, :10, :11)";
-            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:brightness, CCT=:cct, duv=:duv x=:x, y=:y, piledID=:mode";
+            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:brightness:, CCT=:cct:, duv=:duv: x=:x:, y=:y:, piledID=:mode:";
 
             tables["LLBox"].selectSQL = "select * from LLBox";
             tables["LLBox"].updateSQL = "update LLBox set active=:1, ActualSequence=:2 where boxid=:3";
@@ -135,8 +135,8 @@ namespace LightLifeAdminConsole.Data
             tables["LLTestSequenceDefinition"].selectSQL = "select * from LLTestSequenceDefinition";
 
             tables["LLDeltaTest"].selectSQL = "select * from LLDeltaTest";
-            tables["LLDeltaTest"].insertSQL = "insert into LLDeltaTest( ([UserID], [BoxID],[Brightness0],[CCT0],[x0],[y0],[testmode],[actStep],[Brightness],[cct],[x],[y],[actduv],[dBrightness],[dCCT],[duv],[frequency]) " +
-                                               " values(:userid,:boxid,:brightness0,:cct0,:x0,:y0,:mode,:actStep,:brightness,:cct,:x,:y,:actduv,:dbrightness,:dcct,:duv,:frequency)";
+            tables["LLDeltaTest"].insertSQL = "insert into LLDeltaTest([UserID], [BoxID],[Brightness0],[CCT0],[x0],[y0],[testmode],[actStep],[Brightness],[cct],[x],[y],[actduv],[dBrightness],[dCCT],[duv],[frequency]) " +
+                                               " values(:userid:,:boxid:,:brightness0:,:cct0:,:x0:,:y0:,:mode:,:actStep:,:brightness:,:cct:,:x:,:y:,:actduv:,:dbrightness:,:dcct:,:duv:,:frequency: )";
 
             tables["LLDeltaTestMode"].selectSQL = "select * from LLDeltaTestMode";
 

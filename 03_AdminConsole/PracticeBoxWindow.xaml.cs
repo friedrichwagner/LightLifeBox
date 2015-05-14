@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using LightLifeAdminConsole.MVVM;
 using FirstFloor.ModernUI.Windows.Controls;
+using System.Windows.Media;
 
 namespace LightLifeAdminConsole
 {
@@ -71,6 +72,14 @@ namespace LightLifeAdminConsole
                 e.Handled = true;
 
             }
+        }
+
+        private void ModernWindow_Activated(object sender, EventArgs e)
+        {
+            SolidColorBrush myBrush = new SolidColorBrush(Colors.White);
+            if (!dc.box.IsActive)
+                myBrush = new SolidColorBrush(Colors.LightGray);
+            grdDeltaTest.Background= myBrush;
         }  
  
     }

@@ -143,8 +143,8 @@ string DeltaTest::getState()
 	SetLightState(actStep);
 
 	ss << "userid=" << UserID << ";boxid=" << boxid << ";brightness0=" << brightness0 << ";cct0=" << cct0 << ";x0=" << xy0[0] << ";y0=" << xy0[1] << ";mode=" << mode
-		<< ";actStep=" << actStep << ";brightness = " << brightness << ";cct = " << cct << ";x = " << xy[0] << ";y = " << xy[1] << ";actduv=" << actDuv
-		<< ";dbrightness=" << dbrightness << ";dcct=" << dcct << ";duv=" << duv << ";frequency=" << frequency;
+		<< ";actStep=" << actStep << ";brightness=" << brightness << ";cct=" << cct << ";x=" << xy[0] << ";y=" << xy[1] << ";actduv=" << actDuv
+		<< ";dbrightness=" << dbrightness << ";dcct=" << dcct << ";duv=" << duv << ";frequency=" << frequency << ";dummy=";
 
 
 

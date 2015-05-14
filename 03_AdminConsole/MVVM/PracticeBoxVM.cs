@@ -9,7 +9,9 @@ using MvvmFoundation.Wpf;
 using FirstFloor.ModernUI.Windows.Controls;
 using LightLifeAdminConsole.Data;
 using System.Windows;
+using System.Windows.Media;
 using System.Data;
+using System.Windows.Threading;
 
 namespace LightLifeAdminConsole.MVVM
 {
@@ -25,6 +27,7 @@ namespace LightLifeAdminConsole.MVVM
 
         private IDictionary<int, string> _lltestcct;
         public IDictionary<int, string> lltestcct { get { return _lltestcct; } }
+        private DispatcherTimer dispatcherTimer = new DispatcherTimer();  
 
         private string _errorText;
         public string ErrorText 
@@ -95,6 +98,11 @@ namespace LightLifeAdminConsole.MVVM
 
         public bool BtnStartEnabled { get { return BtnEnabled(BoxUIButtons.START); } }
 
+        public bool IsBusy
+        {
+            get { return dTest.isRunning; }
+        }
+
         private ICommand _doStartDeltaTestCommand;
         public ICommand doStartDeltaTestCommand
         {
@@ -122,6 +130,9 @@ namespace LightLifeAdminConsole.MVVM
 
                 dTest = new DeltaTest(box);
                 box.dTest = dTest;
+
+                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1); 
             }
             catch (Exception ex)
             {
@@ -129,12 +140,24 @@ namespace LightLifeAdminConsole.MVVM
             }
         }
 
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("IsBusy");
+
+            if (!IsBusy)
+            {
+                dispatcherTimer.Stop();
+                RaisePropertyChanged("BtnStartEnabled");
+            }
+        }
 
         private void doStartDeltaTest(string cmd)
         {
             try
             {
                 dTest.Start();
+                dispatcherTimer.Start();
+                RaisePropertyChanged("BtnStartEnabled");
             }
             catch (Exception ex)
             {
@@ -145,7 +168,12 @@ namespace LightLifeAdminConsole.MVVM
         private bool BtnEnabled(BoxUIButtons btn)
         {
             if (!_box.IsActive) return false;
-            if (dTest.CanStart()) return true;
+
+            if (btn==BoxUIButtons.START)
+            {
+                if (dTest.CanStart() && !dTest.isRunning) return true;
+                //if (dTest.CanStart()) return true;
+            }
 
             return false;
         }

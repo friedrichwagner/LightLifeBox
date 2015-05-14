@@ -19,6 +19,7 @@ protected:
 	volatile bool done;
 	unsigned int ID;
 	LightLifeButtonType btntype;
+	PIButtonTyp pibtntype;
 	string	Name;
 	string	Section;
 	Settings* ini;
@@ -51,6 +52,7 @@ public:
 	//bool enablePressedEvent;
 	string getName();
 	LightLifeButtonType getBtnType();
+	PIButtonTyp getPiBtnType();
 	int getID();
 
 	bool setActive(bool);

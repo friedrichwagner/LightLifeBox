@@ -25,6 +25,8 @@ RemoteCommands::RemoteCommands(ControlBox* pBox)
 	log->cout(_recvSock->IPAddress + ":" + lumitech::itos(_recvSock->IPPort));
 
 	lllogger = NULL;
+
+	lastCmd.cmdId = (int)LL_NONE;
 }
 
 
@@ -86,6 +88,9 @@ int RemoteCommands::send(RemoteCommand cmd)
 			return ret;
 		}
 	}
+
+	//FW 13.5.2015
+	lastCmd = cmd;
 
 	return ret;
 }
@@ -181,7 +186,7 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 		
 		//FW 9.4.2015 Von hier jetzt die remote Adresse und das Port nehmen
 		//to be tested
-		_sendSock->setServerAddress(_recvSock->remoteAddress);
+		//_sendSock->setServerAddress(_recvSock->remoteAddress);
 		break;
 
 	case LL_ENABLE_BUTTONS:
@@ -216,6 +221,12 @@ void RemoteCommands::DiscoverCommand(RemoteCommand cmd)
 
 	//Gruppe setzen die von dieser Box gesteuert wird
 	box->Lights[0]->setGroup((char)lumitech::stoi(flds["groupid"]));	
+
+	string consoleIP = flds["consoleip"];
+	int consolePort = lumitech::stoi(flds["consoleport"]);
+
+	log->cout("ConsolIP:" + consoleIP + "/" + flds["consoleport"]);
+	_sendSock->setServerIPPort(consoleIP, consolePort);
 
 	//Send Back Name of Controlbox
 	StandardAnswer(cmd);

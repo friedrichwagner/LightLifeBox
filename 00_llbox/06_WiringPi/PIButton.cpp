@@ -27,7 +27,8 @@ void isr_CCTPressed(void);
 void isr_JuddUpDown(void);
 void isr_JuddPressed(void);
 
-void isr_Lock(void);
+void isr_Lock1(void);
+void isr_Lock2(void);
 
 void InitWiringPi()
 {
@@ -96,15 +97,17 @@ void InitPIButton(PIButton* p, string Section, int btntype)
 			if (lock1 == 0)
 			{
 				p->pibtnType = PIBUTTON_LOCK1;
+				p->isr_UpDown = NULL; p->isr_Pressed = &isr_Lock1;
 
 				lock1 = 1;
 			}
 			else
 			{
 				p->pibtnType = PIBUTTON_LOCK2;
+				p->isr_UpDown = NULL; p->isr_Pressed = &isr_Lock2;
 			}
 
-			p->isr_UpDown = NULL; p->isr_Pressed = &isr_Lock;
+			
 
 			break;
 
@@ -247,8 +250,12 @@ void isr_JuddPressed(void)
 //----------------------------
 //--------  Lock Button    --------- 
 //----------------------------
-void isr_Lock(void)
+void isr_Lock1(void)
 {
 	isr_PressedGeneral(PIBUTTON_LOCK1);
 }
 
+void isr_Lock2(void)
+{
+	isr_PressedGeneral(PIBUTTON_LOCK2);
+}

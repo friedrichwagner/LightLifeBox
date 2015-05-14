@@ -3,6 +3,7 @@ using System.Data;
 using Lumitech.Helpers;
 using LightLifeAdminConsole.Data;
 using System.Collections.Generic;
+using System.Text;
 
 namespace LightLifeAdminConsole
 {
@@ -64,12 +65,13 @@ namespace LightLifeAdminConsole
         {
             if (_sqlset.insertSQL != string.Empty)
             {
-                string stmt = _sqlset.insertSQL;
+                StringBuilder stmt = new StringBuilder(_sqlset.insertSQL);
                 foreach (KeyValuePair<string, string> pair in d)
                 {
-                    stmt = stmt.Replace(":" + pair.Key, pair.Value);
+                    stmt = stmt.Replace(":" + pair.Key+":", pair.Value);
                 }
-                //to be tested
+
+                _sql.prep(stmt.ToString());
                 return _sql.Exec();
             }
 
@@ -83,9 +85,10 @@ namespace LightLifeAdminConsole
                 string stmt = _sqlset.updateSQL + " " + filter;
                 foreach (KeyValuePair<string, string> pair in d)
                 {
-                    stmt = stmt.Replace(":" + pair.Key, pair.Value);
+                    stmt = stmt.Replace(":" + pair.Key, pair.Value + ":");
                 }
 
+                _sql.prep(stmt);
                 return _sql.Exec();
             }
 

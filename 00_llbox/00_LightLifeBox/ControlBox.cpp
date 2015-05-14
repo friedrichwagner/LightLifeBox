@@ -155,7 +155,7 @@ int ControlBox::addComClients()
 	for (unsigned int i = 0; i< flds.size(); i++)
 	{
 		IBaseClient* clnt = NULL;
-		if (flds[i] == "NeoLink")
+		if (flds[i] == "NeoLink" && isPracticeBox)
 		{
 			clnt = new NeoLinkClient();			
 		}
@@ -237,6 +237,9 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 {
 	LightLifeButtonType btntype = ((Button*)sender)->getBtnType();
 
+	//FW 13.5. es soll ev. zw. LOCK Button 1 und 2 unterschieden werden
+	PIButtonTyp pibtntype = ((Button*)sender)->getPiBtnType();
+
 	if (Lights.size() == 0) return;
 
 	switch (event)
@@ -251,24 +254,33 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 				
 				rmCmd->SendRemoteCommand(LL_SET_LOCKED_DELTATEST, "");
 
-				StopDeltaTest();
-				
+				StopDeltaTest();				
 			}
 			else
 			{
 				//Wenn NICHT PracticeBox, dann Kommando schicken
 				if (!isPracticeBox)
 				{
-					Lights[0]->lockCurrState();
-					rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
+					//FW 13.5. Wenn LOCK gesendet, dann kann user hiermit weitergehen --> Fade soll aber bleiben
+					if ((rmCmd->lastCmd.cmdId == LL_SET_LOCKED) && (pibtntype == PIBUTTON_LOCK1))
+					{
+						doAfterWait(this);
+					}
+					else
+					{
+						Lights[0]->lockCurrState();
+						rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
 
-					//Disable all Buttons, do not blink
-					bool b[5] = { false, false, false, false, false };
-					setButtons(b, b);
+						//FW 13.5.2015
+						//Linker Button soll Aktive bleiben, damit User "weiter" klicken kann
+						bool b[5] = { false, false, false, true, false };
+						setButtons(b, b);
 
-					//Wait 30 secs
-					log->cout("Waiting 30 secs...");
-					Later Delay1(psychoTestDelayTimeinSecs, true, &delay1, this);
+						//Wait 30 secs
+						log->cout("Waiting 30 secs...");
+						//Later* d = new Later(psychoTestDelayTimeinSecs, true, &delay1, this);
+						Later Delay1(psychoTestDelayTimeinSecs, true, &delay1, this);
+					}
 				}
 
 				if (isPracticeBox)
@@ -299,16 +311,23 @@ void delay1(ControlBox* p)
 {	
 	if (p != NULL)
 	{
-		//30 seconds fade wird direkt in Box gemacht
-		p->Lights[0]->setFadeTime(psychoTestDelayTimeinSecs);
-		p->Lights[0]->resetDefault();		
-
-		cout << "Fading 30 secs..\r\n";	
-		Later Delay2(psychoTestDelayTimeinSecs+2, true, &delay2, p);
-
-		p->rmCmd->SendRemoteCommand(LL_AFTER_WAIT_TIME, "");
-		//Blinken der LED des nächsten Buttons wird in RemoteCommand gemacht
+		//FW 13.5: Wenn User bereits weitergesprungen ist
+		if (p->rmCmd->lastCmd.cmdId != LL_AFTER_WAIT_TIME)
+			p->doAfterWait(p);
 	}
+}
+
+void ControlBox::doAfterWait(ControlBox* p)
+{
+	//30 seconds fade wird direkt in Box gemacht
+	Lights[0]->setFadeTime(psychoTestDelayTimeinSecs);
+	Lights[0]->resetDefault();
+
+	cout << "Fading 30 secs..\r\n";
+	Later Delay2(psychoTestDelayTimeinSecs + 2, true, &delay2, p);
+
+	rmCmd->SendRemoteCommand(LL_AFTER_WAIT_TIME, "");
+	//Blinken der LED des nächsten Buttons wird in RemoteCommand gemacht
 }
 
 void delay2(ControlBox* p)

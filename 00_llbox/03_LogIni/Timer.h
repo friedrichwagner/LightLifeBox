@@ -13,7 +13,6 @@ public:
 	Later(int after, bool async, callable&& f, arguments&&... args)
 	{
 		std::function<typename std::result_of<callable(arguments...)>::type()> task(std::bind(std::forward<callable>(f), std::forward<arguments>(args)...));
-
 		if (async)
 		{
 			std::thread([after, task]() {

@@ -40,7 +40,10 @@ namespace LightLifeAdminConsole
 
         public int PosID { get; private set; } 
         public int CycleID { get; private set; }
-        public int ActivationID { get; set; }                            
+        public int ActivationID { get; set; }
+
+        private int _MinPosID;
+        private int _MaxPosID;
 
         private TestSequenceStep _stepID;
         public TestSequenceStep StepID {
@@ -79,13 +82,13 @@ namespace LightLifeAdminConsole
             if (seqid > 0)
                 filter = " where BoxID=:1 and SequenceID=" + seqid.ToString();
             else if (seqid < 0) //letzte holen
-                filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1) ";
+                filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1 and TestStateID < " + ((int)TestSequenceState.FINISHED).ToString() + ") ";
             else //neue Sequeunce
             {
                 filter = " where BoxID=:1 and 1=0";
             }
 
-            DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].selectSQL, new string[] { boxnr.ToString() }, filter);
+            DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].selectSQL, new string[] { boxnr.ToString()}, filter);
             
             InitSequence(dt1);
         }
@@ -103,6 +106,7 @@ namespace LightLifeAdminConsole
                 SequenceDef = dt.Rows[0].Field<string>("SequenceDef");
                 ActivationID = (int)TestSequenceActivation.NONE;
 
+                getMinMaxPosId();
                 getPos();
             }
             else
@@ -141,28 +145,30 @@ namespace LightLifeAdminConsole
         public void Pause()
         {
             State = TestSequenceState.PAUSED;
-            //UpdateVarious(LLMsgType.LL_PAUSE_TESTSEQUENCE, 0);
             UpdateHeadState();
         }
 
         public void Prev()
         {
             State = TestSequenceState.IN_PROGRESS;
-            PosID++;
-            getPos();
-            //UpdateVarious(LLMsgType.LL_PAUSE_TESTSEQUENCE, 0);
-            UpdateHeadState();
+            if (PosID > _MinPosID)
+            {
+                PosID--;
+                getPos();
+                UpdateHeadState();
+            }
         }
 
         public void Next()
         {
             State = TestSequenceState.IN_PROGRESS;
-            PosID++;
-            getPos();
-            //UpdateVarious(LLMsgType.LL_PAUSE_TESTSEQUENCE, 0);
-            UpdateHeadState();
+            if (PosID < _MinPosID)
+            {
+                PosID++;
+                getPos();
+                UpdateHeadState();
+            }
         }
-
 
         private void CreateSequence()
         {
@@ -180,6 +186,8 @@ namespace LightLifeAdminConsole
                 head.update("", new string[] { ((int)TestSequenceState.NONE).ToString(), firstpos.ToString(), SequenceID.ToString() });
 
                 LLSQL.cmd.Transaction.Commit();
+
+                getMinMaxPosId();
             }
             catch (Exception ex)
             {
@@ -266,7 +274,7 @@ namespace LightLifeAdminConsole
             switch (btn)
             {
                 case BoxUIButtons.START:
-                    if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.PAUSED) || (State == TestSequenceState.NONE) || (State == TestSequenceState.FINISHED)) return true;
+                    if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.PAUSED) || (State == TestSequenceState.NONE)) return true;
                     break;
 
                 case BoxUIButtons.STOP:
@@ -303,6 +311,20 @@ namespace LightLifeAdminConsole
         #endregion Sequence
 
         #region Sequence - Pos(Step)
+
+        private void getMinMaxPosId()
+        {
+            string stmt = "select IsNull(min(POSID),0) , IsNull(max(PosID),0) Maxi from LLTestSequencePos where SequenceID=" + SequenceID.ToString();
+            LLSQL.cmd.prep(stmt);
+            LLSQL.cmd.Exec();
+
+            if (LLSQL.cmd.dr.Read())
+            {
+                _MinPosID = LLSQL.cmd.dr.GetInt32(0);
+                _MaxPosID = LLSQL.cmd.dr.GetInt32(1);
+            }
+            LLSQL.cmd.dr.Close();
+        }
 
         private int getPos(bool firstpos=false)
         {

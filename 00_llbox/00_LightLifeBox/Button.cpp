@@ -52,6 +52,7 @@ void Button::ButtonEvent(PIButtonTyp t, int delta)
 {
 	if (notifyClients[0] != NULL)
 	{
+		pibtntype = t;
 		if (Active)
 		{
 			if (delta == 0)
@@ -84,6 +85,11 @@ int Button::getID()
 LightLifeButtonType Button::getBtnType()
 {
 	return btntype;
+}
+
+PIButtonTyp Button::getPiBtnType()
+{
+	return pibtntype;
 }
 
 bool Button::setActive(bool b)

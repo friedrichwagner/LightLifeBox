@@ -233,7 +233,7 @@ namespace LightLifeAdminConsole
             if (dTest != null)
             {
                 dTest.Save(Params);
-                dTest = null;
+                //dTest = null;
             }
         }
     }

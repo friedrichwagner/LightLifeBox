@@ -201,7 +201,6 @@ namespace LightLifeAdminConsole.MVVM
                     case "NEXT": _box.testsequence.Next(); break;
                     //case "DELTATEST": _box.StartDeltaTest(); break;
                 }
-
                 
                 RaiseAllProperties();
             }

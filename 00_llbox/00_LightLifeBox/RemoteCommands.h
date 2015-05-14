@@ -97,5 +97,6 @@ class RemoteCommands
 
 		void NowAddLLLogger();
 		void SendRemoteCommand(LLMsgType, string); // to AdminConsole
+		RemoteCommand lastCmd;
 		
 };

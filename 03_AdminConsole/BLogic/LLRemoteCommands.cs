@@ -6,6 +6,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using LightLife.Data;
+using System.Net.NetworkInformation;
 
 namespace LightLifeAdminConsole
 {
@@ -47,6 +48,7 @@ namespace LightLifeAdminConsole
         protected UdpClient sendClient;
         protected int _recvport;
         protected UdpClient recvClient;
+        protected IPAddress _OwnIP;
 
         private IPEndPoint receivedfromEP = new IPEndPoint(IPAddress.Any, 0);
         private byte[] recvBuf = new byte[RECVBUF_LEN];
@@ -81,6 +83,8 @@ namespace LightLifeAdminConsole
             var remoteEP = new IPEndPoint(_ip, _sendport);
             sendClient.Connect(remoteEP);
 
+            _OwnIP = IPAddress.Parse(getOwnIPAddress());
+
             //TEST TEST
             //StartReceiveAsync();
         }
@@ -89,6 +93,28 @@ namespace LightLifeAdminConsole
         {
             recvClient.Close();
             sendClient.Close();            
+        }
+
+        public string getOwnIPAddress()
+        {
+            string ip = "127.0.0.1";
+            bool found = false;
+            List<IPAddress> ipList = new List<IPAddress>();
+            foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                foreach (var ua in ni.GetIPProperties().UnicastAddresses)
+                    if ((ua.Address.AddressFamily == AddressFamily.InterNetwork) && (ni.OperationalStatus != OperationalStatus.Down))
+                    {
+                        //take first one
+                        ip = ua.Address.ToString();
+                        found = true;
+                        break;
+                    }
+
+                if (found) break;
+            }
+
+            return ip;
         }
 
         protected int send(LLMsgType cmd, string data)
@@ -311,7 +337,8 @@ namespace LightLifeAdminConsole
 
         public bool Ping(int groupid, bool isPracticeBox)
         {
-            string Params = ";groupid=" + groupid.ToString() + ";ispracticebox=" + ((isPracticeBox) ? "1" : "0");
+            string Params = ";groupid=" + groupid.ToString() + ";ispracticebox=" + ((isPracticeBox) ? "1" : "0") +
+                            ";consoleip=" + _OwnIP.ToString() + ";consoleport=" + _recvport.ToString();
             return SendAndReceiveBool(LLMsgType.LL_DISCOVER, Params, true);
         }
 

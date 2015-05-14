@@ -19,7 +19,11 @@ namespace LightLifeAdminConsole
         public int Proband { get; set; }
         public int Brightness { get; set; }
         public int CCT { get; set; }
+        //public float duv { get; set; }
         public TestMode TestMode   { get; set; }
+
+        private bool _isRunning;
+        public bool isRunning { get { return _isRunning; } }
  
         public DeltaTest(Box2 b)
         {
@@ -27,6 +31,7 @@ namespace LightLifeAdminConsole
             Brightness = LightLifeData.DEFAULT_BRIGHTNESS;
             CCT = LightLifeData.DEFAULT_CCT;
             TestMode = TestMode.DTEST_NONE;
+            //duv = 0.0f;
             _box = b;
         }
 
@@ -38,19 +43,19 @@ namespace LightLifeAdminConsole
 
         public void Start()
         {
-            string Params= ";brightness="+ Brightness + ";cct=" + CCT + ";user="+Proband + ";mode="+ (int)TestMode;
+            string Params= ";brightness="+ Brightness + ";cct=" + CCT + ";userid="+Proband + ";mode="+ (int)TestMode;
             _box.rCmd.StartDeltaTest(Params);
+            _isRunning = true;
         }
 
         public void Save(string Params)
         {
+            _isRunning = false;
             string[] sarr = Params.Split(';');
             Dictionary<string, string> dtmp = sarr.Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
             MyDictionary d = new MyDictionary(dtmp);
             AdminBase deltatest = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLDeltaTest"]);
-            deltatest.insert(d);
-
-
+            deltatest.insert(d);            
         }
 
     }

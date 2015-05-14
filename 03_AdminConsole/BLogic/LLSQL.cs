@@ -77,14 +77,14 @@ namespace LightLifeAdminConsole.Data
             cmd = new LTSQLCommand(sqlCon);
 
             tables = new Dictionary<string, SQLSet>();
-            tables.Add("LLRole", new SQLSet("LLRole"));
+            //tables.Add("LLRole", new SQLSet("LLRole"));
             tables.Add("LLRoom", new SQLSet("LLRoom"));
             tables.Add("LLGroup", new SQLSet("LLGroup"));
             tables.Add("LLFixture", new SQLSet("LLFixture"));
             tables.Add("LLScene", new SQLSet("LLScene"));
-            tables.Add("LLData", new SQLSet("LLData"));
+            //tables.Add("LLData", new SQLSet("LLData"));
             tables.Add("LLUser", new SQLSet("LLUser"));
-            tables.Add("LLUserInfo", new SQLSet("LLUSerInfo"));
+            //tables.Add("LLUserInfo", new SQLSet("LLUSerInfo"));
             tables.Add("LLRoomGroup", new SQLSet("LLRoomGroup"));
             tables.Add("LLTestSequenceHead", new SQLSet("LLTestSequenceHead"));
             tables.Add("LLTestSequencePos", new SQLSet("LLTestSequencePos"));
@@ -98,21 +98,21 @@ namespace LightLifeAdminConsole.Data
             tables.Add("VLLTestSequence", new SQLSet("V_TestSequence"));
             tables.Add("LLTestSequenceDefinition", new SQLSet("LLTestSequenceDefinition"));
 
-            tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
+            //tables["LLRole"].selectSQL = "select * from LLRole order by RoleID";
             tables["LLRoom"].selectSQL = "select * from LLRoom order by RoomID";
             tables["LLGroup"].selectSQL = "select * from LLGroup order by GroupID";
             tables["LLFixture"].selectSQL = "select * from LLFixture order by FixtureID";
             tables["LLScene"].selectSQL = "select * from LLScene order by SceneID";
-            tables["LLData"].selectSQL = "select * from LLData order by DataID";
+            //tables["LLData"].selectSQL = "select * from LLData order by DataID";
             tables["LLRoomGroup"].selectSQL = "select * from LLRoomGroup order by RoomID, GroupID";
 
             tables["LLUser"].selectSQL = "select * from LLUser";
             tables["LLUser"].insertSQL = "insert into LLUser() values()";
             tables["LLUser"].updateSQL = "update LLUser set where ";
 
-            tables["LLUserInfo"].selectSQL = "select * from LLUserInfo";
-            tables["LLUserInfo"].insertSQL = "insert into LLUserInfo() values()";
-            tables["LLUserInfo"].updateSQL = "update LLUserInfo set where ";
+            //tables["LLUserInfo"].selectSQL = "select * from LLUserInfo";
+            //tables["LLUserInfo"].insertSQL = "insert into LLUserInfo() values()";
+            //tables["LLUserInfo"].updateSQL = "update LLUserInfo set where ";
 
             tables["LLTestSequenceHead"].selectSQL = "select * from LLTestSequenceHead";
             tables["LLTestSequenceHead"].insertSQL = "insert into LLTestSequenceHead(SequenceID, SequenceDef, BoxID, UserID, VLId, TestStateID, ActualPosID, remark) values(:1,:2,:3,:4,:5,:6,:7,:8)";
@@ -157,14 +157,14 @@ namespace LightLifeAdminConsole.Data
             llscenes = new Dictionary<int, PILEDScene>();
             getScenes(ref llscenes, tables["LLScene"]);
 
-            llroomgroup = new DataTable(tables["LLRoomGroup"].tablename);
-            getDataTable(ref llroomgroup, tables["LLRoomGroup"]);
+            //llroomgroup = new DataTable(tables["LLRoomGroup"].tablename);
+            //getDataTable(ref llroomgroup, tables["LLRoomGroup"]);
 
             llusers = new DataTable(tables["LLUser"].tablename);
             getDataTable(ref llusers, tables["LLUser"]);
 
-            probanden = new Dictionary<int, string>();
-            getDict(ref probanden, tables["LLUser"], "UserID,  (FirstName+ ' '+ Lastname)", " where RoleId=100");
+            //probanden = new Dictionary<int, string>();
+            //getDict(ref probanden, tables["LLUser"], "UserID,  (FirstName+ ' '+ Lastname)", " where RoleId=100");
 
             llactivationstate = new Dictionary<int, string>();
             getDict(ref llactivationstate, tables["LLActivationState"], "ActivationID, Name", "order by 1");

@@ -23,6 +23,10 @@ namespace LightLifeAdminConsole
         private const byte NUM_BUTTONS = 2;
         private const int DEFAULT_CCT = 4000; //K
         private const int DEFAULT_BRIGHTNESS = 25; //100= ca. 2000lx --> 500lx= ca. 25
+        private const int DEFAULT_NEOLINK_FADETIME = 300; //ms
+        private const int WAIT_FADETIME = 30000; //30 sek
+        private const string ALL_BUTTONS_DISABLED = "00000";
+
 
         public int BoxNr { get; private set; }
         public string Name { get; private set; }     
@@ -86,16 +90,18 @@ namespace LightLifeAdminConsole
                 rCmd.ReceiveData += ReceiveDatafromControlBox;
             }
 
-            IsActive = rCmd.Ping(GroupID, IsPracticeBox);
+            //Hier noch nicht "pingen", erstge bei DoppelKlick auf der Form
+            //IsActive = rCmd.Ping(GroupID, IsPracticeBox);
+            IsActive = false;
 
             testsequence = new LLTestSequence(boxnr, -1);
 
             if (IsActive)
             {
                 if (IsPracticeBox)
-                    EnableBoxButtons("11111", "00000"); //Alle Buttons aktivieren
+                    EnableBoxButtons("11111", ALL_BUTTONS_DISABLED); //Alle Buttons aktivieren
                 else
-                    EnableBoxButtons(testsequence.EnabledButtons, "00000");
+                    EnableBoxButtons(testsequence.EnabledButtons, ALL_BUTTONS_DISABLED);
             }
         }
 
@@ -139,11 +145,10 @@ namespace LightLifeAdminConsole
             rCmd.Close();
         }
 
-
         public void Refresh()
         {
-            //EnableBoxButtons();
-            UpdateVarious(lastmsgtype, lastBrightness);
+            //UpdateVarious(lastmsgtype, lastBrightness);
+            ReloadSequence(testsequence.SequenceID);
         }
      
 
@@ -171,16 +176,35 @@ namespace LightLifeAdminConsole
                         break;
 
                     case (int)LLMsgType.LL_SET_LOCKED_DELTATEST:
-                        LockDeltaTest(rCmd.cmdParams);
+                        if (dTest != null) 
+                            dTest.Save(rCmd.cmdParams);
                         break;
 
                     case (int)LLMsgType.LL_AFTER_WAIT_TIME:
-                        //SendNextStep(rCmd.cmdParams);
+                        CBoxSetPILed(PILEDMode.SET_CCT, DEFAULT_BRIGHTNESS, DEFAULT_CCT, WAIT_FADETIME);
+
+                        //Nächsten Schritt schon hier holen, damit man die richtige LED blinken lassen kann
+                        if (testsequence.Next())
+                        {
+                            System.Threading.Thread.Sleep(100);
+
+                            //Buttons deaktivieren, Nächste LED blinkt                            
+                            string blink = LLSQL.llstep.Select("Stepid=" + (int)testsequence.StepID)[0].Field<string>("EnabledButtons");
+                            EnableBoxButtons(ALL_BUTTONS_DISABLED, blink);
+                        }
+                        else
+                        {
+                            testsequence.Stop();
+                        }
                         break;
 
 
                     case (int)LLMsgType.LL_AFTER_FADE_TIME:
-                        //SendNextStep(rCmd.cmdParams);
+                            CBoxSetPILed(PILEDMode.SET_CCT, DEFAULT_BRIGHTNESS, DEFAULT_CCT, DEFAULT_NEOLINK_FADETIME);
+                            System.Threading.Thread.Sleep(100);
+                            CBoxSetSequenceStep();
+                            System.Threading.Thread.Sleep(100);
+                            EnableBoxButtons(testsequence.EnabledButtons, ALL_BUTTONS_DISABLED);
                         break;
 
                     default:
@@ -194,19 +218,20 @@ namespace LightLifeAdminConsole
             }
         }
 
-        private void SetBoxToDefault(int brightnessLevel)
+        private void CBoxSetPILed(PILEDMode mode, int brightnessLevel, int cct, int fadetime)
         {
             //SetCCT + brightness
-            rCmd.SetPILED(PILEDMode.SET_CCT, brightnessLevel, DEFAULT_CCT, new int[] { 0, 0, 0 }, new float[] { 0f, 0f }, 100, 0.0f);
+            rCmd.SetPILED(mode, brightnessLevel, cct, new int[] { 0, 0, 0 }, new float[] { 0f, 0f }, fadetime, 0.0f);
         }
 
-        private void SetBoxTestSequenceState(LLMsgType msgtype)
+        private void CBoxSetSequenceStep()
         {
-            string Params = ";userid=" + testsequence.ProbandID + ";vlid=" + Box2.VLID + ";sequenceid=" + testsequence.SequenceID + ";stepid=" + testsequence.StepID + ";msgtype=" + ((int)msgtype).ToString();
+            string Params = ";userid=" + testsequence.ProbandID + ";vlid=" + Box2.VLID + ";cycleid=" + testsequence.CycleID+ ";sequenceid=" + testsequence.SequenceID
+                            + ";posid=" + testsequence.PosID + ";stepid=" + testsequence.StepID + ";activationstate=" + testsequence.ActivationID + ";msgtype=" + ((int)LLMsgType.LL_SET_SEQUENCEDATA).ToString();
             rCmd.SetSequence(Params);
         }
 
-        private void UpdateVarious(LLMsgType msgtype, int brightness)
+        /*private void UpdateVarious(LLMsgType msgtype, int brightness)
         {
             //if (State > BoxStatus.NONE)
             {
@@ -220,22 +245,8 @@ namespace LightLifeAdminConsole
                 else
                     EnableBoxButtons(testsequence.EnabledButtons, "00000");           // Send Controlbox Buttons
             }
-        }
-
-        /*public void StartDeltaTest(PILEDMode mode, int CCT, int brightnessLevel, int UserID)
-        {
-            string Params = ";mode=" + ((int)mode).ToString() + ";cct=" + CCT.ToString() + ";brightness=" + brightnessLevel.ToString() + ";userid=" + UserID.ToString();
-            rCmd.StartDeltaTest(Params);
         }*/
 
-        private void LockDeltaTest(string Params)
-        {
-            if (dTest != null)
-            {
-                dTest.Save(Params);
-                //dTest = null;
-            }
-        }
     }
 }
 

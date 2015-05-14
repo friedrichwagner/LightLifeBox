@@ -10,6 +10,8 @@ using FirstFloor.ModernUI.Windows.Controls;
 using LightLifeAdminConsole.Data;
 using System.Windows;
 using System.Data;
+using System.Windows.Threading;
+using System.Windows.Media;
 
 namespace LightLifeAdminConsole.MVVM
 {
@@ -31,14 +33,36 @@ namespace LightLifeAdminConsole.MVVM
             }*/
         }
 
-        private bool _IsBusy;
+        private DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        //private bool _IsBusy;
         public bool IsBusy 
-        { 
-            get { return _IsBusy; }
-            set {   _IsBusy = value;
-                    RaisePropertyChanged("IsBusy");
-            } //Display Wait Cursor
+        {
+            get
+            {
+                if (_box.testsequence.State > TestSequenceState.NONE && _box.testsequence.State < TestSequenceState.STOPPED) return true;
+                else return false;
+            }
+
         }
+
+        public Brush BoxBackgroundColor
+        {
+            get
+            {
+                Brush ret = Brushes.White;
+                switch (_box.testsequence.State)
+                {
+                    case TestSequenceState.NONE: ret = Brushes.White; break;
+                    case TestSequenceState.IN_PROGRESS: ret = Brushes.Beige; break;
+                    case TestSequenceState.PAUSED: ret = Brushes.LightGray; break;
+                    case TestSequenceState.STOPPED: ret = Brushes.LightGreen; break;
+                    case TestSequenceState.FINISHED: ret = Brushes.DarkGray; break;
+                }
+
+                return ret;
+            }
+        }
+
         
         private AdminBase _testSequencePos;
         public DataView TestSequencePos 
@@ -149,8 +173,7 @@ namespace LightLifeAdminConsole.MVVM
         public bool BtnNextEnabled { get { return BtnEnabled(BoxUIButtons.NEXT); } }
         public bool BtnSaveNewEnabled { get { return BtnEnabled(BoxUIButtons.SAVENEW); } }
 
-        public bool TextBoxesEnabled { get { return SequenceID == 0; } }
-               
+        public bool TextBoxesEnabled { get { return SequenceID == 0; } }              
            
         private ICommand _doSequenceCommand;
         public ICommand doSequenceCommand
@@ -175,15 +198,30 @@ namespace LightLifeAdminConsole.MVVM
                 _selectedStep = -1;
                 _testSequencePos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["VLLTestSequence"]);
 
+                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1); 
+
+                if (IsBusy)
+                    dispatcherTimer.Start();
+
                 //RaiseAllProperties();
             }
             catch (Exception ex)
             {
-                IsBusy = false;
                 ErrorText = ex.Message;
             }
         }
 
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("IsBusy");
+
+            if (!IsBusy)
+            {
+                dispatcherTimer.Stop();
+                RaisePropertyChanged("BtnStartEnabled");
+            }
+        }
 
         private void doSequence(string cmd)
         {
@@ -191,14 +229,14 @@ namespace LightLifeAdminConsole.MVVM
             {
                 switch (cmd.ToUpper())
                 {
-                    case "START": _box.testsequence.Start(); break;
-                    case "PAUSE": _box.testsequence.Pause(); break;
-                    case "STOP": _box.testsequence.Stop(); break;
-                    case "UPDATE": _box.testsequence.UpdateRemark(SelectedRemark); break;
-                    case "REFRESH": _box.Refresh(); break;
-                    case "SAVENEW": _box.testsequence.SaveNew(); break;
-                    case "PREV": _box.testsequence.Prev(); break;
-                    case "NEXT": _box.testsequence.Next(); break;
+                    case "START": _box.testsequence.Start(); dispatcherTimer.Start();   break;
+                    case "PAUSE": _box.testsequence.Pause();                            break;
+                    case "STOP": _box.testsequence.Stop(); dispatcherTimer.Stop(); RaisePropertyChanged("IsBusy"); break;
+                    case "UPDATE": _box.testsequence.UpdateRemark(SelectedRemark);      break;
+                    case "REFRESH": _box.Refresh();                                     break;
+                    case "SAVENEW": _box.testsequence.SaveNew();                        break;
+                    case "PREV": _box.testsequence.Prev();                              break;
+                    case "NEXT": _box.testsequence.Next();                              break;
                     //case "DELTATEST": _box.StartDeltaTest(); break;
                 }
                 
@@ -256,6 +294,7 @@ namespace LightLifeAdminConsole.MVVM
            
             RaisePropertyChanged("SequenceID");
             RaisePropertyChanged("TestSequencePos");
+            RaisePropertyChanged("BoxBackgroundColor");
         }
     }
 }

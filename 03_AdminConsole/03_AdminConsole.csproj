@@ -72,6 +72,9 @@
     <Compile Include="..\04_Common\01_ComClients\NeoLink.cs">
       <Link>01_ComClients\NeoLink.cs</Link>
     </Compile>
+    <Compile Include="..\04_Common\DataGridHelpers.cs">
+      <Link>04_Common\DataGridHelpers.cs</Link>
+    </Compile>
     <Compile Include="..\04_Common\JSONSerialize.cs">
       <Link>04_Common\JSONSerialize.cs</Link>
     </Compile>

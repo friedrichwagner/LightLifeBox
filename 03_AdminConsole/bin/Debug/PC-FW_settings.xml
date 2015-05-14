@@ -12,8 +12,8 @@
   <Database>
 	<DataSource value="PC-FW\SQLEXPRESS" />
 	<InitialCatalog value="LightLife" />
-	<UserID value="ltcs" />
-	<Password value="Lumitech03" />
+	<UserID value="sa" />
+	<Password value="test" />
   </Database>
   <LightLifeLogger name="LLLClient1">
 	<Enable value="True" />
@@ -23,5 +23,9 @@
 	<UDP-Port value="1025" />
 	<SendDelayTimeMS value="200" />
 	<Enable value="True" />
-  </NeoLink>      
+  </NeoLink>    
+    <ControlBox>
+	<NrOfBoxes value="2" />
+	<Command-Port value="9998" />
+  </ControlBox>  
 </Settings>

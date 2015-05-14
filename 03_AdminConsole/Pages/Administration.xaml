@@ -7,16 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" PreviewKeyUp="UserControl_PreviewKeyUp">
     <Grid Style="{StaticResource ContentRoot}">
-        <mui:ModernTab Layout="List" SelectedSource="/Content/Admin/Roles.xaml#LLUser" SnapsToDevicePixels="False">
+        <mui:ModernTab Layout="List" SelectedSource="/Content/Admin/Roles.xaml#LLBox" SnapsToDevicePixels="False">
             <mui:ModernTab.Links>
-                <mui:Link DisplayName="Probanden" Source="/Content/Admin/Roles.xaml#LLUser"/>
-                <mui:Link DisplayName="UserInfo" Source="/Content/Admin/Roles.xaml#LLUserInfo" />
-                <mui:Link DisplayName="----------" />
-                <mui:Link DisplayName="Rollen" Source="/Content/Admin/Roles.xaml#LLRole" />
-                <mui:Link DisplayName="Räume" Source="/Content/Admin/Roles.xaml#LLRoom" />
-                <mui:Link DisplayName="Gruppen" Source="/Content/Admin/Roles.xaml#LLGroup" />
-                <mui:Link DisplayName="Leuchten" Source="/Content/Admin/Roles.xaml#LLFixture" />
+                <mui:Link DisplayName="Boxen" Source="/Content/Admin/Roles.xaml#LLBox"/>
                 <mui:Link DisplayName="Szenen" Source="/Content/Admin/Roles.xaml#LLScene" />
+                <mui:Link DisplayName="----------" />
+                <mui:Link DisplayName="Sehtest" Source="/Content/Admin/Roles.xaml#LLDeltaTest" />
+                <mui:Link DisplayName="Test Sequenzen" Source="/Content/Admin/Roles.xaml#LLTestSequenceHead" />               
             </mui:ModernTab.Links>
         </mui:ModernTab>
     </Grid>

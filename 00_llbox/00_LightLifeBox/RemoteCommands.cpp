@@ -309,9 +309,12 @@ void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 	float duv = lumitech::stof(flds["duv"]);
 	unsigned int rgb[3];
 	rgb[0] = lumitech::stoi(flds["r"]); rgb[1] = lumitech::stoi(flds["g"]); rgb[2] = lumitech::stoi(flds["b"]);
+	int fadetime = lumitech::stoi(flds["fadetime"]);
 
 	float xy[2];
 	xy[0] = lumitech::stof(flds["x"]); xy[1] = lumitech::stof(flds["y"]);
+
+	box->Lights[0]->setFadeTime(fadetime);
 
 	switch (pimode)
 	{

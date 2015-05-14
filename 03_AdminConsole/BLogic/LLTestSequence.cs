@@ -12,8 +12,8 @@ using Lumitech.Helpers;
 
 namespace LightLifeAdminConsole
 {
-    public enum TestSequenceState { NONE=0, IN_PROGRESS=10, TESTING=20, FADING_OUT=30, PAUSED=40, STOPPED=90, FINISHED=99}; //identisch Tabelle LLTestSequenceState
-    public enum TestSequenceStep { STOPPED, BRIGHTNESS, CCT, JUDD, ALL, ALL_BIG }; // identisch Tabelle LLStep
+    public enum TestSequenceState { NONE=0, IN_PROGRESS=10, TESTING=20, FADING_OUT=30, PAUSED=80, STOPPED=90, FINISHED=99}; //identisch Tabelle LLTestSequenceState
+    public enum TestSequenceStep { STOPPED=0, BRIGHTNESS, CCT, JUDD, ALL, ALL_BIG, DELTATEST }; // identisch Tabelle LLStep
     public enum TestSequenceActivation { NONE=0, ACTIVATING=1, RELAXING=2 }; // identisch Tabelle LLStep
 
     class LLTestSequence
@@ -43,6 +43,8 @@ namespace LightLifeAdminConsole
         public int ActivationID { get; set; }
 
         private int _MinPosID;
+        public int MinPosID { get { return _MinPosID;} }
+
         private int _MaxPosID;
 
         private TestSequenceStep _stepID;
@@ -138,7 +140,12 @@ namespace LightLifeAdminConsole
         public void Stop()
         {
             State = TestSequenceState.STOPPED;
-            //UpdateVarious(LLMsgType.LL_STOP_TESTSEQUENCE, 0);
+            UpdateHeadState();
+        }
+
+        public void Finish()
+        {
+            State = TestSequenceState.FINISHED;
             UpdateHeadState();
         }
 
@@ -148,7 +155,7 @@ namespace LightLifeAdminConsole
             UpdateHeadState();
         }
 
-        public void Prev()
+        public bool Prev()
         {
             State = TestSequenceState.IN_PROGRESS;
             if (PosID > _MinPosID)
@@ -156,18 +163,24 @@ namespace LightLifeAdminConsole
                 PosID--;
                 getPos();
                 UpdateHeadState();
+                return true;
             }
+
+            return false;
         }
 
-        public void Next()
+        public bool Next()
         {
             State = TestSequenceState.IN_PROGRESS;
-            if (PosID < _MinPosID)
+            if (PosID < _MaxPosID)
             {
                 PosID++;
                 getPos();
                 UpdateHeadState();
+                return true;
             }
+
+            return false;
         }
 
         private void CreateSequence()
@@ -262,9 +275,16 @@ namespace LightLifeAdminConsole
             LLSQL.cmd.Exec();
         }
 
+        public void UpdateRemarkPos(int posid, string txt)
+        {
+            string stmt = "update LLTestSequencePos set remark='" + txt + "' where PosID=" + posid.ToString();
+            LLSQL.cmd.prep(stmt);
+            LLSQL.cmd.Exec();
+        }
+
         private void UpdateHeadState()
         {
-            string stmt = "update LLTestSequenceHead set TestStateID='" + State + "', ActualPosID=" + PosID.ToString() + " where sequenceID=" + SequenceID.ToString();
+            string stmt = "update LLTestSequenceHead set TestStateID='" + ((int)State).ToString() + "', ActualPosID=" + PosID.ToString() + " where sequenceID=" + SequenceID.ToString();
             LLSQL.cmd.prep(stmt);
             LLSQL.cmd.Exec();
         }

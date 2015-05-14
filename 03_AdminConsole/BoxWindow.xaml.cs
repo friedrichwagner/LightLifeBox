@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using LightLifeAdminConsole.MVVM;
 using FirstFloor.ModernUI.Windows.Controls;
 using System.Windows.Media;
+using Lumitech.Helpers;
 
 namespace LightLifeAdminConsole
 {
@@ -73,15 +74,8 @@ namespace LightLifeAdminConsole
         private void dgBox_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             int rowNum = e.Row.GetIndex();
-
-            var row = GetDataGridRows((sender as DataGrid));
-
-            if (row != null)
-            {
-                var test = (sender as DataGrid).ItemsSource
-                e.Row.Background = Brushes.LightGray;
-            }
-           
+            if (rowNum == dc.box.testsequence.PosID - dc.box.testsequence.MinPosID)
+                    e.Row.Background = Brushes.LightBlue;
         }
 
         private void dgBox_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
@@ -103,34 +97,13 @@ namespace LightLifeAdminConsole
             }
         }
 
-        private void dgBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < dgBox.Items.Count; i++)
-            {
-                DataRowView rv = (DataRowView)dgBox.Items[i];
-                if (rv.Row.RowState == DataRowState.Modified)
-                {
-                    string remark = rv.Row[7].ToString();
-                }
-            }
-        }
-
-        /*private void btnRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            try {
-                dc.RefreshPos();
-            }
-            catch (Exception ex)
-            {
-                dc.ErrorText = ex.Message;
-            }
-        }*/
-
         private void txtSequenceID_LostFocus(object sender, RoutedEventArgs e)
         {
             try {
                 if (dc.SequenceID != Int32.Parse(txtSequenceID.Text))
                 {
+                    SavePosRemarks();
+
                     Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
                     dc.ReloadSequence(Int32.Parse(txtSequenceID.Text));
 
@@ -145,6 +118,20 @@ namespace LightLifeAdminConsole
             finally
             {
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            }
+        }
+
+        private void SavePosRemarks()
+        {
+            for (int i = 0; i < dgBox.Items.Count; i++)
+            {
+                DataRowView rv = (DataRowView)dgBox.Items[i];
+                if (rv.Row.RowState == DataRowState.Modified)
+                {
+                    string remark = rv.Row["remark"].ToString();
+                    int posid = Int32.Parse(rv.Row["PosID"].ToString());
+                    dc.box.testsequence.UpdateRemarkPos(posid, remark);
+                }
             }
         }
 
@@ -164,6 +151,13 @@ namespace LightLifeAdminConsole
                 e.Handled = true;
 
             }
+        }
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            SavePosRemarks();
+            dc.ReloadSequence(dc.SequenceID);
+
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using LightLifeAdminConsole.MVVM;
 using Lumitech.Helpers;
+using LightLife.Data;
 
 
 namespace LightLifeAdminConsole
@@ -15,11 +16,12 @@ namespace LightLifeAdminConsole
     public enum TestSequenceState { NONE=0, IN_PROGRESS=10, TESTING=20, FADING_OUT=30, PAUSED=80, STOPPED=90, FINISHED=99}; //identisch Tabelle LLTestSequenceState
     public enum TestSequenceStep { STOPPED=0, BRIGHTNESS, CCT, JUDD, ALL, ALL_BIG, DELTATEST }; // identisch Tabelle LLStep
     public enum TestSequenceActivation { NONE=0, ACTIVATING=1, RELAXING=2 }; // identisch Tabelle LLStep
+    public enum CommandSender { GUI=0, CONTROLBOX=1 }; // identisch Tabelle LLStep
 
     class LLTestSequence
     {
-        private const int DEFAULT_CCT = 4000; //K
-        private const int DEFAULT_BRIGHTNESS = 50; //255:2
+        //private const int DEFAULT_CCT = 4000; //K
+        //private const int DEFAULT_BRIGHTNESS = 50; //255:2
 
         public int SequenceID { get; private set; }
 
@@ -65,7 +67,10 @@ namespace LightLifeAdminConsole
         public string EnabledButtons { get; private set; }
         public int ProbandID { get; set; }
         public string Remark { get; set; }
-        public TestSequenceState State { get; private set; }  
+        public TestSequenceState State { get; private set; }
+
+        public DateTime PhaseStartTime = DateTime.Now;
+        public bool PhaseinProgress { get; private set; }
 
         private AdminBase head;
         private AdminBase pos;
@@ -117,6 +122,15 @@ namespace LightLifeAdminConsole
                 Remark = String.Empty;
                 SequenceDef = String.Empty;
             }
+
+            PhaseinProgress = false;
+        }
+
+        public void SendSequenceStep()
+        {
+            string Params = ";userid=" + ProbandID + ";vlid=" + Box2.VLID + ";cycleid=" + CycleID + ";sequenceid=" + SequenceID
+                            + ";posid=" + PosID + ";stepid=" + ((int)StepID).ToString() + ";activationstate=" + ActivationID + ";msgtype=" + ((int)LLMsgType.LL_SET_SEQUENCEDATA).ToString();
+            Box2.boxes[_boxnr].rCmd.SetSequence(Params);
         }
 
         #region Sequence - Head
@@ -132,14 +146,19 @@ namespace LightLifeAdminConsole
         public int Start()
         {
             State = TestSequenceState.IN_PROGRESS;
-            UpdateHeadState();
 
+            Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, Box2.DEFAULT_BRIGHTNESS, Box2.DEFAULT_CCT, Box2.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+            Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
+
+            UpdateHeadState();
             return SequenceID;
         }
 
         public void Stop()
         {
             State = TestSequenceState.STOPPED;
+            Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, Box2.DEFAULT_BRIGHTNESS, Box2.DEFAULT_CCT, Box2.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+            Box2.boxes[_boxnr].CBoxEnableBoxButtons(Box2.ALL_BUTTONS_DISABLED, Box2.ALL_BUTTONS_DISABLED); 
             UpdateHeadState();
         }
 
@@ -152,16 +171,21 @@ namespace LightLifeAdminConsole
         public void Pause()
         {
             State = TestSequenceState.PAUSED;
+            Box2.boxes[_boxnr].CBoxEnableBoxButtons(Box2.ALL_BUTTONS_DISABLED, Box2.ALL_BUTTONS_DISABLED);
             UpdateHeadState();
         }
 
-        public bool Prev()
+        public bool Prev(CommandSender sender)
         {
             State = TestSequenceState.IN_PROGRESS;
             if (PosID > _MinPosID)
             {
                 PosID--;
                 getPos();
+
+                SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+                Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
+
                 UpdateHeadState();
                 return true;
             }
@@ -169,13 +193,18 @@ namespace LightLifeAdminConsole
             return false;
         }
 
-        public bool Next()
+        public bool Next(CommandSender sender)
         {
             State = TestSequenceState.IN_PROGRESS;
             if (PosID < _MaxPosID)
             {
                 PosID++;
                 getPos();
+
+                SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+
+                if (sender == CommandSender.GUI)
+                    Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
                 UpdateHeadState();
                 return true;
             }
@@ -220,36 +249,36 @@ namespace LightLifeAdminConsole
 
                 pos.Transaction = tran;
                 //Zyklus 1 - Aktivierend oder Entspannend
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(),  dt1.Rows[0].Field<int>("StepID1").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 1 - Aktivierend oder Entspannend (gegenteil von oben)  
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 2 - Aktivierend oder Entspannend
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //Hier im grossen Raum, nochmal ALLE
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 2 - Aktivierend oder Entspannend (gegenteil von oben)  
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //Hier im grossen Raum, nochmal ALLE
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", DEFAULT_BRIGHTNESS.ToString(), DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
             }
 
             return getPos(true);

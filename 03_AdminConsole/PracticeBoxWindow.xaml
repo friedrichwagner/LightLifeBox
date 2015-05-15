@@ -66,8 +66,10 @@
 
 
                 <StackPanel Orientation="Horizontal" Grid.Row="4"  Grid.Column="0" HorizontalAlignment="Stretch">
-                    <mui:ModernButton x:Name="btnStart" IconData="{StaticResource PlayIconData}" Command="{Binding doStartDeltaTestCommand}" CommandParameter="START" ToolTip="Start DeltaTest" IsEnabled="{Binding BtnStartEnabled}"/>
-                    <mui:ModernProgressRing IsActive="{Binding IsBusy}" Margin="230,0,0,0"  Width="80" Height="80"  Style="{StaticResource CircleProgressRingStyle}" />
+                    <mui:ModernButton x:Name="btnStart" IconData="{StaticResource PlayIconData}" Command="{Binding doDeltaTestCommand}" CommandParameter="START" ToolTip="Start DeltaTest" IsEnabled="{Binding BtnStartEnabled}"/>
+                    <mui:ModernButton x:Name="btnStop" IconData="{StaticResource StopIconData}" Command="{Binding doDeltaTestCommand}" CommandParameter="STOP" ToolTip="Stop DeltaTest" IsEnabled="{Binding BtnStopEnabled}"/>
+                    <!--<mui:ModernProgressRing IsActive="{Binding IsBusy}" Margin="230,0,0,0"  Width="80" Height="80"  Style="{StaticResource CircleProgressRingStyle}" />-->
+                    <TextBlock Text="{Binding TimeElapsed,StringFormat=mm\\:ss}"  VerticalAlignment="Center" Margin="200,0,0,0" FontFamily="Lucida Console" FontSize="40" FontWeight="Light"/>
                 </StackPanel>
 
             </Grid>

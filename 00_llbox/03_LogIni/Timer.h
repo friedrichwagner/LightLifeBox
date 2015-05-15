@@ -8,6 +8,9 @@
 //
 class Later
 {
+private:
+	bool done=false;
+
 public:
 	template <class callable, class... arguments>
 	Later(int after, bool async, callable&& f, arguments&&... args)
@@ -17,14 +20,20 @@ public:
 		{
 			std::thread([after, task]() {
 				std::this_thread::sleep_for(std::chrono::milliseconds(after));
-				task();
+					task();
 			}).detach();
 		}
 		else
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(after));
-			task();
+			if (!done)
+				task();
 		}
+	}
+
+	void Stop()
+	{
+		done = true;
 	}
 
 };

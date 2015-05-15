@@ -204,6 +204,9 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 	case LL_START_DELTATEST:
 		DoStartDeltaTest(cmd);
 		break;
+	case LL_STOP_DELTATEST:
+		DoStopDeltaTest(cmd);
+		break;
 
 	default:
 		s << "ExecuteCommand: unknown command:" << cmd.cmdId << " Data:" << cmd.cmdParams;
@@ -227,6 +230,8 @@ void RemoteCommands::DiscoverCommand(RemoteCommand cmd)
 
 	log->cout("ConsolIP:" + consoleIP + "/" + flds["consoleport"]);
 	_sendSock->setServerIPPort(consoleIP, consolePort);
+
+	box->setWaitTime(lumitech::stoi(flds["waittime"]));
 
 	//Send Back Name of Controlbox
 	StandardAnswer(cmd);
@@ -356,7 +361,7 @@ void RemoteCommands::GetPILEDCommand(RemoteCommand cmd)
 void RemoteCommands::StandardAnswer(RemoteCommand cmd)
 {
 	//cmd.cmdParams = "CmdId=" + lumitech::itos(cmd.cmdId) + ";BoxNr=" + lumitech::itos(box->ID);
-	cmd.cmdParams = ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name + ";isPracticeBox=" + lumitech::itos(box->isPracticeBox);
+	cmd.cmdParams = ";BoxNr=" + lumitech::itos(box->ID) + ";BoxName=" + box->Name + ";isPracticeBox=" + lumitech::itos(box->isPracticeBox) + ";dummy=0";
 	send(cmd);
 }
 
@@ -371,6 +376,13 @@ void RemoteCommands::DoStartDeltaTest(RemoteCommand cmd)
 	TestMode testmode = (TestMode)lumitech::stoi(flds["mode"]);
 	
 	box->StartDeltaTest(userid, br, cct, testmode);
+}
+
+void RemoteCommands::DoStopDeltaTest(RemoteCommand cmd)
+{
+	log->cout("Delta Test stopped remotely!");
+	box->deltaTest->stop();
+	box->Lights[0]->resetDefault();
 }
 
 //----------------------------------
@@ -393,9 +405,15 @@ void RemoteCommands::SendRemoteCommand(LLMsgType cmdId, string params)
 	case LL_SET_LOCKED_DELTATEST:
 		SendDeltaTestLock(params);
 		break;
+	case LL_AFTER_WAIT_TIME:
+		AfterWait(params);
+		break;
+	case LL_AFTER_FADE_TIME:
+		AfterFade(params);
+		break;
 
 	default:
-		s << "ExecuteCommand: unknown command:" << cmdId << " Data:" << params;
+		s << "SendRemoteCommand: unknown command:" << cmdId << " Data:" << params;
 		log->error(s.str());
 		break;
 	}

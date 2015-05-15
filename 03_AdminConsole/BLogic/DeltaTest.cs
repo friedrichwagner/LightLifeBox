@@ -13,7 +13,7 @@ namespace LightLifeAdminConsole
 
     class DeltaTest
     {
-        private LLRemoteCommand _rCmd;
+        //private LLRemoteCommand _rCmd;
         private Box2 _box;
 
         public int Proband { get; set; }
@@ -46,6 +46,13 @@ namespace LightLifeAdminConsole
             string Params= ";brightness="+ Brightness + ";cct=" + CCT + ";userid="+Proband + ";mode="+ (int)TestMode;
             _box.rCmd.StartDeltaTest(Params);
             _isRunning = true;
+        }
+
+        public void Stop()
+        {
+            _isRunning = false;
+            string Params = "";
+            _box.rCmd.StopDeltaTest(Params);            
         }
 
         public void Save(string Params)

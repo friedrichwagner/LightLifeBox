@@ -66,11 +66,6 @@ namespace LightLifeAdminConsole
             base.Close();
         }
 
-        private void ModernWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void dgBox_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             int rowNum = e.Row.GetIndex();

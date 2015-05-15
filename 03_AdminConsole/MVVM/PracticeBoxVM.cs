@@ -97,22 +97,24 @@ namespace LightLifeAdminConsole.MVVM
         }
 
         public bool BtnStartEnabled { get { return BtnEnabled(BoxUIButtons.START); } }
+        public bool BtnStopEnabled { get { return BtnEnabled(BoxUIButtons.STOP); } }
 
         public bool IsBusy
         {
             get { return dTest.isRunning; }
         }
+        public TimeSpan TimeElapsed { get; private set; }
 
-        private ICommand _doStartDeltaTestCommand;
-        public ICommand doStartDeltaTestCommand
+        private ICommand _doDeltaTestCommand;
+        public ICommand doDeltaTestCommand
         {
             get
             {
-                if (_doStartDeltaTestCommand == null)
+                if (_doDeltaTestCommand == null)
                 {
-                    _doStartDeltaTestCommand = new RelayCommand<string>(param => this.doStartDeltaTest(param), param => (dTest.CanStart()));
+                    _doDeltaTestCommand = new RelayCommand<string>(param => this.doDeltaTest(param), param => (Proband >0));
                 }
-                return _doStartDeltaTestCommand;
+                return _doDeltaTestCommand;
             }
         }
 
@@ -122,11 +124,12 @@ namespace LightLifeAdminConsole.MVVM
             {
                 _box = box;
                 _lltestcct = new Dictionary<int, string>();
+                _lltestcct.Add(0, "");
                 _lltestcct.Add(3000, "3000K");
-                _lltestcct.Add(4000, "4000K");
-                _lltestcct.Add(5000, "5000K");
+                _lltestcct.Add(4500, "4500K");               
                 _lltestcct.Add(6000, "6000K");
-                _lltestcct.Add(7000, "7000K");
+
+                TimeElapsed = TimeSpan.Zero;
 
                 dTest = new DeltaTest(box);
                 box.dTest = dTest;
@@ -142,22 +145,38 @@ namespace LightLifeAdminConsole.MVVM
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
+            TimeElapsed = TimeElapsed.Add(TimeSpan.FromSeconds(1));
+
             RaisePropertyChanged("IsBusy");
+            RaisePropertyChanged("TimeElapsed");
 
             if (!IsBusy)
             {
-                dispatcherTimer.Stop();
+                dispatcherTimer.Stop();              
+
+                RaisePropertyChanged("TimeElapsed");
                 RaisePropertyChanged("BtnStartEnabled");
+                RaisePropertyChanged("BtnStopEnabled");
             }
         }
 
-        private void doStartDeltaTest(string cmd)
+        private void doDeltaTest(string cmd)
         {
             try
             {
-                dTest.Start();
-                dispatcherTimer.Start();
+                switch (cmd)
+                {
+                    case "START":
+                        dTest.Start();
+                        TimeElapsed = TimeSpan.Zero;
+                        dispatcherTimer.Start();
+                        break;
+                    case "STOP":
+                        dTest.Stop();
+                        break;
+                }
                 RaisePropertyChanged("BtnStartEnabled");
+                RaisePropertyChanged("BtnStopEnabled");
             }
             catch (Exception ex)
             {
@@ -169,12 +188,15 @@ namespace LightLifeAdminConsole.MVVM
         {
             if (!_box.IsActive) return false;
 
-            if (btn==BoxUIButtons.START)
+            switch (btn)
             {
-                if (dTest.CanStart() && !dTest.isRunning) return true;
-                //if (dTest.CanStart()) return true;
+                case BoxUIButtons.START:
+                    if (dTest.CanStart() && !dTest.isRunning) return true;
+                    break;
+                case BoxUIButtons.STOP:
+                    if (dTest.isRunning) return true;
+                    break;
             }
-
             return false;
         }
     }

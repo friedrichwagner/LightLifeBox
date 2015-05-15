@@ -78,6 +78,7 @@ class RemoteCommands
 		void SequenceHandlingCommand(RemoteCommand cmd);
 		void StandardAnswer(RemoteCommand cmd);		
 		void DoStartDeltaTest(RemoteCommand cmd);
+		void DoStopDeltaTest(RemoteCommand cmd);
 
 		
 		//Box -> AdminConsole (rCmd)

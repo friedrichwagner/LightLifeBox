@@ -42,6 +42,7 @@ namespace LightLifeAdminConsole
     {
         public const int RECVBUF_LEN = 256;
         private const int TIMEOUT_INTERVAL = 3000;
+        public const int WAIT_TIME = 500;
 
         protected IPAddress _ip;
         protected int _sendport;
@@ -335,22 +336,21 @@ namespace LightLifeAdminConsole
             //ReceiveData += ReceiveUDP;
         }
 
-        public bool Ping(int groupid, bool isPracticeBox)
+        public bool Ping(int groupid, string addParams)
         {
-            string Params = ";groupid=" + groupid.ToString() + ";ispracticebox=" + ((isPracticeBox) ? "1" : "0") +
-                            ";consoleip=" + _OwnIP.ToString() + ";consoleport=" + _recvport.ToString();
+            string Params = ";groupid=" + groupid.ToString() + ";consoleip=" + _OwnIP.ToString() + ";consoleport=" + _recvport.ToString() + addParams;
             return SendAndReceiveBool(LLMsgType.LL_DISCOVER, Params, true);
         }
 
         public bool EnableButtons(string Params)
         {
-            return SendAndReceiveBool(LLMsgType.LL_ENABLE_BUTTONS, Params, false);
+            return SendAndReceiveBool(LLMsgType.LL_ENABLE_BUTTONS, Params, true);
         }
 
         public bool SetPILED(PILEDMode mode, int brightness, int cct, int[] rgb, float[] xy, int fadetime, float duv)
         {
             string Params = String.Format(PILED_SEND_TEMPLATE, (int)mode, brightness, cct, rgb[0], rgb[1], rgb[2], xy[0], xy[1], fadetime, duv);
-            return SendAndReceiveBool(LLMsgType.LL_SET_PILED, Params, false);
+            return SendAndReceiveBool(LLMsgType.LL_SET_PILED, Params, true);
         }
 
         public IDictionary<string, string> GetPILED(string Params)
@@ -366,6 +366,11 @@ namespace LightLifeAdminConsole
         public bool StartDeltaTest(string Params)
         {
             return SendAndReceiveBool(LLMsgType.LL_START_DELTATEST, Params, false);
+        }
+
+        public bool StopDeltaTest(string Params)
+        {
+            return SendAndReceiveBool(LLMsgType.LL_STOP_DELTATEST, Params, false);
         }
     }
 }

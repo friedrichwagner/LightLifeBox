@@ -42,6 +42,15 @@ namespace LightLifeAdminConsole.MVVM
                 if (_box.testsequence.State > TestSequenceState.NONE && _box.testsequence.State < TestSequenceState.STOPPED) return true;
                 else return false;
             }
+        }
+
+        private TimeSpan _timeElapsed;
+        public TimeSpan TimeElapsed
+        {
+            get
+            {
+                return _timeElapsed;
+            }
 
         }
 
@@ -199,7 +208,9 @@ namespace LightLifeAdminConsole.MVVM
                 _testSequencePos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["VLLTestSequence"]);
 
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-                dispatcherTimer.Interval = new TimeSpan(0, 0, 1); 
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+
+                _timeElapsed = TimeSpan.Zero;
 
                 if (IsBusy)
                     dispatcherTimer.Start();
@@ -214,11 +225,16 @@ namespace LightLifeAdminConsole.MVVM
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
+            _timeElapsed = _timeElapsed.Add(TimeSpan.FromSeconds(1));
+
             RaisePropertyChanged("IsBusy");
+            RaisePropertyChanged("TimeElapsed");
+            RaisePropertyChanged("TestSequencePos"); 
 
             if (!IsBusy)
             {
                 dispatcherTimer.Stop();
+                _timeElapsed = TimeSpan.Zero;
                 RaisePropertyChanged("BtnStartEnabled");
             }
         }
@@ -231,12 +247,12 @@ namespace LightLifeAdminConsole.MVVM
                 {
                     case "START": _box.testsequence.Start(); dispatcherTimer.Start();   break;
                     case "PAUSE": _box.testsequence.Pause();                            break;
-                    case "STOP": _box.testsequence.Stop(); dispatcherTimer.Stop(); RaisePropertyChanged("IsBusy"); break;
+                    case "STOP": _box.testsequence.Stop();                              break;
                     case "UPDATE": _box.testsequence.UpdateRemark(SelectedRemark);      break;
                     case "REFRESH": _box.Refresh();                                     break;
                     case "SAVENEW": _box.testsequence.SaveNew();                        break;
-                    case "PREV": _box.testsequence.Prev();                              break;
-                    case "NEXT": _box.testsequence.Next();                              break;
+                    case "PREV": _box.testsequence.Prev(CommandSender.GUI); break;
+                    case "NEXT": _box.testsequence.Next(CommandSender.GUI);                              break;
                     //case "DELTATEST": _box.StartDeltaTest(); break;
                 }
                 

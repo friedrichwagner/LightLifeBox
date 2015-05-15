@@ -7,10 +7,9 @@
 
 ControlBox* ControlBox::_instance = NULL;
 
+Later* d1;
 void delay1(ControlBox* p);
 void delay2(ControlBox* p);
-
-int psychoTestDelayTimeinSecs = 30000;
 
 ControlBox::ControlBox(std::string pName)
 {
@@ -86,7 +85,7 @@ bool ControlBox::Init()
 
 	//bool defaultActiveControls = ini->Read<bool>(this->Name, "ControlsDefaultActive", false);
 	testWithoutConsole = ini->Read<bool>("ControlBox_General", "TestWithoutConsole", false);
-	psychoTestDelayTimeinSecs = ini->Read<int>("ControlBox_General", "DelayTimeForPsychoTestSecs", 30) * 1000;
+	waittime = ini->Read<int>("ControlBox_General", "DelayTimeForPsychoTestSecs", 30) * 1000;
 	isPracticeBox = ini->Read<int>(this->Name, "IsPracticeBox", 0);
 
 	//1. Get the Potis	
@@ -223,6 +222,12 @@ string ControlBox::getName()
 	return this->Name;
 }
 
+void ControlBox::setWaitTime(int value)
+{
+	waittime = value;
+}
+
+
 void ControlBox::setButtons(bool b[], bool blink[])
 {
 	for (unsigned int i = 0; i < Buttons.size(); i++)
@@ -262,8 +267,10 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 				if (!isPracticeBox)
 				{
 					//FW 13.5. Wenn LOCK gesendet, dann kann user hiermit weitergehen --> Fade soll aber bleiben
-					if ((rmCmd->lastCmd.cmdId == LL_SET_LOCKED) && (pibtntype == PIBUTTON_LOCK1))
+					//if ((rmCmd->lastCmd.cmdId == LL_SET_LOCKED) && (pibtntype == PIBUTTON_LOCK1))
+					if (pibtntype == PIBUTTON_LOCK1)
 					{
+						//d1->Stop();
 						doAfterWait(this);
 					}
 					else
@@ -277,9 +284,9 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 						setButtons(b, b);
 
 						//Wait 30 secs
-						log->cout("Waiting 30 secs...");
-						//Later* d = new Later(psychoTestDelayTimeinSecs, true, &delay1, this);
-						Later Delay1(psychoTestDelayTimeinSecs, true, &delay1, this);
+						log->cout("Waiting 30secs...");
+						d1 = new Later(waittime, true, &delay1, this);
+						//Later Delay1(waittime, true, &delay1, this);
 					}
 				}
 
@@ -319,19 +326,15 @@ void delay1(ControlBox* p)
 
 void ControlBox::doAfterWait(ControlBox* p)
 {
-	//30 seconds fade wird direkt in Box gemacht
-	Lights[0]->setFadeTime(psychoTestDelayTimeinSecs);
-	Lights[0]->resetDefault();
-
-	cout << "Fading 30 secs..\r\n";
-	Later Delay2(psychoTestDelayTimeinSecs + 2, true, &delay2, p);
+	cout << "AfterWait...\r\n";
+	Later Delay2(waittime + 2, true, &delay2, p);
 
 	rmCmd->SendRemoteCommand(LL_AFTER_WAIT_TIME, "");
-	//Blinken der LED des nächsten Buttons wird in RemoteCommand gemacht
 }
 
 void delay2(ControlBox* p)
 {
+	cout << "AfterFade...\r\n";
 	p->rmCmd->SendRemoteCommand(LL_AFTER_FADE_TIME, "");
 }
 

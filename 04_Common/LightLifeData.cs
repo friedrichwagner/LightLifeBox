@@ -52,6 +52,7 @@ namespace LightLife.Data
         LL_GET_PILED = 53,
         LL_SET_SEQUENCEDATA = 54,
         LL_START_DELTATEST = 55,
+        LL_STOP_DELTATEST = 56,
 
         //Box ->AdminConsole
         LL_SET_LOCKED = 100,

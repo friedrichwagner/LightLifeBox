@@ -41,7 +41,7 @@ protected:
 	bool DeltaTestInProgress;
 	DeltaTest* deltaTest;
 	bool isPracticeBox;
-	
+	int waittime;
 public:
 	static ControlBox* getInstance(string);
 	static ControlBox* getInstance();	//should only be used when _instance is not NULL
@@ -65,4 +65,5 @@ public:
 	RemoteCommands* rmCmd;
 
 	void doAfterWait(ControlBox* p);
+	void setWaitTime(int value);
 };

@@ -39,20 +39,12 @@ namespace LightLifeAdminConsole.MVVM
         {
             get
             {
-                if (_box.testsequence.State > TestSequenceState.NONE && _box.testsequence.State < TestSequenceState.STOPPED) return true;
+                if ((_box.testsequence.State > TestSequenceState.NONE && _box.testsequence.State < TestSequenceState.STOPPED) && (_box.testsequence.State != TestSequenceState.PAUSED)) return true;
                 else return false;
             }
         }
 
-        private TimeSpan _timeElapsed;
-        public TimeSpan TimeElapsed
-        {
-            get
-            {
-                return _timeElapsed;
-            }
-
-        }
+        public TimeSpan TimeElapsed { get; private set; }
 
         public Brush BoxBackgroundColor
         {
@@ -62,8 +54,14 @@ namespace LightLifeAdminConsole.MVVM
                 switch (_box.testsequence.State)
                 {
                     case TestSequenceState.NONE: ret = Brushes.White; break;
-                    case TestSequenceState.IN_PROGRESS: ret = Brushes.Beige; break;
-                    case TestSequenceState.PAUSED: ret = Brushes.LightGray; break;
+                    case TestSequenceState.IN_PROGRESS: 
+                    case TestSequenceState.TESTING: 
+                                    ret = Brushes.Beige; break;
+
+                    case TestSequenceState.FADING_OUT:
+                    case TestSequenceState.PAUSED: 
+                            ret = Brushes.LightGray; break;
+
                     case TestSequenceState.STOPPED: ret = Brushes.LightGreen; break;
                     case TestSequenceState.FINISHED: ret = Brushes.DarkGray; break;
                 }
@@ -182,6 +180,45 @@ namespace LightLifeAdminConsole.MVVM
         public bool BtnNextEnabled { get { return BtnEnabled(BoxUIButtons.NEXT); } }
         public bool BtnSaveNewEnabled { get { return BtnEnabled(BoxUIButtons.SAVENEW); } }
 
+        private bool BtnEnabled(BoxUIButtons btn)
+        {
+            switch (btn)
+            {
+                case BoxUIButtons.START:
+                    if ((_box.testsequence.State == TestSequenceState.STOPPED) || (_box.testsequence.State == TestSequenceState.PAUSED) || (_box.testsequence.State == TestSequenceState.NONE)) return true;
+                    break;
+
+                case BoxUIButtons.STOP:
+                    if ((_box.testsequence.State == TestSequenceState.IN_PROGRESS) || (_box.testsequence.State == TestSequenceState.TESTING) || (_box.testsequence.State == TestSequenceState.FADING_OUT) || (_box.testsequence.State == TestSequenceState.PAUSED)) return true;
+                    break;
+
+                case BoxUIButtons.PREV:
+                    if ((_box.testsequence.State == TestSequenceState.IN_PROGRESS) || (_box.testsequence.State == TestSequenceState.TESTING) || (_box.testsequence.State == TestSequenceState.FADING_OUT) || (_box.testsequence.State == TestSequenceState.PAUSED) && (_box.testsequence.PosID > 1)) return true;
+                    break;
+
+                case BoxUIButtons.NEXT:
+                    if ((_box.testsequence.State == TestSequenceState.IN_PROGRESS) || (_box.testsequence.State == TestSequenceState.TESTING) || (_box.testsequence.State == TestSequenceState.FADING_OUT) || (_box.testsequence.State == TestSequenceState.PAUSED) && (_box.testsequence.PosID < 22)) return true;
+                    break;
+
+                case BoxUIButtons.PAUSE:
+                    if ((_box.testsequence.State == TestSequenceState.IN_PROGRESS) || (_box.testsequence.State == TestSequenceState.TESTING) || (_box.testsequence.State == TestSequenceState.FADING_OUT)) return true;
+                    break;
+
+                case BoxUIButtons.UPDATE:
+                    //if (boxes[SelectedBox].State == BoxStatus.STARTED) return true; 
+                    //else 
+                    //kann immer upgedated werden
+                    return true;
+
+                case BoxUIButtons.SAVENEW:
+                    //if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.NONE) || (State == TestSequenceState.FINISHED)) return true;
+                    if ((SequenceID <= 0) && (_box.testsequence.ProbandID > 0) && (_box.testsequence.ActivationID > 0) && (_box.testsequence.SequenceDef.Length > 0)) return true;
+                    break;
+            }
+
+            return false;
+        }
+
         public bool TextBoxesEnabled { get { return SequenceID == 0; } }              
            
         private ICommand _doSequenceCommand;
@@ -207,10 +244,12 @@ namespace LightLifeAdminConsole.MVVM
                 _selectedStep = -1;
                 _testSequencePos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["VLLTestSequence"]);
 
+                _box.testsequence.TestSequenceEvent += TestSequenceEvent;
+
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
 
-                _timeElapsed = TimeSpan.Zero;
+                TimeElapsed = TimeSpan.Zero;
 
                 if (IsBusy)
                     dispatcherTimer.Start();
@@ -223,9 +262,14 @@ namespace LightLifeAdminConsole.MVVM
             }
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        /*private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            _timeElapsed = _timeElapsed.Add(TimeSpan.FromSeconds(1));
+            if (actualPos != _box.testsequence.PosID)
+            {
+                TimeElapsed = TimeSpan.Zero;
+                actualPos = _box.testsequence.PosID;
+            }
+            TimeElapsed = TimeElapsed.Add(TimeSpan.FromSeconds(1));
 
             RaisePropertyChanged("IsBusy");
             RaisePropertyChanged("TimeElapsed");
@@ -234,9 +278,18 @@ namespace LightLifeAdminConsole.MVVM
             if (!IsBusy)
             {
                 dispatcherTimer.Stop();
-                _timeElapsed = TimeSpan.Zero;
+                TimeElapsed = TimeSpan.Zero;
                 RaisePropertyChanged("BtnStartEnabled");
             }
+        }*/
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            if (_box.testsequence.State == TestSequenceState.TESTING)
+                TimeElapsed = TimeElapsed.Add(TimeSpan.FromSeconds(1));
+
+            RaisePropertyChanged("IsBusy");
+            RaisePropertyChanged("TimeElapsed");
         }
 
         private void doSequence(string cmd)
@@ -245,15 +298,16 @@ namespace LightLifeAdminConsole.MVVM
             {
                 switch (cmd.ToUpper())
                 {
-                    case "START": _box.testsequence.Start(); dispatcherTimer.Start();   break;
-                    case "PAUSE": _box.testsequence.Pause();                            break;
+                    case "SAVENEW": _box.testsequence.SaveNew(); break;
+                    case "START": _box.testsequence.Start();    break;                    
                     case "STOP": _box.testsequence.Stop();                              break;
-                    case "UPDATE": _box.testsequence.UpdateRemark(SelectedRemark);      break;
-                    case "REFRESH": _box.Refresh();                                     break;
-                    case "SAVENEW": _box.testsequence.SaveNew();                        break;
-                    case "PREV": _box.testsequence.Prev(CommandSender.GUI); break;
-                    case "NEXT": _box.testsequence.Next(CommandSender.GUI);                              break;
-                    //case "DELTATEST": _box.StartDeltaTest(); break;
+                    case "PAUSE": _box.testsequence.Pause(); break;                    
+                    case "PREV": _box.testsequence.Prev(CommandSender.GUI);             break;
+                    case "NEXT": _box.testsequence.Next(CommandSender.GUI);             break;
+
+                    case "UPDATE": _box.testsequence.UpdateRemark(SelectedRemark); break;
+                    case "REFRESH": _box.Refresh(); break;
+
                 }
                 
                 RaiseAllProperties();
@@ -264,12 +318,18 @@ namespace LightLifeAdminConsole.MVVM
             }
         }
 
-        private bool BtnEnabled(BoxUIButtons btn)
+        private void TestSequenceEvent(int SequenceID, int PosID, TestSequenceCommand cmd)
         {
-            //TEST TEST
-            //return true;
-            //if (!_box.IsActive) return false;
-            return _box.testsequence.btnEnabled(btn);
+            switch (cmd)
+            {
+                case TestSequenceCommand.SAVENEW: RaisePropertyChanged("TestSequencePos"); break;
+                case TestSequenceCommand.START: TimeElapsed = TimeSpan.Zero;  dispatcherTimer.Start(); break;
+                case TestSequenceCommand.STOP:  dispatcherTimer.Stop(); break;
+                case TestSequenceCommand.PAUSE: dispatcherTimer.Stop(); break;
+                case TestSequenceCommand.FINISH: dispatcherTimer.Stop(); break;
+                case TestSequenceCommand.PREV: TimeElapsed = TimeSpan.Zero; RaisePropertyChanged("TestSequencePos"); break;
+                case TestSequenceCommand.NEXT: TimeElapsed = TimeSpan.Zero; RaisePropertyChanged("TestSequencePos"); break;
+            }
         }
 
         public void ReloadSequence(int seqID)
@@ -278,6 +338,7 @@ namespace LightLifeAdminConsole.MVVM
             {       
        
               _box.ReloadSequence(seqID);
+              _box.testsequence.TestSequenceEvent += TestSequenceEvent;
 
                 RaiseAllProperties();
             }

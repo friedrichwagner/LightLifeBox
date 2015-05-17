@@ -1,21 +1,10 @@
+FW 16.5.2015:
+
 ControlBox:
--Integration Drehpoti am Raspi
 -Belastungstests (Anzahl Boxen gleichzeitig)
--Steuerung Funktionalität der Box von Console aus ?
-	--Sperren/Freigeben von Potis
-	--Rücksetzen auf bestimmten Wert
-	--Juddsche Geraden
-	
 
-PILEDServer:
--Aufteilung in LightLife Observer und PILED Observer notwendig ?
-
-
-Admin-App:
-- Applikationstyp: Browser App/WPF, Windows-Forms ? --> Im Moment Tendenz zu WPF
-- Funktionsumfang zu klären
-- "Normale" PILED Funktionen
-- Testsequenzen: Wie genau ?
-- Szenen eingeben/modifizieren/löschen
+AdmonConsole:
+-Testen Ablauf TestSequenzen
+-Stoppuhr
 
 

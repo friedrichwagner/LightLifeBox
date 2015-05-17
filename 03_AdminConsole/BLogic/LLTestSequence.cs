@@ -18,10 +18,15 @@ namespace LightLifeAdminConsole
     public enum TestSequenceActivation { NONE=0, ACTIVATING=1, RELAXING=2 }; // identisch Tabelle LLStep
     public enum CommandSender { GUI=0, CONTROLBOX=1 }; // identisch Tabelle LLStep
 
+    public enum TestSequenceCommand { SAVENEW, START, PREV, NEXT, PAUSE, STOP, FINISH};
+
+    public delegate void TestSequenceEventDelegate(int SequenceID, int PosID, TestSequenceCommand seqCmd);
+
     class LLTestSequence
     {
         //private const int DEFAULT_CCT = 4000; //K
         //private const int DEFAULT_BRIGHTNESS = 50; //255:2
+        public TestSequenceEventDelegate TestSequenceEvent;
 
         public int SequenceID { get; private set; }
 
@@ -40,7 +45,7 @@ namespace LightLifeAdminConsole
             }
         }
 
-        public int PosID { get; private set; } 
+        public int PosID { get; private set; }
         public int CycleID { get; private set; }
         public int ActivationID { get; set; }
 
@@ -68,9 +73,6 @@ namespace LightLifeAdminConsole
         public int ProbandID { get; set; }
         public string Remark { get; set; }
         public TestSequenceState State { get; private set; }
-
-        public DateTime PhaseStartTime = DateTime.Now;
-        public bool PhaseinProgress { get; private set; }
 
         private AdminBase head;
         private AdminBase pos;
@@ -122,8 +124,6 @@ namespace LightLifeAdminConsole
                 Remark = String.Empty;
                 SequenceDef = String.Empty;
             }
-
-            PhaseinProgress = false;
         }
 
         public void SendSequenceStep()
@@ -140,17 +140,30 @@ namespace LightLifeAdminConsole
             CreateSequence();
             State = TestSequenceState.NONE;
 
+            RaiseEvent(TestSequenceCommand.SAVENEW);
+
             return SequenceID;
+        }
+
+        private void RaiseEvent(TestSequenceCommand cmd)
+        {
+            if (TestSequenceEvent != null)
+            {
+                TestSequenceEvent(SequenceID, PosID, cmd);
+            }
         }
 
         public int Start()
         {
-            State = TestSequenceState.IN_PROGRESS;
+            State = TestSequenceState.TESTING;
 
             Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, Box2.DEFAULT_BRIGHTNESS, Box2.DEFAULT_CCT, Box2.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
             Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
 
             UpdateHeadState();
+
+            RaiseEvent(TestSequenceCommand.START);
+
             return SequenceID;
         }
 
@@ -158,13 +171,17 @@ namespace LightLifeAdminConsole
         {
             State = TestSequenceState.STOPPED;
             Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, Box2.DEFAULT_BRIGHTNESS, Box2.DEFAULT_CCT, Box2.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
-            Box2.boxes[_boxnr].CBoxEnableBoxButtons(Box2.ALL_BUTTONS_DISABLED, Box2.ALL_BUTTONS_DISABLED); 
+            Box2.boxes[_boxnr].CBoxEnableBoxButtons(Box2.ALL_BUTTONS_DISABLED, Box2.ALL_BUTTONS_DISABLED);
+
+            RaiseEvent(TestSequenceCommand.STOP);
             UpdateHeadState();
         }
 
         public void Finish()
         {
             State = TestSequenceState.FINISHED;
+
+            RaiseEvent(TestSequenceCommand.FINISH);
             UpdateHeadState();
         }
 
@@ -172,12 +189,13 @@ namespace LightLifeAdminConsole
         {
             State = TestSequenceState.PAUSED;
             Box2.boxes[_boxnr].CBoxEnableBoxButtons(Box2.ALL_BUTTONS_DISABLED, Box2.ALL_BUTTONS_DISABLED);
+            RaiseEvent(TestSequenceCommand.PAUSE);
             UpdateHeadState();
         }
 
         public bool Prev(CommandSender sender)
         {
-            State = TestSequenceState.IN_PROGRESS;
+            State = TestSequenceState.TESTING;
             if (PosID > _MinPosID)
             {
                 PosID--;
@@ -186,6 +204,7 @@ namespace LightLifeAdminConsole
                 SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
                 Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
 
+                RaiseEvent(TestSequenceCommand.PREV);
                 UpdateHeadState();
                 return true;
             }
@@ -195,7 +214,7 @@ namespace LightLifeAdminConsole
 
         public bool Next(CommandSender sender)
         {
-            State = TestSequenceState.IN_PROGRESS;
+                        
             if (PosID < _MaxPosID)
             {
                 PosID++;
@@ -203,9 +222,19 @@ namespace LightLifeAdminConsole
 
                 SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
 
+                //Wenn Cmd von GUI kommt, dann gleich mit Test starten
+                //wenn Cmd von ControlBox --> Fading 30sec, dann starten
                 if (sender == CommandSender.GUI)
+                {
+                    State = TestSequenceState.TESTING;
                     Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
+                }
+                else
+                    State = TestSequenceState.FADING_OUT;
+               
+                RaiseEvent(TestSequenceCommand.NEXT);               
                 UpdateHeadState();
+
                 return true;
             }
 
@@ -253,14 +282,14 @@ namespace LightLifeAdminConsole
                 pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                //pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 1 - Aktivierend oder Entspannend (gegenteil von oben)  
                 pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                //pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 2 - Aktivierend oder Entspannend
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
@@ -269,7 +298,7 @@ namespace LightLifeAdminConsole
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //Hier im grossen Raum, nochmal ALLE
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                //pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 2 - Aktivierend oder Entspannend (gegenteil von oben)  
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
@@ -278,7 +307,7 @@ namespace LightLifeAdminConsole
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //Hier im grossen Raum, nochmal ALLE
                 pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                //pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
             }
 
             return getPos(true);
@@ -311,50 +340,17 @@ namespace LightLifeAdminConsole
             LLSQL.cmd.Exec();
         }
 
+        public void SetTestSequenceState(TestSequenceState s)
+        {
+            State = s;
+            UpdateHeadState();
+        }
+
         private void UpdateHeadState()
         {
             string stmt = "update LLTestSequenceHead set TestStateID='" + ((int)State).ToString() + "', ActualPosID=" + PosID.ToString() + " where sequenceID=" + SequenceID.ToString();
             LLSQL.cmd.prep(stmt);
             LLSQL.cmd.Exec();
-        }
-
-        public bool btnEnabled(BoxUIButtons btn)
-        {
-            switch (btn)
-            {
-                case BoxUIButtons.START:
-                    if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.PAUSED) || (State == TestSequenceState.NONE)) return true;
-                    break;
-
-                case BoxUIButtons.STOP:
-                    if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT) || (State == TestSequenceState.PAUSED)) return true;
-                    break;
-
-                case BoxUIButtons.PREV:
-                    if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT) || (State == TestSequenceState.PAUSED) && (PosID > 1)) return true;
-                    break;
-
-                case BoxUIButtons.NEXT:
-                    if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT) || (State == TestSequenceState.PAUSED) && (PosID < 22)) return true;
-                    break;
-
-                case BoxUIButtons.PAUSE:
-                    if ((State == TestSequenceState.IN_PROGRESS) || (State == TestSequenceState.TESTING) || (State == TestSequenceState.FADING_OUT)) return true;
-                    break;
-
-                case BoxUIButtons.UPDATE:
-                    //if (boxes[SelectedBox].State == BoxStatus.STARTED) return true; 
-                    //else 
-                    //kann immer upgedated werden
-                    return true;
-
-                case BoxUIButtons.SAVENEW:
-                    //if ((State == TestSequenceState.STOPPED) || (State == TestSequenceState.NONE) || (State == TestSequenceState.FINISHED)) return true;
-                    if ((SequenceID <= 0) && (ProbandID > 0) && (ActivationID > 0) && (SequenceDef.Length > 0)) return true;
-                    break;
-            }
-
-            return false;
         }
 
         #endregion Sequence

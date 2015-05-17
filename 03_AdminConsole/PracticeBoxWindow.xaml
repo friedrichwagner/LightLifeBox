@@ -5,7 +5,7 @@
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
                   mc:Ignorable="d" 
-                  d:DesignHeight="350" d:DesignWidth="400"
+                  d:DesignHeight="400" d:DesignWidth="400"
                   Title="Box"  Style="{StaticResource BlankWindow}" SizeToContent="WidthAndHeight" Closing="ModernWindow_Closing" Activated="ModernWindow_Activated">
 
     <Window.Resources>
@@ -37,6 +37,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />                    
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -65,13 +66,17 @@
                 </StackPanel>
 
 
-                <StackPanel Orientation="Horizontal" Grid.Row="4"  Grid.Column="0" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Grid.Row="4"  Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Result:" Style="{StaticResource Heading2}"  Margin="10" Width="90"/>
+                    <TextBox x:Name="txtTestResult"  Margin="10" Height="40" Width="250" MaxLength="3"  Style="{StaticResource TextBoxStyle}" Text="{Binding TestResult, Mode=OneWay}" IsReadOnly="True" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="5"  Grid.Column="0" HorizontalAlignment="Stretch">
                     <mui:ModernButton x:Name="btnStart" IconData="{StaticResource PlayIconData}" Command="{Binding doDeltaTestCommand}" CommandParameter="START" ToolTip="Start DeltaTest" IsEnabled="{Binding BtnStartEnabled}"/>
                     <mui:ModernButton x:Name="btnStop" IconData="{StaticResource StopIconData}" Command="{Binding doDeltaTestCommand}" CommandParameter="STOP" ToolTip="Stop DeltaTest" IsEnabled="{Binding BtnStopEnabled}"/>
                     <!--<mui:ModernProgressRing IsActive="{Binding IsBusy}" Margin="230,0,0,0"  Width="80" Height="80"  Style="{StaticResource CircleProgressRingStyle}" />-->
                     <TextBlock Text="{Binding TimeElapsed,StringFormat=mm\\:ss}"  VerticalAlignment="Center" Margin="200,0,0,0" FontFamily="Lucida Console" FontSize="40" FontWeight="Light"/>
-                </StackPanel>
-
+                </StackPanel>            
             </Grid>
             
         </ScrollViewer>

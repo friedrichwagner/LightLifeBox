@@ -283,9 +283,10 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 						bool b[5] = { false, false, false, true, false };
 						setButtons(b, b);
 
+						//FW 17.5. User löst immer selber aus mit PIBUTTON_LOCK1
 						//Wait 30 secs
-						log->cout("Waiting 30secs...");
-						d1 = new Later(waittime, true, &delay1, this);
+						//log->cout("Waiting 30secs...");
+						//d1 = new Later(waittime, true, &delay1, this);
 						//Later Delay1(waittime, true, &delay1, this);
 					}
 				}
@@ -314,7 +315,7 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 
 
 //Nach 30 Sekunden statischer Lichtszene --> Fade auf Ausgangszustand (fadetime=30sek)
-void delay1(ControlBox* p)
+/*void delay1(ControlBox* p)
 {	
 	if (p != NULL)
 	{
@@ -322,7 +323,7 @@ void delay1(ControlBox* p)
 		if (p->rmCmd->lastCmd.cmdId != LL_AFTER_WAIT_TIME)
 			p->doAfterWait(p);
 	}
-}
+}*/
 
 void ControlBox::doAfterWait(ControlBox* p)
 {

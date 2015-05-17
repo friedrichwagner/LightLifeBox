@@ -105,6 +105,8 @@ namespace LightLifeAdminConsole.MVVM
         }
         public TimeSpan TimeElapsed { get; private set; }
 
+        public string TestResult { get { return dTest.Result; } }
+
         private ICommand _doDeltaTestCommand;
         public ICommand doDeltaTestCommand
         {
@@ -133,6 +135,7 @@ namespace LightLifeAdminConsole.MVVM
 
                 dTest = new DeltaTest(box);
                 box.dTest = dTest;
+                dTest.DeltaTestEvent += DeltaTestEventHandler;
 
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 1); 
@@ -143,21 +146,33 @@ namespace LightLifeAdminConsole.MVVM
             }
         }
 
+        private void DeltaTestEventHandler(DeltaTestCommand cmd, TestMode mode)
+        {
+            switch (cmd)
+            {
+                case DeltaTestCommand.START:
+                    TimeElapsed = TimeSpan.Zero;
+                    dispatcherTimer.Start();
+                    break;
+                case DeltaTestCommand.STOP:
+                    dispatcherTimer.Stop();
+                    break;
+                case DeltaTestCommand.SAVE:
+                    dispatcherTimer.Stop();
+                    break;
+            }
+
+            RaisePropertyChanged("BtnStartEnabled");
+            RaisePropertyChanged("BtnStopEnabled");
+            RaisePropertyChanged("TestResult");
+        }
+
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             TimeElapsed = TimeElapsed.Add(TimeSpan.FromSeconds(1));
 
             RaisePropertyChanged("IsBusy");
             RaisePropertyChanged("TimeElapsed");
-
-            if (!IsBusy)
-            {
-                dispatcherTimer.Stop();              
-
-                RaisePropertyChanged("TimeElapsed");
-                RaisePropertyChanged("BtnStartEnabled");
-                RaisePropertyChanged("BtnStopEnabled");
-            }
         }
 
         private void doDeltaTest(string cmd)
@@ -168,15 +183,11 @@ namespace LightLifeAdminConsole.MVVM
                 {
                     case "START":
                         dTest.Start();
-                        TimeElapsed = TimeSpan.Zero;
-                        dispatcherTimer.Start();
                         break;
                     case "STOP":
                         dTest.Stop();
                         break;
                 }
-                RaisePropertyChanged("BtnStartEnabled");
-                RaisePropertyChanged("BtnStopEnabled");
             }
             catch (Exception ex)
             {

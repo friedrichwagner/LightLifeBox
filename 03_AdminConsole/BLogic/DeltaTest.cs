@@ -9,7 +9,10 @@ using Lumitech.Helpers;
 
 namespace LightLifeAdminConsole
 {
-    enum TestMode : int { DTEST_NONE = 0, DTEST_BRIGHTNESS_UP = 1, DTEST_BRIGHTNESS_DOWN = 2, DTEST_CCT_UP = 3, DTEST_CCT_DOWN = 4, DTEST_JUDD_UP = 5, DTEST_JUDD_DOWN = 6 };
+    public enum TestMode : int { DTEST_NONE = 0, DTEST_BRIGHTNESS_UP = 1, DTEST_BRIGHTNESS_DOWN = 2, DTEST_CCT_UP = 3, DTEST_CCT_DOWN = 4, DTEST_JUDD_UP = 5, DTEST_JUDD_DOWN = 6 };
+
+    public enum DeltaTestCommand { START, STOP, SAVE};
+    public delegate void DeltaTestEventDelegate(DeltaTestCommand cmd, TestMode mode);
 
     class DeltaTest
     {
@@ -19,11 +22,12 @@ namespace LightLifeAdminConsole
         public int Proband { get; set; }
         public int Brightness { get; set; }
         public int CCT { get; set; }
-        //public float duv { get; set; }
         public TestMode TestMode   { get; set; }
+        public DeltaTestEventDelegate DeltaTestEvent;
 
         private bool _isRunning;
         public bool isRunning { get { return _isRunning; } }
+        public string Result { get; private set; }
  
         public DeltaTest(Box2 b)
         {
@@ -31,8 +35,8 @@ namespace LightLifeAdminConsole
             Brightness = LightLifeData.DEFAULT_BRIGHTNESS;
             CCT = LightLifeData.DEFAULT_CCT;
             TestMode = TestMode.DTEST_NONE;
-            //duv = 0.0f;
             _box = b;
+            Result = String.Empty;
         }
 
         public bool CanStart()
@@ -46,23 +50,61 @@ namespace LightLifeAdminConsole
             string Params= ";brightness="+ Brightness + ";cct=" + CCT + ";userid="+Proband + ";mode="+ (int)TestMode;
             _box.rCmd.StartDeltaTest(Params);
             _isRunning = true;
+            Result = String.Empty;
+
+            if (DeltaTestEvent != null)
+                DeltaTestEvent(DeltaTestCommand.START, TestMode);
         }
 
         public void Stop()
         {
             _isRunning = false;
             string Params = "";
-            _box.rCmd.StopDeltaTest(Params);            
+            _box.rCmd.StopDeltaTest(Params);
+
+            if (DeltaTestEvent != null)
+                DeltaTestEvent(DeltaTestCommand.STOP, TestMode);
         }
 
         public void Save(string Params)
         {
             _isRunning = false;
-            string[] sarr = Params.Split(';');
-            Dictionary<string, string> dtmp = sarr.Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
-            MyDictionary d = new MyDictionary(dtmp);
+            /*string[] sarr = Params.Split(';');
+            Dictionary<string, string> dtmp = sarr.Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);*/
+
+            IDictionary<string, string> dtmp = RemoteCommandBase.str2Dict(Params);
+            MyDictionary d = new MyDictionary((Dictionary<string, string>)dtmp);
             AdminBase deltatest = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLDeltaTest"]);
-            deltatest.insert(d);            
+            
+            deltatest.insert(d);
+
+            getResult(d);
+
+            if (DeltaTestEvent != null)
+                DeltaTestEvent(DeltaTestCommand.SAVE, TestMode);
+        }
+
+        private string getResult(MyDictionary d)
+        {
+            switch(TestMode)
+            {
+                case TestMode.DTEST_BRIGHTNESS_DOWN:
+                case TestMode.DTEST_BRIGHTNESS_UP:
+                    Result = d["brightness"].ToString();
+                    break;
+
+                case TestMode.DTEST_CCT_DOWN:
+                case TestMode.DTEST_CCT_UP:
+                    Result = d["cct"].ToString();
+                    break;
+
+                case TestMode.DTEST_JUDD_DOWN:
+                case TestMode.DTEST_JUDD_UP:
+                    Result = d["actduv"].ToString();
+                    break;
+            }
+
+            return Result;
         }
 
     }

@@ -41,8 +41,8 @@ namespace LightLifeAdminConsole
         //private byte[] PotisActive = new byte[NUM_POTIS];
         //private byte[] ButtonsActive = new byte[NUM_BUTTONS];
 
-        private LLMsgType lastmsgtype;
-        private int lastBrightness;
+        //private LLMsgType lastmsgtype;
+        //private int lastBrightness;
         private static Logger log;
 
         public LLTestSequence testsequence;
@@ -118,8 +118,8 @@ namespace LightLifeAdminConsole
             IsActive = false;
             IsPracticeBox = false;
             BoxIP = IPAddress.Loopback;
-            lastmsgtype = LLMsgType.LL_NONE;
-            lastBrightness = 0;
+            //lastmsgtype = LLMsgType.LL_NONE;
+            //lastBrightness = 0;
             dTest = null;
         }
 
@@ -186,12 +186,20 @@ namespace LightLifeAdminConsole
                         {
                             System.Threading.Thread.Sleep(500);
 
-                            //Buttons deaktivieren, Nächste LED blinkt                            
-                            string blink = LLSQL.llstep.Select("Stepid=" + (int)testsequence.StepID)[0].Field<string>("EnabledButtons");
-                            CBoxEnableBoxButtons(ALL_BUTTONS_DISABLED, blink);
+                            /*if (testsequence.StepID == TestSequenceStep.STOPPED)
+                            {
+                                CBoxEnableBoxButtons(ALL_BUTTONS_DISABLED, ALL_BUTTONS_DISABLED);
+                            }
+                            else*/
+                            {
+                                //Buttons deaktivieren, Nächste LED blinkt                            
+                                string blink = LLSQL.llstep.Select("Stepid=" + (int)testsequence.StepID)[0].Field<string>("EnabledButtons");
+                                CBoxEnableBoxButtons(ALL_BUTTONS_DISABLED, blink);
+                            }
                         }
                         else
                         {
+                            CBoxEnableBoxButtons(ALL_BUTTONS_DISABLED, ALL_BUTTONS_DISABLED);
                             testsequence.Stop();
                         }
                         break;
@@ -200,6 +208,9 @@ namespace LightLifeAdminConsole
                     case (int)LLMsgType.LL_AFTER_FADE_TIME:
                             CBoxSetPILed(PILEDMode.SET_CCT, DEFAULT_BRIGHTNESS, DEFAULT_CCT, DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
                             CBoxEnableBoxButtons(testsequence.EnabledButtons, ALL_BUTTONS_DISABLED);
+
+                            //Damit Timer in BoxVM2 richtig gezählt wird
+                            testsequence.SetTestSequenceState(TestSequenceState.TESTING);
                         break;
 
                     default:

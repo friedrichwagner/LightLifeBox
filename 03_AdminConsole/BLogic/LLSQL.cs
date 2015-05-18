@@ -121,7 +121,7 @@ namespace LightLifeAdminConsole.Data
 
             tables["LLTestSequencePos"].selectSQL = "select * from LLTestSequencePos";
             tables["LLTestSequencePos"].insertSQL = "insert into LLTestSequencePos(SequenceID, CycleID, ActivationID, StepID, PILEDID, Brightness, CCT, duv, x,y, remark) values(:1,:2,:3,:4,:5,:6,:7,:8, :9, :10, :11)";
-            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:brightness:, CCT=:cct:, duv=:duv: x=:x:, y=:y:, piledID=:mode:";
+            tables["LLTestSequencePos"].updateSQL = "update LLTestSequencePos set Brightness=:brightness:, CCT=:cct:, duv=:duv:, x=:x:, y=:y:, piledID=:mode:";
 
             tables["LLBox"].selectSQL = "select * from LLBox";
             tables["LLBox"].updateSQL = "update LLBox set active=:1, ActualSequence=:2 where boxid=:3";

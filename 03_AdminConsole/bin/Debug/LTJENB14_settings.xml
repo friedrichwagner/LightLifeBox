@@ -22,8 +22,8 @@
 	<Enable value="True" />
   </LightLifeLogger>    
   <NeoLink name="NeoLinkClient1">
-	<!--<UDP-Address value="192.168.4.168" />-->
-	<UDP-Address value="192.168.5.153" />
+	<UDP-Address value="192.168.4.168" />
+	<!--<UDP-Address value="192.168.5.153" />-->
 	<UDP-Port value="1025" />
 	<SendDelayTimeMS value="300" />
 	<Enable value="True" />

@@ -85,7 +85,7 @@ namespace LightLifeAdminConsole
                 string stmt = _sqlset.updateSQL + " " + filter;
                 foreach (KeyValuePair<string, string> pair in d)
                 {
-                    stmt = stmt.Replace(":" + pair.Key, pair.Value + ":");
+                    stmt = stmt.Replace(":" + pair.Key + ":", pair.Value);
                 }
 
                 _sql.prep(stmt);

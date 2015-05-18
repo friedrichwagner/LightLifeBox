@@ -94,28 +94,35 @@ PIButtonTyp Button::getPiBtnType()
 
 bool Button::setActive(bool b)
 {
-	Active = b;
+	try
+	{
+		Active = b;
 #if defined (RASPI)
-	//Set LED 
-	if (Active)
-	{
-		if (this->pibtn.portLED>0)
-			digitalWrite(this->pibtn.portLED, HIGH);
-		log->cout(this->Name + "= ACTIVE" );
-	}
-	else
-	{
-		if (this->pibtn.portLED>0)
-			digitalWrite(this->pibtn.portLED, LOW);
-		log->cout(this->Name + "= IN-ACTIVE");
-	}
+		//Set LED 
+		if (Active)
+		{
+			if (this->pibtn.portLED>0)
+				digitalWrite(this->pibtn.portLED, HIGH);
+			log->cout(this->Name + "= ACTIVE" );
+		}
+		else
+		{
+			if (this->pibtn.portLED>0)
+				digitalWrite(this->pibtn.portLED, LOW);
+			log->cout(this->Name + "= IN-ACTIVE");
+		}
 #else
-	//Set LED 
-	if (Active)
-		log->cout(this->Name + "= ACTIVE");
-	else
-		log->cout(this->Name + "= IN-ACTIVE");
+		//Set LED 
+		if (Active)
+			log->cout(this->Name + "= ACTIVE");
+		else
+			log->cout(this->Name + "= IN-ACTIVE");
 #endif
+	}
+	catch (exception ex)
+	{
+		cout << ex.what() << "\n";
+	}
 
 	return Active;
 }

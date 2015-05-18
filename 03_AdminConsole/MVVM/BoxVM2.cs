@@ -322,14 +322,16 @@ namespace LightLifeAdminConsole.MVVM
         {
             switch (cmd)
             {
-                case TestSequenceCommand.SAVENEW: RaisePropertyChanged("TestSequencePos"); break;
+                case TestSequenceCommand.SAVENEW: break;
                 case TestSequenceCommand.START: TimeElapsed = TimeSpan.Zero;  dispatcherTimer.Start(); break;
                 case TestSequenceCommand.STOP:  dispatcherTimer.Stop(); break;
                 case TestSequenceCommand.PAUSE: dispatcherTimer.Stop(); break;
                 case TestSequenceCommand.FINISH: dispatcherTimer.Stop(); break;
-                case TestSequenceCommand.PREV: TimeElapsed = TimeSpan.Zero; RaisePropertyChanged("TestSequencePos"); break;
-                case TestSequenceCommand.NEXT: TimeElapsed = TimeSpan.Zero; RaisePropertyChanged("TestSequencePos"); break;
+                case TestSequenceCommand.PREV: TimeElapsed = TimeSpan.Zero;  break;
+                case TestSequenceCommand.NEXT: TimeElapsed = TimeSpan.Zero; break;
             }
+
+            RaisePropertyChanged("TestSequencePos");
         }
 
         public void ReloadSequence(int seqID)
@@ -337,9 +339,10 @@ namespace LightLifeAdminConsole.MVVM
             try                
             {       
        
-              _box.ReloadSequence(seqID);
-              _box.testsequence.TestSequenceEvent += TestSequenceEvent;
+                _box.ReloadSequence(seqID);
+                _box.testsequence.TestSequenceEvent += TestSequenceEvent;
 
+                RaisePropertyChanged("TestSequencePos");
                 RaiseAllProperties();
             }
             catch (Exception ex)
@@ -370,7 +373,7 @@ namespace LightLifeAdminConsole.MVVM
             RaisePropertyChanged("TextBoxesEnabled");
            
             RaisePropertyChanged("SequenceID");
-            RaisePropertyChanged("TestSequencePos");
+            //RaisePropertyChanged("TestSequencePos");
             RaisePropertyChanged("BoxBackgroundColor");
         }
     }

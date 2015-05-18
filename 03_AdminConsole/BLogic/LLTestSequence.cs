@@ -91,7 +91,10 @@ namespace LightLifeAdminConsole
             if (seqid > 0)
                 filter = " where BoxID=:1 and SequenceID=" + seqid.ToString();
             else if (seqid < 0) //letzte holen
-                filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1 and TestStateID < " + ((int)TestSequenceState.FINISHED).ToString() + ") ";
+            {
+                //filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1 and TestStateID < " + ((int)TestSequenceState.FINISHED).ToString() + ") ";
+                filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1) ";
+            }
             else //neue Sequeunce
             {
                 filter = " where BoxID=:1 and 1=0";
@@ -157,6 +160,7 @@ namespace LightLifeAdminConsole
         {
             State = TestSequenceState.TESTING;
 
+            SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
             Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, Box2.DEFAULT_BRIGHTNESS, Box2.DEFAULT_CCT, Box2.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
             Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
 
@@ -173,16 +177,18 @@ namespace LightLifeAdminConsole
             Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, Box2.DEFAULT_BRIGHTNESS, Box2.DEFAULT_CCT, Box2.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
             Box2.boxes[_boxnr].CBoxEnableBoxButtons(Box2.ALL_BUTTONS_DISABLED, Box2.ALL_BUTTONS_DISABLED);
 
-            RaiseEvent(TestSequenceCommand.STOP);
             UpdateHeadState();
+
+            RaiseEvent(TestSequenceCommand.STOP);
         }
 
         public void Finish()
         {
             State = TestSequenceState.FINISHED;
 
-            RaiseEvent(TestSequenceCommand.FINISH);
             UpdateHeadState();
+
+            RaiseEvent(TestSequenceCommand.FINISH);
         }
 
         public void Pause()
@@ -195,14 +201,20 @@ namespace LightLifeAdminConsole
 
         public bool Prev(CommandSender sender)
         {
-            State = TestSequenceState.TESTING;
             if (PosID > _MinPosID)
             {
                 PosID--;
                 getPos();
 
                 SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
-                Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
+
+                if (sender == CommandSender.GUI)
+                {
+                    State = TestSequenceState.TESTING;
+                    Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
+                }
+                else
+                    State = TestSequenceState.FADING_OUT;
 
                 RaiseEvent(TestSequenceCommand.PREV);
                 UpdateHeadState();
@@ -213,14 +225,14 @@ namespace LightLifeAdminConsole
         }
 
         public bool Next(CommandSender sender)
-        {
-                        
+        {                        
             if (PosID < _MaxPosID)
             {
                 PosID++;
                 getPos();
 
                 SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+               
 
                 //Wenn Cmd von GUI kommt, dann gleich mit Test starten
                 //wenn Cmd von ControlBox --> Fading 30sec, dann starten
@@ -231,6 +243,7 @@ namespace LightLifeAdminConsole
                 }
                 else
                     State = TestSequenceState.FADING_OUT;
+                
                
                 RaiseEvent(TestSequenceCommand.NEXT);               
                 UpdateHeadState();
@@ -374,28 +387,26 @@ namespace LightLifeAdminConsole
         private int getPos(bool firstpos=false)
         {
             int ret = 0;
+            DataTable dt;
 
             if (firstpos)
             {
-                DataTable dt = pos.select(" where SequenceID=" + SequenceID.ToString()+" order by PosID");
-                if (dt.Rows.Count > 0)
-                {
-                    ret = PosID = dt.Rows[0].Field<int>("PosID");
-                }
+                dt = pos.select(" where SequenceID=" + SequenceID.ToString()+" order by PosID");
             }
             else
             {
-                DataTable dt = pos.select(" where PosID=" + PosID.ToString());
-                if (dt.Rows.Count > 0)
-                {
-                    CycleID = dt.Rows[0].Field<int>("CycleID");
-                    ActivationID = dt.Rows[0].Field<int>("ActivationID");
-                    PosID = dt.Rows[0].Field<int>("PosID");
-                    StepID = (TestSequenceStep)dt.Rows[0].Field<int>("StepID");
+                dt = pos.select(" where PosID=" + PosID.ToString());
+                //else throw new ArgumentException("No TestSequence Position found!");
+            }
 
-                    ret = PosID;
-                }
-                else throw new ArgumentException("No TestSequence Position found!");
+            if (dt.Rows.Count > 0)
+            {
+                CycleID = dt.Rows[0].Field<int>("CycleID");
+                ActivationID = dt.Rows[0].Field<int>("ActivationID");
+                PosID = dt.Rows[0].Field<int>("PosID");
+                StepID = (TestSequenceStep)dt.Rows[0].Field<int>("StepID");
+
+                ret = PosID;
             }
 
             return ret;

@@ -89,7 +89,7 @@
                             <DataGridTextColumn Binding="{Binding Path=brightness}" Header="Brightness" />
                             <DataGridTextColumn Binding="{Binding Path=CCT}" Header="CCT" />
                             <DataGridTextColumn Binding="{Binding Path=duv}" Header="duv" />
-                            <DataGridTextColumn Binding="{Binding Path=updated}" Header="updated" />
+                            <DataGridTextColumn Binding="{Binding Path=updated, StringFormat={}{0:HH:mm:ss}}" Header="updated" />
                             <DataGridTextColumn Binding="{Binding Path=remark}" Header="Remark" />
                         </DataGrid.Columns>
                     </DataGrid>

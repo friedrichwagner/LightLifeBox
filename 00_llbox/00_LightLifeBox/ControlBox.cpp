@@ -272,6 +272,8 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 					{
 						//d1->Stop();
 						doAfterWait(this);
+						bool b[5] = { false, false, false, false, false };
+						setButtons(b, b);
 					}
 					else
 					{

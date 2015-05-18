@@ -5,7 +5,7 @@
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                   xmlns:mui="http://firstfloorsoftware.com/ModernUI"
                   mc:Ignorable="d" 
-                  d:DesignHeight="400" d:DesignWidth="400"
+                  d:DesignHeight="420" d:DesignWidth="400"
                   Title="Box"  Style="{StaticResource BlankWindow}" SizeToContent="WidthAndHeight" Closing="ModernWindow_Closing" Activated="ModernWindow_Activated">
 
     <Window.Resources>

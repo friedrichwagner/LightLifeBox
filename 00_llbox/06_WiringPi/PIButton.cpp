@@ -2,6 +2,7 @@
 //#include <math.h>
 #include <stdlib.h> 
 #include <iostream>
+#include <chrono>
 #include "Settings.h"
 
 #include "PIButton.h"
@@ -39,9 +40,13 @@ void InitWiringPi()
 
 }
 
+static std::chrono::time_point<std::chrono::system_clock> last;
+
+
 void InitPIButton(PIButton* p, string Section, int btntype)
 {
 	static int lock1 = 0;
+	last = std::chrono::system_clock::now();
 
 	if (p != NULL)
 	{
@@ -195,11 +200,17 @@ void isr_General2(int btntype)
 
 void isr_PressedGeneral(int btntype)
 {
+	//De-bouncing
+	std::chrono::duration<double> elapsed_seconds = std::chrono::system_clock::now() - last;
+	cout << elapsed_seconds.count() << "\n";
+	if (elapsed_seconds.count() < 0.5) return;	
+	last = std::chrono::system_clock::now();
+
 	if ((pibuttons[btntype]->ButtonEvent != NULL) && pibuttons[btntype]->enablePressedEvent)
 	{
 		Button* instance = pibuttons[btntype]->btn;
 		(instance->*(pibuttons[btntype]->ButtonEvent))((PIButtonTyp)btntype, 0);
-	}
+	}	
 
 #if defined(RASPI)
 	//delay(200);

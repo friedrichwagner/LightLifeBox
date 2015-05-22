@@ -14,66 +14,61 @@
 	</DeltaTest>  
   
 	<ControlBox_General>
-		<Clients value="LightLifeServer" />
-		<TestWithoutConsole value="1" />
+		<Clients value="LightLifeServer,NeoLink" />
+		<!--<TestWithoutConsole value="1" />-->
 		<DelayTimeForPsychoTestSecs value="30" />	
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1,Button2" />
 		<PILights value="Light1" />
 		<Sleep value="1000"/>
-		<Admin-Console-IP value="192.168.5.100"/>
+		<Admin-Console-IP value="192.168.4.32"/>
 	</ControlBox_General>
+	
+	<LTJENB14 name="ControlBox6">
+		<BoxNr value="99" />
+		<IsPracticeBox value="1" />
+		<Send-Command-Port value="1798"/>
+		<Receive-Command-Port value="1799"/>
+		<DefaultGroup value="0"/>			
+	</LTJENB14>		
 
 	<raspi1LightLife name="ControlBox1">
 		<BoxNr value="1" />
 		<Send-Command-Port value="1749"/>
 		<Receive-Command-Port value="1748"/>
 		<ControlsDefaultActive value="1"/>
-		<DefaultGroup value="201"/>	
+		<DefaultGroup value="200"/>	
 	</raspi1LightLife>
 
 	<raspi2LightLife name="ControlBox2">
 		<BoxNr value="2" />
+		<!--<IsPracticeBox value="1" />-->
 		<Send-Command-Port value="1759"/>
 		<Receive-Command-Port value="1758"/>
-		<ControlsDefaultActive value="1"/>
-		<DefaultGroup value="0"/>	
+		<DefaultGroup value="201"/>	
 	</raspi2LightLife>
 
 	<raspi3LightLife name="ControlBox3">
 		<BoxNr value="3" />
 		<Send-Command-Port value="1769"/>
-		<Receive-Command-Port value="1768"/>	
-		<ControlsDefaultActive value="1"/>		
+		<Receive-Command-Port value="1768"/>		
 		<DefaultGroup value="202"/>	
 	</raspi3LightLife>
 	
 	<raspi4LightLife name="ControlBox4">
 		<BoxNr value="4" />
-		<IsPracticeBox value="1" />
 		<Send-Command-Port value="1779"/>
 		<Receive-Command-Port value="1778"/>
-		<ControlsDefaultActive value="1"/>	
-		<DefaultGroup value="203"/>			
+		<DefaultGroup value="0"/>			
 	</raspi4LightLife>
 	
 	<raspi5LightLife name="ControlBox5">
 		<BoxNr value="5" />
-		<IsPracticeBox value="1" />
 		<Send-Command-Port value="1789"/>
 		<Receive-Command-Port value="1788"/>
-		<ControlsDefaultActive value="1"/>		
 		<DefaultGroup value="204"/>	
 	</raspi5LightLife>	
-	
-	<LTJENB14 name="ControlBox1">
-		<BoxNr value="99" />
-		<Send-Command-Port value="1749"/>
-		<Receive-Command-Port value="1748"/>
-		<ControlsDefaultActive value="1"/>		
-	</LTJENB14>	
-
-  
+	 
 	<Button1 id="1" name="btnLock1">
 		<LightLifeButtonType value="1" />
 		<Testing value="MockButton1"/>
@@ -126,7 +121,7 @@
 		<EnablePortPressed value="0"/>
 	</Poti3>
 	<Light1 id="1" name="liBazille">
-		<Default value="4000,100"/>	
+		<Default value="4000,50"/>	
 		<CCTMinMax value="2500,7000"/>
 	</Light1>  
   
@@ -156,12 +151,13 @@
   </MockPoti4>
    
   <LightLifeServer name="LightLifeServer1">
-    <UDP-Address value="192.168.5.100" />
+    <!--<UDP-Address value="192.168.5.100" />-->
+	<UDP-Address value="192.168.4.32" />
 	<UDP-Port value="1747" />
   </LightLifeServer> 
   
   <NeoLink name="NeoLinkClient1">
-	<UDP-Address value="192.168.5.153" />
+	<UDP-Address value="192.168.4.168" />
 	<UDP-Port value="1025" />
 	<SendDelayTimeMS value="200" />
 	<Enable value="True" />

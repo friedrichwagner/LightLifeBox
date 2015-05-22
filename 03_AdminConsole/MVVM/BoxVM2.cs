@@ -181,26 +181,31 @@ namespace LightLifeAdminConsole.MVVM
         public bool BtnSaveNewEnabled { get { return BtnEnabled(BoxUIButtons.SAVENEW); } }
 
         private bool BtnEnabled(BoxUIButtons btn)
-        {
+        {           
             switch (btn)
             {
                 case BoxUIButtons.START:
+                    if (!_box.IsActive) return false;
                     if ((_box.testsequence.State == TestSequenceState.STOPPED) || (_box.testsequence.State == TestSequenceState.PAUSED) || (_box.testsequence.State == TestSequenceState.NONE)) return true;
                     break;
 
                 case BoxUIButtons.STOP:
+                    if (!_box.IsActive) return false;
                     if ((_box.testsequence.State == TestSequenceState.IN_PROGRESS) || (_box.testsequence.State == TestSequenceState.TESTING) || (_box.testsequence.State == TestSequenceState.FADING_OUT) || (_box.testsequence.State == TestSequenceState.PAUSED)) return true;
                     break;
 
                 case BoxUIButtons.PREV:
+                    if (!_box.IsActive) return false;
                     if ((_box.testsequence.State == TestSequenceState.IN_PROGRESS) || (_box.testsequence.State == TestSequenceState.TESTING) || (_box.testsequence.State == TestSequenceState.FADING_OUT) || (_box.testsequence.State == TestSequenceState.PAUSED) && (_box.testsequence.PosID > 1)) return true;
                     break;
 
                 case BoxUIButtons.NEXT:
+                    if (!_box.IsActive) return false;
                     if ((_box.testsequence.State == TestSequenceState.IN_PROGRESS) || (_box.testsequence.State == TestSequenceState.TESTING) || (_box.testsequence.State == TestSequenceState.FADING_OUT) || (_box.testsequence.State == TestSequenceState.PAUSED) && (_box.testsequence.PosID < 22)) return true;
                     break;
 
                 case BoxUIButtons.PAUSE:
+                    if (!_box.IsActive) return false;
                     if ((_box.testsequence.State == TestSequenceState.IN_PROGRESS) || (_box.testsequence.State == TestSequenceState.TESTING) || (_box.testsequence.State == TestSequenceState.FADING_OUT)) return true;
                     break;
 
@@ -262,27 +267,6 @@ namespace LightLifeAdminConsole.MVVM
             }
         }
 
-        /*private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            if (actualPos != _box.testsequence.PosID)
-            {
-                TimeElapsed = TimeSpan.Zero;
-                actualPos = _box.testsequence.PosID;
-            }
-            TimeElapsed = TimeElapsed.Add(TimeSpan.FromSeconds(1));
-
-            RaisePropertyChanged("IsBusy");
-            RaisePropertyChanged("TimeElapsed");
-            RaisePropertyChanged("TestSequencePos"); 
-
-            if (!IsBusy)
-            {
-                dispatcherTimer.Stop();
-                TimeElapsed = TimeSpan.Zero;
-                RaisePropertyChanged("BtnStartEnabled");
-            }
-        }*/
-
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             if (_box.testsequence.State == TestSequenceState.TESTING)
@@ -290,6 +274,9 @@ namespace LightLifeAdminConsole.MVVM
 
             RaisePropertyChanged("IsBusy");
             RaisePropertyChanged("TimeElapsed");
+
+            if (_box.ErrorText.Length > 0)
+                _errorText = _box.ErrorText;
         }
 
         private void doSequence(string cmd)
@@ -310,7 +297,7 @@ namespace LightLifeAdminConsole.MVVM
 
                 }
                 
-                RaiseAllProperties();
+                //RaiseAllProperties();
             }
             catch (Exception ex)
             {
@@ -322,16 +309,43 @@ namespace LightLifeAdminConsole.MVVM
         {
             switch (cmd)
             {
-                case TestSequenceCommand.SAVENEW: break;
+                case TestSequenceCommand.SAVENEW:
+                    RaisePropertyChanged("TestSequencePos");
+                    break;
                 case TestSequenceCommand.START: TimeElapsed = TimeSpan.Zero;  dispatcherTimer.Start(); break;
-                case TestSequenceCommand.STOP:  dispatcherTimer.Stop(); break;
-                case TestSequenceCommand.PAUSE: dispatcherTimer.Stop(); break;
-                case TestSequenceCommand.FINISH: dispatcherTimer.Stop(); break;
-                case TestSequenceCommand.PREV: TimeElapsed = TimeSpan.Zero;  break;
-                case TestSequenceCommand.NEXT: TimeElapsed = TimeSpan.Zero; break;
+
+                case TestSequenceCommand.STOP:  
+                case TestSequenceCommand.PAUSE: 
+                            //dispatcherTimer.Stop(); 
+                            break;
+
+                case TestSequenceCommand.FINISH:
+                            //box.testsequence.Refresh();
+                            //RaiseAllProperties();
+                            dispatcherTimer.Stop(); 
+                    break;
+
+                case TestSequenceCommand.GOTO:
+                case TestSequenceCommand.PREV: 
+                case TestSequenceCommand.NEXT: 
+                        TimeElapsed = TimeSpan.Zero; 
+                        RaisePropertyChanged("TestSequencePos"); 
+                        break;
+                
+                case TestSequenceCommand.REFRESH: 
+                    break;
+
+                case TestSequenceCommand.POSUPDATE:
+                    RaisePropertyChanged("TestSequencePos");
+                    break;
+
+                case TestSequenceCommand.STATECHANGED:
+                    break;
+
             }
 
-            RaisePropertyChanged("TestSequencePos");
+            //RaisePropertyChanged("TestSequencePos");
+            RaiseAllProperties();
         }
 
         public void ReloadSequence(int seqID)
@@ -339,8 +353,8 @@ namespace LightLifeAdminConsole.MVVM
             try                
             {       
        
-                _box.ReloadSequence(seqID);
-                _box.testsequence.TestSequenceEvent += TestSequenceEvent;
+                if (_box.ReloadSequence(seqID))
+                    _box.testsequence.TestSequenceEvent += TestSequenceEvent;
 
                 RaisePropertyChanged("TestSequencePos");
                 RaiseAllProperties();

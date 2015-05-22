@@ -80,17 +80,17 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="5" Grid.Column="0">
-                    <DataGrid x:Name="dgBox"  Margin="10" ItemsSource="{Binding TestSequencePos}" AutoGeneratingColumn="dgBox_AutoGeneratingColumn" LoadingRow="dgBox_LoadingRow">
-                       <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Path=PosID}" Header="PosID" />
-                            <DataGridTextColumn Binding="{Binding Path=CycleID}" Header="CycleID" />
-                            <DataGridTextColumn Binding="{Binding Path=ActivationName}" Header="Activation" />
-                            <DataGridTextColumn Binding="{Binding Path=StepName}" Header="Step" />
-                            <DataGridTextColumn Binding="{Binding Path=brightness}" Header="Brightness" />
-                            <DataGridTextColumn Binding="{Binding Path=CCT}" Header="CCT" />
-                            <DataGridTextColumn Binding="{Binding Path=duv}" Header="duv" />
-                            <DataGridTextColumn Binding="{Binding Path=updated, StringFormat={}{0:HH:mm:ss}}" Header="updated" />
-                            <DataGridTextColumn Binding="{Binding Path=remark}" Header="Remark" />
+                    <DataGrid x:Name="dgBox"  Margin="10" ItemsSource="{Binding TestSequencePos}" AutoGeneratingColumn="dgBox_AutoGeneratingColumn" LoadingRow="dgBox_LoadingRow" MouseDoubleClick="dgBox_MouseDoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path=PosID}" Header="PosID" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=CycleID}" Header="CycleID" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=ActivationName}" Header="Activation" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=StepName}" Header="Step" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=brightness}" Header="Brightness" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=CCT}" Header="CCT" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=duv}" Header="duv" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=updated, StringFormat={}{0:HH:mm:ss}}" Header="updated" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=remark}" Header="Remark" IsReadOnly="false"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <StackPanel Orientation="Horizontal">

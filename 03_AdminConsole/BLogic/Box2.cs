@@ -7,6 +7,9 @@ using System.Net;
 using LightLife.Data;
 using Lumitech.Helpers;
 using System.Linq;
+using System.Threading;
+using Renci.SshNet;
+using System.Text.RegularExpressions;
 
 namespace LightLifeAdminConsole
 {    
@@ -37,16 +40,11 @@ namespace LightLifeAdminConsole
         public LLRemoteCommand rCmd { get; private set; }
 
         public bool IsPracticeBox { get; private set; }
-
-        //private byte[] PotisActive = new byte[NUM_POTIS];
-        //private byte[] ButtonsActive = new byte[NUM_BUTTONS];
-
-        //private LLMsgType lastmsgtype;
-        //private int lastBrightness;
         private static Logger log;
 
         public LLTestSequence testsequence;
         public DeltaTest dTest;
+        public string ErrorText { get; private set; }
 
         public static void getBoxes()
         {
@@ -68,6 +66,7 @@ namespace LightLifeAdminConsole
         public Box2(int boxnr)
         {
             log = Logger.GetInstance();
+            ErrorText = string.Empty;
 
             boxdata = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLBox"]);
 
@@ -95,13 +94,13 @@ namespace LightLifeAdminConsole
 
             testsequence = new LLTestSequence(boxnr, -1);
 
-            if (IsActive)
+            /*if (IsActive)
             {
                 if (IsPracticeBox)
                     CBoxEnableBoxButtons("11111", ALL_BUTTONS_DISABLED); //Alle Buttons aktivieren
                 else
                     CBoxEnableBoxButtons(testsequence.EnabledButtons, ALL_BUTTONS_DISABLED);
-            }
+            }*/
         }
 
         /*public Box2(DataTable dt)
@@ -123,14 +122,25 @@ namespace LightLifeAdminConsole
             dTest = null;
         }
 
-        public void ReloadSequence(int pSeqid)
+        public bool ReloadSequence(int pSeqid)
         {
-            LLTestSequence Newtestsequence = new LLTestSequence(BoxNr, pSeqid);
+            bool isNew = false;
+            if (pSeqid != testsequence.SequenceID)
+            {
+                LLTestSequence Newtestsequence = new LLTestSequence(BoxNr, pSeqid);
 
-                if (Newtestsequence.SequenceID != pSeqid)            
-                throw new ArgumentException("Sequence ID does not exist (on this Box)!");
+                if (Newtestsequence.SequenceID != pSeqid)
+                    throw new ArgumentException("Sequence ID does not exist (on this Box)!");
+            
+                testsequence = Newtestsequence;
+                   isNew = true;
+            }
+            else
+            {
+                testsequence.Refresh();
+            }
 
-            testsequence = Newtestsequence;
+           return isNew;
         }
 
         public bool Ping()
@@ -216,7 +226,7 @@ namespace LightLifeAdminConsole
             catch (Exception ex)
             {
                 log.Error(ex.Message);
-
+                ErrorText = ex.Message;
                 //Da stürtzt das Programm
                 //throw;
             }
@@ -236,23 +246,71 @@ namespace LightLifeAdminConsole
         }
 
 
-
-        /*private void UpdateVarious(LLMsgType msgtype, int brightness)
+        public bool ResetLLBox()
         {
-            //if (State > BoxStatus.NONE)
+            bool ret = false;
+            using (var client = new SshClient(BoxIP.ToString(), "lightlife", "test"))
             {
-                lastmsgtype = msgtype;
-                lastBrightness = brightness;
+                client.Connect();
 
-                SetBoxTestSequenceState(msgtype);
-                SetBoxToDefault(brightness);    //Set Box to Default Settings
-                if (IsPracticeBox)
-                    EnableBoxButtons("11111", "00000"); //Alle Buttons aktivieren
-                else
-                    EnableBoxButtons(testsequence.EnabledButtons, "00000");           // Send Controlbox Buttons
+                //1. See if llbox is running
+                int cnt = cntpsaxllbox(client);
+
+               
+                //2. stop background process anyway, even if it is not running
+                var cmd = client.CreateCommand("sudo /etc/init.d/llbox.sh stop");
+                var result = cmd.Execute();
+                Thread.Sleep(200);
+
+                cnt = cntpsaxllbox(client);
+                
+                //3. start background process
+                cmd = client.CreateCommand("sudo /etc/init.d/llbox.sh start");
+                result = cmd.Execute();
+                Thread.Sleep(200);
+
+                cnt = cntpsaxllbox(client);
+                if (cnt == 1) ret = true;
+
+                client.Disconnect();
             }
-        }*/
 
+            return ret;
+        }
+
+        private int cntpsaxllbox(SshClient c)
+        {
+            var cmd = c.CreateCommand("ps ax | grep llbox");
+            var result = cmd.Execute();
+            int count = 0;
+            foreach (Match m in Regex.Matches(result, "/lightlife/run/llbox"))
+                count++;
+
+            return count;
+        }
+
+        public bool RebootRaspi()
+        {
+            bool ret = false;
+            using (var client = new SshClient(BoxIP.ToString(), "lightlife", "test"))
+            {
+                client.Connect();
+
+                //2. stop background process anyway, even if it is not running
+                var cmd = client.CreateCommand("sudo shutdown -r now");
+                var result = cmd.Execute();
+
+                //1 Minute warten
+                Thread.Sleep(60000);
+
+                int cnt = cntpsaxllbox(client);
+                if (cnt == 2) ret = true;
+
+                client.Disconnect();
+            }
+
+            return ret;
+        }
     }
 }
 

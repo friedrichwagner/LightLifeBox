@@ -58,8 +58,9 @@ namespace LightLifeAdminConsole.Pages
 
         public void OnNavigatingFrom(FirstFloor.ModernUI.Windows.Navigation.NavigatingCancelEventArgs e) { }
 
-        private void dgBoxOverview_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private int getSelectedBoxNr()
         {
+            int ret = -1;
 
             if (dgBoxOverview.SelectedItems != null && dgBoxOverview.SelectedItems.Count == 1)
             {
@@ -67,16 +68,96 @@ namespace LightLifeAdminConsole.Pages
                 if (rowview != null)
                 {
                     DataRow row = rowview.Row;
-                    int boxnr = (int)row[0];
+                    ret = (int)row[0];
+                }
 
+            }
+
+            return ret;
+        }
+
+        private void dgBoxOverview_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            int boxnr = getSelectedBoxNr();
+            if (boxnr > -1)
+            {
                     Box2.boxes[boxnr].Ping();
 
                     if (Box2.boxes[boxnr].IsPracticeBox)
                         Box2.practiceboxWindows[boxnr].Show();
                     else
                         Box2.boxWindows[boxnr].Show();
+            }
+        }
+
+        private void mnuPing_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int boxnr = getSelectedBoxNr();
+                if (boxnr > -1)
+                {
+                    Box2.boxes[boxnr].Ping();
+                    if (Box2.boxes[boxnr].IsActive)
+                        ModernDialog.ShowMessage("Ping OK!", "Info", MessageBoxButton.OK);
+                    else
+                        ModernDialog.ShowMessage("Ping NOT OK!", "Info", MessageBoxButton.OK);
                 }
-                
+            }
+            catch (Exception ex)
+            {
+                ModernDialog.ShowMessage(ex.Message,"Error", MessageBoxButton.OK);
+            }
+        }
+
+        private void mnuReset_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                int boxnr = getSelectedBoxNr();
+                if (boxnr > -1)
+                {
+                    bool ok = Box2.boxes[boxnr].ResetLLBox();
+                    if (ok)
+                        ModernDialog.ShowMessage("Reset OK!", "Info", MessageBoxButton.OK);
+                    else
+                        ModernDialog.ShowMessage("Reset NOT OK!", "Error", MessageBoxButton.OK);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModernDialog.ShowMessage(ex.Message,"Error", MessageBoxButton.OK);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            }
+
+        }
+
+        private void mnuReboot_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                int boxnr = getSelectedBoxNr();
+                if (boxnr > -1)
+                {
+                    bool ok = Box2.boxes[boxnr].RebootRaspi();
+                    if (ok)
+                        ModernDialog.ShowMessage("Reboot OK!", "Info", MessageBoxButton.OK);
+                    else
+                        ModernDialog.ShowMessage("Reboot NOT OK!", "Error", MessageBoxButton.OK);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModernDialog.ShowMessage(ex.Message, "Error", MessageBoxButton.OK);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
             }
         }
     }

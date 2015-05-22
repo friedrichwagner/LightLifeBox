@@ -283,7 +283,8 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 						//FW 13.5.2015
 						//Linker Button soll Aktive bleiben, damit User "weiter" klicken kann
 						bool b[5] = { false, false, false, true, false };
-						setButtons(b, b);
+						bool blink[5] = { false, false, false, false, false };
+						setButtons(b, blink);
 
 						//FW 17.5. User löst immer selber aus mit PIBUTTON_LOCK1
 						//Wait 30 secs

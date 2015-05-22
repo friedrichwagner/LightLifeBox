@@ -45,6 +45,7 @@ namespace LightLifeAdminConsole
 
         private void InitDataGrid()
         {
+            //dgBox.IsReadOnly = true;
             dgBox.CanUserAddRows = false;
             dgBox.CanUserDeleteRows = false;
             dgBox.CanUserReorderColumns = false;
@@ -75,10 +76,11 @@ namespace LightLifeAdminConsole
 
         private void dgBox_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
         {
-            if (e.Column.Header.ToString().ToLower() == "remark")
+            //obsolet
+            /*if (e.Column.Header.ToString().ToLower() == "remark")
             {
                 e.Column.IsReadOnly = false;
-            }
+            }*/
         }
 
         public IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
@@ -150,8 +152,37 @@ namespace LightLifeAdminConsole
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            SavePosRemarks();
-            dc.ReloadSequence(dc.SequenceID);
+            try
+            {
+                SavePosRemarks();
+                dc.ReloadSequence(dc.SequenceID);
+            }
+            catch (Exception ex)
+            {
+                dc.ErrorText = ex.Message;
+            }
+
+        }
+
+        private void dgBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                if (dc.BtnStartEnabled)
+                {
+                    var row = (sender as DataGrid).GetSelectedRow();
+                    DataRowView rv = (DataRowView)dgBox.Items[row.GetIndex()];
+                    int posid = Int32.Parse(rv.Row["PosID"].ToString());
+
+                    dc.box.testsequence.Goto(CommandSender.GUI, posid);
+
+                    e.Handled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                dc.ErrorText = ex.Message;
+            }
 
         }
     }

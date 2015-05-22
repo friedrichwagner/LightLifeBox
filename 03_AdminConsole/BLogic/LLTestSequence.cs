@@ -18,7 +18,7 @@ namespace LightLifeAdminConsole
     public enum TestSequenceActivation { NONE=0, ACTIVATING=1, RELAXING=2 }; // identisch Tabelle LLStep
     public enum CommandSender { GUI=0, CONTROLBOX=1 }; // identisch Tabelle LLStep
 
-    public enum TestSequenceCommand { SAVENEW, START, PREV, NEXT, PAUSE, STOP, FINISH};
+    public enum TestSequenceCommand { SAVENEW, REFRESH, POSUPDATE, STATECHANGED, START, PREV, GOTO, NEXT, PAUSE, STOP, FINISH };
 
     public delegate void TestSequenceEventDelegate(int SequenceID, int PosID, TestSequenceCommand seqCmd);
 
@@ -85,22 +85,9 @@ namespace LightLifeAdminConsole
             _boxnr = boxnr;
             head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
             pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
-            def = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceDefinition"]);           
+            def = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceDefinition"]);
 
-            string filter=String.Empty;
-            if (seqid > 0)
-                filter = " where BoxID=:1 and SequenceID=" + seqid.ToString();
-            else if (seqid < 0) //letzte holen
-            {
-                //filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1 and TestStateID < " + ((int)TestSequenceState.FINISHED).ToString() + ") ";
-                filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1) ";
-            }
-            else //neue Sequeunce
-            {
-                filter = " where BoxID=:1 and 1=0";
-            }
-
-            DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].selectSQL, new string[] { boxnr.ToString()}, filter);
+            DataTable dt1 = getSequence(boxnr, seqid);
             
             InitSequence(dt1);
         }
@@ -154,6 +141,14 @@ namespace LightLifeAdminConsole
             {
                 TestSequenceEvent(SequenceID, PosID, cmd);
             }
+        }
+
+        public void Refresh()
+        {
+            DataTable dt1 = getSequence(_boxnr, SequenceID);
+            InitSequence(dt1);
+
+            RaiseEvent(TestSequenceCommand.REFRESH);
         }
 
         public int Start()
@@ -254,6 +249,32 @@ namespace LightLifeAdminConsole
             return false;
         }
 
+        public bool Goto(CommandSender sender, int posid)
+        {
+            if ( (posid >= _MinPosID) && (posid <= _MaxPosID ) )
+            {
+                PosID = posid;
+                getPos();
+
+                SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+
+                if (sender == CommandSender.GUI)
+                {
+                    State = TestSequenceState.TESTING;
+                    Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
+                }
+                else
+                    State = TestSequenceState.FADING_OUT;
+
+                RaiseEvent(TestSequenceCommand.GOTO);
+                UpdateHeadState();
+                return true;
+            }
+
+            return false;
+        }
+
+
         private void CreateSequence()
         {
             try
@@ -326,6 +347,25 @@ namespace LightLifeAdminConsole
             return getPos(true);
         }
 
+        private DataTable getSequence(int boxnr, int seqid)
+        {
+            string filter = String.Empty;
+            if (seqid > 0)
+                filter = " where BoxID=:1 and SequenceID=" + seqid.ToString();
+            else if (seqid < 0) //letzte holen
+            {
+                //filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1 and TestStateID < " + ((int)TestSequenceState.FINISHED).ToString() + ") ";
+                filter = " where BoxID=:1 and SequenceID = (select max(SequenceID) from LLTestSequenceHead where boxid=:1) ";
+            }
+            else //neue Sequeunce
+            {
+                filter = " where BoxID=:1 and 1=0";
+            }
+
+            DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].selectSQL, new string[] { boxnr.ToString() }, filter);
+            return dt1;
+        }
+
 
         private int getNextHeadID()
         {
@@ -357,6 +397,8 @@ namespace LightLifeAdminConsole
         {
             State = s;
             UpdateHeadState();
+
+            RaiseEvent(TestSequenceCommand.STATECHANGED);
         }
 
         private void UpdateHeadState()
@@ -419,6 +461,8 @@ namespace LightLifeAdminConsole
             MyDictionary d = new MyDictionary(dtmp);
 
             pos.update("where PosID="+PosID.ToString(), d);
+
+            RaiseEvent(TestSequenceCommand.POSUPDATE);
         }
         #endregion
 

@@ -6,6 +6,14 @@
              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
              mc:Ignorable="d">
     <Grid Style="{StaticResource ContentRoot}">
-            <DataGrid x:Name="dgBoxOverview" IsReadOnly="True" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" MouseDoubleClick="dgBoxOverview_MouseDoubleClick"/>
+        <DataGrid x:Name="dgBoxOverview" IsReadOnly="True" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" MouseDoubleClick="dgBoxOverview_MouseDoubleClick">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="mnuPing" Header="Ping" Click="mnuPing_Click" />
+                    <MenuItem x:Name="mnuReset" Header="Reset Box" Click="mnuReset_Click"/>
+                    <MenuItem x:Name="mnuReboot"  Header="Reboot Raspi" Click="mnuReboot_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
     </Grid>
 </UserControl>

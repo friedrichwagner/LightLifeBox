@@ -74,18 +74,22 @@ namespace LightLifeAdminConsole
         public string Remark { get; set; }
         public TestSequenceState State { get; private set; }
 
-        private AdminBase head;
-        private AdminBase pos;
-        private AdminBase def;
+        private AdminBase _head;
+        private AdminBase _pos;
+        private AdminBase _posView;
+        private AdminBase _def;
+
+        public DataTable posView { get; private set; }
 
         private int _boxnr;
 
         public LLTestSequence(int boxnr, int seqid)
         {
             _boxnr = boxnr;
-            head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
-            pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
-            def = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceDefinition"]);
+            _head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
+            _pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+            _def = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceDefinition"]);
+            _posView = new AdminBase(LLSQL.sqlCon, LLSQL.tables["VLLTestSequence"]);
 
             DataTable dt1 = getSequence(boxnr, seqid);
             
@@ -113,6 +117,7 @@ namespace LightLifeAdminConsole
                 StepID = TestSequenceStep.STOPPED;
                 Remark = String.Empty;
                 SequenceDef = String.Empty;
+                posView = _posView.select(" where SequenceID=" + SequenceID.ToString() + " order by PosID");
             }
         }
 
@@ -156,7 +161,7 @@ namespace LightLifeAdminConsole
             State = TestSequenceState.TESTING;
 
             SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
-            Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, Box2.DEFAULT_BRIGHTNESS, Box2.DEFAULT_CCT, Box2.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+            Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, LightLifeData.DEFAULT_BRIGHTNESS, LightLifeData.DEFAULT_CCT, LightLifeData.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
             Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
 
             UpdateHeadState();
@@ -169,7 +174,7 @@ namespace LightLifeAdminConsole
         public void Stop()
         {
             State = TestSequenceState.STOPPED;
-            Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, Box2.DEFAULT_BRIGHTNESS, Box2.DEFAULT_CCT, Box2.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+            Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, LightLifeData.DEFAULT_BRIGHTNESS, LightLifeData.DEFAULT_CCT, LightLifeData.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
             Box2.boxes[_boxnr].CBoxEnableBoxButtons(Box2.ALL_BUTTONS_DISABLED, Box2.ALL_BUTTONS_DISABLED);
 
             UpdateHeadState();
@@ -256,7 +261,8 @@ namespace LightLifeAdminConsole
                 PosID = posid;
                 getPos();
 
-                SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+                //FW 23.5. Hier nur Feld ActualPos in DB setzen. User muss dann wieder START drücken
+                /*SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
 
                 if (sender == CommandSender.GUI)
                 {
@@ -264,7 +270,7 @@ namespace LightLifeAdminConsole
                     Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
                 }
                 else
-                    State = TestSequenceState.FADING_OUT;
+                    State = TestSequenceState.FADING_OUT;*/
 
                 RaiseEvent(TestSequenceCommand.GOTO);
                 UpdateHeadState();
@@ -283,12 +289,12 @@ namespace LightLifeAdminConsole
                 LLSQL.cmd.Transaction = tran;
 
                 SequenceID = getNextHeadID();
-                head.Transaction = tran;
-                head.insert(new string[] { SequenceID.ToString(),_SequenceDef, _boxnr.ToString(), ProbandID.ToString(), "0", ((int)TestSequenceState.NONE).ToString(), "0", String.Empty });
+                _head.Transaction = tran;
+                _head.insert(new string[] { SequenceID.ToString(),_SequenceDef, _boxnr.ToString(), ProbandID.ToString(), "0", ((int)TestSequenceState.NONE).ToString(), "0", String.Empty });
 
                 int firstpos = CreateSequencePos(tran);
 
-                head.update("", new string[] { ((int)TestSequenceState.NONE).ToString(), firstpos.ToString(), SequenceID.ToString() });
+                _head.update("", new string[] { ((int)TestSequenceState.NONE).ToString(), firstpos.ToString(), SequenceID.ToString() });
 
                 LLSQL.cmd.Transaction.Commit();
 
@@ -303,47 +309,48 @@ namespace LightLifeAdminConsole
 
         private int  CreateSequencePos(SqlTransaction tran)
         {
-            def.Transaction = tran;
-            DataTable dt1 = def.select(" where SequenceDef='" + _SequenceDef + "'");
+            _def.Transaction = tran;
+            DataTable dt1 = _def.select(" where SequenceDef='" + _SequenceDef + "'");
             if (dt1.Rows.Count == 1)
             {
                 int ActivationID2 = (int)TestSequenceActivation.ACTIVATING;
                 if (ActivationID == (int)TestSequenceActivation.ACTIVATING) ActivationID2 = (int)TestSequenceActivation.RELAXING;
 
-                pos.Transaction = tran;
+                _pos.Transaction = tran;
                 //Zyklus 1 - Aktivierend oder Entspannend
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 1 - Aktivierend oder Entspannend (gegenteil von oben)  
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //pos.insert(new string[] { SequenceID.ToString(), "1", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 2 - Aktivierend oder Entspannend
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //Hier im grossen Raum, nochmal ALLE
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
 
                 //Zyklus 2 - Aktivierend oder Entspannend (gegenteil von oben)  
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID1").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID2").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID3").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID4").ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //Hier im grossen Raum, nochmal ALLE
-                pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
+                _pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), ((int)TestSequenceStep.ALL_BIG).ToString(), "0", LightLifeData.DEFAULT_BRIGHTNESS.ToString(), LightLifeData.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
                 //pos.insert(new string[] { SequenceID.ToString(), "2", ActivationID2.ToString(), dt1.Rows[0].Field<int>("StepID5").ToString(), "0", Box2.DEFAULT_BRIGHTNESS.ToString(), Box2.DEFAULT_CCT.ToString(), "0.0", "0.0", "0.0", string.Empty });
             }
 
+            _posView.Transaction = tran;
             return getPos(true);
         }
 
@@ -362,7 +369,7 @@ namespace LightLifeAdminConsole
                 filter = " where BoxID=:1 and 1=0";
             }
 
-            DataTable dt1 = head.execQuery(LLSQL.tables["LLTestSequenceHead"].selectSQL, new string[] { boxnr.ToString() }, filter);
+            DataTable dt1 = _head.execQuery(LLSQL.tables["LLTestSequenceHead"].selectSQL, new string[] { boxnr.ToString() }, filter);
             return dt1;
         }
 
@@ -433,11 +440,11 @@ namespace LightLifeAdminConsole
 
             if (firstpos)
             {
-                dt = pos.select(" where SequenceID=" + SequenceID.ToString()+" order by PosID");
+                dt = _pos.select(" where SequenceID=" + SequenceID.ToString()+" order by PosID");
             }
             else
             {
-                dt = pos.select(" where PosID=" + PosID.ToString());
+                dt = _pos.select(" where PosID=" + PosID.ToString());
                 //else throw new ArgumentException("No TestSequence Position found!");
             }
 
@@ -449,7 +456,9 @@ namespace LightLifeAdminConsole
                 StepID = (TestSequenceStep)dt.Rows[0].Field<int>("StepID");
 
                 ret = PosID;
-            }
+
+                posView = _posView.select(" where SequenceID=" + SequenceID.ToString() + " order by PosID"); 
+            }            
 
             return ret;
         }
@@ -460,10 +469,12 @@ namespace LightLifeAdminConsole
             Dictionary<string, string> dtmp = sarr.Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
             MyDictionary d = new MyDictionary(dtmp);
 
-            pos.update("where PosID="+PosID.ToString(), d);
+            _pos.update("where PosID="+PosID.ToString(), d);
+            posView = _posView.select(" where SequenceID=" + SequenceID.ToString() + " order by PosID");
 
             RaiseEvent(TestSequenceCommand.POSUPDATE);
         }
+
         #endregion
 
     }

@@ -113,18 +113,22 @@ void PILight::updateClients()
     }
 }
 
-void PILight::Send2ComClients()
+bool PILight::skip()
 {
-
 	milliseconds now = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
-	if ((now - lastsend).count() < (long)DEFAULT_NEOLINK_FADETIME)
-	//if ((now - lastsend).count() < (long)MINIMUM_SEND_TIME)
+	if ((now - lastsend).count() < (long)(DEFAULT_NEOLINK_FADETIME + 20))
+		//if ((now - lastsend).count() < (long)MINIMUM_SEND_TIME)
 	{
 		//Silently ignore this messages
 		//toString(true);
-		return;
+		return true;
 	}
 
+	return false;
+}
+
+void PILight::Send2ComClients()
+{
 	toString();
 
 	for (unsigned int i = 0; i < ComClients.size(); i++)
@@ -163,6 +167,8 @@ void PILight::Send2ComClients()
 
 void PILight::setBrightness(unsigned int val)
 {
+	if (skip()) return;
+
 	brightness = val;
 	piledMode = PILED_SET_BRIGHTNESS;
 
@@ -174,6 +180,8 @@ void PILight::setBrightness(unsigned int val)
 
 void PILight::setCCT(unsigned int val)
 {
+	if (skip()) return;
+
 	//cct = (unsigned int)((MaxVal - MinVal) * delta + MinVal);
 	cct = val;
 	piledMode = PILED_SET_CCT;
@@ -191,6 +199,8 @@ void PILight::setCCT(unsigned int val)
 
 void PILight::setRGB(unsigned int prgb[])
 {
+	if (skip()) return;
+
 	rgb[0] = prgb[0]; rgb[1] = prgb[1]; rgb[2] = prgb[2];
 	piledMode = PILED_SET_RGB;
 	for (int i = 0; i<3; i++)
@@ -204,6 +214,8 @@ void PILight::setRGB(unsigned int prgb[])
 
 void PILight::setXY(float pxy[])
 {
+	if (skip()) return;
+
 	xy[0] = pxy[0]; xy[1] = pxy[1];
 	piledMode = PILED_SET_XY;
 	if (xy[0]>1.0f) xy[0] = 1.0f; if (xy[0]<0.0f) xy[0] = 0.0f;
@@ -214,6 +226,8 @@ void PILight::setXY(float pxy[])
 
 void PILight::setCCTDuv(unsigned int valCCT, float valDuv)
 {
+	if (skip()) return;
+
 	cct = valCCT; duv = valDuv;
 	if (cct > (unsigned int)MaxVal) cct = MaxVal;
 	if (cct < (unsigned int)MinVal) cct = MinVal;
@@ -248,6 +262,8 @@ void PILight::setFadeTime(unsigned int val)
 
 void PILight::setBrightnessUpDown(int delta)
 {
+	if (skip()) return;
+
 	int b = (signed)brightness + delta;
 	//cout << "b=" << b << "\r\n";
 	if (b < 0)
@@ -261,12 +277,16 @@ void PILight::setBrightnessUpDown(int delta)
 
 void PILight::setCCTUpDown(int delta)
 {
+	if (skip()) return;
+
 	cct = cct + delta;
 	setCCT(cct);
 }
 
 void PILight::setRGBUpDown(int deltargb[])
 {
+	if (skip()) return;
+
 	for (int i = 0; i < 3; i++)
 		rgb[i] = rgb[i] + deltargb[i];
 
@@ -275,6 +295,8 @@ void PILight::setRGBUpDown(int deltargb[])
 
 void PILight::setXYUpDown(int delta[])
 {
+	if (skip()) return;
+
 	xy[0] = xy[0] + delta[0] / 1000; // 1/1000 = +/-0.001
 	xy[1] = xy[1] + delta[1] / 1000;
 	setXY(xy);
@@ -282,6 +304,8 @@ void PILight::setXYUpDown(int delta[])
 
 void PILight::setDuvUpDown(int delta)
 {
+	if (skip()) return;
+
 	duv = duv + (float)delta/2000.0f; // 1/2000 = +/-0.0005
 	setCCTDuv(cct, duv);
 }

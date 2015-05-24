@@ -273,7 +273,6 @@ namespace LightLife.Data
     public class LightLifeData
     {
         public const int DEFAULT_NEOLINK_FADETIME = 300;
-        public const int MINIMUM_SEND_TIME = 100;
         public const int DEFAULT_CCT = 4000;
         public const int DEFAULT_BRIGHTNESS = 50;
         public const int MIN_CCT = 2500;

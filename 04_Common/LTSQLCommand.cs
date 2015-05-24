@@ -57,15 +57,12 @@ namespace Lumitech.Helpers
         public LTSQLCommand(SqlConnection con)
         {
             cmd.Connection = con;
-            //cmd.Transaction = null;
-            //log = Logger.GetInstance();
         }
 
         public LTSQLCommand(SqlConnection con, SqlTransaction tr)
         {
             cmd.Connection = con;
             cmd.Transaction = tr;
-            //log = Logger.GetInstance();
         }
 
         public int prep(string cmdText)
@@ -103,7 +100,7 @@ namespace Lumitech.Helpers
             StringBuilder sb = new StringBuilder(stmt);
 
             //Von oben nach unten ersetzen, damit ":10" nicht bei ":1" mit ersetzt wird
-            for (int i = Params.Count-1; i>=0; i--)
+            for (int i = Params.Count - 1; i >= 0; i--)
             {
                 //Parameter Array started bei 0, Parameter in stmt starten  bei :1
                 if (Params[i] is string)
@@ -131,11 +128,9 @@ namespace Lumitech.Helpers
                     //sb = Regex.Replace(sb.ToString(), ":" + (i + 1)+"[, s);
                 }
 
+                this.cmd.CommandText = sb.ToString();
             }
-
-            this.cmd.CommandText = sb.ToString();
-
-            return this.cmd.CommandText;
+           return this.cmd.CommandText;
         }
 
         public int Exec()
@@ -152,26 +147,27 @@ namespace Lumitech.Helpers
             if (s.StartsWith("select"))
             {
                 //returns SqlDataReader
-                if (dr!= null) dr.Close();
+                if (dr != null) dr.Close();
 
                 //if (log !=  null) log.Debug(cmd.CommandText);
                 Debug.Print(cmd.CommandText);
 
-                dr=cmd.ExecuteReader();
+                dr = cmd.ExecuteReader();
 
-                if (dr.HasRows) ret=1;
-                else ret=0;
+                if (dr.HasRows) ret = 1;
+                else ret = 0;
             }
             else
             {
-                //return RowsAffected (int)
-                if (dr != null) dr.Close();
-                //if (log != null) log.Debug(cmd.CommandText);
+                if (dr != null) 
+                    dr.Close();
+
                 Debug.Print(cmd.CommandText);
-                ret=cmd.ExecuteNonQuery();
+                ret = cmd.ExecuteNonQuery();
             }
             sw.Stop();
             //Debug.Print(String.Format("{0} ms *************************************", sw.Elapsed.TotalMilliseconds));
+
 
             return ret;
         }

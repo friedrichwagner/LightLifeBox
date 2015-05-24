@@ -74,15 +74,6 @@ namespace LightLifeAdminConsole
                     e.Row.Background = Brushes.LightBlue;
         }
 
-        private void dgBox_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        {
-            //obsolet
-            /*if (e.Column.Header.ToString().ToLower() == "remark")
-            {
-                e.Column.IsReadOnly = false;
-            }*/
-        }
-
         public IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
         {
             var itemsSource = grid.ItemsSource as IEnumerable;
@@ -155,6 +146,11 @@ namespace LightLifeAdminConsole
             try
             {
                 SavePosRemarks();
+
+                //Always do ping here
+                if (!dc.box.Ping())
+                    throw new Exception("Ping NOT OK!");
+                
                 dc.ReloadSequence(dc.SequenceID);
             }
             catch (Exception ex)
@@ -168,6 +164,7 @@ namespace LightLifeAdminConsole
         {
             try
             {
+                //if (dc.BtnNextEnabled || dc.BtnPrevEnabled)
                 if (dc.BtnStartEnabled)
                 {
                     var row = (sender as DataGrid).GetSelectedRow();

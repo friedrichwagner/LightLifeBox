@@ -24,9 +24,6 @@ namespace LightLifeAdminConsole
 
         private const byte NUM_POTIS = 3;
         private const byte NUM_BUTTONS = 2;
-        public const int DEFAULT_CCT = 4000; //K
-        public const int DEFAULT_BRIGHTNESS = 50; //100= ca. 2000lx --> 500lx= ca. 25
-        public const int DEFAULT_NEOLINK_FADETIME = 300; //ms
         private const int WAIT_FADETIME = 30000; //30 sek
         public const string ALL_BUTTONS_DISABLED = "00000";
 
@@ -189,7 +186,7 @@ namespace LightLifeAdminConsole
                         break;
 
                     case (int)LLMsgType.LL_AFTER_WAIT_TIME:
-                        CBoxSetPILed(PILEDMode.SET_CCT, DEFAULT_BRIGHTNESS, DEFAULT_CCT, WAIT_FADETIME);
+                        CBoxSetPILed(PILEDMode.SET_XY, LightLifeData.DEFAULT_BRIGHTNESS, LightLifeData.DEFAULT_CCT, WAIT_FADETIME);
 
                         //Nächsten Schritt schon hier holen, damit man die richtige LED blinken lassen kann
                         if (testsequence.Next(CommandSender.CONTROLBOX))
@@ -209,7 +206,7 @@ namespace LightLifeAdminConsole
 
 
                     case (int)LLMsgType.LL_AFTER_FADE_TIME:
-                        CBoxSetPILed(PILEDMode.SET_CCT, DEFAULT_BRIGHTNESS, DEFAULT_CCT, DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+                        CBoxSetPILed(PILEDMode.SET_CCT, LightLifeData.DEFAULT_BRIGHTNESS, LightLifeData.DEFAULT_CCT, LightLifeData.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
                         if (testsequence.State < TestSequenceState.STOPPED)
                         {                            
                             CBoxEnableBoxButtons(testsequence.EnabledButtons, ALL_BUTTONS_DISABLED);
@@ -241,8 +238,15 @@ namespace LightLifeAdminConsole
 
         public void CBoxSetPILed(PILEDMode mode, int brightnessLevel, int cct, int fadetime)
         {
+            float[] xy = new Single[2] { 0.0f, 0.0f };
             //SetCCT + brightness
-            rCmd.SetPILED(mode, brightnessLevel, cct, new int[] { 0, 0, 0 }, new float[] { 0f, 0f }, fadetime, 0.0f);
+            if (mode == PILEDMode.SET_XY)
+            {
+                CIECoords cie = (Photometric.CCT2xy(cct, Observer.Observer10deg));
+                xy[0] = (float)cie.x; xy[1] = (float)cie.y;
+            }
+
+            rCmd.SetPILED(mode, brightnessLevel, cct, new int[] { 0, 0, 0 }, xy, fadetime, 0.0f);
         }
 
 

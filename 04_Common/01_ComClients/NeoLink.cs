@@ -218,8 +218,8 @@ namespace Lumitech.Interfaces
         {
             log = Logger.GetInstance();
             Settings ini = Settings.GetInstance();
-            fadetime = ini.Read<int>("NeoLink", "Fadetime", 200);
-            _sendDelay = ini.Read<int>("NeoLink", "SendDelayTimeMS", 200);
+            fadetime = ini.Read<int>("NeoLink", "Fadetime", LightLifeData.DEFAULT_NEOLINK_FADETIME);
+            _sendDelay = ini.Read<int>("NeoLink", "SendDelayTimeMS", LightLifeData.DEFAULT_NEOLINK_FADETIME+20);
 
             _UDPAddress = ini.Read<string>("NeoLink", "UDP-Address", "");
             _UDPPort = ini.Read<int>("NeoLink", "UDP-Port", (int)LightLifePorts.NEOLINK_BOX_UDP); //PortNr of NeoLinkBox = 1025

@@ -69,10 +69,10 @@ namespace LightLifeAdminConsole
 
         private void ModernWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            PiledVM p = PiledVM.GetInstance();
+            //PiledVM p = PiledVM.GetInstance();
             foreach (var boxWndw in Box2.boxWindows.Values)
                 boxWndw.Close();
-            p.Done();
+            //p.Done();
 
             LLSQL.Done();
         }

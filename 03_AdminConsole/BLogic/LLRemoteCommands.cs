@@ -68,14 +68,7 @@ namespace LightLifeAdminConsole
             sockEx = null;
             IsAsync = async;
 
-            //Send and Receive on same Port: Remote Commands to ControlBox --> Answers back
-            var recvEP = new IPEndPoint(IPAddress.Any, _recvport);
-            recvClient = new UdpClient();
-            recvClient.ExclusiveAddressUse = false;
-            recvClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            recvClient.Client.ReceiveTimeout = TIMEOUT_INTERVAL;
-            recvClient.Client.Bind(recvEP);
-            //byte[] buffer = receiveClient.Receive(ref ep1);
+            CreateRecvClient();
 
             sendClient = new UdpClient();
             sendClient.ExclusiveAddressUse = false;
@@ -90,10 +83,21 @@ namespace LightLifeAdminConsole
             //StartReceiveAsync();
         }
 
+        private void CreateRecvClient()
+        {
+            //Send and Receive on same Port: Remote Commands to ControlBox --> Answers back
+            var recvEP = new IPEndPoint(IPAddress.Any, _recvport);
+            recvClient = new UdpClient();
+            recvClient.ExclusiveAddressUse = false;
+            recvClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            recvClient.Client.ReceiveTimeout = TIMEOUT_INTERVAL; //für Syncronous calls
+            recvClient.Client.Bind(recvEP);
+        }
+
         public void Close()
         {
-            recvClient.Close();
-            sendClient.Close();            
+            if (recvClient != null) recvClient.Close();
+            if (sendClient != null) sendClient.Close();            
         }
 
         public string getOwnIPAddress()
@@ -173,7 +177,6 @@ namespace LightLifeAdminConsole
             return str2Dict("");
         }
 
-
         //Send and Asynchronous Receive
         protected void sendAndReceiveAsync(LLMsgType cmd, string data, bool wait)
         {
@@ -194,8 +197,12 @@ namespace LightLifeAdminConsole
 
                     if (!iar.IsCompleted)
                     {
-                        isReceiving = false;
-                        StartReceiveAsync();
+                        //recvClient.Close();
+                        //CreateRecvClient();
+
+                        //isReceiving = false;
+                        //StartReceiveAsync();
+
                     }
 
                 }                                   
@@ -349,7 +356,7 @@ namespace LightLifeAdminConsole
 
         public bool SetPILED(PILEDMode mode, int brightness, int cct, int[] rgb, float[] xy, int fadetime, float duv)
         {
-            string Params = String.Format(PILED_SEND_TEMPLATE, (int)mode, brightness, cct, rgb[0], rgb[1], rgb[2], xy[0], xy[1], fadetime, duv);
+            string Params = String.Format(PILED_SEND_TEMPLATE, (int)mode, brightness, cct, rgb[0], rgb[1], rgb[2], xy[0], xy[1], fadetime, duv).Replace(',','.');
             return SendAndReceiveBool(LLMsgType.LL_SET_PILED, Params, true);
         }
 

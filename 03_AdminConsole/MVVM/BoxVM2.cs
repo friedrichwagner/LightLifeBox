@@ -69,12 +69,20 @@ namespace LightLifeAdminConsole.MVVM
                 return ret;
             }
         }
-
         
-        private AdminBase _testSequencePos;
+        //private AdminBase _testSequencePos;
         public DataView TestSequencePos 
         {
-            get { return _testSequencePos.select(" where SequenceID=" + _box.testsequence.SequenceID.ToString()+" order by PosID").DefaultView; }
+            //get { return _testSequencePos.select(" where SequenceID=" + _box.testsequence.SequenceID.ToString()+" order by PosID").DefaultView; }
+            get { return _box.testsequence.posView.AsDataView(); }
+        }
+
+        public string TestSequenceStateText
+        {
+            get
+            {
+                return _box.testsequence.State.ToString();
+            }
         }
 
         private string _errorText;
@@ -246,8 +254,7 @@ namespace LightLifeAdminConsole.MVVM
                 _box = box;
                 _selectedProband = -1;
                 _selectedActivationState = -1;
-                _selectedStep = -1;
-                _testSequencePos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["VLLTestSequence"]);
+                _selectedStep = -1;               
 
                 _box.testsequence.TestSequenceEvent += TestSequenceEvent;
 
@@ -293,7 +300,12 @@ namespace LightLifeAdminConsole.MVVM
                     case "NEXT": _box.testsequence.Next(CommandSender.GUI);             break;
 
                     case "UPDATE": _box.testsequence.UpdateRemark(SelectedRemark); break;
-                    case "REFRESH": _box.Refresh(); break;
+
+                        //Wird in BoxWindow CodeBehind gemacht
+                    /*case "REFRESH": 
+                        _box.Refresh();
+                        if (!_box.IsActive) box.Ping();
+                        break;*/
 
                 }
                 
@@ -310,18 +322,15 @@ namespace LightLifeAdminConsole.MVVM
             switch (cmd)
             {
                 case TestSequenceCommand.SAVENEW:
-                    RaisePropertyChanged("TestSequencePos");
+                    //RaisePropertyChanged("TestSequencePos");
                     break;
                 case TestSequenceCommand.START: TimeElapsed = TimeSpan.Zero;  dispatcherTimer.Start(); break;
 
                 case TestSequenceCommand.STOP:  
                 case TestSequenceCommand.PAUSE: 
-                            //dispatcherTimer.Stop(); 
                             break;
 
                 case TestSequenceCommand.FINISH:
-                            //box.testsequence.Refresh();
-                            //RaiseAllProperties();
                             dispatcherTimer.Stop(); 
                     break;
 
@@ -329,22 +338,20 @@ namespace LightLifeAdminConsole.MVVM
                 case TestSequenceCommand.PREV: 
                 case TestSequenceCommand.NEXT: 
                         TimeElapsed = TimeSpan.Zero; 
-                        RaisePropertyChanged("TestSequencePos"); 
+                        //RaisePropertyChanged("TestSequencePos"); 
                         break;
                 
                 case TestSequenceCommand.REFRESH: 
                     break;
 
-                case TestSequenceCommand.POSUPDATE:
-                    RaisePropertyChanged("TestSequencePos");
+                case TestSequenceCommand.POSUPDATE:                
+                    //RaisePropertyChanged("TestSequencePos");
                     break;
-
                 case TestSequenceCommand.STATECHANGED:
                     break;
-
             }
 
-            //RaisePropertyChanged("TestSequencePos");
+            RaisePropertyChanged("TestSequencePos");
             RaiseAllProperties();
         }
 
@@ -389,6 +396,7 @@ namespace LightLifeAdminConsole.MVVM
             RaisePropertyChanged("SequenceID");
             //RaisePropertyChanged("TestSequencePos");
             RaisePropertyChanged("BoxBackgroundColor");
+            RaisePropertyChanged("TestSequenceStateText");
         }
     }
 }

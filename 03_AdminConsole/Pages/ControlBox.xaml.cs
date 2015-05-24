@@ -94,10 +94,14 @@ namespace LightLifeAdminConsole.Pages
         {
             try
             {
+                Mouse.OverrideCursor = Cursors.Wait;
                 int boxnr = getSelectedBoxNr();
                 if (boxnr > -1)
                 {
                     Box2.boxes[boxnr].Ping();
+
+                    Mouse.OverrideCursor = Cursors.Arrow;
+
                     if (Box2.boxes[boxnr].IsActive)
                         ModernDialog.ShowMessage("Ping OK!", "Info", MessageBoxButton.OK);
                     else
@@ -106,7 +110,12 @@ namespace LightLifeAdminConsole.Pages
             }
             catch (Exception ex)
             {
+
                 ModernDialog.ShowMessage(ex.Message,"Error", MessageBoxButton.OK);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = Cursors.Arrow;
             }
         }
 
@@ -119,6 +128,8 @@ namespace LightLifeAdminConsole.Pages
                 if (boxnr > -1)
                 {
                     bool ok = Box2.boxes[boxnr].ResetLLBox();
+
+                    Mouse.OverrideCursor = Cursors.Arrow;
                     if (ok)
                         ModernDialog.ShowMessage("Reset OK!", "Info", MessageBoxButton.OK);
                     else
@@ -145,6 +156,9 @@ namespace LightLifeAdminConsole.Pages
                 if (boxnr > -1)
                 {
                     bool ok = Box2.boxes[boxnr].RebootRaspi();
+
+                    Mouse.OverrideCursor = Cursors.Arrow;
+
                     if (ok)
                         ModernDialog.ShowMessage("Reboot OK!", "Info", MessageBoxButton.OK);
                     else

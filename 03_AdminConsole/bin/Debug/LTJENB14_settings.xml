@@ -25,7 +25,8 @@
 	<UDP-Address value="192.168.4.168" />
 	<!--<UDP-Address value="192.168.5.153" />-->
 	<UDP-Port value="1025" />
-	<SendDelayTimeMS value="300" />
+	<Fadetime value="300" />
+	<SendDelayTimeMS value="320" />
 	<Enable value="True" />
   </NeoLink>  
   <ControlBox>

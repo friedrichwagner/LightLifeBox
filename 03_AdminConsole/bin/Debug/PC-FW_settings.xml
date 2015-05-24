@@ -2,8 +2,8 @@
 <Settings>
 	<Pages>
 		<StartPage value="/Pages/Login.xaml" />
-		<PagesVisible value="Boxen;PI-LED Control;Administration;;Settings" />
-		<Interfaces value="LightLifeLogger,NeoLink" />
+		<PagesVisible value="Boxen;PI-LED Control;Administration;Settings" />
+		<Interfaces value="NeoLink" />
 	</Pages>
 	<Login>
 		<Username value="nn" />

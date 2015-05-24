@@ -52,6 +52,7 @@ protected:
 	void toString(bool skip = false);
 
 	void Send2ComClients();
+	bool skip();
 public:
 	PILight(std::string pName); //private contructor
 	~PILight();	

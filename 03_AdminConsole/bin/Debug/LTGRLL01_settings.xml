@@ -21,11 +21,12 @@
   <NeoLink name="NeoLinkClient1">
 	<UDP-Address value="192.168.5.153" />
 	<UDP-Port value="1025" />
-	<SendDelayTimeMS value="200" />
+	<Fadetime value="300" />
+	<SendDelayTimeMS value="320" />
 	<Enable value="True" />
   </NeoLink>   
   <ControlBox>
-	<NrOfBoxes value="2" />
+	<NrOfBoxes value="4" />
 	<Command-Port value="9998" />
   </ControlBox> 
 </Settings>

@@ -274,7 +274,7 @@ namespace LightLife.Data
     {
         public const int DEFAULT_NEOLINK_FADETIME = 300;
         public const int DEFAULT_CCT = 4000;
-        public const int DEFAULT_BRIGHTNESS = 50;
+        public const int DEFAULT_BRIGHTNESS = 100;
         public const int MIN_CCT = 2500;
         public const int MAX_CCT = 7000;
 

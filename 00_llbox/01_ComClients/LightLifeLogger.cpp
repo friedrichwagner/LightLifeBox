@@ -122,10 +122,11 @@ void LightLifeLogger::logLLEvent()
 	LightLifeData* d = new LightLifeData(lldata);
 
 	//PILED Daten "leer" setzen
+	d->mode = PILED_MODE_NONE;
 	d->brightness = 0;
 	d->cct = 0;	d->duv = 0.0f;
 	d->xy[0] = 0;	d->xy[1] = 0;
-	d->receiver = "CONSOLE";
+	d->receiver = "PILEDSVC";
 
 	send(d);
 

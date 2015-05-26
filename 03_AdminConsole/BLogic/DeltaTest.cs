@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LightLife.Data;
 using LightLifeAdminConsole.Data;
 using Lumitech.Helpers;
+using System.Threading;
 
 namespace LightLifeAdminConsole
 {
@@ -61,9 +62,18 @@ namespace LightLifeAdminConsole
             _isRunning = false;
             string Params = "";
             _box.rCmd.StopDeltaTest(Params);
-
+            Thread.Sleep(500);
+            EnableBoxButtons("11111", "00000");
+           
             if (DeltaTestEvent != null)
                 DeltaTestEvent(DeltaTestCommand.STOP, TestMode);
+        }
+
+        private void EnableBoxButtons(string enabledButtons, string blinkleds)
+        {
+            string Params = ";buttons=" + enabledButtons + ";blinkleds=" + blinkleds;
+
+            _box.rCmd.EnableButtons(Params);
         }
 
         public void Save(string Params)

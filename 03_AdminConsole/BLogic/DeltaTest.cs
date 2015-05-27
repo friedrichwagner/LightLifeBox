@@ -22,7 +22,17 @@ namespace LightLifeAdminConsole
 
         public int Proband { get; set; }
         public int Brightness { get; set; }
-        public int CCT { get; set; }
+        
+        private CIECoords _xy;
+        private int _CCT;
+        public int CCT 
+        { 
+            get {   return _CCT; }
+            set { _CCT=value;
+                _xy= Photometric.CCT2xy(_CCT, Observer.Observer10deg);
+            }
+        }
+
         public TestMode TestMode   { get; set; }
         public DeltaTestEventDelegate DeltaTestEvent;
 
@@ -42,13 +52,13 @@ namespace LightLifeAdminConsole
 
         public bool CanStart()
         {
-            if ((Proband > 0) && (Brightness > 0) && (Brightness <= 255) && (CCT >= LightLifeData.MIN_CCT) && (CCT <= LightLifeData.MAX_CCT) && (TestMode > TestMode.DTEST_NONE)) return true;
+            if ((Proband > 0) && (Brightness > 0) && (Brightness <= 255) && (_CCT >= LightLifeData.MIN_CCT) && (_CCT <= LightLifeData.MAX_CCT) && (TestMode > TestMode.DTEST_NONE)) return true;
             return false;
         }
 
         public void Start()
         {
-            string Params= ";brightness="+ Brightness + ";cct=" + CCT + ";userid="+Proband + ";mode="+ (int)TestMode;
+            string Params= ";brightness="+ Brightness + ";cct=" + _CCT + ";userid="+Proband + ";mode="+ (int)TestMode;
             _box.rCmd.StartDeltaTest(Params);
             _isRunning = true;
             Result = String.Empty;

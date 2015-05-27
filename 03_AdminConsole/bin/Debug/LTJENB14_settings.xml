@@ -10,20 +10,20 @@
 		<Password value="test" />
 	</Login>
   <Database>
-	<!--<InitialCatalog value="LightLife" />
+	<InitialCatalog value="LightLife" />
     <DataSource value="LT-WSSQLTEST\SQLEXPRESS" />
 	<UserID value="ltcs" />
-	<Password value="Lumitech03" />	-->
-	<DataSource value="LTGRLL01" />    
+	<Password value="Lumitech03" />
+	<!--<DataSource value="LTGRLL01" />    
     <UserID value="LightLife" />
-    <Password value="test" />
+    <Password value="test" />-->
   </Database>
   <LightLifeLogger name="LLLClient1">
 	<Enable value="True" />
   </LightLifeLogger>    
   <NeoLink name="NeoLinkClient1">
-	<!--<UDP-Address value="192.168.4.168" />-->
-	<UDP-Address value="192.168.5.153" />
+	<UDP-Address value="192.168.4.168" />
+	<!--<UDP-Address value="192.168.5.153" />-->
 	<UDP-Port value="1025" />
 	<Fadetime value="300" />
 	<SendDelayTimeMS value="320" />

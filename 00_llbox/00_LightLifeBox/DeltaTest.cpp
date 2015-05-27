@@ -94,15 +94,19 @@ void DeltaTest::start(PILight* _light, int _userid, int b0, int _cct0, TestMode 
 {
 	if ((m != DTEST_NONE) && (_light != NULL))
 	{
-		light = _light;
-		UserID = _userid;
+		light = _light; UserID = _userid;
 		actStep = 0;
+
 		brightness0 = b0; cct0 = _cct0; mode = m;
+		brightness = b0; cct = _cct0; actDuv = 0.0f;
 
 		light->setFadeTime(0);
 		
 		//Ausgangssituation herstellen
 		light->setCCT(cct0);
+		light->getXY(xy0);
+		xy[0] = xy0[0]; xy[1] = xy0[1];
+
 		lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
 		light->setBrightness(brightness0);
 

@@ -76,17 +76,25 @@ namespace LightLifeAdminConsole.Pages
             return ret;
         }
 
-        private void dgBoxOverview_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void dgBoxOverview_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            int boxnr = getSelectedBoxNr();
-            if (boxnr > -1)
+            try
             {
+                Mouse.OverrideCursor = Cursors.Wait;
+                int boxnr = getSelectedBoxNr();
+                if (boxnr > -1)
+                {
                     Box2.boxes[boxnr].Ping();
 
                     if (Box2.boxes[boxnr].IsPracticeBox)
                         Box2.practiceboxWindows[boxnr].Show();
                     else
                         Box2.boxWindows[boxnr].Show();
+                }
+            }
+            finally
+            {
+                Mouse.OverrideCursor = Cursors.Arrow;
             }
         }
 
@@ -174,5 +182,6 @@ namespace LightLifeAdminConsole.Pages
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
             }
         }
+
     }
 }

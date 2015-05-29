@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Settings>
 	<Pages>
-		<StartPage value="/Pages/Login.xaml" />
+		<StartPage value="/Pages/ControlBox.xaml" />
 		<PagesVisible value="Boxen;PI-LED Control;Administration;Settings" />
 		<Interfaces value="NeoLink" />
 	</Pages>

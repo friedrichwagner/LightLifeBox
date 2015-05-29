@@ -1,36 +1,85 @@
-**** General
-sudo apt-get install git-core
+************ General
 sudo apt-get update
-sudo apt-get update
+sudo apt-get upgrade
 
-**** Benutzer anlegen
-adduser lightlife
-
-**** Benutzer "lightlife" der Gruppe sudo zuordnen
-sudo usermod -a -G sudo lightlife
-
-*** gcc
-sudo apt-get install g++-4.8.2
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.6 
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.7 
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
-sudo update-alternatives --config gcc
-gcc --version
-
-
-*** Wiring Pi Library --> http://wiringpi.com/download-and-install/
-git clone git://git.drogon.net/wiringPi
-cd wiringPi
-git pull origin
-cd wiringPi
-./build
-
-sudo usermod -a -G gpio lightlife
-
-***** Samba --> http://www.forum-raspberrypi.de/Thread-tutorial-samba-windows-freigabe-server-installation-raspbian-debian
+************ Samba --> http://www.forum-raspberrypi.de/Thread-tutorial-samba-windows-freigabe-server-installation-raspbian-debian
 sudo apt-get update
 sudo apt-get install samba samba-common samba-common-bin winbind
 
+************ Benutzer anlegen
+sudo adduser lightlife
+**** das untere Kommando funktioniert so nicht
+****sudo useradd -m lightlife -g 1000 –G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,netdev,input
+**** Benutzer "lightlife" der Gruppe sudo zuordnen
+sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,netdev,input lightlife
+sudo mkdir /lightlife
+sudo chown lightlife:pi /lightlife
+
+sudo visudo --> Zeile hinzufügen: lightlife ALL=(ALL) NOPASSWD: ALL
+
+
+
+************ Setup Samba
+sudo nano /etc/samba/smb.conf
+
+'*** add the end of samba.conf add
+	[lightlife]
+	path = /lightlife
+	writeable = yes
+	guest ok = no
+
+'*** after all config
+sudo /etc/init.d/samba restart
+'*** check by windows explorer
+
+************ gcc
+sudo nano /etc/apt/sources.list --> jessie (wheezy löschen)
+sudo apt-get update
+
+sudo apt-get install g++-4.9 oder sudo apt-get install gcc-4.9 g++-4.9
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
+sudo update-alternatives --config gcc
+gcc --version
+
+sudo nano /etc/apt/sources.list --> wheezy
+sudo apt-get update
+
+************ Wiring Pi Library --> http://wiringpi.com/download-and-install/
+cd /lightlife
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+git pull origin --> "already upt-to-date"
+sudo ./build
+
+sudo usermod -a -G gpio lightlife
+cd /
+
+************ Setup Lightlife
+cd /lightlife
+sudo git clone https://github.com/friedrichwagner/LightLifeBox.git
+cd LightLifeBox
+sudo git checkout -B Version2.0 --track origin/Version2.0
+sudo chmod 777 -R /lightlife/LightLifeBox
+cd 00_llbox
+mkdir _bin
+make
+'***** only for update
+git fetch origin
+git fetch https://github.com/friedrichwagner/LightLifeBox.git
+git reset --hard origin/Version2.0
+
+************ Autostart llbox über /etc/init.d
+mkdir /lightlife/run
+-->llbox.sh über sudo nano llbox.sh NEU erstellen, da sonst mit lineendings probleme
+--> copy llbox, settings.xml, in dieses directory über Windows Explorer
+
+sudo cp llbox.sh /etc/init.d
+sudo chmod 755 /etc/init.d/llbox.sh
+sudo update-rc.d llbox.sh defaults
+
+sudo /etc/init.d/llbox.sh start
+ps ax|grep llbox --> sollte dann in der Liste auftauchen
+sudo /etc/init.d/llbox.sh stop
 
 *** Setup RDP
 sudo apt-get install xrdp

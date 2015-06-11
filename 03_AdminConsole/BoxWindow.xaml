@@ -47,17 +47,19 @@
 
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1"  Grid.Column="0" Margin="0,0,20,0">
-                    <TextBlock Text="Proband:" Style="{StaticResource Heading2}"  Margin="10" Width="180"/>
-                    <TextBox x:Name="txtProband"  Margin="10" Height="40" Width="250" MaxLength="3"  Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedProband}" PreviewTextInput="txtProband_PreviewTextInput" IsEnabled="{Binding TextBoxesEnabled}"/>
+                    <TextBlock Text="Proband:" Style="{StaticResource Heading2}"  Margin="10" Width="135"/>
+                    <mui:ModernButton x:Name="btnLoadProbandSequence" IconData="{StaticResource ProbandIconData}"  ToolTip="Load Proband Sequence" Click="btnLoadProbandSequence_Click"/>
+                    <TextBox x:Name="txtProband"  Margin="10" Height="40" Width="250" MaxLength="3"  Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedProband}" PreviewTextInput="txtProband_PreviewTextInput"/>                    
                     
-                    <mui:ModernButton x:Name="btnStart" IconData="{StaticResource PlayIconData}" Command="{Binding doSequenceCommand}" CommandParameter="START" IsEnabled="{Binding BtnStartEnabled}" ToolTip="Start Sequence" />
+                    <StackPanel Orientation="Horizontal" Background="LightGoldenrodYellow">
+                        <mui:ModernButton x:Name="btnStart" IconData="{StaticResource PlayIconData}" Command="{Binding doSequenceCommand}" CommandParameter="START" IsEnabled="{Binding BtnStartEnabled}" ToolTip="Start Sequence" />
 
-                    <TextBox x:Name="txtSequenceID" Width="60" Margin="10" Style="{StaticResource TextBoxStyle}" Text="{Binding SequenceID, Mode=OneWay}" LostFocus="txtSequenceID_LostFocus" MaxLength="3" PreviewTextInput="txtSequenceID_PreviewTextInput"/>
+                        <TextBox x:Name="txtSequenceID" Width="60" Margin="10" Style="{StaticResource TextBoxStyle}" Text="{Binding SequenceID, Mode=OneWay}" LostFocus="txtSequenceID_LostFocus" MaxLength="3" PreviewTextInput="txtSequenceID_PreviewTextInput"/>
 
-                    <mui:ModernButton x:Name="btnPause" IconData="{StaticResource PauseIconData}"   Command="{Binding doSequenceCommand}" CommandParameter="PAUSE" IsEnabled="{Binding BtnPauseEnabled}" ToolTip="Pause Sequence"/>
-                    <mui:ModernButton x:Name="btnStop" IconData="{StaticResource StopIconData}"  Command="{Binding doSequenceCommand}" CommandParameter="STOP" IsEnabled="{Binding BtnStopEnabled}" ToolTip="Stop Sequence"/>
-                    <TextBlock Text="{Binding TestSequenceStateText}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
-
+                        <mui:ModernButton x:Name="btnPause" IconData="{StaticResource PauseIconData}"   Command="{Binding doSequenceCommand}" CommandParameter="PAUSE" IsEnabled="{Binding BtnPauseEnabled}" ToolTip="Pause Sequence"/>
+                        <mui:ModernButton x:Name="btnStop" IconData="{StaticResource StopIconData}"  Command="{Binding doSequenceCommand}" CommandParameter="STOP" IsEnabled="{Binding BtnStopEnabled}" ToolTip="Stop Sequence"/>
+                        <TextBlock Text="{Binding TestSequenceStateText}"  VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    </StackPanel>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="2"  Grid.Column="0" Margin="0,0,20,0">

@@ -66,7 +66,7 @@ int IBaseClient::SendUDP(unsigned char* cdata, int cnt)
 	for (unsigned int i=0; i < IPClients.size(); i++)
 	{
 		//isValid wird in send gemacht
-		log->info("send:" + IPClients[i]->IPAddress + ":" + lumitech::itos(IPPort) + "(" + this->Name + ")");
+		//log->info("send:" + IPClients[i]->IPAddress + ":" + lumitech::itos(IPPort) + "(" + this->Name + ")");
 		ret=IPClients[i]->send(cdata, cnt);
 	}
 

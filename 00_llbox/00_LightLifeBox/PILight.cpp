@@ -280,7 +280,11 @@ void PILight::setCCTUpDown(int delta)
 	if (skip()) return;
 
 	cct = cct + delta;
-	setCCT(cct);
+
+	//FW 11.6.2015 - Wenn alle 3 gleichzeitig geändert werden, dann darf duv ja nicht auf 0 gesetzt werden
+	//sonst springt er auf die Plancksche Kurve
+	//setCCT(cct);
+	setCCTDuv(cct, duv);
 }
 
 void PILight::setRGBUpDown(int deltargb[])
@@ -325,7 +329,8 @@ void PILight::resetDefault()
 	setBrightness(defaultBrightness);
 	duv = 0.0f;
 
-	for (unsigned int i = 0; i < ComClients.size(); i++)
+	//FW 10.6.2015: Alle Boxen schicken direkt an NeoLink Box. Daten werden nicht (mehr) über Server geschleift
+	/*for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
 		if (ComClients[i] != NULL)
 		{
@@ -339,12 +344,13 @@ void PILight::resetDefault()
 				}
 			}
 		}
-	}
+	}*/
 }
 
 void PILight::lockCurrState()
 {
-	for (unsigned int i = 0; i < ComClients.size(); i++)
+	//FW 10.6.2015: Alle Boxen schicken direkt an NeoLink Box. Daten werden nicht (mehr) über Server geschleift
+	/*for (unsigned int i = 0; i < ComClients.size(); i++)
 	{
 		if (ComClients[i] != NULL)
 		{
@@ -358,7 +364,7 @@ void PILight::lockCurrState()
 				}
 			}				
 		}			
-	}	
+	}*/	
 }
 
 void PILight::setGroup(unsigned char val)

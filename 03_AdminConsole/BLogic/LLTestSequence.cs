@@ -96,6 +96,26 @@ namespace LightLifeAdminConsole
             InitSequence(dt1);
         }
 
+        public LLTestSequence(int boxnr, int seqid, int ProbandID)
+        {
+            SequenceID = getUserSequence(ProbandID);
+
+            if (SequenceID > 0)
+            {
+                SetBoxNrtoSequence(SequenceID, boxnr);
+
+                _boxnr = boxnr;
+                _head = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceHead"]);
+                _pos = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequencePos"]);
+                _def = new AdminBase(LLSQL.sqlCon, LLSQL.tables["LLTestSequenceDefinition"]);
+                _posView = new AdminBase(LLSQL.sqlCon, LLSQL.tables["VLLTestSequence"]);
+
+                DataTable dt1 = getSequence(boxnr, SequenceID);
+
+                InitSequence(dt1);
+            }
+        }
+
         private void InitSequence(DataTable dt)
         {
             if (dt.Rows.Count >= 1)
@@ -121,12 +141,14 @@ namespace LightLifeAdminConsole
             }
         }
 
-        public void SendSequenceStep()
+
+        //FW 10.6.2015 - obsolet
+        /*public void SendSequenceStep()
         {
             string Params = ";userid=" + ProbandID + ";vlid=" + Box2.VLID + ";cycleid=" + CycleID + ";sequenceid=" + SequenceID
                             + ";posid=" + PosID + ";stepid=" + ((int)StepID).ToString() + ";activationstate=" + ActivationID + ";msgtype=" + ((int)LLMsgType.LL_SET_SEQUENCEDATA).ToString();
             Box2.boxes[_boxnr].rCmd.SetSequence(Params);
-        }
+        }*/
 
         #region Sequence - Head
 
@@ -160,7 +182,7 @@ namespace LightLifeAdminConsole
         {
             State = TestSequenceState.TESTING;
 
-            SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+            //SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
             Box2.boxes[_boxnr].CBoxSetPILed(PILEDMode.SET_CCT, LightLifeData.DEFAULT_BRIGHTNESS, LightLifeData.DEFAULT_CCT, LightLifeData.DEFAULT_NEOLINK_FADETIME); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
             Box2.boxes[_boxnr].CBoxEnableBoxButtons(EnabledButtons, Box2.ALL_BUTTONS_DISABLED);
 
@@ -206,7 +228,7 @@ namespace LightLifeAdminConsole
                 PosID--;
                 getPos();
 
-                SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+                //SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
 
                 if (sender == CommandSender.GUI)
                 {
@@ -231,7 +253,7 @@ namespace LightLifeAdminConsole
                 PosID++;
                 getPos();
 
-                SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
+                //SendSequenceStep(); System.Threading.Thread.Sleep(RemoteCommandBase.WAIT_TIME);
                
 
                 //Wenn Cmd von GUI kommt, dann gleich mit Test starten
@@ -411,6 +433,28 @@ namespace LightLifeAdminConsole
         private void UpdateHeadState()
         {
             string stmt = "update LLTestSequenceHead set TestStateID='" + ((int)State).ToString() + "', ActualPosID=" + PosID.ToString() + " where sequenceID=" + SequenceID.ToString();
+            LLSQL.cmd.prep(stmt);
+            LLSQL.cmd.Exec();
+        }
+
+        private int getUserSequence(int ProbandID)
+        {
+            int ret=-1;
+            string stmt = "select SequenceID from LLTestSequenceHead where UserID=" + ProbandID.ToString() + " order by SequenceID desc";
+            LLSQL.cmd.prep(stmt);
+            LLSQL.cmd.Exec();
+
+            if (LLSQL.cmd.dr.Read())
+                ret = LLSQL.cmd.dr.GetInt32(0);
+
+            LLSQL.cmd.dr.Close();
+
+            return ret;
+        }
+
+        private void SetBoxNrtoSequence(int SeqId, int boxnr)
+        {
+            string stmt = "update LLTestSequenceHead set BoxID=" + boxnr.ToString() + " where SequenceID=" + SeqId.ToString();
             LLSQL.cmd.prep(stmt);
             LLSQL.cmd.Exec();
         }

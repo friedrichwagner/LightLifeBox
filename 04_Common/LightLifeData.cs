@@ -50,7 +50,7 @@ namespace LightLife.Data
         LL_ENABLE_BUTTONS = 51,
         LL_SET_PILED = 52,
         LL_GET_PILED = 53,
-        LL_SET_SEQUENCEDATA = 54,
+        LL_SET_SEQUENCEDATA = 54, //FW 10.6.2015 - eigentlich obosolet. War gedacht für mitloggen in Tabelle LLData über den PILEDServerSvc
         LL_START_DELTATEST = 55,
         LL_STOP_DELTATEST = 56,
 
@@ -274,7 +274,7 @@ namespace LightLife.Data
     {
         public const int DEFAULT_NEOLINK_FADETIME = 300;
         public const int DEFAULT_CCT = 4000;
-        public const int DEFAULT_BRIGHTNESS = 100;
+        public const int DEFAULT_BRIGHTNESS = 35;
         public const int MIN_CCT = 2500;
         public const int MAX_CCT = 7000;
 

@@ -17,18 +17,29 @@ sudo chown lightlife:pi /lightlife
 
 sudo visudo --> Zeile hinzufügen: lightlife ALL=(ALL) NOPASSWD: ALL
 
-
-
 ************ Setup Samba
 sudo nano /etc/samba/smb.conf
 
-'*** add the end of samba.conf add
+[global]
+   workgroup = WORKGROUP
+	realm = raspberrypi  ##new
+	netbios name = raspberrypi ##new
+	
+'*** einkommentieren
+   security = user
+
+   '*** add the end of samba.conf add
 	[lightlife]
 	path = /lightlife
 	writeable = yes
 	guest ok = no
+	
 
 '*** after all config
+'*** create samba users
+sudo smbpasswd -a lightlife
+'***[Enter 2 times the password]
+
 sudo /etc/init.d/samba restart
 '*** check by windows explorer
 

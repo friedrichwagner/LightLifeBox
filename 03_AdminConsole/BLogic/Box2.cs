@@ -57,6 +57,7 @@ namespace LightLifeAdminConsole
                     Box2.boxWindows.Add(dt.Rows[i].Field<int>("BoxID"), new BoxWindow(dt.Rows[i].Field<int>("BoxID")));
                 else
                     Box2.practiceboxWindows.Add(dt.Rows[i].Field<int>("BoxID"), new PracticeBoxWindow(dt.Rows[i].Field<int>("BoxID")));
+                  
             }
         }
 
@@ -140,9 +141,26 @@ namespace LightLifeAdminConsole
            return isNew;
         }
 
+        public bool LoadProbandSequence(int pProbandID)
+        {
+            bool isNew = false;
+            //if (pProbandID != testsequence.ProbandID)
+            {
+                LLTestSequence Newtestsequence = new LLTestSequence(BoxNr, -1, pProbandID);
+
+                if (Newtestsequence.SequenceID < 0)
+                    throw new ArgumentException("There is no TestSequence for this User");
+
+                testsequence = Newtestsequence;
+                isNew = true;
+            }
+
+            return isNew;
+        }
+
         public bool Ping()
         {
-            string Params = ";waittime=" + WAIT_FADETIME.ToString();
+            string Params = ";waittime=" + WAIT_FADETIME.ToString() + ";ispracticebox=" + (IsPracticeBox? "1" : "0");
             IsActive = rCmd.Ping(GroupID, Params);
             return IsActive;
         }

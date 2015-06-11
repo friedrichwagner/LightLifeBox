@@ -127,9 +127,7 @@ namespace LightLifeAdminConsole.MVVM
                 _box = box;
                 _lltestcct = new Dictionary<int, string>();
                 _lltestcct.Add(0, "");
-                _lltestcct.Add(3000, "3000K");
-                _lltestcct.Add(4500, "4500K");               
-                _lltestcct.Add(6000, "6000K");
+                _lltestcct.Add(4000, "4000K");
 
                 TimeElapsed = TimeSpan.Zero;
 

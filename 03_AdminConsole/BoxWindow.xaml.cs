@@ -87,7 +87,8 @@ namespace LightLifeAdminConsole
 
         private void txtSequenceID_LostFocus(object sender, RoutedEventArgs e)
         {
-            try {
+            try 
+            {
                 if (dc.SequenceID != Int32.Parse(txtSequenceID.Text))
                 {
                     SavePosRemarks();
@@ -102,6 +103,28 @@ namespace LightLifeAdminConsole
             catch (Exception ex)
             {
                  dc.ErrorText = ex.Message;
+            }
+            finally
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            }
+        }
+
+        private void btnLoadProbandSequence_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //if (dc.SelectedProband != Int32.Parse(txtProband.Text))
+                {
+                    //SavePosRemarks();
+
+                    Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                    dc.LoadProbandSequence(Int32.Parse(txtProband.Text));
+                }
+            }
+            catch (Exception ex)
+            {
+                dc.ErrorText = ex.Message;
             }
             finally
             {

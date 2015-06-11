@@ -100,6 +100,11 @@ void NeoLinkClient::setXY(float val[2])
 	nlframe->data[2] = v[0];
 	nlframe->data[3] = v[1];
 
+	//FW 11.6.2015, Das hat gefehlt
+	//fadetime
+	nlframe->data[4] = byfadetime[0];
+	nlframe->data[5] = byfadetime[1];
+
    send();
 }
 

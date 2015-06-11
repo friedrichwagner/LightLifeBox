@@ -373,6 +373,26 @@ namespace LightLifeAdminConsole.MVVM
                 //DAmit wieder die richtige SequenceID im TextFeld steht
                 RaisePropertyChanged("SequenceID");
             }
+        }
+
+        public void LoadProbandSequence(int ProbandID)
+        {
+            try
+            {
+
+                if (_box.LoadProbandSequence(ProbandID))
+                    _box.testsequence.TestSequenceEvent += TestSequenceEvent;
+
+                RaisePropertyChanged("TestSequencePos");
+                RaiseAllProperties();
+            }
+            catch (Exception ex)
+            {
+                ErrorText = ex.Message;
+
+                //DAmit wieder die richtige SequenceID im TextFeld steht
+                RaisePropertyChanged("SelectedProband");
+            }
 
         }
 

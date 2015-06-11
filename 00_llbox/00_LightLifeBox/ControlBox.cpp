@@ -86,7 +86,7 @@ bool ControlBox::Init()
 	//bool defaultActiveControls = ini->Read<bool>(this->Name, "ControlsDefaultActive", false);
 	testWithoutConsole = ini->Read<bool>("ControlBox_General", "TestWithoutConsole", false);
 	waittime = ini->Read<int>("ControlBox_General", "DelayTimeForPsychoTestSecs", 30) * 1000;
-	isPracticeBox = ini->Read<int>(this->Name, "IsPracticeBox", 0);
+	setPracticeBox(ini->Read<int>(this->Name, "IsPracticeBox", 1));
 
 	//1. Get the Potis	
 	ini->ReadStringVector("ControlBox_General", "Potis", "", &flds);
@@ -154,17 +154,18 @@ int ControlBox::addComClients()
 	for (unsigned int i = 0; i< flds.size(); i++)
 	{
 		IBaseClient* clnt = NULL;
-		if (flds[i] == "NeoLink" && isPracticeBox)
+		if (flds[i] == "NeoLink")
 		{
 			clnt = new NeoLinkClient();			
 		}
 
+		//FW 10.6.2015: Alle Boxen schicken direkt an NeoLink Box. Daten werden nicht (mehr) über Server geschleift
 		//Wenn "PracticeBox", dann kein LightLifLogger, damit PI-LED Server und DB nicht so belastet
 		//Deltatest geht über AdminConsole und wird von dort in DB geloggt
-		if ((flds[i] == "LightLifeServer") && !isPracticeBox)
+		/*if ((flds[i] == "LightLifeServer") && !isPracticeBox)
 		{
 			clnt = new LightLifeLogger(Name);
-		}
+		}*/
 
 		for (unsigned int k = 0; k < Lights.size(); k++)
 		{
@@ -184,7 +185,10 @@ bool ControlBox::EventLoop()
 { 
 	//int c = 0;
 	log->cout("------------- Controlbox::EventLoop-BEGIN ------------- ");
-	rmCmd->NowAddLLLogger(); //ziemlich unsauber
+	
+	//FW 10.6.2015: Alle Boxen schicken direkt an NeoLink Box. Daten werden nicht (mehr) über Server geschleift
+	//rmCmd->NowAddLLLogger(); 
+
 	while (!isDone)
 	{
 		//log->cout("------------Controlbox::EventLoop-------------");
@@ -225,6 +229,16 @@ string ControlBox::getName()
 void ControlBox::setWaitTime(int value)
 {
 	waittime = value;
+}
+
+
+void ControlBox::setPracticeBox(int value)
+{
+	if (value > 0)
+		isPracticeBox = true;
+	else
+		isPracticeBox = false;
+	log->cout("IsPracticeBox: " + lumitech::itos(value));
 }
 
 
@@ -277,7 +291,9 @@ void ControlBox::notify(void* sender, enumButtonEvents event, int delta)
 					}
 					else
 					{
-						Lights[0]->lockCurrState();
+						//FW 10.6.2015: Alle Boxen schicken direkt an NeoLink Box. Daten werden nicht (mehr) über Server geschleift
+						//Lights[0]->lockCurrState();
+
 						rmCmd->SendRemoteCommand(LL_SET_LOCKED, "");
 
 						//FW 13.5.2015

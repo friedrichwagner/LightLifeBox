@@ -1,0 +1,24 @@
+LightLifeServer	192.168.5.100 (lumitech/Tzj!8380), Remote Desktop
+C:\LightLife
+
+putty --> raspiXLightlife (lightlife/test)
+
+ps ax | grep llbox
+sudo /etc/init.d/llbox.sh stop
+ps ax | grep llbox
+
+**** händisch starten zum ausprobieren
+cd /lightlife/run
+sudo ./llbox -b "ControlBox4"
+
+
+**** Als Dienst starten
+sudo /etc/init.d/llbox.sh start
+ps ax | grep llbox
+
+
+**** Als Dienst stopen
+sudo /etc/init.d/llbox.sh stop
+ps ax | grep llbox
+
+

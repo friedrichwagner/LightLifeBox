@@ -24,12 +24,14 @@ RemoteCommands::RemoteCommands(ControlBox* pBox)
 	_recvSock = new UDPRecvSocket(p);
 	log->cout(_recvSock->IPAddress + ":" + lumitech::itos(_recvSock->IPPort));
 
-	lllogger = NULL;
+	//lllogger = NULL;
 
 	lastCmd.cmdId = (int)LL_NONE;
 }
 
 
+//obsolet FW 10.6.2015: Alle Boxen schicken direkt an NeoLink Box. Daten werden nicht (mehr) über Server geschleift
+/*
 void RemoteCommands::NowAddLLLogger()
 {	
 	lllogger = (LightLifeLogger*)box->Lights[0]->getComClient(0); // Assume LightLifeLogger is on pos=0
@@ -45,6 +47,7 @@ void RemoteCommands::NowAddLLLogger()
 		lllogger = NULL;
 	}
 }
+*/
 
 RemoteCommands::~RemoteCommands()
 {	
@@ -199,7 +202,8 @@ void RemoteCommands::ExecuteReceiveCommands(RemoteCommand cmd)
 		GetPILEDCommand(cmd);
 		break;
 	case LL_SET_SEQUENCEDATA:
-		SequenceHandlingCommand(cmd);
+		//FW 10.6.2015: Alle Boxen schicken direkt an NeoLink Box. Daten werden nicht (mehr) über Server geschleift
+		//SequenceHandlingCommand(cmd);
 		break;
 	case LL_START_DELTATEST:
 		DoStartDeltaTest(cmd);
@@ -233,11 +237,14 @@ void RemoteCommands::DiscoverCommand(RemoteCommand cmd)
 
 	box->setWaitTime(lumitech::stoi(flds["waittime"]));
 
+	box->setPracticeBox(lumitech::stoi(flds["ispracticebox"]));
+
 	//Send Back Name of Controlbox
 	StandardAnswer(cmd);
 }
 void RemoteCommands::SequenceHandlingCommand(RemoteCommand cmd)
 {
+	/*
 	splitstring s = cmd.cmdParams;
 	map<string, string> flds = s.split2map(';', '=');
 	
@@ -261,6 +268,7 @@ void RemoteCommands::SequenceHandlingCommand(RemoteCommand cmd)
 	}
 
 	StandardAnswer(cmd);
+	*/
 }
 
 void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
@@ -286,7 +294,8 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 
 	box->setButtons(b, blink);
 
-	if (lllogger != NULL)
+	//FW 10.6.2015: Alle Boxen schicken direkt an NeoLink Box. Daten werden nicht (mehr) über Server geschleift
+	/*if (lllogger != NULL)
 	{
 		lllogger->lldata->msgtype = LL_ENABLE_BUTTONS;
 		lllogger->logLLEvent();
@@ -294,7 +303,7 @@ void RemoteCommands::EnableButtonsCommand(RemoteCommand cmd)
 	else
 	{
 		log->error("RemoteCommands: LightLifeLogger is null");
-	}
+	}*/
 
 
 	StandardAnswer(cmd);
@@ -329,10 +338,10 @@ void RemoteCommands::SetPILEDCommand(RemoteCommand cmd)
 			box->Lights[0]->setBrightness(br);
 			break;
 
-	case PILED_SET_XY:
-			box->Lights[0]->setXY(xy);
-			lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
+	case PILED_SET_XY:			
 			box->Lights[0]->setBrightness(br);
+			lumitech::sleep(DEFAULT_NEOLINK_FADETIME + 30);
+			box->Lights[0]->setXY(xy);
 
 			break;
 

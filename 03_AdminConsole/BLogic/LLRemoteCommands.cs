@@ -96,8 +96,14 @@ namespace LightLifeAdminConsole
 
         public void Close()
         {
-            if (recvClient != null) recvClient.Close();
-            if (sendClient != null) sendClient.Close();            
+            try
+            {
+                if (recvClient != null) recvClient.Close();
+                if (sendClient != null) sendClient.Close();
+            }
+            catch(SocketException ex)
+            {                
+            }
         }
 
         public string getOwnIPAddress()

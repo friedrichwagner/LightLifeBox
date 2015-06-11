@@ -41,7 +41,7 @@ class RemoteCommands
 {
 	protected:
 		ControlBox* box;
-		LightLifeLogger* lllogger;
+		//LightLifeLogger* lllogger;
 		bool done;
 		Logger* log;
 		Settings* ini;
@@ -96,7 +96,7 @@ class RemoteCommands
 		void stop();
 		void start();
 
-		void NowAddLLLogger();
+		//void NowAddLLLogger();
 		void SendRemoteCommand(LLMsgType, string); // to AdminConsole
 		RemoteCommand lastCmd;
 		

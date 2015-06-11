@@ -24,6 +24,12 @@
                     <TextBox  x:Name="txtCCT"  Width="60" Margin="10" Text="{Binding Path=CCT, Mode=TwoWay}" MaxLength="4" HorizontalAlignment="Left" LostFocus="txtCCT_LostFocus"/>
                 </StackPanel>
 
+                <StackPanel  Grid.Row="0" Grid.Column="1" Margin="0" Orientation="Horizontal">
+                    <TextBlock Text="Fadetime:" Width="80" Style="{StaticResource Heading2}"  Margin="10" HorizontalAlignment="Right" />
+                    <TextBox  x:Name="txtfadettime"  Width="60" Margin="10" Text="{Binding Path=Fadetime, Mode=TwoWay}" MaxLength="5" HorizontalAlignment="Left"/>
+                    <Label Content="ms"  VerticalContentAlignment="Center" />
+                </StackPanel>
+                
                 <StackPanel  Grid.Row="1" Grid.Column="0" Margin="0" Orientation="Horizontal">
                     <TextBlock Text="x:" Width="40" Style="{StaticResource Heading2}" Margin="10" HorizontalAlignment="Right"/>
                     <TextBox  x:Name="txtX" Width="60" Margin="10" Text="{Binding Path=X, Mode=TwoWay, ConverterCulture='de-DE', StringFormat={}{0:0.000}}" MaxLength="5" TabIndex="1" GotFocus="txtX_GotFocus" LostFocus="txtX_LostFocus" HorizontalAlignment="Left"/>

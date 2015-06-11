@@ -137,6 +137,16 @@ namespace LightLifeAdminConsole.MVVM
             }
         }
 
+        public int Fadetime
+        {
+            get { return lldata.piled.fadetime; }
+            set
+            {
+                lldata.piled.fadetime = value;
+                RaisePropertyChanged("Fadetime");
+            }
+        }
+
         public int CCT
         {
             get { return lldata.piled.cct; }

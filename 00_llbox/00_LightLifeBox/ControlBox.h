@@ -66,4 +66,5 @@ public:
 
 	void doAfterWait(ControlBox* p);
 	void setWaitTime(int value);
+	void setPracticeBox(int value);
 };

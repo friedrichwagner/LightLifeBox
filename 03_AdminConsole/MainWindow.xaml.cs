@@ -10,6 +10,7 @@ using System.Windows.Input;
 using LightLifeAdminConsole.Data;
 using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 namespace LightLifeAdminConsole
 {
@@ -70,11 +71,20 @@ namespace LightLifeAdminConsole
         private void ModernWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             //PiledVM p = PiledVM.GetInstance();
+            foreach (KeyValuePair<int, Box2> pair in Box2.boxes)
+            {
+               pair.Value.Close();
+            }
+
             foreach (var boxWndw in Box2.boxWindows.Values)
                 boxWndw.Close();
+
+            foreach (var practiceboxWindow in Box2.practiceboxWindows.Values)
+                practiceboxWindow.Close();
+
             //p.Done();
 
-            LLSQL.Done();
+            LLSQL.Done();          
         }
 
         private void ModernWindow_PreviewKeyDown(object sender, KeyEventArgs e)

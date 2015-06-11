@@ -14,14 +14,15 @@
 	</DeltaTest>	
 	
 	<ControlBox_General>
-		<Clients value="LightLifeServer,NeoLink" />
+		<Clients value="NeoLink" />
 		<!--<TestWithoutConsole value="1" />-->
 		<DelayTimeForPsychoTestSecs value="10" />
 		<Potis value="Poti1,Poti2,Poti3" />
 		<Buttons value="Button1,Button2" />
 		<PILights value="Light1" />
 		<Sleep value="1000"/>
-		<Admin-Console-IP value="127.0.0.1"/>
+		<!--<Admin-Console-IP value="127.0.0.1"/>-->
+		<Admin-Console-IP value="192.168.4.24"/>
 	</ControlBox_General>
 	
 	<LTJENB14 name="ControlBox6">

@@ -293,6 +293,7 @@ namespace LightLifeAdminConsole.MVVM
                 switch (cmd.ToUpper())
                 {
                     case "SAVENEW": _box.testsequence.SaveNew(); break;
+                    //case "SAVEALL": _box.testsequence.SaveALL(); break;
                     case "START": _box.testsequence.Start();    break;                    
                     case "STOP": _box.testsequence.Stop();                              break;
                     case "PAUSE": _box.testsequence.Pause(); break;                    

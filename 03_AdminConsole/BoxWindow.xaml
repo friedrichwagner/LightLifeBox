@@ -73,7 +73,8 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="3"  Grid.Column="0" Margin="0,0,20,0">
                     <TextBlock Text="Sequence Definition:" Style="{StaticResource Heading2}"  Margin="10" Width="180"/>
                     <ComboBox x:Name="cbSeqeunceDef" Style="{StaticResource LLTextStyle}"  Margin="10"  Width="250" ItemsSource="{Binding lltestsequencedef}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding SelectedSequenceDef, Mode=TwoWay}" IsEnabled="{Binding TextBoxesEnabled}"/>
-                    <mui:ModernButton x:Name="btnSave" IconData="{StaticResource SaveIconData}"  Command="{Binding doSequenceCommand}" CommandParameter="SAVENEW" IsEnabled="{Binding BtnSaveNewEnabled}" ToolTip="Save New Sequence"/>                    
+                    <mui:ModernButton x:Name="btnSave" IconData="{StaticResource SaveIconData}"  Command="{Binding doSequenceCommand}" CommandParameter="SAVENEW" IsEnabled="{Binding BtnSaveNewEnabled}" ToolTip="Save New Sequence"/>
+                    <mui:ModernButton x:Name="btnSaveALL" IconData="{StaticResource SaveIconData}"  Command="{Binding doSequenceCommand}" CommandParameter="SAVEALL" Visibility="Hidden"/>
                 </StackPanel>
     
                 <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal">
@@ -91,7 +92,7 @@
                             <DataGridTextColumn Binding="{Binding Path=StepName}" Header="Step" IsReadOnly="True"/>
                             <DataGridTextColumn Binding="{Binding Path=brightness}" Header="Brightness" IsReadOnly="True"/>
                             <DataGridTextColumn Binding="{Binding Path=CCT}" Header="CCT" IsReadOnly="True"/>
-                            <DataGridTextColumn Binding="{Binding Path=duv}" Header="duv" IsReadOnly="True"/>
+                            <DataGridTextColumn Binding="{Binding Path=duv, StringFormat={}{0:0.0000}}" Header="duv" IsReadOnly="True"/>
                             <DataGridTextColumn Binding="{Binding Path=updated, StringFormat={}{0:HH:mm:ss}}" Header="updated" IsReadOnly="True"/>
                             <DataGridTextColumn Binding="{Binding Path=remark}" Header="Remark" IsReadOnly="false"/>
                         </DataGrid.Columns>

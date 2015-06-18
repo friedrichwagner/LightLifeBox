@@ -162,6 +162,63 @@ namespace LightLifeAdminConsole
             return SequenceID;
         }
 
+        public void SaveALL()
+        {
+            for (int i=1; i<=24; i++)
+            {
+                _boxnr = 0;
+                switch (i)
+                {
+                    case 1: ActivationID=1; _SequenceDef = "BFJa"; break;
+                    case 2: ActivationID = 2; _SequenceDef = "BFJa"; break;
+
+                    case 3: ActivationID = 1; _SequenceDef = "BJFa"; break;
+                    case 4: ActivationID = 2; _SequenceDef = "BJFa"; break;
+
+                    case 5: ActivationID = 1; _SequenceDef = "FBJa"; break;
+                    case 6: ActivationID = 2; _SequenceDef = "FBJa"; break;
+
+                    case 7: ActivationID = 1; _SequenceDef = "FJBa"; break;
+                    case 8: ActivationID = 2; _SequenceDef = "FJBa"; break;
+
+                        //9,10, falsch im Excel ?
+                    case 9: ActivationID = 1; _SequenceDef = "JBFa"; break;
+                    case 10: ActivationID = 2; _SequenceDef = "JBFa"; break;
+
+                    case 11: ActivationID = 1; _SequenceDef = "JFBa"; break;
+                    case 12: ActivationID = 2; _SequenceDef = "JFBa"; break;
+
+                    //---------------------------------------------------------
+                    case 13: ActivationID = 1; _SequenceDef = "BFJa"; break;
+                    case 14: ActivationID = 2; _SequenceDef = "BFJa"; break;
+
+                    case 15: ActivationID = 1; _SequenceDef = "BJFa"; break;
+                    case 16: ActivationID = 2; _SequenceDef = "BJFa"; break;
+
+                    case 17: ActivationID = 1; _SequenceDef = "FBJa"; break;
+                    case 18: ActivationID = 2; _SequenceDef = "FBJa"; break;
+
+                    case 19: ActivationID = 1; _SequenceDef = "FJBa"; break;
+                    case 20: ActivationID = 2; _SequenceDef = "FJBa"; break;
+
+                    case 21: ActivationID = 1; _SequenceDef = "JBFa"; break;
+                    case 22: ActivationID = 2; _SequenceDef = "JBFa"; break;
+
+                    case 23: ActivationID = 1; _SequenceDef = "JFBa"; break;
+                    case 24: ActivationID = 2; _SequenceDef = "JFBa"; break;
+
+
+                }
+
+                for (int k = 1; k <= 8;k++ )
+                {
+                    ProbandID = 100 * k + i;
+                    CreateSequence();
+                }
+                    
+            }
+        }
+
         private void RaiseEvent(TestSequenceCommand cmd)
         {
             if (TestSequenceEvent != null)
